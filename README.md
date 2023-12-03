@@ -1,2 +1,2 @@
 # ReDoomsEngine
-Toy game engine..
+Let's make toy game engine better than [DoomsEngine](https://github.com/SungJJinKang/DoomsEngine)
