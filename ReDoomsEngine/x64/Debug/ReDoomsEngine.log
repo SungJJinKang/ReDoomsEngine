@@ -1,0 +1,28 @@
+﻿  MemoryCore.cpp
+  D3D12Fence.cpp
+  Parse.cpp
+  RendererManager.cpp
+  Commandline.cpp
+  D3D12Assert.cpp
+  D3D12Utils.cpp
+  D3D12CommandQueue.cpp
+  Log.cpp
+  D3D12Adapter.cpp
+  D3D12Device.cpp
+  D3D12Manager.cpp
+  main.cpp
+  Window.cpp
+  allocator_eastl.cpp
+  assert.cpp
+  atomic.cpp
+  fixed_pool.cpp
+  hashtable.cpp
+  intrusive_list.cpp
+  Generating Code...
+  Compiling...
+  numeric_limits.cpp
+  red_black_tree.cpp
+  string.cpp
+  thread_support.cpp
+  Generating Code...
+  ReDoomsEngine.vcxproj -> C:\ReDoomsEngine\ReDoomsEngine\x64\Debug\ReDoomsEngine.exe

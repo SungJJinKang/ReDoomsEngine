@@ -1,0 +1,51 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "4f13dde9-1598-462a-a2e6-78ac330682db": {
+      "ProjectGuid": "4f13dde9-1598-462a-a2e6-78ac330682db",
+      "DisplayName": "ReDoomsEngine",
+      "ColorIndex": 0
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "591dfbb6-3f96-3e74-add8-af0fe156465a": {
+      "ProjectGuid": "591dfbb6-3f96-3e74-add8-af0fe156465a",
+      "DisplayName": "EASTL",
+      "ColorIndex": 1
+    },
+    "bc214079-45d8-36bd-a49f-65a0d29a4d50": {
+      "ProjectGuid": "bc214079-45d8-36bd-a49f-65a0d29a4d50",
+      "DisplayName": "EAAssert",
+      "ColorIndex": 2
+    },
+    "1fc0ed2d-2baa-36e9-8b7a-2a0aa49e2fac": {
+      "ProjectGuid": "1fc0ed2d-2baa-36e9-8b7a-2a0aa49e2fac",
+      "DisplayName": "EAStdC",
+      "ColorIndex": 3
+    },
+    "a7a2a36c-3c53-4ccb-b52e-425623e2dda5": {
+      "ProjectGuid": "a7a2a36c-3c53-4ccb-b52e-425623e2dda5",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": 4
+    },
+    "fb303ccf-93e6-31de-9275-c48a436c4791": {
+      "ProjectGuid": "fb303ccf-93e6-31de-9275-c48a436c4791",
+      "DisplayName": "EAThread",
+      "ColorIndex": 5
+    },
+    "31ed7c22-fc2e-323c-bbb3-2609326e5425": {
+      "ProjectGuid": "31ed7c22-fc2e-323c-bbb3-2609326e5425",
+      "DisplayName": "mimalloc",
+      "ColorIndex": 6
+    },
+    "abb5eae7-b3e6-432e-b636-333449892ea7": {
+      "ProjectGuid": "abb5eae7-b3e6-432e-b636-333449892ea7",
+      "DisplayName": "mimalloc-override",
+      "ColorIndex": 7
+    }
+  },
+  "NextColorIndex": 8
+}

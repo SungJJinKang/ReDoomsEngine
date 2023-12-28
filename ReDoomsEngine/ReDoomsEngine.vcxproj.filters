@@ -1,0 +1,957 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\allocator_eastl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\assert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\atomic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\fixed_pool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\hashtable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\intrusive_list.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\numeric_limits.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\red_black_tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\thread_support.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Device.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Adapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Core\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12CommandQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Assert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Rendering\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Core\Commandline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Rendering\RendererManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Core\Parse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Fence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Core\MemoryCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\call_traits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\compressed_pair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\fixed_ring_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\fixed_tuple_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\intrusive_sdlist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\intrusive_slist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\list_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\lru_cache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\overloaded.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\ring_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\sort_extra.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\tuple_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_load.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_memory_barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_store.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_thread_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_add_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_and_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_cmpxchg_strong.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_cmpxchg_weak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_exchange.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_add.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_and.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_or.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_sub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_xor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_load.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_memory_barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_or_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_store.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_sub_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_thread_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_xor_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_add_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_and_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cmpxchg_strong.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cmpxchg_weak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_compiler_barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cpu_pause.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_exchange.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_add.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_and.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_or.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_sub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_xor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_load.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_memory_barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_or_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_signal_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_store.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_sub_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_thread_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_xor_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_add_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_and_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cmpxchg_strong.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cmpxchg_weak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_compiler_barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cpu_pause.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_exchange.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_add.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_and.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_or.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_sub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_xor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_load.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_memory_barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_or_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_signal_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_store.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_sub_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_thread_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_xor_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_add_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_and_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cmpxchg_strong.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cmpxchg_weak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cpu_pause.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_exchange.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_add.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_and.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_or.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_sub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_xor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_load.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_or_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_signal_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_store.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_sub_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_thread_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_xor_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_add_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_and_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cmpxchg_strong.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cmpxchg_weak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cpu_pause.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_exchange.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_add.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_and.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_or.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_sub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_xor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_or_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_signal_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_sub_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_xor_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_add_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_and_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cmpxchg_strong.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cmpxchg_weak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cpu_pause.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_exchange.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_add.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_and.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_or.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_sub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_xor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_load.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_memory_barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_or_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_signal_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_store.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_sub_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_thread_fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_xor_fetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_asserts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_base_width.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_casts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_flag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_flag_standalone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_integral.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_memory_order.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_pointer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_pop_compiler_options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_push_compiler_options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_size_aligned.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_standalone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\char_traits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\copy_help.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\enable_shared.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\fill_help.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\fixed_pool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\function.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\function_detail.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\function_help.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\functional_base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\generic_iterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\hashtable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\in_place_t.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\integer_sequence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\intrusive_hashtable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\mem_fn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\memory_base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\move_help.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\pair_fwd_decls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\piecewise_construct_t.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\red_black_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\smart_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\thread_support.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\tuple_fwd_decls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_compound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_detected.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_fundamental.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_pod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_properties.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_transformations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_void_t.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\algorithm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\allocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\allocator_malloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\any.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\atomic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bitset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bitvector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\chrono.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\compare.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\core_allocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\core_allocator_adapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\deque.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\finally.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_allocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_function.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_hash_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_hash_set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_slist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_substring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\functional.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\hash_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\hash_set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\heap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\initializer_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_hash_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_hash_set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\iterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\linked_array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\linked_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\meta.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\numeric.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\numeric_limits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\optional.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\priority_queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\ratio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\safe_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\scoped_array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\scoped_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\segmented_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\shared_array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\shared_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\slist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\sort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\span.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string_hash_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string_view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\tuple.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\type_traits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\unique_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\unordered_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\unordered_set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\variant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_multimap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_multiset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\weak_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\d3d12shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcapi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcerrors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcisense.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Core\CommonInclude.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Device.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Include.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Adapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Core\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Assert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Rendering\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Core\Commandline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Rendering\RendererManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Core\Parse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Fence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc-new-delete.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc-override.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\atomic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\prim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\track.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Core\MemoryCore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
+  </ItemGroup>
+</Project>
