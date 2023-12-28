@@ -1,0 +1,33 @@
+#pragma once
+#include "CommonInclude.h"
+
+#include "D3D12Include.h"
+#include "D3D12Fence.h"
+
+enum class ED3D12QueueType : uint64_t
+{
+	Direct = 0,
+	Copy,
+	Async,
+	
+	Count
+};
+
+D3D12_COMMAND_LIST_TYPE GetD3D12CommandListType(ED3D12QueueType QueueType);
+const wchar_t* GetD3D12QueueTypeString(ED3D12QueueType QueueType);
+
+class FD3D12Device;
+class FD3D12CommandQueue
+{
+public:
+
+	FD3D12CommandQueue(FD3D12Device* const InDevice, const ED3D12QueueType InQueueType);
+
+private:
+	FD3D12Device* const Device;
+	ED3D12QueueType QueueType;
+	ComPtr<ID3D12CommandQueue> CommandQueue;
+
+	FD3D12Fence Fence;
+};
+
