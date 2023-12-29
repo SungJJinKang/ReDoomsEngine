@@ -26,4 +26,12 @@ using namespace Microsoft::WRL;
 #include "EASTL/shared_ptr.h"
 #include "eathread/eathread_futex.h"
 
+#include "Log.h"// Math
+// Math
+#include "DirectXMath.h"
+#include "DirectXCollision.h"
+#include "DirectXColors.h"
+#include "DirectXPackedVector.h"
+
 #include "Log.h"
+#include "WindowsApplication.h"
