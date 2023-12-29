@@ -1,0 +1,8 @@
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/Experimental.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/Nightly.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/Continuous.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/NightlyMemoryCheck.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/RUN_TESTS.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/INSTALL.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/ALL_BUILD.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/ZERO_CHECK.dir
