@@ -7,14 +7,27 @@ class FD3D12Adapter
 {
 public:
 
-	IDXGIAdapter1* GetD3D12Adapter() const;
+	FD3D12Adapter(const bool bInRequestHighPerformanceAdapter);
+	~FD3D12Adapter();
 
-	FD3D12Adapter(IDXGIFactory1& Factory, const bool bRequestHighPerformanceAdapter);
-	void CreateDevice();
+	void Init();
+
+	FD3D12Device* GetDevice()
+	{
+		return Device;
+	}
+
+	IDXGIAdapter1* GetD3DAdapter()
+	{
+		return D3DAdapter.Get();
+	}
+
 
 private:
 
-	ComPtr<IDXGIAdapter1> Adapter;
+	ComPtr<IDXGIAdapter1> D3DAdapter;
 	FD3D12Device* Device;
+
+	bool bRequestHighPerformanceAdapter;
 };
 

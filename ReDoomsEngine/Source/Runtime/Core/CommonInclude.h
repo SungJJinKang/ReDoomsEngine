@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef UNICODE
+#error "ReDoomsEngine requires unicode"
+#endif
+
 #include "MemoryCore.h"
 
 #include "combaseapi.h"
@@ -7,8 +11,7 @@
 #include "wrl/client.h"
 using namespace Microsoft::WRL;
 
-// EASTL
-
+// STL
 #include "EABase/eabase.h"
 #include "EAAssert/eaassert.h"
 #include "EABase/earesult.h"
@@ -26,7 +29,6 @@ using namespace Microsoft::WRL;
 #include "EASTL/shared_ptr.h"
 #include "eathread/eathread_futex.h"
 
-#include "Log.h"// Math
 // Math
 #include "DirectXMath.h"
 #include "DirectXCollision.h"

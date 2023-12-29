@@ -1,4 +1,5 @@
 #include "Log.h"
+#include "CommonInclude.h"
 
 const wchar_t* redooms::log::LogVerbosityToString(const ELogVerbosity LogVerbosity)
 {
@@ -17,16 +18,19 @@ const wchar_t* redooms::log::LogVerbosityToString(const ELogVerbosity LogVerbosi
 	}
 }
 
-void redooms::log::LogInternal(const ELogVerbosity LogVerbosity, const char* const FilePath, const uint32_t CodeLine, const wchar_t* const Format, ...)
+void redooms::log::LogInternal(const ELogVerbosity LogVerbosity, const char* const FilePath, const unsigned int CodeLine, const wchar_t* const Format, ...)
 {
-	va_list Args;
-	va_start(Args, Format);
+	if (IsDebuggerPresent())
+	{
+		va_list Args;
+		va_start(Args, Format);
 
-	wchar_t StringBuffer[1024];
-	EA::StdC::Vsprintf(StringBuffer, Format, Args);
-	EA::StdC::Printf(EA_WCHAR("%s : %s (FilePath : %s, CodeLine : %d)"), LogVerbosityToString(LogVerbosity), StringBuffer, FilePath, CodeLine);
-	va_end(Args);
-
+		wchar_t StringBuffer[1024];
+		const int LogLength = EA::StdC::Vsnprintf(StringBuffer, 1024, Format, Args);
+		EA::StdC::Snprintf(StringBuffer + LogLength, 1024 - LogLength, EA_WCHAR(" (LogVerbosity : %s)\n"), LogVerbosityToString(LogVerbosity));
+		OutputDebugString(StringBuffer);
+		va_end(Args);
+	}
 
 	if (LogVerbosity == ELogVerbosity::Error)
 	{

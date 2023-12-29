@@ -69,7 +69,7 @@
     <ClCompile Include="Source\Runtime\D3D12\D3D12Assert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\Window.cpp">
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Runtime\Core\Commandline.cpp">
@@ -85,6 +85,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Runtime\Core\MemoryCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Swapchain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Core\WindowsApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -908,7 +917,7 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12Assert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\Window.h">
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Core\Commandline.h">
@@ -950,8 +959,49 @@
     <ClInclude Include="Source\Runtime\Core\MemoryCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Swapchain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Core\WindowsApplication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXColors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathConvert.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathMatrix.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathMisc.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathVector.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -92,8 +92,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;EA_DEBUG;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -111,8 +112,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -130,8 +132,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;EA_DEBUG;_HAS_EXCEPTIONS=0;MIMALLOC_VERBOSE=1</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,8 +152,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,6 +167,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Shader.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Swapchain.cpp" />
     <ClCompile Include="Source\Runtime\Core\MemoryCore.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Fence.cpp" />
     <ClCompile Include="Source\Runtime\Core\Parse.cpp" />
@@ -176,7 +182,7 @@
     <ClCompile Include="Source\Runtime\D3D12\D3D12Device.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Manager.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\Runtime\Rendering\Window.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Window.cpp" />
     <ClCompile Include="Source\Runtime\STL\EASTL\source\allocator_eastl.cpp" />
     <ClCompile Include="Source\Runtime\STL\EASTL\source\assert.cpp" />
     <ClCompile Include="Source\Runtime\STL\EASTL\source\atomic.cpp" />
@@ -187,11 +193,18 @@
     <ClCompile Include="Source\Runtime\STL\EASTL\source\red_black_tree.cpp" />
     <ClCompile Include="Source\Runtime\STL\EASTL\source\string.cpp" />
     <ClCompile Include="Source\Runtime\STL\EASTL\source\thread_support.cpp" />
+    <ClCompile Include="Source\Runtime\Core\WindowsApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Shader.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Swapchain.h" />
     <ClInclude Include="Source\Runtime\Core\MemoryCore.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Fence.h" />
     <ClInclude Include="Source\Runtime\Core\Parse.h" />
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.h" />
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXColors.h" />
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMath.h" />
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.h" />
     <ClInclude Include="Source\Runtime\Rendering\RendererManager.h" />
     <ClInclude Include="Source\Runtime\Core\Commandline.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Assert.h" />
@@ -207,7 +220,7 @@
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcapi.h" />
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcerrors.h" />
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcisense.h" />
-    <ClInclude Include="Source\Runtime\Rendering\Window.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Window.h" />
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\algorithm.h" />
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\allocator.h" />
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\allocator_malloc.h" />
@@ -476,9 +489,18 @@
     <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\prim.h" />
     <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\track.h" />
     <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\types.h" />
+    <ClInclude Include="Source\Runtime\Core\WindowsApplication.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.inl" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathConvert.inl" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathMatrix.inl" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathMisc.inl" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathVector.inl" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
