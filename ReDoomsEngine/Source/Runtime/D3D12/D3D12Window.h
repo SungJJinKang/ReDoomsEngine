@@ -10,7 +10,7 @@ public:
 	void Init();
 
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-	inline HWND GetWindowHandle()
+	inline HWND GetWindowHandle() const
 	{
 		EA_ASSERT(WindowHandle);
 		return WindowHandle;

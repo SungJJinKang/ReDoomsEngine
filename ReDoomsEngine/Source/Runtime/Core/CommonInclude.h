@@ -9,7 +9,7 @@
 #include "combaseapi.h"
 
 #include "wrl/client.h"
-using namespace Microsoft::WRL;
+using Microsoft::WRL::ComPtr;
 
 // STL
 #include "EABase/eabase.h"
@@ -18,8 +18,10 @@ using namespace Microsoft::WRL;
 #include "EAStdC/EASingleton.h"
 #include "EAStdC/EAMemory.h"
 #include "EAStdC/EASprintf.h"
+#include "EAStdC/EAString.h"
 #include "EAStdC/EATextUtil.h"
 #include "EAStdC/EACType.h"
+#include "EASTL/array.h"
 #include "EASTL/string.h"
 #include "EASTL/fixed_string.h"
 #include "EASTL/vector.h"
@@ -27,6 +29,7 @@ using namespace Microsoft::WRL;
 #include "EASTL/vector_set.h"
 #include "EASTL/unique_ptr.h"
 #include "EASTL/shared_ptr.h"
+#include "EASTL/bitvector.h"
 #include "eathread/eathread_futex.h"
 
 // Math
@@ -36,4 +39,3 @@ using namespace Microsoft::WRL;
 #include "DirectXPackedVector.h"
 
 #include "Log.h"
-#include "WindowsApplication.h"

@@ -31,7 +31,8 @@
 *.out
 *.app
 
+*.tlog
 *.pdb
-
 *.ipch
 ReDoomsEngine/.vs/ReDoomsEngine/v17
+ReDoomsEngine/x64

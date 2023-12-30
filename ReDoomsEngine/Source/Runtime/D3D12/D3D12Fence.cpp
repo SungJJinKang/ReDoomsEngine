@@ -4,28 +4,19 @@
 #include "D3D12Fence.h"
 #include "D3D12CommandQueue.h"
 
-FD3D12Fence::FD3D12Fence()
+void FD3D12Fence::CreateD3DFence()
 {
+	CreateD3DFence(EA_WCHAR("Unnamed"));
 }
 
-FD3D12Fence::FD3D12Fence(FD3D12Device* const InDevice)
+void FD3D12Fence::CreateD3DFence(const eastl::wstring& InDebugName)
 {
-	CreateD3DFence(InDevice);
-}
-
-FD3D12Fence::FD3D12Fence(FD3D12Device* const InDevice, const eastl::wstring& InDebugName)
-{
-	CreateD3DFence(InDevice);
-	SetDebugNameToFence(InDebugName);
-}
-
-void FD3D12Fence::CreateD3DFence(FD3D12Device* const InDevice)
-{
-	VERIFYD3D12RESULT(InDevice->GetD3D12Device()->CreateFence(
+	VERIFYD3D12RESULT(FD3D12Device::GetInstance()->GetD3D12Device()->CreateFence(
 		0,
 		D3D12_FENCE_FLAG_NONE,
 		IID_PPV_ARGS(&D3DFence)
 	));
+	SetDebugNameToFence(InDebugName);
 }
 
 void FD3D12Fence::SetDebugNameToFence(const eastl::wstring& InDebugName)

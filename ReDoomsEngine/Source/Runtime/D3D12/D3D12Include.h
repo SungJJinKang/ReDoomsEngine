@@ -5,3 +5,4 @@
 #include <dxgidebug.h>
 
 #include "D3D12Assert.h"
+#include "D3D12Enums.h"

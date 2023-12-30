@@ -4,6 +4,8 @@
 #include "D3D12Device.h"
 #include "D3D12Window.h"
 #include "D3D12Swapchain.h"
+#include "D3D12Descriptor.h"
+#include "D3D12Shader.h"
 
 static const uint32_t GNumBackBufferCount = 3;
 static const int32_t GWindowWidth = 1024;
@@ -15,23 +17,12 @@ FD3D12Manager::FD3D12Manager(const bool bInEnableDebugLayer)
 {
 }
 
-FD3D12Manager::~FD3D12Manager()
-{
-    if (D3D12Window)
-    {
-        delete D3D12Window;
-    }
-
-    if (ChoosenAdapter)
-    {
-        delete ChoosenAdapter;
-    }
-}
+FD3D12Manager::~FD3D12Manager() = default;
 
 void FD3D12Manager::Init()
 {
     {
-        D3D12Window = new FD3D12Window(GWindowWidth, GWindowHeight, EA_WCHAR("ReDoomsEngine"));
+        D3D12Window = eastl::make_unique<FD3D12Window>(GWindowWidth, GWindowHeight, EA_WCHAR("ReDoomsEngine"));
         D3D12Window->Init();
     }
 
@@ -58,13 +49,22 @@ void FD3D12Manager::Init()
     }
 
     {
-        ChoosenAdapter = new FD3D12Adapter(true);
+        ChoosenAdapter = eastl::make_unique<FD3D12Adapter>(true);
         ChoosenAdapter->Init();
     }
 
     {
-        Swapchain = new FD3D12Swapchain(GetChoosenAdapter()->GetDevice()->GetCommandQueue(ED3D12QueueType::Direct),
-            D3D12Window, GNumBackBufferCount, GWindowWidth, GWindowHeight, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT);
+        Swapchain = eastl::make_unique<FD3D12Swapchain> (GetChoosenAdapter()->GetDevice()->GetCommandQueue(ED3D12QueueType::Direct),
+            D3D12Window.get(), GNumBackBufferCount, GWindowWidth, GWindowHeight, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT);
         Swapchain->Init();
+    }
+
+    {
+        D3D12OnlineDescriptorHeapManager = eastl::make_unique<FD3D12OnlineDescriptorHeapManager>();
+        D3D12OnlineDescriptorHeapManager->Init();
+
+
+        D3D12OfflineDescriptorHeapManager = eastl::make_unique<FD3D12OfflineDescriptorHeapManager>();
+        D3D12OfflineDescriptorHeapManager->Init();
     }
 }

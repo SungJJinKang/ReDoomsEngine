@@ -10,15 +10,20 @@ public:
 
 	FD3D12Swapchain(FD3D12CommandQueue* const InCommandQueue, FD3D12Window* const InWindow, const uint32_t InNumBuffer, const uint32_t InWidth, const uint32_t InHeight, const DXGI_FORMAT InFormat);
 	void Init();
-	IDXGISwapChain1* GetD3DSwapchain()
+	IDXGISwapChain3* GetD3DSwapchain() const
 	{
 		return D3DSwapchain.Get();
 	}
 
 	void Present(const int32_t SyncInterval);
+	void UpdateCurrentBackbufferIndex();
+	uint32_t GetCurrentBackbufferIndex() const
+	{
+		return CurrentBackbufferIndex;
+	}
 
 private:
-	ComPtr<IDXGISwapChain1> D3DSwapchain;
+	ComPtr<IDXGISwapChain3> D3DSwapchain;
 
 	FD3D12CommandQueue* CommandQueue;
 	FD3D12Window* Window;
@@ -26,5 +31,7 @@ private:
 	uint32_t Width;
 	uint32_t Height;
 	DXGI_FORMAT Format;
+
+	uint32_t CurrentBackbufferIndex;
 };
 

@@ -3,7 +3,7 @@
 #include "D3D12Manager.h"
 #include "D3D12Window.h"
 
-class FRendererManager
+class FRendererManager : public EA::StdC::Singleton<FRendererManager>
 {
 public:
 
