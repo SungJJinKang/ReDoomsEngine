@@ -18,7 +18,7 @@ const wchar_t* redooms::log::LogVerbosityToString(const ELogVerbosity LogVerbosi
 	}
 }
 
-void redooms::log::LogInternal(const ELogVerbosity LogVerbosity, const char* const FilePath, const unsigned int CodeLine, const wchar_t* const Format, ...)
+void redooms::log::LogInternal(const ELogVerbosity LogVerbosity, const wchar_t* const FilePath, const unsigned int CodeLine, const wchar_t* const Format, ...)
 {
 	if (IsDebuggerPresent())
 	{

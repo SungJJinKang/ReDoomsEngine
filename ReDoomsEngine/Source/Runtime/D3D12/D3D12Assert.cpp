@@ -44,7 +44,7 @@ eastl::wstring d3d12::assert::GetD3D12ErrorString(HRESULT Result)
 	return ErrorCodeText;
 }
 
-void d3d12::assert::VerifyD3D12Result(HRESULT Result, const wchar_t* const Statement, const char* const FilePath, const uint32_t CodeLine)
+void d3d12::assert::D3D12CallFail(HRESULT Result, const wchar_t* const Statement, const wchar_t* const FilePath, const uint32_t CodeLine)
 {
 	EA::Thread::AutoFutex AutoFutex{ VerifyD3D12ResultFutex };
 

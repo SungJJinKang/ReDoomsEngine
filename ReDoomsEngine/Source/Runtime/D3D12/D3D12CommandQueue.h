@@ -21,16 +21,17 @@ class FD3D12CommandQueue
 {
 public:
 
-	FD3D12CommandQueue(FD3D12Device* const InDevice, const ED3D12QueueType InQueueType);
+	FD3D12CommandQueue(const ED3D12QueueType InQueueType);
 	void Init();
 	void WaitForCompletion();
-	ID3D12CommandQueue* GetD3DCommandQueue()
+	ID3D12CommandQueue* GetD3DCommandQueue() const
 	{
+		EA_ASSERT(D3DCommandQueue.Get());
 		return D3DCommandQueue.Get();
 	}
 
 private:
-	FD3D12Device* const Device;
+
 	ED3D12QueueType QueueType;
 	ComPtr<ID3D12CommandQueue> D3DCommandQueue;
 

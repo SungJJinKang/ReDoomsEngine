@@ -13,9 +13,20 @@ public:
 
 	void Init();
 
-	FD3D12Adapter* GetAdapter();
-	ID3D12Device* GetD3D12Device();
-	FD3D12CommandQueue* GetCommandQueue(const ED3D12QueueType QueueType);
+	FD3D12Adapter* GetAdapter() const
+	{
+		return Adapter;
+	}
+
+	ID3D12Device* GetD3D12Device() const
+	{
+		return D3DDevice.Get();
+	}
+
+	FD3D12CommandQueue* GetCommandQueue(const ED3D12QueueType QueueType)
+	{
+		return &CommandQueueList[static_cast<uint64_t>(QueueType)];
+	}
 
 
 private:
@@ -25,6 +36,3 @@ private:
 
 	eastl::vector<FD3D12CommandQueue> CommandQueueList;
 };
-
-FD3D12Device* GetD3D12Device();
-FD3D12Adapter* GetD3D12ChosenAdapter();

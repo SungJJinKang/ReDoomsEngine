@@ -1,4 +1,5 @@
 #include "D3D12Window.h"
+#include "WindowsApplication.h"
 
 FD3D12Window::FD3D12Window(const long InWidth, const long InHeight, const wchar_t* const InWindowTitle)
     :

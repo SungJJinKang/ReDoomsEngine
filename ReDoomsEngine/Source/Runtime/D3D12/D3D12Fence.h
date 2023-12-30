@@ -8,13 +8,10 @@ class FD3D12Fence
 {
 public:
 
-	FD3D12Fence();
-	FD3D12Fence(FD3D12Device* const InDevice);
-	FD3D12Fence(FD3D12Device* const InDevice, const eastl::wstring& InDebugName);
-
-	void CreateD3DFence(FD3D12Device* const InDevice);
+	void CreateD3DFence();
+	void CreateD3DFence(const eastl::wstring& InDebugName);
 	void SetDebugNameToFence(const eastl::wstring& InDebugName);
-	ID3D12Fence* GetD3DFence()
+	ID3D12Fence* GetD3DFence() const
 	{
 		return D3DFence.Get();
 	}

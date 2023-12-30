@@ -14,11 +14,13 @@ public:
 
 	FD3D12Device* GetDevice()
 	{
+		EA_ASSERT(Device);
 		return Device;
 	}
 
 	IDXGIAdapter1* GetD3DAdapter()
 	{
+		EA_ASSERT(D3DAdapter.Get());
 		return D3DAdapter.Get();
 	}
 

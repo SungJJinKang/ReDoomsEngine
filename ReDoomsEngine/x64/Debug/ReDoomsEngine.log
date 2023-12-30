@@ -1,3 +1,0 @@
-﻿cl : command line warning D9002: ignoring unknown option '/arch:SSE2'
-  D3D12Manager.cpp
-  ReDoomsEngine.vcxproj -> C:\ReDoomsEngine\ReDoomsEngine\x64\Debug\ReDoomsEngine.exe

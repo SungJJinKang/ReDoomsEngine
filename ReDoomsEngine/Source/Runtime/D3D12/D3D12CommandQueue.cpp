@@ -24,22 +24,24 @@ const wchar_t* GetD3D12QueueTypeString(ED3D12QueueType QueueType)
 }
 
 
-FD3D12CommandQueue::FD3D12CommandQueue(FD3D12Device* const InDevice, const ED3D12QueueType InQueueType)
-	: Device(InDevice), QueueType(InQueueType), D3DCommandQueue(), Fence()
+FD3D12CommandQueue::FD3D12CommandQueue(const ED3D12QueueType InQueueType)
+	: QueueType(InQueueType), D3DCommandQueue(), Fence()
 {
 }
 
 void FD3D12CommandQueue::Init()
 {
+	EA_ASSERT(D3DCommandQueue.Get() == nullptr);
+
 	D3D12_COMMAND_QUEUE_DESC CommandQueueDesc = {};
 	CommandQueueDesc.Type = GetD3D12CommandListType((ED3D12QueueType)QueueType);
 	CommandQueueDesc.Priority = 0;
 	CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 
-	VERIFYD3D12RESULT(Device->GetD3D12Device()->CreateCommandQueue(&CommandQueueDesc, IID_PPV_ARGS(&D3DCommandQueue)));
+	VERIFYD3D12RESULT(FD3D12Device::GetInstance()->GetD3D12Device()->CreateCommandQueue(&CommandQueueDesc, IID_PPV_ARGS(&D3DCommandQueue)));
 	D3DCommandQueue->SetName(eastl::wstring{ eastl::wstring::CtorSprintf(), EA_WCHAR("%s Queue"), GetD3D12QueueTypeString(QueueType) }.c_str());
 
-	Fence.CreateD3DFence(Device);
+	Fence.CreateD3DFence();
 	Fence.SetDebugNameToFence(eastl::wstring{ eastl::wstring::CtorSprintf(), EA_WCHAR("%s Queue Fence"), GetD3D12QueueTypeString(QueueType) }.c_str());
 }
 
