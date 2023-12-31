@@ -2,6 +2,30 @@
 #include "CommonInclude.h"
 #include "ShaderCompilers/ShaderCompileStructs.h"
 
+struct FD3D12ShaderReflectionData
+{
+	D3D12_SHADER_DESC ShaderDesc;
+
+	// Input Elements
+	D3D12_INPUT_LAYOUT_DESC InputLayoutDesc;
+	eastl::vector<D3D12_INPUT_ELEMENT_DESC> InputElementDescList;
+	eastl::vector<eastl::string> InputElementSemanticNameList;
+
+	/*
+	// Output Elements
+	D3D12_INPUT_LAYOUT_DESC OutputLayoutDesc;
+	eastl::vector<D3D12_OUTPUT_ELEMENT_DESC> OutputElementDescList;
+	eastl::vector<eastl::string> OutputElementSemanticNameList;
+	*/
+
+	// A Constant buffer info is stored at the same pos(index) in ConstantBufferResourceBindingDescList and ConstantBufferDescList
+	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> ConstantBufferResourceBindingDescList;
+	eastl::vector<D3D12_SHADER_BUFFER_DESC> ConstantBufferDescList;
+
+	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> TextureResourceBindingDescList;
+	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> SamplerResourceBindingDescList;
+};
+
 class FD3D12Shader
 {
 public:
@@ -14,6 +38,7 @@ public:
 		const uint64_t InShaderCompileFlags, const char* const InAdditionalPreprocessorDefine ...);
 
 	void SetShaderCompileResult(const FShaderCompileResult& InShaderCompileResult);
+	void OnFinishShaderCompile();
 
 	const FShaderDeclaration& GetShaderDeclaration() const
 	{
@@ -38,8 +63,11 @@ public:
 
 private:
 
+	void PopulateShaderReflectionData();
+
 	FShaderDeclaration ShaderDeclaration; // ShaderCompileResult variable also contains ShaderDeclaration same with this variable. 
 	FShaderCompileResult ShaderCompileResult;
+	FD3D12ShaderReflectionData ShaderReflectionData;
 };
 
 // TODO) Need to support permutation?

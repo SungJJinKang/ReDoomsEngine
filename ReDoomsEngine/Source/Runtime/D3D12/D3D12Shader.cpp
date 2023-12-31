@@ -10,7 +10,8 @@ FD3D12Shader::FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* con
 	const char* const InAdditionalPreprocessorDefine ...)
 	:
 	ShaderDeclaration(),
-	ShaderCompileResult()
+	ShaderCompileResult(),
+	ShaderReflectionData()
 {
 	ShaderDeclaration.ShaderName = InShaderName;
 	ShaderDeclaration.ShaderTextFileRelativePath = InShaderTextFileRelativePath;
@@ -62,6 +63,112 @@ void FD3D12Shader::SetShaderCompileResult(const FShaderCompileResult& InShaderCo
 	ShaderCompileResult = InShaderCompileResult;
 }
 
+void FD3D12Shader::OnFinishShaderCompile()
+{
+	EA_ASSERT(!ShaderCompileResult.bIsValid);
+
+
+}
+
+void FD3D12Shader::PopulateShaderReflectionData()
+{
+	// ref https://rtarun9.github.io/blogs/shader_reflection/
+
+	ID3D12ShaderReflection& D3D12ShaderReflection = *(ShaderCompileResult.DxcContainerReflection.Get());\
+
+	{
+		D3D12ShaderReflection.GetDesc(&ShaderReflectionData.ShaderDesc);
+	}
+	
+	{
+		for (uint32_t InputParameterIndex = 0; InputParameterIndex < ShaderReflectionData.ShaderDesc.InputParameters; ++InputParameterIndex)
+		{
+			D3D12_SIGNATURE_PARAMETER_DESC SignatureParameterDesc{};
+			D3D12ShaderReflection.GetInputParameterDesc(InputParameterIndex, &SignatureParameterDesc);
+
+			// Using the semantic name provided by the signatureParameterDesc directly to the input element desc will cause the SemanticName field to have garbage values.
+			// This is because the SemanticName filed is a const wchar_t*. I am using a separate std::vector<std::string> for simplicity.
+			ShaderReflectionData.InputElementSemanticNameList.emplace_back(SignatureParameterDesc.SemanticName);
+
+			D3D12_INPUT_ELEMENT_DESC InputElementDesc{};
+			InputElementDesc.SemanticName = ShaderReflectionData.InputElementSemanticNameList.back().c_str();
+			InputElementDesc.SemanticIndex = SignatureParameterDesc.SemanticIndex;
+			InputElementDesc.Format = static_cast<DXGI_FORMAT>(SignatureParameterDesc.Mask);
+			InputElementDesc.InputSlot = 0u;
+			InputElementDesc.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+			InputElementDesc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+			// There doesn't seem to be a obvious way to 
+			// automate this currently, which might be a issue when instanced rendering is used 😩
+			InputElementDesc.InstanceDataStepRate = 0u;
+			ShaderReflectionData.InputElementDescList.emplace_back(InputElementDesc);
+		}
+
+		ShaderReflectionData.InputLayoutDesc.pInputElementDescs = ShaderReflectionData.InputElementDescList.data();
+		ShaderReflectionData.InputLayoutDesc.NumElements = ShaderReflectionData.InputElementDescList.size();
+	}
+	
+	/*
+	{
+		for (uint32_t OutputParameterIndex = 0; OutputParameterIndex < ShaderReflectionData.ShaderDesc.InputParameters; ++OutputParameterIndex)
+		{
+			D3D12_SIGNATURE_PARAMETER_DESC SignatureParameterDesc{};
+			D3D12ShaderReflection.GetOutputParameterDesc(OutputParameterIndex, &SignatureParameterDesc);
+
+			// Using the semantic name provided by the signatureParameterDesc directly to the input element desc will cause the SemanticName field to have garbage values.
+			// This is because the SemanticName filed is a const wchar_t*. I am using a separate std::vector<std::string> for simplicity.
+			ShaderReflectionData.InputElementSemanticNameList.emplace_back(SignatureParameterDesc.SemanticName);
+
+			D3D12_INPUT_ELEMENT_DESC InputElementDesc{};
+			InputElementDesc.SemanticName = ShaderReflectionData.InputElementSemanticNameList.back().c_str();
+			InputElementDesc.SemanticIndex = SignatureParameterDesc.SemanticIndex;
+			InputElementDesc.Format = static_cast<DXGI_FORMAT>(SignatureParameterDesc.Mask);
+			InputElementDesc.InputSlot = 0u;
+			InputElementDesc.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+			InputElementDesc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+			// There doesn't seem to be a obvious way to 
+			// automate this currently, which might be a issue when instanced rendering is used 😩
+			InputElementDesc.InstanceDataStepRate = 0u;
+			ShaderReflectionData.InputElementDescList.emplace_back(InputElementDesc);
+		}
+
+		ShaderReflectionData.InputLayoutDesc.pInputElementDescs = ShaderReflectionData.InputElementDescList.data();
+		ShaderReflectionData.InputLayoutDesc.NumElements = ShaderReflectionData.InputElementDescList.size();
+	}
+	*/
+
+	{
+		for (uint32_t BoundResourceIndex = 0; BoundResourceIndex < ShaderReflectionData.ShaderDesc.BoundResources; ++BoundResourceIndex)
+		{
+			D3D12_SHADER_INPUT_BIND_DESC ResourceBindingDesc{};
+			VERIFYD3D12RESULT(D3D12ShaderReflection.GetResourceBindingDesc(BoundResourceIndex, &ResourceBindingDesc));
+
+			if (ResourceBindingDesc.Type == D3D_SIT_CBUFFER)
+			{
+				ID3D12ShaderReflectionConstantBuffer* ShaderReflectionConstantBuffer = D3D12ShaderReflection.GetConstantBufferByIndex(BoundResourceIndex);
+				D3D12_SHADER_BUFFER_DESC ConstantBufferDesc{};
+				ShaderReflectionConstantBuffer->GetDesc(&ConstantBufferDesc);
+
+				ShaderReflectionData.ConstantBufferResourceBindingDescList.emplace_back(ResourceBindingDesc);
+				ShaderReflectionData.ConstantBufferDescList.emplace_back(ConstantBufferDesc);
+			}
+			else if (ResourceBindingDesc.Type == D3D_SIT_TEXTURE)
+			{
+				ShaderReflectionData.TextureResourceBindingDescList.emplace_back(ResourceBindingDesc);
+			}
+			else if (ResourceBindingDesc.Type == D3D_SIT_SAMPLER)
+			{
+				ShaderReflectionData.SamplerResourceBindingDescList.emplace_back(ResourceBindingDesc);
+			}
+			else
+			{
+				EA_ASSERT(false);
+			}
+
+			
+		}
+	}
+}
+
 void FD3D12ShaderManager::Init()
 {
 	CompileAllPendingShader();
@@ -95,6 +202,8 @@ bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12Shader& Shader, const FSh
 
 			RD_LOG(ELogVerbosity::Log, EA_WCHAR("Shader Compile Success : %s %s %s"), Shader.GetShaderDeclaration().ShaderName,
 				Shader.GetShaderDeclaration().ShaderTextFileRelativePath, GetShaderFrequencyString(Shader.GetShaderDeclaration().ShaderFrequency));
+
+			Shader.OnFinishShaderCompile();
 		}
 	}
 	return bIsSuccess;
