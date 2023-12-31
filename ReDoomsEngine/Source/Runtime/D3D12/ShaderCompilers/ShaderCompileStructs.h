@@ -19,7 +19,7 @@ enum EShaderCompileFlag : uint64_t
 struct FShaderDeclaration
 {
 	const wchar_t* ShaderName;
-	const wchar_t* ShaderTextFilePath;
+	const wchar_t* ShaderTextFileRelativePath;
 
 	const wchar_t* ShaderEntryPoint;
 	EShaderFrequency ShaderFrequency;
@@ -49,18 +49,18 @@ struct FShaderCompileArguments
 
 	// Below data is set from FD3D12Shader
 	FShaderDeclaration ShaderDeclaration{};
-	const char* ShaderText = nullptr;
+	eastl::u8string_view ShaderText{};
 	uint64_t ShaderTextLength = 0;
 
 	// Below datas is set from shader compiler
 	EOptimizationLevel OptimizationLevel = EOptimizationLevel::DisableOptimization;
-	EWarningLevel WarningLevel = EWarningLevel::W1;
+	EWarningLevel WarningLevel = EWarningLevel::W0;
 	bool bGenerateDebugInformation = false;
 	bool bWarningAsError = false;
 	bool bGenerateSymbols = false;
 
 	static const wchar_t* ConvertShaderFrequencyToShaderProfile(const EShaderFrequency InShaderFrequency);
-	static FShaderPreprocessorDefine ParseDefineStr(const wchar_t* const Str);
+	static FShaderPreprocessorDefine ParseDefineStr(const char* const Str);
 };
 
 #define SHADER_HASH_SIZE 16

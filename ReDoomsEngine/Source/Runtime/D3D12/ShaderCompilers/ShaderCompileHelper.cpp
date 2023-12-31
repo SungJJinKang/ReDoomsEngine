@@ -33,13 +33,14 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 {
 	ComPtr<IDxcBlobEncoding> DxcTextBlob{};
 
+	EA_ASSERT(!InShaderCompileArguments.ShaderText.empty());
 	if (InShaderCompileArguments.ShaderTextLength == 0)
 	{
-		InShaderCompileArguments.ShaderTextLength = EA::StdC::Strlen(InShaderCompileArguments.ShaderText);
+		InShaderCompileArguments.ShaderTextLength = InShaderCompileArguments.ShaderText.size();
 	}
 
-	VERIFYD3D12RESULT(GetDxcLibrary()->CreateBlobWithEncodingFromPinned((LPCVOID)InShaderCompileArguments.ShaderText,
-		InShaderCompileArguments.ShaderTextLength, CP_UTF8, DxcTextBlob.GetAddressOf()));
+	VERIFYD3D12RESULT(GetDxcLibrary()->CreateBlobWithEncodingFromPinned((LPCVOID)InShaderCompileArguments.ShaderText.data(),
+		InShaderCompileArguments.ShaderTextLength, DXC_CP_UTF8, DxcTextBlob.GetAddressOf()));
 
 	eastl::vector<const wchar_t*> Arguments{};
 	{
@@ -107,10 +108,11 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 		}
 
 		Arguments.emplace_back(DXC_ARG_DEBUG_NAME_FOR_SOURCE); // this is required for DXC_OUT_SHADER_HASH
+		Arguments.emplace_back(EA_WCHAR("-Zi"));
+
 		if (InShaderCompileArguments.bGenerateSymbols)
 		{
 			Arguments.emplace_back(EA_WCHAR("-Qembed_debug"));
-			Arguments.emplace_back(EA_WCHAR("-Zi"));
 
 			Arguments.emplace_back(EA_WCHAR("-Fd"));
 			Arguments.emplace_back(EA_WCHAR(".\\"));
@@ -137,7 +139,7 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 		Define.Value = Definition.Value.c_str();
 	}
 
-	VERIFYD3D12RESULT(GetDxcUtiles()->BuildArguments(InShaderCompileArguments.ShaderDeclaration.ShaderTextFilePath,
+	VERIFYD3D12RESULT(GetDxcUtiles()->BuildArguments(InShaderCompileArguments.ShaderDeclaration.ShaderTextFileRelativePath,
 		InShaderCompileArguments.ShaderDeclaration.ShaderEntryPoint,
 		FShaderCompileArguments::ConvertShaderFrequencyToShaderProfile(InShaderCompileArguments.ShaderDeclaration.ShaderFrequency),
 		Arguments.data(),
@@ -210,11 +212,26 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 	else
 	{
 		ComPtr<IDxcBlobEncoding> ErrorBuffer{};
-		
+
+		EA_ASSERT(DxcResult->HasOutput(DXC_OUT_KIND::DXC_OUT_ERRORS));
 		VERIFYD3D12RESULT(DxcResult->GetErrorBuffer(ErrorBuffer.GetAddressOf()));
 
-		eastl::wstring ErrorStr{ reinterpret_cast<const wchar_t*>(ErrorBuffer->GetBufferPointer()), ErrorBuffer->GetBufferSize() };
-		RD_LOG(ELogVerbosity::Fatal, EA_WCHAR("Shader Compile Fail! : %s"), ErrorStr.c_str());
+		
+
+		eastl::string8 ErrorStr{ reinterpret_cast<const char8_t*>(ErrorBuffer->GetBufferPointer()), ErrorBuffer->GetBufferSize()};
+		RD_LOG(ELogVerbosity::Fatal, EA_WCHAR("\
+------------------------------------\n \
+- Shader Compile Fail -\n \
+ShaderName : %s\n \
+ShaderPath : %s\n \
+ShaderFrequency : %s\n \
+Reason :\n\n \
+%s\n \
+------------------------------------"), 
+			InShaderCompileArguments.ShaderDeclaration.ShaderName,
+			InShaderCompileArguments.ShaderDeclaration.ShaderTextFileRelativePath,
+			GetShaderFrequencyString(InShaderCompileArguments.ShaderDeclaration.ShaderFrequency),
+			UTF8_TO_WCHAR(ErrorStr.c_str()));
 
 		ShaderCompileResult.bIsValid = false;
 	}

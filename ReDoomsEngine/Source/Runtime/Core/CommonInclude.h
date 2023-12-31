@@ -39,3 +39,4 @@ using Microsoft::WRL::ComPtr;
 #include "DirectXPackedVector.h"
 
 #include "Log.h"
+#include "TextHelper.h"
