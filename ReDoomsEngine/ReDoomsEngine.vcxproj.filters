@@ -126,6 +126,9 @@
     <ClCompile Include="Source\Runtime\D3D12\D3D12PSO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Enums.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
@@ -1043,6 +1046,9 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12PSO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Runtime\Core\TextHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
@@ -1068,6 +1074,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Asset\Shader\HelloTriangle.hlsl" />
+    <FxCompile Include="Assets\Shader\HelloTriangle.hlsl" />
   </ItemGroup>
 </Project>

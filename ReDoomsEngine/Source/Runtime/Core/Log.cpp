@@ -18,6 +18,8 @@ const wchar_t* redooms::log::LogVerbosityToString(const ELogVerbosity LogVerbosi
 	}
 }
 
+#define LOG_STRING_BUFFER_LENGTH 2048
+
 void redooms::log::LogInternal(const ELogVerbosity LogVerbosity, const wchar_t* const FilePath, const unsigned int CodeLine, const wchar_t* const Format, ...)
 {
 	if (IsDebuggerPresent())
@@ -25,9 +27,11 @@ void redooms::log::LogInternal(const ELogVerbosity LogVerbosity, const wchar_t* 
 		va_list Args;
 		va_start(Args, Format);
 
-		wchar_t StringBuffer[1024];
-		const int LogLength = EA::StdC::Vsnprintf(StringBuffer, 1024, Format, Args);
-		EA::StdC::Snprintf(StringBuffer + LogLength, 1024 - LogLength, EA_WCHAR(" (LogVerbosity : %s)\n"), LogVerbosityToString(LogVerbosity));
+		
+		wchar_t StringBuffer[LOG_STRING_BUFFER_LENGTH];
+		const int LogLength = EA::StdC::Vsnprintf(StringBuffer, LOG_STRING_BUFFER_LENGTH, Format, Args);
+		EA_ASSERT(LogLength < LOG_STRING_BUFFER_LENGTH);
+		EA::StdC::Snprintf(StringBuffer + LogLength, LOG_STRING_BUFFER_LENGTH - LogLength, EA_WCHAR(" (LogVerbosity : %s)\n"), LogVerbosityToString(LogVerbosity));
 		OutputDebugString(StringBuffer);
 		va_end(Args);
 	}

@@ -51,44 +51,67 @@ private:
 	eastl::bitvector<> FreeSlot;
 };
 
-struct FD3D12DescriptorHeapContainer
-{
-	eastl::vector<eastl::unique_ptr<FD3D12DescriptorHeap>> DescriptorHeapList;
-};
-
-class FD3D12DescriptorHeapManager
+class FD3D12DescriptorHeapContainer
 {
 public:
 
-	virtual void Init() = 0;
-
-	void CopyDescriotprFromOfflineHeapToOnlineHeap();
+	FD3D12DescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType, const D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, const uint32_t InNumDescriptor);
+	virtual void Init();
 
 protected:
 
-	eastl::vector<FD3D12DescriptorHeapContainer> DescriptorHeapPerType;
+	eastl::unique_ptr<FD3D12DescriptorHeap>& AllocateNewHeap();
+
+	D3D12_DESCRIPTOR_HEAP_TYPE HeapType;
+	D3D12_DESCRIPTOR_HEAP_FLAGS HeapFlag;
+	uint32_t NumDescriptor;
+	eastl::vector<eastl::unique_ptr<FD3D12DescriptorHeap>> DescriptorHeapList;
+
 };
 
 /// <summary>
 /// Manage shader visible descriotpr heap
 /// Have a large heap. If the heap is completely exhausted, we just assert it.
 /// </summary>
-class FD3D12OnlineDescriptorHeapManager : public FD3D12DescriptorHeapManager
+class FD3D12OnlineDescriptorHeapContainer : public FD3D12DescriptorHeapContainer
 {
 public:
 
+	FD3D12OnlineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType);
+	virtual void Init();
+
+private:
+
+	/// <summary>
+	/// Large Heap. Shader Visible Heap
+	/// </summary>
+	eastl::unique_ptr<FD3D12DescriptorHeap> DescriptorHeap;
+};
+
+
+
+class FD3D12OfflineDescriptorHeapContainer : public FD3D12DescriptorHeapContainer
+{
+public:
+
+	FD3D12OfflineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType);
 	virtual void Init();
 
 private:
 
 };
 
-class FD3D12OfflineDescriptorHeapManager : public FD3D12DescriptorHeapManager
+class FD3D12DescriptorHeapManager
 {
 public:
 
-	virtual void Init();
+	FD3D12DescriptorHeapManager();
+	void Init();
 
-private:
-
+	FD3D12OfflineDescriptorHeapContainer RTVDescriptorHeapContainer;
+	FD3D12OfflineDescriptorHeapContainer DSVDescriptorHeapContainer;
+	FD3D12OnlineDescriptorHeapContainer CbvSrvUavOnlineDescriptorHeapContainer;
+	FD3D12OfflineDescriptorHeapContainer CbvSrvUavOfflineDescriptorHeapContainer;
+	FD3D12OnlineDescriptorHeapContainer SamplerOnlineDescriptorHeapContainer;
+	FD3D12OfflineDescriptorHeapContainer SamplerOfflineDescriptorHeapContainer;
 };

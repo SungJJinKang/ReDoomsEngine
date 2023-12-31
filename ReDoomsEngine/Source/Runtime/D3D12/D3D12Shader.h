@@ -9,7 +9,7 @@ public:
 	FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFilePath,
 		const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency,
 		const uint64_t InShaderCompileFlags);
-	FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFilePath,
+	FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath,
 		const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, 
 		const uint64_t InShaderCompileFlags, const char* const InAdditionalPreprocessorDefine ...);
 
@@ -43,18 +43,27 @@ private:
 };
 
 // TODO) Need to support permutation?
-// Example 1 : DECLARE_SHADER(MotionBlurVS, "Asset/Shader/MotionBlur.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None, "EARLY_OUT", "FAST_PATH=1");
-// Example 2 : DECLARE_SHADER(MotionBlurPS, "Asset/Shader/MotionBlur.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None);
-#define DECLARE_SHADER(ShaderName, ShaderTextFilePath, ShaderEntryPoint, ShaderFrequency, ShaderCompileFlags, AdditionalPreprocessorDefine, ... /*Definitions*/) \
-	static FD3D12Shader D3D12Shader##ShaderName{EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFilePath), \
-		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags, AdditionalPreprocessorDefine, ##__VA_ARGS__ };
+// Example 1 : DECLARE_SHADER(MotionBlurVS, "MotionBlur.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None, "EARLY_OUT", "FAST_PATH=1");
+// Example 2 : DECLARE_SHADER(MotionBlurPS, "MotionBlur.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None);
+//
+// Parameters)
+// ShaderTextFileRelativePath : Shader file path relative to Asset/Shader
+#define DECLARE_SHADER(ShaderName, ShaderTextFileRelativePath, ShaderEntryPoint, ShaderFrequency, ShaderCompileFlags, AdditionalPreprocessorDefine, ... /*Definitions*/) \
+	FD3D12Shader D3D12Shader##ShaderName{EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \
+		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags, AdditionalPreprocessorDefine, ##__VA_ARGS__, NULL };
 
 class FD3D12ShaderManager : public EA::StdC::Singleton<FD3D12ShaderManager>
 {
 public:
 
+	void Init();
 	bool CompileAndAddNewShader(FD3D12Shader& Shader, const FShaderCompileArguments& InShaderCompileArguments);
+	void CompileAllPendingShader();
 
+	/// <summary>
+	/// FD3D12Shader objects created through "DECLARE_SHADER" macros is added to this list
+	/// </summary>
+	static eastl::vector<FD3D12Shader*>& GetCompilePendingShaderList();
 	static void AddCompilePendingShader(FD3D12Shader& CompilePendingShader);
 
 private:
@@ -64,8 +73,4 @@ private:
 	/// </summary>
 	eastl::vector<FD3D12Shader*> ShaderList;
 
-	/// <summary>
-	/// FD3D12Shader objects created through "DECLARE_SHADER" macros is added to this list
-	/// </summary>
-	static eastl::vector<FD3D12Shader*> CompilePendingShaderList;
 };

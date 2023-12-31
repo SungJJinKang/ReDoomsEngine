@@ -21,19 +21,19 @@ const wchar_t* FShaderCompileArguments::ConvertShaderFrequencyToShaderProfile(co
 	}
 }
 
-FShaderPreprocessorDefine FShaderCompileArguments::ParseDefineStr(const wchar_t* const Str)
+FShaderPreprocessorDefine FShaderCompileArguments::ParseDefineStr(const char* const Str)
 {
 	FShaderPreprocessorDefine Result{};
 
-	const wchar_t* const SplitChar = EA::StdC::Strchr(Str, EA_WCHAR('='));
+	const char* const SplitChar = EA::StdC::Strchr(Str, '=');
 	if (SplitChar != nullptr)
 	{
-		Result.Name.append(Str, SplitChar);
-		Result.Value.append(SplitChar + 1);
+		Result.Name.append_convert(Str, SplitChar - Str);
+		Result.Value.append_convert(SplitChar + 1);
 	}
 	else
 	{
-		Result.Name = Str;
+		Result.Name.append_convert(Str);
 	}
 
 	return Result;

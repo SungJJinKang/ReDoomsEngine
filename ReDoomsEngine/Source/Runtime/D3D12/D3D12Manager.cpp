@@ -60,11 +60,13 @@ void FD3D12Manager::Init()
     }
 
     {
-        D3D12OnlineDescriptorHeapManager = eastl::make_unique<FD3D12OnlineDescriptorHeapManager>();
-        D3D12OnlineDescriptorHeapManager->Init();
-
-
-        D3D12OfflineDescriptorHeapManager = eastl::make_unique<FD3D12OfflineDescriptorHeapManager>();
-        D3D12OfflineDescriptorHeapManager->Init();
+        D3D12DescriptorHeapManager = eastl::make_unique<FD3D12DescriptorHeapManager>();
+        D3D12DescriptorHeapManager->Init();
     }
+
+    {
+        D3D12ShaderManager = eastl::make_unique<FD3D12ShaderManager>();
+        D3D12ShaderManager->Init();
+    }
+    
 }

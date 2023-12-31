@@ -2,19 +2,27 @@
 
 #include "D3D12Device.h"
 
-static uint32_t GetNumDescriptorsForOnlineHeap(const D3D12_DESCRIPTOR_HEAP_TYPE HeapType)
+static uint32_t GetNumDescriptorsForOfflineHeap(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
 {
-    return 0;
+    switch (InHeapType)
+    {
+    case D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV:    return 2048;
+    case D3D12_DESCRIPTOR_HEAP_TYPE_RTV:            return 256;
+    case D3D12_DESCRIPTOR_HEAP_TYPE_DSV:            return 256;
+    case D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER:        return 128;
+    default: EA_ASSUME(0);
+    }
 }
 
-static uint32_t GetNumDescriptorsForOfflineHeap(const D3D12_DESCRIPTOR_HEAP_TYPE HeapType)
-{
-    return 0;
-}
+// This value defines how many descriptors will be in the device online view heap which
+// is shared across contexts to allow the driver to eliminate redundant descriptor heap sets.
+// This should be tweaked for each title as heaps require VRAM. The default value of 512k takes up ~16MB
+static uint32_t GOnlineDescriptorHeapSize = 500 * 1000;
 
 FD3D12DescriptorHeap::FD3D12DescriptorHeap(uint32_t InNumDescriptors, D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
 	: NumDescriptors(InNumDescriptors), HeapFlags(InHeapFlags), HeapType(InHeapType), DescriptorSize(), CPUBase(), GPUBase(), FreeSlot()
 {
+    EA_ASSERT(NumDescriptors > 0);
 }
 
 void FD3D12DescriptorHeap::Init()
@@ -33,33 +41,62 @@ void FD3D12DescriptorHeap::Init()
     FreeSlot.set(NumDescriptors, true);
 }
 
+FD3D12DescriptorHeapContainer::FD3D12DescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType, const D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, const uint32_t InNumDescriptor)
+    : HeapType(InHeapType), HeapFlag(InHeapFlags), NumDescriptor(InNumDescriptor)
+{
+}
+
+void FD3D12DescriptorHeapContainer::Init()
+{
+}
+
+eastl::unique_ptr<FD3D12DescriptorHeap>& FD3D12DescriptorHeapContainer::AllocateNewHeap()
+{
+    eastl::unique_ptr<FD3D12DescriptorHeap>& OfflineHeap =
+        DescriptorHeapList.emplace_back(eastl::make_unique<FD3D12DescriptorHeap>(NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, HeapType));
+    OfflineHeap->Init();
+    return OfflineHeap;
+}
+
+FD3D12OnlineDescriptorHeapContainer::FD3D12OnlineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
+    : FD3D12DescriptorHeapContainer(InHeapType, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, GOnlineDescriptorHeapSize)
+{
+}
+
+void FD3D12OnlineDescriptorHeapContainer::Init()
+{
+    FD3D12DescriptorHeapContainer::Init();
+    AllocateNewHeap();
+}
+
+FD3D12OfflineDescriptorHeapContainer::FD3D12OfflineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
+    : FD3D12DescriptorHeapContainer(InHeapType, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, GetNumDescriptorsForOfflineHeap(InHeapType))
+{
+}
+
+void FD3D12OfflineDescriptorHeapContainer::Init()
+{
+    FD3D12DescriptorHeapContainer::Init();
+    AllocateNewHeap();
+}
+
+FD3D12DescriptorHeapManager::FD3D12DescriptorHeapManager()
+    :
+    RTVDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_RTV),
+    DSVDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_DSV),
+    CbvSrvUavOnlineDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV),
+    CbvSrvUavOfflineDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV),
+    SamplerOnlineDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER),
+    SamplerOfflineDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER)
+{
+}
+
 void FD3D12DescriptorHeapManager::Init()
 {
-    
-
-   
-}
-
-void FD3D12OnlineDescriptorHeapManager::Init()
-{
-    DescriptorHeapPerType.resize(D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES);
-    for (size_t HeapTypeIndex = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV; HeapTypeIndex < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++HeapTypeIndex)
-    {
-        const D3D12_DESCRIPTOR_HEAP_TYPE HeapType = static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(HeapTypeIndex);
-        eastl::unique_ptr<FD3D12DescriptorHeap>& OnlineHeap =
-            DescriptorHeapPerType[HeapTypeIndex].DescriptorHeapList.emplace_back(eastl::make_unique<FD3D12DescriptorHeap>(GetNumDescriptorsForOnlineHeap(HeapType), D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, HeapType));
-        OnlineHeap->Init();
-    }
-}
-
-void FD3D12OfflineDescriptorHeapManager::Init()
-{
-    DescriptorHeapPerType.resize(D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES);
-    for (size_t HeapTypeIndex = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV; HeapTypeIndex < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++HeapTypeIndex)
-    {
-        const D3D12_DESCRIPTOR_HEAP_TYPE HeapType = static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(HeapTypeIndex);
-        eastl::unique_ptr<FD3D12DescriptorHeap>& OfflineHeap =
-            DescriptorHeapPerType[HeapTypeIndex].DescriptorHeapList.emplace_back(eastl::make_unique<FD3D12DescriptorHeap>(GetNumDescriptorsForOfflineHeap(HeapType), D3D12_DESCRIPTOR_HEAP_FLAG_NONE, HeapType));
-        OfflineHeap->Init();
-    }
+    RTVDescriptorHeapContainer.Init();
+    DSVDescriptorHeapContainer.Init();
+    CbvSrvUavOnlineDescriptorHeapContainer.Init();
+    CbvSrvUavOfflineDescriptorHeapContainer.Init();
+    SamplerOnlineDescriptorHeapContainer.Init();
+    SamplerOfflineDescriptorHeapContainer.Init();
 }

@@ -1,3 +1,20 @@
-﻿     Creating library C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/build/Debug/mimalloc.lib and object C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/build/Debug/mimalloc.exp
+﻿  Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/CMakeLists.txt
+  alloc.c
+  alloc-aligned.c
+  alloc-posix.c
+  arena.c
+  bitmap.c
+  heap.c
+  init.c
+  options.c
+  os.c
+  page.c
+  random.c
+  segment.c
+  segment-map.c
+  stats.c
+  prim.c
+  Generating Code...
+     Creating library C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/build/Debug/mimalloc.lib and object C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/build/Debug/mimalloc.exp
   mimalloc.vcxproj -> C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\Debug\mimalloc.dll
   Copy mimalloc-redirect.dll to output directory

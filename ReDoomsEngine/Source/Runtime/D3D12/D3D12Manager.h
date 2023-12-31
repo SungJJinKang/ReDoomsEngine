@@ -5,8 +5,7 @@
 class FD3D12Window;
 class FD3D12Adapter;
 class FD3D12Swapchain;
-class FD3D12OnlineDescriptorHeapManager;
-class FD3D12OfflineDescriptorHeapManager;
+class FD3D12DescriptorHeapManager;
 class FD3D12ShaderManager;
 
 class FD3D12Manager : public EA::StdC::Singleton<FD3D12Manager>
@@ -45,9 +44,8 @@ private:
 	eastl::unique_ptr<FD3D12Window> D3D12Window;
 	eastl::unique_ptr<FD3D12Adapter> ChoosenAdapter;
 	eastl::unique_ptr<FD3D12Swapchain> Swapchain;
-	eastl::unique_ptr<FD3D12OnlineDescriptorHeapManager> D3D12OnlineDescriptorHeapManager;
-	eastl::unique_ptr<FD3D12OfflineDescriptorHeapManager> D3D12OfflineDescriptorHeapManager;
-	eastl::unique_ptr<FD3D12ShaderManager> ShaderManager;
+	eastl::unique_ptr<FD3D12DescriptorHeapManager> D3D12DescriptorHeapManager;
+	eastl::unique_ptr<FD3D12ShaderManager> D3D12ShaderManager;
 
 	bool bEnableDebugLayer;
 };

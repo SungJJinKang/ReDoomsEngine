@@ -8,3 +8,5 @@ enum class EShaderFrequency : uint8_t
 	Compute,
 	NumShaderFrequency
 };
+
+const wchar_t* GetShaderFrequencyString(const EShaderFrequency ShaderFrequency);
