@@ -36,3 +36,6 @@
 *.ipch
 ReDoomsEngine/.vs/ReDoomsEngine/v17
 ReDoomsEngine/x64
+ReDoomsEngine/Source/Runtime/STL/mimalloc/build
+ReDoomsEngine/Source/Runtime/STL/mimalloc/build/Debug
+ReDoomsEngine/Source/Runtime/STL/mimalloc/build/mimalloc.dir
