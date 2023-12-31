@@ -1,5 +1,6 @@
 #include "ShaderCompileHelper.h"
 #include "DirectXShaderCompiler/inc/dxcapi.h"
+#include  <filesystem>
 
 ComPtr<IDxcLibrary> FShaderCompileHelper::GetDxcLibrary()
 {
@@ -22,6 +23,13 @@ ComPtr<IDxcCompiler3> FShaderCompileHelper::GetDxcCompilerInstance()
 	return DxcCompiler3;
 }
 
+ComPtr<IDxcIncludeHandler> FShaderCompileHelper::GetDxcDefualtIncludeHandler()
+{
+	static ComPtr<IDxcIncludeHandler> DxcDefualtIncludeHandler{};
+	VERIFYD3D12RESULT(GetDxcUtiles()->CreateDefaultIncludeHandler(DxcDefualtIncludeHandler.GetAddressOf()));
+	return DxcDefualtIncludeHandler;
+}
+
 ComPtr<IDxcContainerReflection> FShaderCompileHelper::GetDxcContainerReflectionInstance()
 {
 	static ComPtr<IDxcContainerReflection> Reflection;
@@ -42,7 +50,10 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 	VERIFYD3D12RESULT(GetDxcLibrary()->CreateBlobWithEncodingFromPinned((LPCVOID)InShaderCompileArguments.ShaderText.data(),
 		InShaderCompileArguments.ShaderTextLength, DXC_CP_UTF8, DxcTextBlob.GetAddressOf()));
 
-	eastl::vector<const wchar_t*> Arguments{};
+	std::filesystem::path ShaderTextFilePath{ InShaderCompileArguments.ShaderTextFilePath.data() };
+	ShaderTextFilePath.make_preferred();
+
+	eastl::vector<eastl::wstring> Arguments{};
 	{
 		// hlsl version
 		Arguments.emplace_back(EA_WCHAR("-HV"));
@@ -112,10 +123,15 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 
 		if (InShaderCompileArguments.bGenerateSymbols)
 		{
+			// ref : https://simoncoenen.com/blog/programming/graphics/DxcCompiling#custom-include-handler
 			Arguments.emplace_back(EA_WCHAR("-Qembed_debug"));
 
 			Arguments.emplace_back(EA_WCHAR("-Fd"));
 			Arguments.emplace_back(EA_WCHAR(".\\"));
+		}
+		else
+		{
+			Arguments.emplace_back(EA_WCHAR("-Qstrip_reflect"));
 		}
 
 		// Reflection will be removed later, otherwise the disassembly won't contain variables
@@ -126,6 +142,13 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 
 		// @lh-todo: This fixes a loop unrolling issue that showed up in DOFGatherKernel with cs_6_6 with the latest DXC revision
 		Arguments.emplace_back(EA_WCHAR("-disable-lifetime-markers"));
+		Arguments.emplace_back(EA_WCHAR("-encoding"));
+		Arguments.emplace_back(EA_WCHAR("utf8"));
+
+		// Add directory to include search path
+		Arguments.emplace_back(EA_WCHAR("-I"));
+		std::filesystem::path ParentDirectory = ShaderTextFilePath.parent_path();
+		Arguments.emplace_back(ParentDirectory.make_preferred().c_str());
 	}
 
 	ComPtr<IDxcCompilerArgs> DxcCompilerArgs{};
@@ -139,11 +162,17 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 		Define.Value = Definition.Value.c_str();
 	}
 
-	VERIFYD3D12RESULT(GetDxcUtiles()->BuildArguments(InShaderCompileArguments.ShaderDeclaration.ShaderTextFileRelativePath,
+	eastl::vector<const wchar_t*> WcharArguments{};
+	for (eastl::wstring& Arg : Arguments)
+	{
+		WcharArguments.push_back(Arg.data());
+	}
+
+	VERIFYD3D12RESULT(GetDxcUtiles()->BuildArguments(ShaderTextFilePath.filename().c_str(),
 		InShaderCompileArguments.ShaderDeclaration.ShaderEntryPoint,
 		FShaderCompileArguments::ConvertShaderFrequencyToShaderProfile(InShaderCompileArguments.ShaderDeclaration.ShaderFrequency),
-		Arguments.data(),
-		Arguments.size(),
+		WcharArguments.data(),
+		WcharArguments.size(),
 		DxcDefineList.data(),
 		DxcDefineList.size(),
 		DxcCompilerArgs.GetAddressOf()));
@@ -165,8 +194,8 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 		}
 	}
 
-	VERIFYD3D12RESULT(GetDxcCompilerInstance()->Compile(&DxcShaderBuffer, DxcCompilerArgs->GetArguments(), DxcCompilerArgs->GetCount(), nullptr,
-		__uuidof(IDxcResult), reinterpret_cast<LPVOID*>(DxcResult.GetAddressOf())));
+	VERIFYD3D12RESULT(GetDxcCompilerInstance()->Compile(&DxcShaderBuffer, DxcCompilerArgs->GetArguments(), DxcCompilerArgs->GetCount(), 
+		GetDxcDefualtIncludeHandler().Get(), IID_PPV_ARGS(&DxcResult)));
 		
 	HRESULT DxcResultStatus = 0;
 	VERIFYD3D12RESULT(DxcResult->GetStatus(&DxcResultStatus));
@@ -203,7 +232,9 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 			ReflectionDataBlobDxcBuffer.Size = ReflectionDataBlob->GetBufferSize();
 			
 			VERIFYD3D12RESULT(GetDxcUtiles()->CreateReflection(&ReflectionDataBlobDxcBuffer, IID_PPV_ARGS(&ShaderCompileResult.DxcContainerReflection)));
-			
+
+			// refer : https://rtarun9.github.io/blogs/shader_reflection/
+			ShaderCompileResult.DxcContainerReflection->GetDesc(&ShaderCompileResult.ShaderDesc);
 
 		}
 
@@ -216,8 +247,6 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 		EA_ASSERT(DxcResult->HasOutput(DXC_OUT_KIND::DXC_OUT_ERRORS));
 		VERIFYD3D12RESULT(DxcResult->GetErrorBuffer(ErrorBuffer.GetAddressOf()));
 
-		
-
 		eastl::string8 ErrorStr{ reinterpret_cast<const char8_t*>(ErrorBuffer->GetBufferPointer()), ErrorBuffer->GetBufferSize()};
 		RD_LOG(ELogVerbosity::Fatal, EA_WCHAR("\
 ------------------------------------\n \
@@ -227,11 +256,11 @@ ShaderPath : %s\n \
 ShaderFrequency : %s\n \
 Reason :\n\n \
 %s\n \
-------------------------------------"), 
+------------------------------------\n"), 
 			InShaderCompileArguments.ShaderDeclaration.ShaderName,
 			InShaderCompileArguments.ShaderDeclaration.ShaderTextFileRelativePath,
 			GetShaderFrequencyString(InShaderCompileArguments.ShaderDeclaration.ShaderFrequency),
-			UTF8_TO_WCHAR(ErrorStr.c_str()));
+			ANSI_TO_WCHAR(ErrorStr.c_str()));
 
 		ShaderCompileResult.bIsValid = false;
 	}
