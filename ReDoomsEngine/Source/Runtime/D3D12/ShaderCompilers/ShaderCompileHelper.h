@@ -7,6 +7,7 @@
 struct IDxcLibrary;
 struct IDxcUtils;
 struct IDxcCompiler3;
+struct IDxcIncludeHandler;
 struct IDxcContainerReflection;
 
 class FShaderCompileHelper
@@ -22,6 +23,7 @@ private:
 	static ComPtr<IDxcLibrary> GetDxcLibrary();
 	static ComPtr<IDxcUtils> GetDxcUtiles();
 	static ComPtr<IDxcCompiler3> GetDxcCompilerInstance();
+	static ComPtr<IDxcIncludeHandler> GetDxcDefualtIncludeHandler();
 	static ComPtr<IDxcContainerReflection> GetDxcContainerReflectionInstance();
 };
 

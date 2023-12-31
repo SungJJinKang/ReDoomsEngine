@@ -85,6 +85,7 @@ bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12Shader& Shader, const FSh
 		// UTF8 to WideChar
 		EA_ASSERT(EA::StdC::UTF8Validate(reinterpret_cast<const char*>(OutTextData.data()), OutTextData.size()));
 		FinalShaderCompileArguments.ShaderText = eastl::u8string_view{ reinterpret_cast<const char8_t*>(OutTextData.data()), OutTextData.size() };
+		FinalShaderCompileArguments.ShaderTextFilePath = AssetPath;
 
 		const FShaderCompileResult ShaderCompileResult = FShaderCompileHelper::CompileShader(FinalShaderCompileArguments);
 		if (ShaderCompileResult.bIsValid)

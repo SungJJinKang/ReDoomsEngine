@@ -50,6 +50,7 @@ struct FShaderCompileArguments
 	// Below data is set from FD3D12Shader
 	FShaderDeclaration ShaderDeclaration{};
 	eastl::u8string_view ShaderText{};
+	eastl::wstring_view ShaderTextFilePath;
 	uint64_t ShaderTextLength = 0;
 
 	// Below datas is set from shader compiler
@@ -57,7 +58,10 @@ struct FShaderCompileArguments
 	EWarningLevel WarningLevel = EWarningLevel::W0;
 	bool bGenerateDebugInformation = false;
 	bool bWarningAsError = false;
-	bool bGenerateSymbols = false;
+
+	// embed shader symbol data in shader container
+	// this data will be used for debugging, profiling
+	bool bGenerateSymbols = true;
 
 	static const wchar_t* ConvertShaderFrequencyToShaderProfile(const EShaderFrequency InShaderFrequency);
 	static FShaderPreprocessorDefine ParseDefineStr(const char* const Str);
@@ -78,4 +82,6 @@ struct FShaderCompileResult
 	eastl::vector<uint8_t> ShaderBlobData;
 	ComPtr<ID3D12ShaderReflection> DxcContainerReflection; // https://learn.microsoft.com/en-us/windows/win32/api/d3d12shader/nn-d3d12shader-id3d12shaderreflection
 	FShaderHash ShaderHash;
+	D3D12_SHADER_DESC ShaderDesc;
+
 };
