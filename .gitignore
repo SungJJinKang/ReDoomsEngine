@@ -12,9 +12,9 @@
 *.pch
 
 # Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# *.so
+# *.dylib
+# *.dll
 
 # Fortran module files
 *.mod
@@ -32,7 +32,7 @@
 *.app
 
 *.tlog
-*.pdb
+#*.pdb
 *.ipch
 ReDoomsEngine/.vs/ReDoomsEngine/v17
 ReDoomsEngine/x64
