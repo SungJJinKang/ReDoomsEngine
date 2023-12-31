@@ -1,1 +1,7 @@
 - D3D12
+- Highly abstracted rendering code
+- Render Graph
+- Dynamic Instancing
+- Compute Shader
+- User marker for profiling
+- Frustum, Occlusion CPU Culling(Use [EveryCulling](https://github.com/SungJJinKang/EveryCulling))
