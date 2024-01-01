@@ -8,10 +8,11 @@ DECLARE_SHADER(HelloTrianglePS, "HelloTriangle.hlsl", "MainPS", EShaderFrequency
 FD3D12Shader::FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath, 
 	const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, const uint64_t InShaderCompileFlags, 
 	const char* const InAdditionalPreprocessorDefine ...)
-	:
-	ShaderDeclaration(),
-	ShaderReflectionData()
 {
+
+	MEM_ZERO(ShaderDeclaration);
+	MEM_ZERO(ShaderReflectionData);
+
 	ShaderDeclaration.ShaderName = InShaderName;
 	ShaderDeclaration.ShaderTextFileRelativePath = InShaderTextFileRelativePath;
 	ShaderDeclaration.ShaderEntryPoint = InShaderEntryPoint;
@@ -83,7 +84,8 @@ void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const In
 	{
 		for (uint32_t InputParameterIndex = 0; InputParameterIndex < ShaderReflectionData.ShaderDesc.InputParameters; ++InputParameterIndex)
 		{
-			D3D12_SIGNATURE_PARAMETER_DESC SignatureParameterDesc{};
+			D3D12_SIGNATURE_PARAMETER_DESC SignatureParameterDesc;
+			MEM_ZERO(SignatureParameterDesc);
 			D3D12ShaderReflection.GetInputParameterDesc(InputParameterIndex, &SignatureParameterDesc);
 
 			// Using the semantic name provided by the signatureParameterDesc directly to the input element desc will cause the SemanticName field to have garbage values.
@@ -93,7 +95,8 @@ void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const In
 			SignatureParameterDesc.SemanticName = ShaderReflectionData.InputElementSemanticNameList.back().c_str();;
 			ShaderReflectionData.InputElementSignatureParameterList.emplace_back(SignatureParameterDesc);
 
-			D3D12_INPUT_ELEMENT_DESC InputElementDesc{};
+			D3D12_INPUT_ELEMENT_DESC InputElementDesc;
+			MEM_ZERO(InputElementDesc);
 			InputElementDesc.SemanticName = ShaderReflectionData.InputElementSemanticNameList.back().c_str();
 			InputElementDesc.SemanticIndex = SignatureParameterDesc.SemanticIndex;
 			InputElementDesc.Format = static_cast<DXGI_FORMAT>(SignatureParameterDesc.Mask);
@@ -113,7 +116,8 @@ void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const In
 	{
 		for (uint32_t OutputParameterIndex = 0; OutputParameterIndex < ShaderReflectionData.ShaderDesc.OutputParameters; ++OutputParameterIndex)
 		{
-			D3D12_SIGNATURE_PARAMETER_DESC SignatureParameterDesc{};
+			D3D12_SIGNATURE_PARAMETER_DESC SignatureParameterDesc;
+			MEM_ZERO(SignatureParameterDesc);
 			D3D12ShaderReflection.GetOutputParameterDesc(OutputParameterIndex, &SignatureParameterDesc);
 
 			// Using the semantic name provided by the signatureParameterDesc directly to the output element desc will cause the SemanticName field to have garbage values.
@@ -128,7 +132,8 @@ void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const In
 	{
 		for (uint32_t BoundResourceIndex = 0; BoundResourceIndex < ShaderReflectionData.ShaderDesc.BoundResources; ++BoundResourceIndex)
 		{
-			D3D12_SHADER_INPUT_BIND_DESC ResourceBindingDesc{};
+			D3D12_SHADER_INPUT_BIND_DESC ResourceBindingDesc;
+			MEM_ZERO(ResourceBindingDesc);
 
 			// "ResourceBindingDesc.uFlags" mapped to "_D3D_SHADER_INPUT_FLAGS"
 			VERIFYD3D12RESULT(D3D12ShaderReflection.GetResourceBindingDesc(BoundResourceIndex, &ResourceBindingDesc));
@@ -143,7 +148,8 @@ void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const In
 					// Glober constant buffer's name is "Globals"
 
 					ID3D12ShaderReflectionConstantBuffer* ShaderReflectionConstantBuffer = D3D12ShaderReflection.GetConstantBufferByIndex(BoundResourceIndex);
-					D3D12_SHADER_BUFFER_DESC ConstantBufferDesc{};
+					D3D12_SHADER_BUFFER_DESC ConstantBufferDesc;
+					MEM_ZERO(ConstantBufferDesc);
 					ShaderReflectionConstantBuffer->GetDesc(&ConstantBufferDesc);
 
 					EA_ASSERT(EA::StdC::Strcmp(ResourceBindingDesc.Name, ConstantBufferDesc.Name) == 0);
@@ -158,7 +164,8 @@ void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const In
 					{
 						ID3D12ShaderReflectionVariable* const VariableInConstantBuffer = ShaderReflectionConstantBuffer->GetVariableByIndex(IndexOfVariableInConstantBuffer);
 
-						D3D12_SHADER_VARIABLE_DESC ShaderVariableDesc{};
+						D3D12_SHADER_VARIABLE_DESC ShaderVariableDesc;
+						MEM_ZERO(ShaderVariableDesc);
 						VariableInConstantBuffer->GetDesc(&ShaderVariableDesc);
 
 						FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBuffer = ConstantBuffer.VariableList.emplace_back();

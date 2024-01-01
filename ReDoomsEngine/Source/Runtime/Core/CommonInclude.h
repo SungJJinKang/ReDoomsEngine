@@ -16,7 +16,6 @@ using Microsoft::WRL::ComPtr;
 #include "EAAssert/eaassert.h"
 #include "EABase/earesult.h"
 #include "EAStdC/EASingleton.h"
-#include "EAStdC/EAMemory.h"
 #include "EAStdC/EASprintf.h"
 #include "EAStdC/EAString.h"
 #include "EAStdC/EATextUtil.h"

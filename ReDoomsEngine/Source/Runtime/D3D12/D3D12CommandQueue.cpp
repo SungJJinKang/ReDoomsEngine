@@ -33,7 +33,8 @@ void FD3D12CommandQueue::Init()
 {
 	EA_ASSERT(D3DCommandQueue.Get() == nullptr);
 
-	D3D12_COMMAND_QUEUE_DESC CommandQueueDesc = {};
+	D3D12_COMMAND_QUEUE_DESC CommandQueueDesc;
+	MEM_ZERO(CommandQueueDesc);
 	CommandQueueDesc.Type = GetD3D12CommandListType((ED3D12QueueType)QueueType);
 	CommandQueueDesc.Priority = 0;
 	CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
