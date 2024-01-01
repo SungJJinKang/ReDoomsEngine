@@ -2,6 +2,8 @@
 #include "CommonInclude.h"
 #include "ShaderCompilers/ShaderCompileStructs.h"
 
+class FD3D12RootSignature;
+
 struct FD3D12ConstantBufferReflectionData
 {
 	struct FD3D12VariableOfConstantBufferReflectionData
@@ -88,7 +90,7 @@ private:
 	eastl::vector<uint8_t> ShaderBlobData;
 	FD3D12ShaderReflectionData ShaderReflectionData;
 	FShaderHash ShaderHash;
-
+	FD3D12RootSignature* RootSignature;
 };
 
 // TODO) Need to support permutation?
@@ -114,7 +116,10 @@ public:
 	/// </summary>
 	static eastl::vector<FD3D12Shader*>& GetCompilePendingShaderList();
 	static void AddCompilePendingShader(FD3D12Shader& CompilePendingShader);
-
+	inline const eastl::vector<FD3D12Shader*>& GetShaderList() const
+	{
+		return ShaderList;
+	}
 private:
 
 	/// <summary>

@@ -6,6 +6,7 @@
 #include "D3D12Swapchain.h"
 #include "D3D12Descriptor.h"
 #include "D3D12Shader.h"
+#include "D3D12RootSignature.h"
 
 static const uint32_t GNumBackBufferCount = 3;
 static const int32_t GWindowWidth = 1024;
@@ -13,7 +14,15 @@ static const int32_t GWindowHeight = 720;
 
 
 FD3D12Manager::FD3D12Manager(const bool bInEnableDebugLayer)
-    : DXGIFactory(), D3D12Window(), ChoosenAdapter(), Swapchain(), bEnableDebugLayer(bInEnableDebugLayer)
+    :
+    DXGIFactory(), 
+    D3D12Window(),
+    ChoosenAdapter(),
+    Swapchain(),
+    bEnableDebugLayer(bInEnableDebugLayer), 
+    D3D12DescriptorHeapManager(),
+    D3D12ShaderManager(),
+    D3D12RootSignatureManager()
 {
 }
 
@@ -62,6 +71,11 @@ void FD3D12Manager::Init()
     {
         D3D12DescriptorHeapManager = eastl::make_unique<FD3D12DescriptorHeapManager>();
         D3D12DescriptorHeapManager->Init();
+    }
+
+    {
+        D3D12RootSignatureManager = eastl::make_unique<FD3D12RootSignatureManager>();
+        D3D12RootSignatureManager->Init();
     }
 
     {
