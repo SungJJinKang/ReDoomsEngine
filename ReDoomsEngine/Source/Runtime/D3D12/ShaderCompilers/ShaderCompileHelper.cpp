@@ -62,6 +62,7 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 		// Unpack uniform matrices as row-major to match the CPU layout.
 		Arguments.emplace_back(DXC_ARG_PACK_MATRIX_ROW_MAJOR);
 
+		// check https://learn.microsoft.com/en-us/windows/win32/direct3d12/resource-binding-in-hlsl
 		Arguments.emplace_back(EA_WCHAR("-auto-binding-space"));
 		Arguments.emplace_back(EA_WCHAR("0"));
 
