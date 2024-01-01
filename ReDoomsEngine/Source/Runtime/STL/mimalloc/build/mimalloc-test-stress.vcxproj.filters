@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\test\test-stress.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\test\test-stress.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\CMakeLists.txt" />
+    <CustomBuild Include="$(SolutionDir)Source\Runtime\STL\mimalloc\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

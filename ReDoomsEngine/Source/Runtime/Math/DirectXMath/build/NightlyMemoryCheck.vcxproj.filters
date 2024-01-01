@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Math\DirectXMath\build\CMakeFiles\11e141bae9535772946dd9bc2d97c046\NightlyMemoryCheck.rule">
+    <CustomBuild Include="$(SolutionDir)Source\Runtime\Math\DirectXMath\build\CMakeFiles\11e141bae9535772946dd9bc2d97c046\NightlyMemoryCheck.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Math\DirectXMath\CMakeLists.txt" />
+    <CustomBuild Include="$(SolutionDir)Source\Runtime\Math\DirectXMath\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Math\DirectXMath\build\CMakeFiles\NightlyMemoryCheck" />
+    <None Include="$(SolutionDir)Source\Runtime\Math\DirectXMath\build\CMakeFiles\NightlyMemoryCheck" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">

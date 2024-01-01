@@ -65,7 +65,7 @@ void FD3D12Shader::SetShaderCompileResult(const FShaderCompileResult& InShaderCo
 
 void FD3D12Shader::OnFinishShaderCompile()
 {
-	EA_ASSERT(!ShaderCompileResult.bIsValid);
+	EA_ASSERT(ShaderCompileResult.bIsValid);
 
 
 }

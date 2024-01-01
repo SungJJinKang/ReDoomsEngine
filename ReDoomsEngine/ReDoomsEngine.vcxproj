@@ -160,7 +160,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc.lib;mimalloc-redirect.lib;mimalloc-override.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Debug;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Debug;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\STL\mimalloc\bin</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Debug;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Debug;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\STL\mimalloc\bin;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
     <FxCompile>
@@ -191,7 +191,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc.lib;mimalloc-redirect.lib;mimalloc-override.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Release;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\STL\mimalloc\bin</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Release;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\STL\mimalloc\bin;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
     <FxCompile>

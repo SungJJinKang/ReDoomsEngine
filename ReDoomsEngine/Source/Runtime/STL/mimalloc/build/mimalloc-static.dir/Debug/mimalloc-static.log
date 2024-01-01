@@ -15,4 +15,4 @@
   stats.c
   prim.c
   Generating Code...
-  mimalloc-static.vcxproj -> C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\Debug\mimalloc-static.lib
+  mimalloc-static.vcxproj -> $(SolutionDir)Source\Runtime\STL\mimalloc\build\Debug\mimalloc-static.lib

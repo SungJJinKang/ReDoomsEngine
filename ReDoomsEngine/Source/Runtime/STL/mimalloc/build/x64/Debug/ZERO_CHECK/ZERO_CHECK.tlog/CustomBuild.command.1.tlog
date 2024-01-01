@@ -1,4 +1,4 @@
-^C:\REDOOMSENGINE\REDOOMSENGINE\SOURCE\RUNTIME\STL\MIMALLOC\BUILD\CMAKEFILES\8D7BF8D1509C1C7D8AB33DB99F07FA0D\GENERATE.STAMP.RULE
+^$(SolutionDir)SOURCE\RUNTIME\STL\MIMALLOC\BUILD\CMAKEFILES\8D7BF8D1509C1C7D8AB33DB99F07FA0D\GENERATE.STAMP.RULE
 setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/build/libmimalloc.sln
 if %errorlevel% neq 0 goto :cmEnd

@@ -1,4 +1,4 @@
-^C:\REDOOMSENGINE\REDOOMSENGINE\SOURCE\RUNTIME\STL\MIMALLOC\CMAKELISTS.TXT
+^$(SolutionDir)SOURCE\RUNTIME\STL\MIMALLOC\CMAKELISTS.TXT
 setlocal
 "C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/build --check-stamp-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd

@@ -23,7 +23,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FB303CCF-93E6-31DE-9275-C48A436C4791}</ProjectGuid>
-    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
     <ProjectName>EAThread</ProjectName>
@@ -59,26 +59,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAThread\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EAThread.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EAThread</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAThread\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">EAThread.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">EAThread</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAThread\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">EAThread.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">EAThread</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAThread\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">EAThread.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">EAThread</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
@@ -97,10 +97,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -113,7 +113,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -132,10 +132,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -148,7 +148,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -167,10 +167,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -183,7 +183,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -201,10 +201,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -216,7 +216,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\CMakeLists.txt">
+    <CustomBuild Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAThread/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
@@ -228,8 +228,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAThread\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;$(SolutionDir)Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAThread/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
@@ -241,8 +241,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAThread\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;$(SolutionDir)Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAThread/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
@@ -254,8 +254,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAThread\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;$(SolutionDir)Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAThread/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
@@ -267,28 +267,28 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAThread\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;$(SolutionDir)Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_barrier.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_callstack.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_condition.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_futex.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_mutex.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_pool.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_rwmutex.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_rwmutex_ip.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_semaphore.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_storage.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_thread.cpp" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\source\version.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_barrier.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_callstack.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_condition.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_futex.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_mutex.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_pool.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_rwmutex.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_rwmutex_ip.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_semaphore.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_storage.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\eathread_thread.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\source\version.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\ZERO_CHECK.vcxproj">
+    <ProjectReference Include="$(SolutionDir)Source\Runtime\STL\EASTL\build\ZERO_CHECK.vcxproj">
       <Project>{FF71505A-CF35-3BB2-B61F-06F8A68F4518}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
