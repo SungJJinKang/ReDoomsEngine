@@ -1,0 +1,16 @@
+Performing C++ SOURCE FILE Test EASTL_HAS_FCHAR8T_FLAG failed with the following output:
+Change Dir: C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_cf70d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && .NET Framework용 Microsoft (R) Build Engine 버전 17.0.0+c9eb9dd64
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.30.30706 for x64
+  src.cxx
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /I"C:\vcpkg\scripts\buildsystems\msbuild\..\..\..\installed\x64-windows\include" /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D EASTL_HAS_FCHAR8T_FLAG /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_cf70d.dir\Debug\\" /Fd"cmTC_cf70d.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue  -fchar8_t C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\src.cxx
+cl : command line warning D9002: ignoring unknown option '-fchar8_t' [C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\cmTC_cf70d.vcxproj]
+  cmTC_cf70d.vcxproj -> C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\Debug\cmTC_cf70d.exe
+
+
+Source file was:
+int main() { return 0; }

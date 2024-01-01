@@ -1,0 +1,4 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.22/Modules/CheckCXXCompilerFlag.cmake
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/scripts/CMake/CommonCppFlags.cmake
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAAssert/CMakeLists.txt
