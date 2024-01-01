@@ -140,7 +140,7 @@ void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const In
 			{
 				case D3D_SIT_CBUFFER:
 				{
-					// Glober variables's name is "Globals"
+					// Glober constant buffer's name is "Globals"
 
 					ID3D12ShaderReflectionConstantBuffer* ShaderReflectionConstantBuffer = D3D12ShaderReflection.GetConstantBufferByIndex(BoundResourceIndex);
 					D3D12_SHADER_BUFFER_DESC ConstantBufferDesc{};
@@ -197,25 +197,8 @@ void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const In
 					break;
 				}
 				default:
-					EA_ASSERT(false);
+					EA_ASSERT(false); // @todo support other types
 			}
-			if (ResourceBindingDesc.Type == D3D_SIT_CBUFFER)
-			{
-			}
-			else if (ResourceBindingDesc.Type == D3D_SIT_TEXTURE)
-			{
-			}
-			else if (ResourceBindingDesc.Type == D3D_SIT_SAMPLER)
-			{
-			}
-
-
-			else
-			{
-				EA_ASSERT(false);
-			}
-
-			
 		}
 	}
 }
