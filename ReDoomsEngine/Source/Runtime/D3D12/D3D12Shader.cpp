@@ -1,6 +1,8 @@
 #include "D3D12Shader.h"
+
 #include "ShaderCompilers/ShaderCompileHelper.h"
 #include "AssetManager.h"
+#include "D3D12RootSignature.h"
 
 DECLARE_SHADER(HelloTriangleVS, "HelloTriangle.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None, "NO_ERROR=1");
 DECLARE_SHADER(HelloTrianglePS, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, "NO_ERROR=1");
@@ -8,6 +10,7 @@ DECLARE_SHADER(HelloTrianglePS, "HelloTriangle.hlsl", "MainPS", EShaderFrequency
 FD3D12Shader::FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath, 
 	const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, const uint64_t InShaderCompileFlags, 
 	const char* const InAdditionalPreprocessorDefine ...)
+	: RootSignature()
 {
 
 	MEM_ZERO(ShaderDeclaration);
@@ -68,7 +71,7 @@ void FD3D12Shader::SetShaderCompileResult(FShaderCompileResult& InShaderCompileR
 
 void FD3D12Shader::OnFinishShaderCompile()
 {
-
+	FD3D12RootSignatureManager::GetInstance()->CreateAndAddNewRootSignature(this);
 }
 
 void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection)

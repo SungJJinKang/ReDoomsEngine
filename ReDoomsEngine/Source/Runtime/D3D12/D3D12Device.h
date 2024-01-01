@@ -28,11 +28,28 @@ public:
 		return &CommandQueueList[static_cast<uint64_t>(QueueType)];
 	}
 
+	D3D12_RESOURCE_HEAP_TIER GetResourceHeapTier() const
+	{
+		return ResourceHeapTier;
+	}
+	D3D12_RESOURCE_BINDING_TIER GetResourceBindingTier() const
+	{
+		return ResourceBindingTier;
+	}
+
+	D3D_ROOT_SIGNATURE_VERSION GetRootSignatureVersion() const
+	{
+		return RootSignatureVersion;
+	}
 
 private:
 
 	ComPtr<ID3D12Device> D3DDevice;
 	FD3D12Adapter* Adapter;
+
+	D3D12_RESOURCE_HEAP_TIER ResourceHeapTier;
+	D3D12_RESOURCE_BINDING_TIER ResourceBindingTier;
+	D3D_ROOT_SIGNATURE_VERSION RootSignatureVersion;
 
 	eastl::vector<FD3D12CommandQueue> CommandQueueList;
 };
