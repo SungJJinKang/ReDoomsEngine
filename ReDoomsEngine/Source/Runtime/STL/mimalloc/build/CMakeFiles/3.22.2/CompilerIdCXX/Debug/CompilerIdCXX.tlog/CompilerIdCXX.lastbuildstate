@@ -1,2 +1,0 @@
-PlatformToolSet=v143:VCToolArchitecture=Native64Bit:VCToolsVersion=14.34.31933:TargetPlatformVersion=10.0.20348.0:VcpkgTriplet=x64-windows:
-Debug|x64|$(SolutionDir)Source\Runtime\STL\mimalloc\build\CMakeFiles\3.22.2\CompilerIdCXX\|
