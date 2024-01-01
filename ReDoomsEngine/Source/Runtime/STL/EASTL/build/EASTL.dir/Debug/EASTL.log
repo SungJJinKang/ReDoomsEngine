@@ -1,0 +1,12 @@
+﻿  allocator_eastl.cpp
+  assert.cpp
+  atomic.cpp
+  fixed_pool.cpp
+  hashtable.cpp
+  intrusive_list.cpp
+  numeric_limits.cpp
+  red_black_tree.cpp
+  string.cpp
+  thread_support.cpp
+  Generating Code...
+  EASTL.vcxproj -> C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\Debug\EASTL.lib

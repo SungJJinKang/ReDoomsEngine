@@ -1,0 +1,96 @@
+﻿  EACType.cpp
+  EACallback.cpp
+  EADateTime.cpp
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(310,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../../../test/packages/EAStdC/source/EADateTime.cpp')
+  
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(314,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../../../test/packages/EAStdC/source/EADateTime.cpp')
+  
+  EAFixedPoint.cpp
+  EAGlobal.cpp
+  EAHashCRC.cpp
+  EAHashString.cpp
+  EAMemory.cpp
+  EAProcess.cpp
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(310,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EAProcess.cpp')
+  
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(314,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EAProcess.cpp')
+  
+  EARandom.cpp
+  EAScanf.cpp
+  EAScanfCore.cpp
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(310,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EAScanfCore.cpp')
+  
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(314,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EAScanfCore.cpp')
+  
+  EASprintf.cpp
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(310,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EASprintf.cpp')
+  
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(314,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EASprintf.cpp')
+  
+  EASprintfCore.cpp
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(310,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EASprintfCore.cpp')
+  
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(314,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EASprintfCore.cpp')
+  
+  EASprintfOrdered.cpp
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EASprintfCore.cpp(444,90): warning C4100: 'pScratchBuffer': unreferenced formal parameter
+  C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EASprintfCore.cpp(444,90):
+  the template instantiation context (the oldest one first) is
+  	C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EASprintfCore.cpp(1935,9):
+  	see reference to function template instantiation 'int EA::StdC::SprintfLocal::VprintfCoreInternal<char32_t>(int (__cdecl *)(const CharT *__restrict ,size_t,void *__restrict ,EA::StdC::WriteFunctionState),void *__restrict ,const CharT *__restrict ,va_list)' being compiled
+          with
+          [
+              CharT=char32_t
+          ]
+  	C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EASprintfCore.cpp(1726,22):
+  	see reference to function template instantiation 'int EA::StdC::SprintfLocal::StringFormat<char,char32_t>(int (__cdecl *)(const OutCharT *__restrict ,size_t,void *__restrict ,EA::StdC::WriteFunctionState),void *__restrict ,const EA::StdC::SprintfLocal::FormatData &,OutCharT *,const InCharT *)' being compiled
+          with
+          [
+              OutCharT=char32_t,
+              InCharT=char
+          ]
+  	C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EASprintfCore.cpp(561,48):
+  	see reference to class template instantiation 'EA::StdC::SprintfLocal::StringFormatHelper<true,char32_t,char32_t>' being compiled
+  	C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EASprintfCore.cpp(443,6):
+  	while compiling class template member function 'int EA::StdC::SprintfLocal::StringFormatHelper<true,char32_t,char32_t>::operator ()(int (__cdecl *)(const OutCharT *__restrict ,size_t,void *__restrict ,EA::StdC::WriteFunctionState),void *__restrict ,const EA::StdC::SprintfLocal::FormatData &,OutCharT *,const InCharT *)'
+          with
+          [
+              OutCharT=char32_t,
+              InCharT=char32_t
+          ]
+  		C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EASprintfCore.cpp(562,3):
+  		see the first reference to 'EA::StdC::SprintfLocal::StringFormatHelper<true,char32_t,char32_t>::operator ()' in 'EA::StdC::SprintfLocal::StringFormat'
+  
+  EAStdC.cpp
+  EAStopwatch.cpp
+  EAString.cpp
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(310,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EAString.cpp')
+  
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(314,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EAString.cpp')
+  
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EAString.cpp(565,89): warning C4100: 'pSourceEnd': unreferenced formal parameter
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EAString.cpp(570,83): warning C4100: 'pDestEnd': unreferenced formal parameter
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EAString.cpp(576,89): warning C4100: 'pSourceEnd': unreferenced formal parameter
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\source\EAString.cpp(581,83): warning C4100: 'pDestEnd': unreferenced formal parameter
+  EATextUtil.cpp
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(310,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EATextUtil.cpp')
+  
+C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC\EAString.h(314,94): warning C4100: 'nSourceLength': unreferenced formal parameter
+  (compiling source file '../../EASTL/test/packages/EAStdC/source/EATextUtil.cpp')
+  
+  Int128_t.cpp
+  Generating Code...
+  EAStdC.vcxproj -> C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Debug\EAStdC.lib
