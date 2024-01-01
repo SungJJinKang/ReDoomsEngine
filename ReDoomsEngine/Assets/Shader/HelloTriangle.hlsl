@@ -8,10 +8,15 @@ cbuffer SceneConstantBuffer
     float4 padding[15];
 };
 
+cbuffer ModelMatrixConstantBuffer
+{
+    float4x4 Matrix;
+};
+
 struct PSInput
 {
     float4 position : SV_POSITION;
-    float4 color : COLOR;
+    float2 UV : TEXCOORD0;
 };
 
 // 테스트
@@ -20,17 +25,23 @@ struct PSInput
 Make Compile Error!!!!!!!!!
 #endif
 
-PSInput MainVS(float4 position : POSITION, float4 color : COLOR)
+float4 offsetShaderVariable1;
+float4 offsetShaderVariable2;
+
+Texture2D<float4> TriangleColorTexture;
+SamplerState Sampler;
+
+PSInput MainVS(float4 position : POSITION, float2 UV : TEXCOORD0)
 {
     PSInput result;
 
-    result.position = position + offset;
-    result.color = color;
+    result.position = position + offset + Matrix[0] + offsetShaderVariable1 + offsetShaderVariable2;
+    result.UV = UV;
 
     return result;
 }
 
 float4 MainPS(PSInput input) : SV_TARGET
 {
-    return input.color;
+    return TriangleColorTexture.Sample(Sampler, input.UV);
 }

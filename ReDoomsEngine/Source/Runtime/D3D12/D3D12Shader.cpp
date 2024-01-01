@@ -10,7 +10,6 @@ FD3D12Shader::FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* con
 	const char* const InAdditionalPreprocessorDefine ...)
 	:
 	ShaderDeclaration(),
-	ShaderCompileResult(),
 	ShaderReflectionData()
 {
 	ShaderDeclaration.ShaderName = InShaderName;
@@ -57,24 +56,25 @@ FD3D12Shader::FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* con
 {
 }
 
-void FD3D12Shader::SetShaderCompileResult(const FShaderCompileResult& InShaderCompileResult)
+void FD3D12Shader::SetShaderCompileResult(FShaderCompileResult& InShaderCompileResult)
 {
-	EA_ASSERT(!ShaderCompileResult.bIsValid); // Shouldn't overwrite
-	ShaderCompileResult = InShaderCompileResult;
+	EA_ASSERT(InShaderCompileResult.bIsValid); // Shouldn't overwrite
+
+	ShaderBlobData = eastl::move(InShaderCompileResult.ShaderBlobData);
+	ShaderHash = InShaderCompileResult.ShaderHash;
+
 }
 
 void FD3D12Shader::OnFinishShaderCompile()
 {
-	EA_ASSERT(ShaderCompileResult.bIsValid);
-
 
 }
 
-void FD3D12Shader::PopulateShaderReflectionData()
+void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection)
 {
 	// ref https://rtarun9.github.io/blogs/shader_reflection/
 
-	ID3D12ShaderReflection& D3D12ShaderReflection = *(ShaderCompileResult.DxcContainerReflection.Get());\
+	ID3D12ShaderReflection& D3D12ShaderReflection = *(InD3D12ShaderReflection);
 
 	{
 		D3D12ShaderReflection.GetDesc(&ShaderReflectionData.ShaderDesc);
@@ -90,6 +90,9 @@ void FD3D12Shader::PopulateShaderReflectionData()
 			// This is because the SemanticName filed is a const wchar_t*. I am using a separate std::vector<std::string> for simplicity.
 			ShaderReflectionData.InputElementSemanticNameList.emplace_back(SignatureParameterDesc.SemanticName);
 
+			SignatureParameterDesc.SemanticName = ShaderReflectionData.InputElementSemanticNameList.back().c_str();;
+			ShaderReflectionData.InputElementSignatureParameterList.emplace_back(SignatureParameterDesc);
+
 			D3D12_INPUT_ELEMENT_DESC InputElementDesc{};
 			InputElementDesc.SemanticName = ShaderReflectionData.InputElementSemanticNameList.back().c_str();
 			InputElementDesc.SemanticIndex = SignatureParameterDesc.SemanticIndex;
@@ -107,58 +110,106 @@ void FD3D12Shader::PopulateShaderReflectionData()
 		ShaderReflectionData.InputLayoutDesc.NumElements = ShaderReflectionData.InputElementDescList.size();
 	}
 	
-	/*
 	{
-		for (uint32_t OutputParameterIndex = 0; OutputParameterIndex < ShaderReflectionData.ShaderDesc.InputParameters; ++OutputParameterIndex)
+		for (uint32_t OutputParameterIndex = 0; OutputParameterIndex < ShaderReflectionData.ShaderDesc.OutputParameters; ++OutputParameterIndex)
 		{
 			D3D12_SIGNATURE_PARAMETER_DESC SignatureParameterDesc{};
 			D3D12ShaderReflection.GetOutputParameterDesc(OutputParameterIndex, &SignatureParameterDesc);
 
-			// Using the semantic name provided by the signatureParameterDesc directly to the input element desc will cause the SemanticName field to have garbage values.
+			// Using the semantic name provided by the signatureParameterDesc directly to the output element desc will cause the SemanticName field to have garbage values.
 			// This is because the SemanticName filed is a const wchar_t*. I am using a separate std::vector<std::string> for simplicity.
-			ShaderReflectionData.InputElementSemanticNameList.emplace_back(SignatureParameterDesc.SemanticName);
+			ShaderReflectionData.OutputElementSemanticNameList.emplace_back(SignatureParameterDesc.SemanticName);
 
-			D3D12_INPUT_ELEMENT_DESC InputElementDesc{};
-			InputElementDesc.SemanticName = ShaderReflectionData.InputElementSemanticNameList.back().c_str();
-			InputElementDesc.SemanticIndex = SignatureParameterDesc.SemanticIndex;
-			InputElementDesc.Format = static_cast<DXGI_FORMAT>(SignatureParameterDesc.Mask);
-			InputElementDesc.InputSlot = 0u;
-			InputElementDesc.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-			InputElementDesc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
-			// There doesn't seem to be a obvious way to 
-			// automate this currently, which might be a issue when instanced rendering is used 😩
-			InputElementDesc.InstanceDataStepRate = 0u;
-			ShaderReflectionData.InputElementDescList.emplace_back(InputElementDesc);
+			SignatureParameterDesc.SemanticName = ShaderReflectionData.OutputElementSemanticNameList.back().c_str();;
+			ShaderReflectionData.OutputElementSignatureParameterList.emplace_back(SignatureParameterDesc);
 		}
-
-		ShaderReflectionData.InputLayoutDesc.pInputElementDescs = ShaderReflectionData.InputElementDescList.data();
-		ShaderReflectionData.InputLayoutDesc.NumElements = ShaderReflectionData.InputElementDescList.size();
 	}
-	*/
 
 	{
 		for (uint32_t BoundResourceIndex = 0; BoundResourceIndex < ShaderReflectionData.ShaderDesc.BoundResources; ++BoundResourceIndex)
 		{
 			D3D12_SHADER_INPUT_BIND_DESC ResourceBindingDesc{};
+
+			// "ResourceBindingDesc.uFlags" mapped to "_D3D_SHADER_INPUT_FLAGS"
 			VERIFYD3D12RESULT(D3D12ShaderReflection.GetResourceBindingDesc(BoundResourceIndex, &ResourceBindingDesc));
 
+			ShaderReflectionData.ResourceBindingNameList.emplace_back(ResourceBindingDesc.Name);
+			ResourceBindingDesc.Name = ShaderReflectionData.ResourceBindingNameList.back().c_str();
+
+			switch (ResourceBindingDesc.Type)
+			{
+				case D3D_SIT_CBUFFER:
+				{
+					// Glober variables's name is "Globals"
+
+					ID3D12ShaderReflectionConstantBuffer* ShaderReflectionConstantBuffer = D3D12ShaderReflection.GetConstantBufferByIndex(BoundResourceIndex);
+					D3D12_SHADER_BUFFER_DESC ConstantBufferDesc{};
+					ShaderReflectionConstantBuffer->GetDesc(&ConstantBufferDesc);
+
+					EA_ASSERT(EA::StdC::Strcmp(ResourceBindingDesc.Name, ConstantBufferDesc.Name) == 0);
+
+					FD3D12ConstantBufferReflectionData& ConstantBuffer = ShaderReflectionData.ConstantBufferList.emplace_back();
+					ConstantBuffer.Name = ShaderReflectionData.ResourceBindingNameList.back();
+					ConstantBufferDesc.Name = ConstantBuffer.Name.c_str();
+					ConstantBuffer.ResourceBindingDesc = ResourceBindingDesc;
+					ConstantBuffer.Desc = ConstantBufferDesc;
+
+					for (uint32_t IndexOfVariableInConstantBuffer = 0; IndexOfVariableInConstantBuffer < ConstantBufferDesc.Variables; ++IndexOfVariableInConstantBuffer)
+					{
+						ID3D12ShaderReflectionVariable* const VariableInConstantBuffer = ShaderReflectionConstantBuffer->GetVariableByIndex(IndexOfVariableInConstantBuffer);
+
+						D3D12_SHADER_VARIABLE_DESC ShaderVariableDesc{};
+						VariableInConstantBuffer->GetDesc(&ShaderVariableDesc);
+
+						FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBuffer = ConstantBuffer.VariableList.emplace_back();
+						VariableOfConstantBuffer.Name = ShaderVariableDesc.Name;
+						ShaderVariableDesc.Name = VariableOfConstantBuffer.Name.c_str();
+
+						VariableOfConstantBuffer.Desc = ShaderVariableDesc;
+					}
+
+					break;
+				}
+				case D3D_SIT_TEXTURE:
+				{
+					ShaderReflectionData.TextureResourceBindingDescList.emplace_back(ResourceBindingDesc);
+					break;
+				}
+				case D3D_SIT_SAMPLER:
+				{
+					ShaderReflectionData.SamplerResourceBindingDescList.emplace_back(ResourceBindingDesc);
+					break;
+				}
+				case D3D_SIT_UAV_RWTYPED:
+				{
+					ShaderReflectionData.TypedBufferResourceBindingDescList.emplace_back(ResourceBindingDesc);
+					break;
+				}
+				case D3D_SIT_BYTEADDRESS:
+				{
+					ShaderReflectionData.ByteAddressBufferResourceBindingDescList.emplace_back(ResourceBindingDesc);
+					break;
+				}
+				case D3D_SIT_UAV_RWSTRUCTURED:
+				case D3D_SIT_STRUCTURED:
+				{
+					ShaderReflectionData.StructuredBufferResourceBindingDescList.emplace_back(ResourceBindingDesc);
+					break;
+				}
+				default:
+					EA_ASSERT(false);
+			}
 			if (ResourceBindingDesc.Type == D3D_SIT_CBUFFER)
 			{
-				ID3D12ShaderReflectionConstantBuffer* ShaderReflectionConstantBuffer = D3D12ShaderReflection.GetConstantBufferByIndex(BoundResourceIndex);
-				D3D12_SHADER_BUFFER_DESC ConstantBufferDesc{};
-				ShaderReflectionConstantBuffer->GetDesc(&ConstantBufferDesc);
-
-				ShaderReflectionData.ConstantBufferResourceBindingDescList.emplace_back(ResourceBindingDesc);
-				ShaderReflectionData.ConstantBufferDescList.emplace_back(ConstantBufferDesc);
 			}
 			else if (ResourceBindingDesc.Type == D3D_SIT_TEXTURE)
 			{
-				ShaderReflectionData.TextureResourceBindingDescList.emplace_back(ResourceBindingDesc);
 			}
 			else if (ResourceBindingDesc.Type == D3D_SIT_SAMPLER)
 			{
-				ShaderReflectionData.SamplerResourceBindingDescList.emplace_back(ResourceBindingDesc);
 			}
+
+
 			else
 			{
 				EA_ASSERT(false);
@@ -194,10 +245,11 @@ bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12Shader& Shader, const FSh
 		FinalShaderCompileArguments.ShaderText = eastl::u8string_view{ reinterpret_cast<const char8_t*>(OutTextData.data()), OutTextData.size() };
 		FinalShaderCompileArguments.ShaderTextFilePath = AssetPath;
 
-		const FShaderCompileResult ShaderCompileResult = FShaderCompileHelper::CompileShader(FinalShaderCompileArguments);
+		FShaderCompileResult ShaderCompileResult = FShaderCompileHelper::CompileShader(FinalShaderCompileArguments);
 		if (ShaderCompileResult.bIsValid)
 		{
 			Shader.SetShaderCompileResult(ShaderCompileResult);
+			Shader.PopulateShaderReflectionData(ShaderCompileResult.DxcContainerReflection.Get());
 			bIsSuccess = true;
 
 			RD_LOG(ELogVerbosity::Log, EA_WCHAR("Shader Compile Success : %s %s %s"), Shader.GetShaderDeclaration().ShaderName,

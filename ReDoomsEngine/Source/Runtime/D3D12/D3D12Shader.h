@@ -2,28 +2,47 @@
 #include "CommonInclude.h"
 #include "ShaderCompilers/ShaderCompileStructs.h"
 
+struct FD3D12ConstantBufferReflectionData
+{
+	struct FD3D12VariableOfConstantBufferReflectionData
+	{
+		eastl::string Name;
+		D3D12_SHADER_VARIABLE_DESC Desc;
+	};
+
+	eastl::string Name;
+	D3D12_SHADER_INPUT_BIND_DESC ResourceBindingDesc;
+	D3D12_SHADER_BUFFER_DESC Desc;
+	eastl::vector<FD3D12VariableOfConstantBufferReflectionData> VariableList; // variables declared in cbuffer
+};
+
 struct FD3D12ShaderReflectionData
 {
 	D3D12_SHADER_DESC ShaderDesc;
 
 	// Input Elements
 	D3D12_INPUT_LAYOUT_DESC InputLayoutDesc;
+
+	// A InputElement info is stored at the same pos(index) in InputElementSignatureParameterList and InputElementDescList and InputElementSemanticNameList
+	eastl::vector<D3D12_SIGNATURE_PARAMETER_DESC> InputElementSignatureParameterList;
 	eastl::vector<D3D12_INPUT_ELEMENT_DESC> InputElementDescList;
 	eastl::vector<eastl::string> InputElementSemanticNameList;
 
-	/*
 	// Output Elements
-	D3D12_INPUT_LAYOUT_DESC OutputLayoutDesc;
-	eastl::vector<D3D12_OUTPUT_ELEMENT_DESC> OutputElementDescList;
+	eastl::vector<D3D12_SIGNATURE_PARAMETER_DESC> OutputElementSignatureParameterList;
 	eastl::vector<eastl::string> OutputElementSemanticNameList;
-	*/
+
+	// Resource Binding
+	eastl::vector<eastl::string> ResourceBindingNameList;
 
 	// A Constant buffer info is stored at the same pos(index) in ConstantBufferResourceBindingDescList and ConstantBufferDescList
-	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> ConstantBufferResourceBindingDescList;
-	eastl::vector<D3D12_SHADER_BUFFER_DESC> ConstantBufferDescList;
+	eastl::vector<FD3D12ConstantBufferReflectionData> ConstantBufferList;
 
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> TextureResourceBindingDescList;
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> SamplerResourceBindingDescList;
+	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> TypedBufferResourceBindingDescList;
+	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> ByteAddressBufferResourceBindingDescList;
+	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> StructuredBufferResourceBindingDescList;
 };
 
 class FD3D12Shader
@@ -37,7 +56,8 @@ public:
 		const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, 
 		const uint64_t InShaderCompileFlags, const char* const InAdditionalPreprocessorDefine ...);
 
-	void SetShaderCompileResult(const FShaderCompileResult& InShaderCompileResult);
+	void SetShaderCompileResult(FShaderCompileResult& InShaderCompileResult);
+	void PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection);
 	void OnFinishShaderCompile();
 
 	const FShaderDeclaration& GetShaderDeclaration() const
@@ -50,24 +70,25 @@ public:
 	}
 	const eastl::vector<uint8_t>& GetShaderBlob() const
 	{
-		return ShaderCompileResult.ShaderBlobData;
+		return ShaderBlobData;
 	}
-	const ID3D12ShaderReflection* GetD3D12ShaderReflection() const
+	const FD3D12ShaderReflectionData& GetD3D12ShaderReflection() const
 	{
-		return ShaderCompileResult.DxcContainerReflection.Get();
+		return ShaderReflectionData;
 	}
 	const FShaderHash& GetShaderHash() const
 	{
-		return ShaderCompileResult.ShaderHash;
+		return ShaderHash;
 	}
 
 private:
 
-	void PopulateShaderReflectionData();
-
 	FShaderDeclaration ShaderDeclaration; // ShaderCompileResult variable also contains ShaderDeclaration same with this variable. 
-	FShaderCompileResult ShaderCompileResult;
+
+	eastl::vector<uint8_t> ShaderBlobData;
 	FD3D12ShaderReflectionData ShaderReflectionData;
+	FShaderHash ShaderHash;
+
 };
 
 // TODO) Need to support permutation?
