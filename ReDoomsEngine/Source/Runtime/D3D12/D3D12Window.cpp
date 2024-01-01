@@ -13,7 +13,8 @@ FD3D12Window::FD3D12Window(const long InWidth, const long InHeight, const wchar_
 void FD3D12Window::Init()
 { 
     // Initialize the window class.
-    WNDCLASSEX WindowClass = { 0 };
+    WNDCLASSEX WindowClass;
+    MEM_ZERO(WindowClass);
     WindowClass.cbSize = sizeof(WNDCLASSEX);
     WindowClass.style = CS_HREDRAW | CS_VREDRAW;
     WindowClass.lpfnWndProc = FD3D12Window::WindowProc;

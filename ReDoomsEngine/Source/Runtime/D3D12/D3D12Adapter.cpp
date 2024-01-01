@@ -34,6 +34,7 @@ void FD3D12Adapter::Init()
                 ++AdapterIndex)
             {
                 DXGI_ADAPTER_DESC1 AdapterDesc;
+                MEM_ZERO(AdapterDesc);
                 LocalAdapter->GetDesc1(&AdapterDesc);
 
                 if (AdapterDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
@@ -57,6 +58,7 @@ void FD3D12Adapter::Init()
             for (UINT adapterIndex = 0; SUCCEEDED(FD3D12Manager::GetInstance()->GetDXGIFactory()->EnumAdapters1(adapterIndex, &LocalAdapter)); ++adapterIndex)
             {
                 DXGI_ADAPTER_DESC1 AdapterDesc;
+                MEM_ZERO(AdapterDesc);
                 LocalAdapter->GetDesc1(&AdapterDesc);
 
                 if (AdapterDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)

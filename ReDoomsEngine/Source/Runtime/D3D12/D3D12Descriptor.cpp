@@ -27,7 +27,8 @@ FD3D12DescriptorHeap::FD3D12DescriptorHeap(uint32_t InNumDescriptors, D3D12_DESC
 
 void FD3D12DescriptorHeap::Init()
 {
-    D3D12_DESCRIPTOR_HEAP_DESC DescriptorHeapDesc = {};
+    D3D12_DESCRIPTOR_HEAP_DESC DescriptorHeapDesc;
+    MEM_ZERO(DescriptorHeapDesc);
     DescriptorHeapDesc.NumDescriptors = NumDescriptors;
     DescriptorHeapDesc.Type = HeapType;
     DescriptorHeapDesc.Flags = HeapFlags;
