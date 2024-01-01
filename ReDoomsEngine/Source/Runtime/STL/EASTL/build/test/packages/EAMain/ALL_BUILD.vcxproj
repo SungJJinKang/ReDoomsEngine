@@ -105,7 +105,7 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAMain\CMakeLists.txt">
+    <CustomBuild Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAMain/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
@@ -117,8 +117,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAMain\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;$(SolutionDir)Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAMain\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAMain/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
@@ -130,8 +130,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAMain\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;$(SolutionDir)Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAMain\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAMain/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
@@ -143,8 +143,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAMain\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;$(SolutionDir)Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAMain\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAMain/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
@@ -156,21 +156,21 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAMain\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.22\Modules\CheckCXXCompilerFlag.cmake;$(SolutionDir)Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAMain\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\ZERO_CHECK.vcxproj">
+    <ProjectReference Include="$(SolutionDir)Source\Runtime\STL\EASTL\build\ZERO_CHECK.vcxproj">
       <Project>{FF71505A-CF35-3BB2-B61F-06F8A68F4518}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAMain\EAMain.vcxproj">
+    <ProjectReference Include="$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAMain\EAMain.vcxproj">
       <Project>{315E65B1-FD34-3B3B-BC84-77F6955C94E4}</Project>
       <Name>EAMain</Name>
     </ProjectReference>

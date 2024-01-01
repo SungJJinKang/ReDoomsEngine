@@ -1,54 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\alloc.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\alloc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\alloc-aligned.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\alloc-aligned.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\alloc-posix.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\alloc-posix.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\arena.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\arena.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\bitmap.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\bitmap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\heap.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\heap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\init.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\init.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\options.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\options.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\os.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\os.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\page.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\page.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\random.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\random.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\segment.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\segment.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\segment-map.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\segment-map.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\stats.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\stats.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\src\prim\prim.c">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\mimalloc\src\prim\prim.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\CMakeLists.txt" />
+    <CustomBuild Include="$(SolutionDir)Source\Runtime\STL\mimalloc\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

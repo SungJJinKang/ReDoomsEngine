@@ -9,4 +9,4 @@
   string.cpp
   thread_support.cpp
   Generating Code...
-  EASTL.vcxproj -> C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\Debug\EASTL.lib
+  EASTL.vcxproj -> C:\ReDoomsEngine\ReDoomsEngine\x64\Debug\EASTL.lib
