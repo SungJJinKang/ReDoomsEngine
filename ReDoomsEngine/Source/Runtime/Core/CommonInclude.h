@@ -4,6 +4,7 @@
 #error "ReDoomsEngine requires unicode"
 #endif
 
+#include "Macros.h"
 #include "MemoryCore.h"
 
 #include "combaseapi.h"

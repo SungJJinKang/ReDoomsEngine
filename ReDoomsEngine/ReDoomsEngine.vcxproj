@@ -243,6 +243,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Core\WindowsApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Runtime\Core\Macros.h" />
     <ClInclude Include="Source\Runtime\Core\TextHelper.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12PSO.h" />
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.h" />
