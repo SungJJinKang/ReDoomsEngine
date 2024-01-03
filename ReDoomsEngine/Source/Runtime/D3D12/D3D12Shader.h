@@ -3,6 +3,12 @@
 #include "ShaderCompilers/ShaderCompileStructs.h"
 
 class FD3D12RootSignature;
+struct FShaderVariableTemplate;
+
+template<typename Type>
+struct FShaderVariable;
+
+struct FShaderPreprocessorDefineAdd;
 
 struct FD3D12ConstantBufferReflectionData
 {
@@ -47,16 +53,13 @@ struct FD3D12ShaderReflectionData
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> StructuredBufferResourceBindingDescList;
 };
 
-class FD3D12Shader
+class FD3D12ShaderTemplate
 {
 public:
 
-	FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFilePath,
+	FD3D12ShaderTemplate(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath,
 		const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency,
 		const uint64_t InShaderCompileFlags);
-	FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath,
-		const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, 
-		const uint64_t InShaderCompileFlags, const char* const InAdditionalPreprocessorDefine ...);
 
 	void SetShaderCompileResult(FShaderCompileResult& InShaderCompileResult);
 	void PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection);
@@ -83,6 +86,9 @@ public:
 		return ShaderHash;
 	}
 
+	void AddShaderVariable(FShaderVariableTemplate& InShaderVariable);
+	void AddShaderPreprocessorDefine(const FShaderPreprocessorDefine& InShaderPreprocessorDefine);
+
 private:
 
 	FShaderDeclaration ShaderDeclaration; // ShaderCompileResult variable also contains ShaderDeclaration same with this variable. 
@@ -90,33 +96,86 @@ private:
 	eastl::vector<uint8_t> ShaderBlobData;
 	FD3D12ShaderReflectionData ShaderReflectionData;
 	FShaderHash ShaderHash;
-	FD3D12RootSignature* RootSignature;
+	eastl::shared_ptr<FD3D12RootSignature> RootSignature;
 };
 
+class FD3D12ShaderInstance
+{
+public:
+
+private:
+
+};
+
+struct FShaderVariableTemplate
+{
+
+};
+
+template<typename VariableType>
+struct FShaderVariable : public FShaderVariableTemplate
+{
+	FShaderVariable(FD3D12ShaderTemplate& D3D12Shader, const char* const InVariableName)
+		: FShaderVariableTemplate(), VariableName(InVariableName)
+	{
+		MEM_ZERO(Value);
+		D3D12Shader.AddShaderVariable(*this);
+	}
+	VariableType Value;
+	const char* const VariableName;
+	//
+	//
+};
+
+struct FShaderPreprocessorDefineAdd
+{
+	FShaderPreprocessorDefineAdd(FD3D12ShaderTemplate& D3D12Shader, const char* const InDefineStr);
+	const char* const DefineStr;
+};
+
+// This should match with variable declared in shader
+#define ADD_SHADER_VARIABLE(Type, VariableNameStr) \
+	public: \
+	FShaderVariable<Type> VariableNameStr{*this, #VariableNameStr};
+
+#define ADD_PREPROCESSOR_DEFINE(DefineStr) \
+	private: \
+	FShaderPreprocessorDefineAdd RD_UNIQUE_NAME(ShaderPreprocessorDefine) {*this, #DefineStr};
+
 // TODO) Need to support permutation?
-// Example 1 : DECLARE_SHADER(MotionBlurVS, "MotionBlur.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None, "EARLY_OUT", "FAST_PATH=1");
-// Example 2 : DECLARE_SHADER(MotionBlurPS, "MotionBlur.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None);
+// Example 1 : DEFINE_SHADER(MotionBlurVS, "MotionBlur.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None, "EARLY_OUT", "FAST_PATH=1");
+// Example 2 : DEFINE_SHADER(MotionBlurPS, "MotionBlur.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None);
 //
 // Parameters)
 // ShaderTextFileRelativePath : Shader file path relative to Asset/Shader
-#define DECLARE_SHADER(ShaderName, ShaderTextFileRelativePath, ShaderEntryPoint, ShaderFrequency, ShaderCompileFlags, AdditionalPreprocessorDefine, ... /*Definitions*/) \
-	FD3D12Shader D3D12Shader##ShaderName{EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \
-		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags, AdditionalPreprocessorDefine, ##__VA_ARGS__, NULL };
+#define DEFINE_SHADER(ShaderName, ShaderTextFileRelativePath, ShaderEntryPoint, ShaderFrequency, ShaderCompileFlags, ...) \
+	class FD3D12Shader##ShaderName : public FD3D12ShaderTemplate \
+	{ \
+	public: \
+		FD3D12Shader##ShaderName(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath, \
+			const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, const uint64_t InShaderCompileFlags) \
+			: FD3D12ShaderTemplate(InShaderName, InShaderTextFileRelativePath, InShaderEntryPoint, InShaderFrequency, InShaderCompileFlags) \
+		{ \
+		} \
+		__VA_ARGS__ \
+	}; \
+	FD3D12Shader##ShaderName D3D12Shader##ShaderName{EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \
+		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags};
 
 class FD3D12ShaderManager : public EA::StdC::Singleton<FD3D12ShaderManager>
 {
 public:
 
 	void Init();
-	bool CompileAndAddNewShader(FD3D12Shader& Shader, const FShaderCompileArguments& InShaderCompileArguments);
+	bool CompileAndAddNewShader(FD3D12ShaderTemplate& Shader, const FShaderCompileArguments& InShaderCompileArguments);
 	void CompileAllPendingShader();
 
 	/// <summary>
-	/// FD3D12Shader objects created through "DECLARE_SHADER" macros is added to this list
+	/// FD3D12Shader objects created through "DEFINE_SHADER" macros is added to this list
 	/// </summary>
-	static eastl::vector<FD3D12Shader*>& GetCompilePendingShaderList();
-	static void AddCompilePendingShader(FD3D12Shader& CompilePendingShader);
-	inline const eastl::vector<FD3D12Shader*>& GetShaderList() const
+	static eastl::vector<FD3D12ShaderTemplate*>& GetCompilePendingShaderList();
+	static void AddCompilePendingShader(FD3D12ShaderTemplate& CompilePendingShader);
+	inline const eastl::vector<FD3D12ShaderTemplate*>& GetShaderList() const
 	{
 		return ShaderList;
 	}
@@ -125,6 +184,6 @@ private:
 	/// <summary>
 	/// FD3D12Shader objects containing compiled data is added to this list
 	/// </summary>
-	eastl::vector<FD3D12Shader*> ShaderList;
+	eastl::vector<FD3D12ShaderTemplate*> ShaderList;
 
 };

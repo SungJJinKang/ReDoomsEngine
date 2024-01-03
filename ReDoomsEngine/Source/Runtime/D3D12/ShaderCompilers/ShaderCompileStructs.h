@@ -8,6 +8,11 @@ struct FShaderPreprocessorDefine
 {
 	eastl::wstring Name;
 	eastl::wstring Value;
+
+	bool operator==(const FShaderPreprocessorDefine& Other)
+	{
+		return (Name == Other.Name) && (Value == Other.Value);
+	}
 };
 
 enum EShaderCompileFlag : uint64_t

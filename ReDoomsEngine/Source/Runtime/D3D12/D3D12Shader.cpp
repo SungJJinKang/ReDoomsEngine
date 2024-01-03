@@ -4,15 +4,18 @@
 #include "AssetManager.h"
 #include "D3D12RootSignature.h"
 
-DECLARE_SHADER(HelloTriangleVS, "HelloTriangle.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None, "NO_ERROR=1");
-DECLARE_SHADER(HelloTrianglePS, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, "NO_ERROR=1");
+DEFINE_SHADER(HelloTriangleVS, "HelloTriangle.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None, 
+	ADD_SHADER_VARIABLE(int, Time)
+	ADD_PREPROCESSOR_DEFINE(NO_ERROR=1)
+	ADD_PREPROCESSOR_DEFINE(NO_ERROR1=1)
+);
+DEFINE_SHADER(HelloTrianglePS, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
+DEFINE_SHADER(HelloTrianglePS2, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR = 1));
 
-FD3D12Shader::FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath, 
-	const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, const uint64_t InShaderCompileFlags, 
-	const char* const InAdditionalPreprocessorDefine ...)
-	: RootSignature()
+FD3D12ShaderTemplate::FD3D12ShaderTemplate(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath,
+	const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, const uint64_t InShaderCompileFlags)
 {
-
+	MEM_ZERO(RootSignature);
 	MEM_ZERO(ShaderDeclaration);
 	MEM_ZERO(ShaderReflectionData);
 
@@ -22,45 +25,10 @@ FD3D12Shader::FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* con
 	ShaderDeclaration.ShaderFrequency = InShaderFrequency;
 	ShaderDeclaration.ShaderCompileFlags = InShaderCompileFlags;
 
-	if (InAdditionalPreprocessorDefine)
-	{
-		auto AddToAdditionalPreprocessorDefineList = [this](const char* const Define)
-		{
-			ShaderDeclaration.AdditionalPreprocessorDefineList.push_back(FShaderCompileArguments::ParseDefineStr(Define));
-		};
-		
-		va_list args;
-		const char* str = InAdditionalPreprocessorDefine;
-		size_t StrCount = 1;
-
-		// Count the number of arguments
-		va_start(args, InAdditionalPreprocessorDefine);
-		while (str != NULL) {
-			StrCount++;
-			str = va_arg(args, const char*);
-		}
-		va_end(args);
-
-		AddToAdditionalPreprocessorDefineList(InAdditionalPreprocessorDefine);
-		// Extract and store the string arguments in the array
-		va_start(args, InAdditionalPreprocessorDefine);
-		for (int32_t i = 1; i < StrCount - 1; i++) 
-		{
-			AddToAdditionalPreprocessorDefineList(va_arg(args, const char*));
-		}
-		va_end(args);
-	}
-
 	FD3D12ShaderManager::AddCompilePendingShader(*this);
 }
 
-FD3D12Shader::FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFilePath,
-	const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, const uint64_t InShaderCompileFlags)
-	: FD3D12Shader(InShaderName, InShaderTextFilePath, InShaderEntryPoint, InShaderFrequency, InShaderCompileFlags, nullptr)
-{
-}
-
-void FD3D12Shader::SetShaderCompileResult(FShaderCompileResult& InShaderCompileResult)
+void FD3D12ShaderTemplate::SetShaderCompileResult(FShaderCompileResult& InShaderCompileResult)
 {
 	EA_ASSERT(InShaderCompileResult.bIsValid); // Shouldn't overwrite
 
@@ -69,12 +37,26 @@ void FD3D12Shader::SetShaderCompileResult(FShaderCompileResult& InShaderCompileR
 
 }
 
-void FD3D12Shader::OnFinishShaderCompile()
+void FD3D12ShaderTemplate::OnFinishShaderCompile()
 {
-	FD3D12RootSignatureManager::GetInstance()->CreateAndAddNewRootSignature(this);
+	FD3D12RootSignatureManager::GetInstance()->GetOrCreateRootSignature(this);
 }
 
-void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection)
+void FD3D12ShaderTemplate::AddShaderVariable(FShaderVariableTemplate& InShaderVariable)
+{
+	// todo : map to shader variable in reflection data
+}
+
+void FD3D12ShaderTemplate::AddShaderPreprocessorDefine(const FShaderPreprocessorDefine& InShaderPreprocessorDefine)
+{
+#if RD_DEBUG
+	EA_ASSERT(eastl::find(ShaderDeclaration.AdditionalPreprocessorDefineList.begin(), ShaderDeclaration.AdditionalPreprocessorDefineList.end(), InShaderPreprocessorDefine)
+		== ShaderDeclaration.AdditionalPreprocessorDefineList.end());
+#endif
+	ShaderDeclaration.AdditionalPreprocessorDefineList.push_back(InShaderPreprocessorDefine);
+}
+
+void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection)
 {
 	// ref https://rtarun9.github.io/blogs/shader_reflection/
 
@@ -213,12 +195,19 @@ void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const In
 	}
 }
 
+FShaderPreprocessorDefineAdd::FShaderPreprocessorDefineAdd(FD3D12ShaderTemplate& D3D12Shader, const char* const InDefineStr)
+	: DefineStr(InDefineStr)
+{
+	EA_ASSERT(EA::StdC::Strstr(InDefineStr, " ") != NULL);
+	D3D12Shader.AddShaderPreprocessorDefine(FShaderCompileArguments::ParseDefineStr(DefineStr));
+}
+
 void FD3D12ShaderManager::Init()
 {
 	CompileAllPendingShader();
 }
 
-bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12Shader& Shader, const FShaderCompileArguments& InShaderCompileArguments)
+bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12ShaderTemplate& Shader, const FShaderCompileArguments& InShaderCompileArguments)
 {
 	bool bIsSuccess = false;
 	FShaderCompileArguments FinalShaderCompileArguments = InShaderCompileArguments;
@@ -249,6 +238,8 @@ bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12Shader& Shader, const FSh
 				Shader.GetShaderDeclaration().ShaderTextFileRelativePath, GetShaderFrequencyString(Shader.GetShaderDeclaration().ShaderFrequency));
 
 			Shader.OnFinishShaderCompile();
+			
+			// @todo check if name of the shader exists already
 		}
 	}
 	return bIsSuccess;
@@ -257,20 +248,20 @@ bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12Shader& Shader, const FSh
 void FD3D12ShaderManager::CompileAllPendingShader()
 {
 	FShaderCompileArguments DeafulatShaderCompileArguments{};
-	for (FD3D12Shader* D3D12Shader : GetCompilePendingShaderList())
+	for (FD3D12ShaderTemplate* D3D12Shader : GetCompilePendingShaderList())
 	{
 		CompileAndAddNewShader(*D3D12Shader, DeafulatShaderCompileArguments);
 	}
 	GetCompilePendingShaderList().resize(0);
 }
 
-eastl::vector<FD3D12Shader*>& FD3D12ShaderManager::GetCompilePendingShaderList()
+eastl::vector<FD3D12ShaderTemplate*>& FD3D12ShaderManager::GetCompilePendingShaderList()
 {
-	static eastl::vector<FD3D12Shader*> CompilePendingShaderList{};
+	static eastl::vector<FD3D12ShaderTemplate*> CompilePendingShaderList{};
 	return CompilePendingShaderList;
 }
 
-void FD3D12ShaderManager::AddCompilePendingShader(FD3D12Shader& CompilePendingShader)
+void FD3D12ShaderManager::AddCompilePendingShader(FD3D12ShaderTemplate& CompilePendingShader)
 {
 	GetCompilePendingShaderList().push_back(&CompilePendingShader);
 }

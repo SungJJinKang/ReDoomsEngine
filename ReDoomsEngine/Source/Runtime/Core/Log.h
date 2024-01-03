@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Macros.h"
+
 enum class ELogVerbosity
 {
 	Log,
@@ -14,7 +16,7 @@ namespace redooms::log
 	void LogInternal(const ELogVerbosity LogVerbosity, const wchar_t* const FilePath, const unsigned int CodeLine, const wchar_t* const Format, ...);
 }
 
-#if defined(_DEBUG)
+#if RD_DEBUG
 
 #define RD_LOG(LogVerbosity, Format, ...) \
 { \
