@@ -23,8 +23,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{343DF88E-214F-3A9F-9B12-193A22EDDBAA}</ProjectGuid>
-    <WindowsTargetPlatformVersion>10.0.20348.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>INSTALL</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
@@ -126,6 +126,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="$(SolutionDir)Source\Runtime\STL\mimalloc\build\CMakeFiles\8d7bf8d1509c1c7d8ab33db99f07fa0d\INSTALL_force.rule">
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</BuildInParallel>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
 cd .
@@ -140,6 +141,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Source\Runtime\STL\mimalloc\build\CMakeFiles\INSTALL_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</VerifyInputsAndOutputsExist>
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</BuildInParallel>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
 cd .
@@ -154,6 +156,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Source\Runtime\STL\mimalloc\build\CMakeFiles\INSTALL_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</BuildInParallel>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
 cd .
@@ -168,6 +171,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(SolutionDir)Source\Runtime\STL\mimalloc\build\CMakeFiles\INSTALL_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</VerifyInputsAndOutputsExist>
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</BuildInParallel>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
 cd .

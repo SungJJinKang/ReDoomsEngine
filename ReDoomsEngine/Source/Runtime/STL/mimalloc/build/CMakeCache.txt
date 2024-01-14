@@ -73,6 +73,9 @@ CMAKE_EXE_LINKER_FLAGS_RELEASE:STRING=/INCREMENTAL:NO
 //Flags used by the linker during RELWITHDEBINFO builds.
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
 
+//Value Computed by CMake.
+CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/build/CMakeFiles/pkgRedirects
+
 //User executables (bin)
 CMAKE_INSTALL_BINDIR:PATH=bin
 
@@ -339,9 +342,9 @@ CMAKE_CACHEFILE_DIR:INTERNAL=c:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/m
 //Major version of cmake used to create the current loaded cache
 CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=22
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=28
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=2
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=1
 //Path to CMake executable.
 CMAKE_COMMAND:INTERNAL=C:/Program Files/CMake/bin/cmake.exe
 //Path to cpack program executable.
@@ -463,7 +466,7 @@ CMAKE_RC_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_RC_FLAGS_RELWITHDEBINFO
 CMAKE_RC_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //Path to CMake installation.
-CMAKE_ROOT:INTERNAL=C:/Program Files/CMake/share/cmake-3.22
+CMAKE_ROOT:INTERNAL=C:/Program Files/CMake/share/cmake-3.28
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS
 CMAKE_SHARED_LINKER_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS_DEBUG
