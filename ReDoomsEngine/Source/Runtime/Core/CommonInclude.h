@@ -27,6 +27,7 @@ using Microsoft::WRL::ComPtr;
 #include "EASTL/vector.h"
 #include "EASTL/vector_map.h"
 #include "EASTL/vector_set.h"
+#include "EASTL/hash_map.h"
 #include "EASTL/unique_ptr.h"
 #include "EASTL/shared_ptr.h"
 #include "EASTL/bitvector.h"
@@ -40,3 +41,4 @@ using Microsoft::WRL::ComPtr;
 
 #include "Log.h"
 #include "TextHelper.h"
+#include "Utils.h"

@@ -2,6 +2,11 @@
 
 #include "D3D12Adapter.h"
 
+ID3D12Device* GetD3D12Device()
+{
+    return FD3D12Device::GetInstance()->GetD3D12Device();
+}
+
 FD3D12Device::FD3D12Device(FD3D12Adapter* const InAdapter)
     : Adapter(InAdapter)
 {

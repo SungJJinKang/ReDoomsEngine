@@ -32,9 +32,9 @@ void FD3D12DescriptorHeap::Init()
     DescriptorHeapDesc.NumDescriptors = NumDescriptors;
     DescriptorHeapDesc.Type = HeapType;
     DescriptorHeapDesc.Flags = HeapFlags;
-    VERIFYD3D12RESULT(FD3D12Device::GetInstance()->GetD3D12Device()->CreateDescriptorHeap(&DescriptorHeapDesc, IID_PPV_ARGS(&D3DDescriptorHeap)));
+    VERIFYD3D12RESULT(GetD3D12Device()->CreateDescriptorHeap(&DescriptorHeapDesc, IID_PPV_ARGS(&D3DDescriptorHeap)));
 
-    DescriptorSize = FD3D12Device::GetInstance()->GetD3D12Device()->GetDescriptorHandleIncrementSize(HeapType);
+    DescriptorSize = GetD3D12Device()->GetDescriptorHandleIncrementSize(HeapType);
 
     CPUBase = D3DDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
     GPUBase = D3DDescriptorHeap->GetGPUDescriptorHandleForHeapStart();

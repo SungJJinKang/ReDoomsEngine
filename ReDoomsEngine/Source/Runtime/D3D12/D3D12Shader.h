@@ -3,12 +3,24 @@
 #include "ShaderCompilers/ShaderCompileStructs.h"
 
 class FD3D12RootSignature;
+class FD3D12ShaderTemplate;
 struct FShaderVariableTemplate;
 
 template<typename Type>
 struct FShaderVariable;
 
 struct FShaderPreprocessorDefineAdd;
+
+struct FBoundShaderSet
+{
+	FBoundShaderSet() = delete;
+	FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH> InShaderList);
+	void CacheHash();
+	void Validate();
+
+	const eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH> ShaderList{ nullptr };
+	FHash CachedHash;
+};
 
 struct FD3D12ConstantBufferReflectionData
 {
@@ -48,9 +60,14 @@ struct FD3D12ShaderReflectionData
 
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> TextureResourceBindingDescList;
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> SamplerResourceBindingDescList;
-	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> TypedBufferResourceBindingDescList;
+	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> UAVResourceBindingDescList;
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> ByteAddressBufferResourceBindingDescList;
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> StructuredBufferResourceBindingDescList;
+
+	uint32_t ShaderResourceCount;
+	uint32_t ConstantBufferCount;
+	uint32_t SamplerCount;
+	uint32_t UnorderedAccessCount;
 };
 
 class FD3D12ShaderTemplate
@@ -81,7 +98,7 @@ public:
 	{
 		return ShaderReflectionData;
 	}
-	const FShaderHash& GetShaderHash() const
+	const FHash& GetShaderHash() const
 	{
 		return ShaderHash;
 	}
@@ -95,7 +112,7 @@ private:
 
 	eastl::vector<uint8_t> ShaderBlobData;
 	FD3D12ShaderReflectionData ShaderReflectionData;
-	FShaderHash ShaderHash;
+	FHash ShaderHash;
 	eastl::shared_ptr<FD3D12RootSignature> RootSignature;
 };
 

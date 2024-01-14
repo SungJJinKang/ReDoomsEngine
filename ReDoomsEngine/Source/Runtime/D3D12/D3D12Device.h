@@ -5,6 +5,8 @@
 
 class FD3D12Adapter;
 
+ID3D12Device* GetD3D12Device();
+
 class FD3D12Device : public EA::StdC::Singleton<FD3D12Device>
 {
 public:
