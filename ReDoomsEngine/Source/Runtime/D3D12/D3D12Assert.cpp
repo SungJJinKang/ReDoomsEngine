@@ -2,7 +2,6 @@
 
 #define D3DERR(x) case x: ErrorCodeText = TEXT(#x); break;
 
-
 static EA::Thread::Futex VerifyD3D12ResultFutex{};
 
 eastl::wstring d3d12::assert::GetD3D12ErrorString(HRESULT Result)
@@ -56,8 +55,22 @@ void d3d12::assert::D3D12CallFail(HRESULT Result, const wchar_t* const Statement
 	{
 
 	}
-
 	redooms::log::LogInternal(ELogVerbosity::Fatal, FilePath, CodeLine, EA_WCHAR("VerifyD3D12Result Fail : %s (Error Code : %ld)"), Statement, GetD3D12ErrorString(Result).c_str());
+}
 
-	
+void d3d12::assert::D3D12CallFail(HRESULT Result, const wchar_t* const Statement, const wchar_t* const FilePath, const uint32_t CodeLine, const ComPtr<ID3DBlob>& ErrorBlob)
+{
+	EA::Thread::AutoFutex AutoFutex{ VerifyD3D12ResultFutex };
+
+	if (Result == E_OUTOFMEMORY)
+	{
+
+	}
+	else if (Result == DXGI_ERROR_DEVICE_REMOVED || Result == DXGI_ERROR_DEVICE_HUNG || Result == DXGI_ERROR_DEVICE_RESET)
+	{
+
+	}
+
+	eastl::string8 ErrorStr{ reinterpret_cast<const char8_t*>(ErrorBlob->GetBufferPointer()), ErrorBlob->GetBufferSize() };
+	redooms::log::LogInternal(ELogVerbosity::Fatal, FilePath, CodeLine, EA_WCHAR("VerifyD3D12Result Fail : %s (Error Code : %ld)(Error String : %s)"), Statement, GetD3D12ErrorString(Result).c_str(), UTF8_TO_WCHAR(ErrorStr));
 }

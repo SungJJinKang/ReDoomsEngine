@@ -8,10 +8,8 @@ cbuffer SceneConstantBuffer
     float4 padding[15];
 };
 
-cbuffer ModelMatrixConstantBuffer
-{
-    float4x4 Matrix;
-};
+Texture2D<float4> TestTexture;
+float4x4 ModelMatrix;
 
 struct PSInput
 {
@@ -27,6 +25,7 @@ Make Compile Error!!!!!!!!!
 
 float4 offsetShaderVariable1;
 float4 offsetShaderVariable2;
+int Time;
 
 Texture2D<float4> TriangleColorTexture;
 SamplerState Sampler;
@@ -35,7 +34,7 @@ PSInput MainVS(float4 position : POSITION, float2 UV : TEXCOORD0)
 {
     PSInput result;
 
-    result.position = position + offset + Matrix[0] + offsetShaderVariable1 + offsetShaderVariable2;
+    result.position = position + offset + ModelMatrix[0] + offsetShaderVariable1 + offsetShaderVariable2 + TestTexture.Load(int3(Time, 0, 0));
     result.UV = UV;
 
     return result;
