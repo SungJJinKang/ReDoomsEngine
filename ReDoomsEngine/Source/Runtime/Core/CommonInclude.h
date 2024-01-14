@@ -38,6 +38,7 @@ using Microsoft::WRL::ComPtr;
 #include "DirectXCollision.h"
 #include "DirectXColors.h"
 #include "DirectXPackedVector.h"
+using namespace DirectX;
 
 #include "Log.h"
 #include "TextHelper.h"

@@ -13,6 +13,9 @@ public:
 
 	static constexpr int32_t MaxRootParameters = 32;	// Arbitrary max, increase as needed.
 
+	uint32_t RootParameterCount;
+	uint32_t BindingSpace;
+
 	ComPtr<ID3DBlob> RootSignatureBlob;
 	ComPtr<ID3D12RootSignature> RootSignature;
 

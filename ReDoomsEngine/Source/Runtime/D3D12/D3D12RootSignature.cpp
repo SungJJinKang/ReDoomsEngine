@@ -19,8 +19,8 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 	// -> 되도록이면 RootDescriptor Table을 사용함 
 	const D3D12_ROOT_PARAMETER_TYPE RootParameterTypePriorityOrder[] = { D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, D3D12_ROOT_PARAMETER_TYPE_CBV };
 	
-	uint32_t RootParameterCount = 0;
-	uint32_t BindingSpace = 0; // Default binding space for D3D 11 & 12 shaders
+	RootSignature.RootParameterCount = 0;
+	RootSignature.BindingSpace = 0; // Default binding space for D3D 11 & 12 shaders
 
 	const D3D12_RESOURCE_BINDING_TIER ResourceBindingTier = FD3D12Device::GetInstance()->GetResourceBindingTier();
 
@@ -62,30 +62,30 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 				{
 					if (ReflectionData.ShaderResourceCount > 0)
 					{
-						RootSignature.DescriptorRanges[RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, ReflectionData.ShaderResourceCount, 0u, BindingSpace, SRVDescriptorRangeFlags);
-						RootSignature.TableSlots[RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootParameterCount], Visibility);
-						RootParameterCount++;
+						RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, ReflectionData.ShaderResourceCount, 0u, RootSignature.BindingSpace, SRVDescriptorRangeFlags);
+						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
+						RootSignature.RootParameterCount++;
 					}
 
 					if (ReflectionData.ConstantBufferCount > MAX_ROOT_CBVS)
 					{
-						RootSignature.DescriptorRanges[RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, ReflectionData.ConstantBufferCount - MAX_ROOT_CBVS, MAX_ROOT_CBVS, BindingSpace, CBVDescriptorRangeFlags);
-						RootSignature.TableSlots[RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootParameterCount], Visibility);
-						RootParameterCount++;
+						RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, ReflectionData.ConstantBufferCount - MAX_ROOT_CBVS, MAX_ROOT_CBVS, RootSignature.BindingSpace, CBVDescriptorRangeFlags);
+						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
+						RootSignature.RootParameterCount++;
 					}
 
 					if (ReflectionData.SamplerCount > 0)
 					{
-						RootSignature.DescriptorRanges[RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, ReflectionData.SamplerCount, 0u, BindingSpace, SamplerDescriptorRangeFlags);
-						RootSignature.TableSlots[RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootParameterCount], Visibility);
-						RootParameterCount++;
+						RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, ReflectionData.SamplerCount, 0u, RootSignature.BindingSpace, SamplerDescriptorRangeFlags);
+						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
+						RootSignature.RootParameterCount++;
 					}
 
 					if (ReflectionData.UnorderedAccessCount > 0)
 					{
-						RootSignature.DescriptorRanges[RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, ReflectionData.UnorderedAccessCount, 0u, BindingSpace, UAVDescriptorRangeFlags);
-						RootSignature.TableSlots[RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootParameterCount], Visibility);
-						RootParameterCount++;
+						RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, ReflectionData.UnorderedAccessCount, 0u, RootSignature.BindingSpace, UAVDescriptorRangeFlags);
+						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
+						RootSignature.RootParameterCount++;
 					}
 					break;
 				}
@@ -94,8 +94,8 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 				{
 					for (uint32_t ShaderRegister = 0; (ShaderRegister < ReflectionData.ConstantBufferCount) && (ShaderRegister < MAX_ROOT_CBVS); ShaderRegister++)
 					{
-						RootSignature.TableSlots[RootParameterCount].InitAsConstantBufferView(ShaderRegister, BindingSpace, CBVRootDescriptorFlags, Visibility);
-						RootParameterCount++;
+						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsConstantBufferView(ShaderRegister, RootSignature.BindingSpace, CBVRootDescriptorFlags, Visibility);
+						RootSignature.RootParameterCount++;
 					}
 					break;
 				}
@@ -108,7 +108,7 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 		}
 	}
 
-	RootSignature.RootDesc.Init_1_1(_countof(RootSignature.TableSlots), RootSignature.TableSlots, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	RootSignature.RootDesc.Init_1_1(RootSignature.RootParameterCount, RootSignature.TableSlots, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	D3D12_FEATURE_DATA_ROOT_SIGNATURE FeatureData = {};
 
@@ -121,7 +121,7 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 	}
 
 	ComPtr<ID3DBlob> ErrorBlob;
-	VERIFYD3D12RESULT(D3DX12SerializeVersionedRootSignature(&RootSignature.RootDesc, FeatureData.HighestVersion, &RootSignature.RootSignatureBlob, &ErrorBlob));
+	VERIFYD3D12RESULT_ERRORBLOB(D3DX12SerializeVersionedRootSignature(&RootSignature.RootDesc, FeatureData.HighestVersion, &RootSignature.RootSignatureBlob, &ErrorBlob), ErrorBlob);
 	VERIFYD3D12RESULT(GetD3D12Device()->CreateRootSignature(0, RootSignature.RootSignatureBlob->GetBufferPointer(), RootSignature.RootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&RootSignature.RootSignature)));
 
 	return RootSignature;

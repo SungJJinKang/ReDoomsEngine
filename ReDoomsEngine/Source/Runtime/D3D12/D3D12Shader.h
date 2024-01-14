@@ -4,10 +4,10 @@
 
 class FD3D12RootSignature;
 class FD3D12ShaderTemplate;
-struct FShaderVariableTemplate;
+struct FShaderParameterTemplate;
 
 template<typename Type>
-struct FShaderVariable;
+struct FShaderParameter;
 
 struct FShaderPreprocessorDefineAdd;
 
@@ -22,6 +22,13 @@ struct FBoundShaderSet
 	FHash CachedHash;
 };
 
+//
+template<typename Type>
+uint32_t GetShaderVariableSize()
+{
+	return sizeof(Type);
+}
+
 struct FD3D12ConstantBufferReflectionData
 {
 	struct FD3D12VariableOfConstantBufferReflectionData
@@ -30,6 +37,7 @@ struct FD3D12ConstantBufferReflectionData
 		D3D12_SHADER_VARIABLE_DESC Desc;
 	};
 
+	bool bIsGlobalVariable;
 	eastl::string Name;
 	D3D12_SHADER_INPUT_BIND_DESC ResourceBindingDesc;
 	D3D12_SHADER_BUFFER_DESC Desc;
@@ -38,6 +46,8 @@ struct FD3D12ConstantBufferReflectionData
 
 struct FD3D12ShaderReflectionData
 {
+	bool bPopulated = false;
+
 	D3D12_SHADER_DESC ShaderDesc;
 
 	// Input Elements
@@ -56,6 +66,7 @@ struct FD3D12ShaderReflectionData
 	eastl::vector<eastl::string> ResourceBindingNameList;
 
 	// A Constant buffer info is stored at the same pos(index) in ConstantBufferResourceBindingDescList and ConstantBufferDescList
+	FD3D12ConstantBufferReflectionData GlobalConstantBuffer;
 	eastl::vector<FD3D12ConstantBufferReflectionData> ConstantBufferList;
 
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> TextureResourceBindingDescList;
@@ -103,8 +114,10 @@ public:
 		return ShaderHash;
 	}
 
-	void AddShaderVariable(FShaderVariableTemplate& InShaderVariable);
+	void AddShaderParameter(FShaderParameterTemplate* InShaderParameter);
 	void AddShaderPreprocessorDefine(const FShaderPreprocessorDefine& InShaderPreprocessorDefine);
+
+	void ValidateShaderParameter();
 
 private:
 
@@ -113,7 +126,8 @@ private:
 	eastl::vector<uint8_t> ShaderBlobData;
 	FD3D12ShaderReflectionData ShaderReflectionData;
 	FHash ShaderHash;
-	eastl::shared_ptr<FD3D12RootSignature> RootSignature;
+
+	eastl::vector<FShaderParameterTemplate*> ShaderParameterList;
 };
 
 class FD3D12ShaderInstance
@@ -124,24 +138,99 @@ private:
 
 };
 
-struct FShaderVariableTemplate
+struct FShaderParameterTemplate
 {
+	FShaderParameterTemplate(const char* const InVariableName)
+		: VariableName(InVariableName)
+	{
 
+	}
+	const char* const VariableName;
+
+	virtual uint32_t GetSize() = 0;
+	virtual bool IsConstantBuffer() const
+	{
+		return false;
+	}
+	virtual bool IsTexture() const
+	{
+		return false;
+	}
+	virtual bool IsBuffer() const
+	{
+		return false;
+	}
+	virtual bool IsSampler() const
+	{
+		return false;
+	}
+};
+
+struct FShaderConstantBufferTemplate : public FShaderParameterTemplate
+{
+	FShaderConstantBufferTemplate(FD3D12ShaderTemplate& D3D12Shader, const char* const InVariableName)
+		: FShaderParameterTemplate(InVariableName), MemberVariableList()
+	{
+		D3D12Shader.AddShaderParameter(this);
+	}
+
+	void AddMemberVariable(FShaderParameterTemplate* InShaderParameter);
+
+	virtual bool IsConstantBuffer() const
+	{
+		return true;
+	}
+
+	virtual uint32_t GetSize()
+	{
+		EA_ASSERT(false); // todo
+		return 0;
+	}
+
+	eastl::vector<FShaderParameterTemplate*> MemberVariableList;
 };
 
 template<typename VariableType>
-struct FShaderVariable : public FShaderVariableTemplate
+struct FShaderParameter : public FShaderParameterTemplate
 {
-	FShaderVariable(FD3D12ShaderTemplate& D3D12Shader, const char* const InVariableName)
-		: FShaderVariableTemplate(), VariableName(InVariableName)
+	FShaderParameter(FShaderConstantBufferTemplate& ConstantBuffer, const char* const InVariableName)
+		: FShaderParameterTemplate(InVariableName)
 	{
 		MEM_ZERO(Value);
-		D3D12Shader.AddShaderVariable(*this);
+		ConstantBuffer.AddMemberVariable(this);
+	}
+
+	FShaderParameter(FD3D12ShaderTemplate& D3D12Shader, const char* const InVariableName)
+		: FShaderParameterTemplate(InVariableName)
+	{
+		MEM_ZERO(Value);
+		D3D12Shader.AddShaderParameter(this);
 	}
 	VariableType Value;
-	const char* const VariableName;
-	//
-	//
+
+	std::type_info GetTypeId() const
+	{
+		return typeid(VariableType);
+	}
+
+	virtual uint32_t GetSize()
+	{
+		return GetShaderVariableSize<VariableType>();
+
+	}
+
+	virtual bool IsTexture() const
+	{
+		return false;
+	}
+	virtual bool IsBuffer() const
+	{
+		return false;
+	}
+	virtual bool IsSampler() const
+	{
+		return false;
+	}
 };
 
 struct FShaderPreprocessorDefineAdd
@@ -150,10 +239,24 @@ struct FShaderPreprocessorDefineAdd
 	const char* const DefineStr;
 };
 
+#define ADD_CONSTANT_BUFFER(VariableNameStr, ...) \
+	public : \
+	struct FShaderConstantBuffer##VariableNameStr : public FShaderConstantBufferTemplate \
+	{ \
+		FShaderConstantBuffer##VariableNameStr(FD3D12ShaderTemplate& D3D12Shader, const char* const InVariableName) \
+			: FShaderConstantBufferTemplate(D3D12Shader, InVariableName) \
+		{ \
+			D3D12Shader.AddShaderParameter(this); \
+		} \
+		__VA_ARGS__ \
+	}; \
+	public: \
+	FShaderConstantBuffer##VariableNameStr VariableNameStr{ *this, #VariableNameStr };
+
 // This should match with variable declared in shader
 #define ADD_SHADER_VARIABLE(Type, VariableNameStr) \
 	public: \
-	FShaderVariable<Type> VariableNameStr{*this, #VariableNameStr};
+	FShaderParameter<Type> VariableNameStr{*this, #VariableNameStr};
 
 #define ADD_PREPROCESSOR_DEFINE(DefineStr) \
 	private: \
@@ -176,8 +279,9 @@ struct FShaderPreprocessorDefineAdd
 		} \
 		__VA_ARGS__ \
 	}; \
-	FD3D12Shader##ShaderName D3D12Shader##ShaderName{EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \
-		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags};
+	FD3D12Shader##ShaderName ShaderName{EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \
+		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags}; \
+	class FD3D12Shader##ShaderName##Instance : public FD3D12Shader##ShaderName {};
 
 class FD3D12ShaderManager : public EA::StdC::Singleton<FD3D12ShaderManager>
 {
