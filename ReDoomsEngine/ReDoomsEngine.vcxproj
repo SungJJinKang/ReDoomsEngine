@@ -92,11 +92,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;EA_DEBUG;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -121,11 +122,12 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,11 +152,12 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;EA_DEBUG;_HAS_EXCEPTIONS=0;MIMALLOC_VERBOSE=1</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -179,11 +182,12 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -205,6 +209,8 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
   <ItemGroup>
     <ClCompile Include="Source\Runtime\D3D12\D3D12Enums.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12PSO.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3DX12\source\d3dx12_property_format_table.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3DX12\source\dxguids.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.cpp" />
     <ClCompile Include="Source\Runtime\Engine\AssetManager.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.cpp" />
@@ -245,7 +251,43 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
   <ItemGroup>
     <ClInclude Include="Source\Runtime\Core\Macros.h" />
     <ClInclude Include="Source\Runtime\Core\TextHelper.h" />
+    <ClInclude Include="Source\Runtime\Core\Utils.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12PSO.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12compatibility.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12sdklayers.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12shader.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\D3D12TokenizedProgramFormat.hpp" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12video.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dcommon.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_barriers.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_check_feature_support.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_core.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_default.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_pipeline_state_stream.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_property_format_table.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_render_pass.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_resource_helpers.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_root_signature.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_state_object.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxcore.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxcore_interface.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxgicommon.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxgiformat.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\dxguids\dxguids.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\basetsd.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\oaidl.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\ocidl.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\rpc.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\rpcndr.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\unknwn.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\unknwnbase.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\winapifamily.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\wrl\client.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\wrl\implements.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\winadapter.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\wrladapter.h" />
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.h" />
     <ClInclude Include="Source\Runtime\Engine\AssetManager.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Enums.h" />
