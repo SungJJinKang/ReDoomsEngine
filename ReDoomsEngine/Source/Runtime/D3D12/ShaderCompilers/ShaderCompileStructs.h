@@ -72,21 +72,21 @@ struct FShaderCompileArguments
 	static FShaderPreprocessorDefine ParseDefineStr(const char* const Str);
 };
 
-#define SHADER_HASH_SIZE 16
+using FHash = uint64_t;
+#define SHADER_HASH_SIZE sizeof(FHash)
 
-
-struct FShaderHash
+inline FHash CombineHash(const FHash& A, const FHash& B)
 {
-	alignas(16) uint8_t Value[SHADER_HASH_SIZE];
-};
-bool operator<(const FShaderHash& A, const FShaderHash& B);
+	FHash NewHash = A ^ B;
+	return NewHash;
+}
 
 struct FShaderCompileResult
 {
 	bool bIsValid;
 	eastl::vector<uint8_t> ShaderBlobData;
 	ComPtr<ID3D12ShaderReflection> DxcContainerReflection; // https://learn.microsoft.com/en-us/windows/win32/api/d3d12shader/nn-d3d12shader-id3d12shaderreflection
-	FShaderHash ShaderHash;
+	FHash ShaderHash;
 	D3D12_SHADER_DESC ShaderDesc;
 
 };

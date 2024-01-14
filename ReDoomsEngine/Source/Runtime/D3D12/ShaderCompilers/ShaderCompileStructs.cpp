@@ -1,11 +1,5 @@
 #include "ShaderCompileStructs.h"
 
-bool operator<(const FShaderHash& A, const FShaderHash& B)
-{
-	return DirectX::XMVector4Less(*reinterpret_cast<DirectX::FXMVECTOR*>(A.Value),
-		*reinterpret_cast<DirectX::FXMVECTOR*>(B.Value));
-}
-
 const wchar_t* FShaderCompileArguments::ConvertShaderFrequencyToShaderProfile(const EShaderFrequency InShaderFrequency)
 {
 	switch (InShaderFrequency)

@@ -220,7 +220,14 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 			ComPtr<IDxcBlob> ShaderHashDxBlob{};
 			VERIFYD3D12RESULT(DxcResult->GetOutput(DXC_OUT_KIND::DXC_OUT_SHADER_HASH, IID_PPV_ARGS(&ShaderHashDxBlob), nullptr));
 			DxcShaderHash* DxcShaderHashBuffer = (DxcShaderHash*)ShaderHashDxBlob->GetBufferPointer();
-			EA::StdC::Memcpy(ShaderCompileResult.ShaderHash.Value, DxcShaderHashBuffer->HashDigest, SHADER_HASH_SIZE);
+
+			FHash HashLow = 0;
+			FHash HashHigh = 0;
+			EA::StdC::Memcpy(&HashLow, DxcShaderHashBuffer->HashDigest, SHADER_HASH_SIZE);
+			EA::StdC::Memcpy(&HashHigh, DxcShaderHashBuffer->HashDigest + SHADER_HASH_SIZE, SHADER_HASH_SIZE);
+			EA_ASSERT(ARRAY_LENGTH(DxcShaderHashBuffer->HashDigest) == SHADER_HASH_SIZE * 2);
+
+			ShaderCompileResult.ShaderHash = CombineHash(HashLow, HashHigh);
 		}
 
 		{

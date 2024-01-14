@@ -39,7 +39,7 @@ void FD3D12CommandQueue::Init()
 	CommandQueueDesc.Priority = 0;
 	CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 
-	VERIFYD3D12RESULT(FD3D12Device::GetInstance()->GetD3D12Device()->CreateCommandQueue(&CommandQueueDesc, IID_PPV_ARGS(&D3DCommandQueue)));
+	VERIFYD3D12RESULT(GetD3D12Device()->CreateCommandQueue(&CommandQueueDesc, IID_PPV_ARGS(&D3DCommandQueue)));
 	D3DCommandQueue->SetName(eastl::wstring{ eastl::wstring::CtorSprintf(), EA_WCHAR("%s Queue"), GetD3D12QueueTypeString(QueueType) }.c_str());
 
 	Fence.CreateD3DFence();

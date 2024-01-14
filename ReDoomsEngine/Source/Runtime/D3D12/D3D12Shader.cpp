@@ -10,7 +10,40 @@ DEFINE_SHADER(HelloTriangleVS, "HelloTriangle.hlsl", "MainVS", EShaderFrequency:
 	ADD_PREPROCESSOR_DEFINE(NO_ERROR1=1)
 );
 DEFINE_SHADER(HelloTrianglePS, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
-DEFINE_SHADER(HelloTrianglePS2, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR = 1));
+DEFINE_SHADER(HelloTrianglePS2, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
+
+FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH> InShaderList)
+	: ShaderList(InShaderList)
+{
+	CacheHash();
+}
+
+void FBoundShaderSet::CacheHash()
+{
+	for (uint32_t ShaderIndex = 0; ShaderIndex < D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH; ++ShaderIndex)
+	{
+		if (ShaderList[ShaderIndex])
+		{
+			CachedHash = CombineHash(CachedHash, ShaderList[ShaderIndex]->GetShaderHash());
+		}
+	}
+}
+
+void FBoundShaderSet::Validate()
+{
+	bool bFound = false;
+
+	for (FD3D12ShaderTemplate* Shader : ShaderList)
+	{
+		if (Shader)
+		{
+			bFound = true;
+			break;
+		}
+	}
+
+	EA_ASSERT(bFound);
+}
 
 FD3D12ShaderTemplate::FD3D12ShaderTemplate(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath,
 	const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, const uint64_t InShaderCompileFlags)
@@ -39,7 +72,6 @@ void FD3D12ShaderTemplate::SetShaderCompileResult(FShaderCompileResult& InShader
 
 void FD3D12ShaderTemplate::OnFinishShaderCompile()
 {
-	FD3D12RootSignatureManager::GetInstance()->GetOrCreateRootSignature(this);
 }
 
 void FD3D12ShaderTemplate::AddShaderVariable(FShaderVariableTemplate& InShaderVariable)
@@ -129,6 +161,7 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 			switch (ResourceBindingDesc.Type)
 			{
 				case D3D_SIT_CBUFFER:
+				case D3D_SIT_TBUFFER:
 				{
 					// Glober constant buffer's name is "Globals"
 
@@ -136,6 +169,8 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 					D3D12_SHADER_BUFFER_DESC ConstantBufferDesc;
 					MEM_ZERO(ConstantBufferDesc);
 					ShaderReflectionConstantBuffer->GetDesc(&ConstantBufferDesc);
+
+					const bool bIsGlobalCBuffer = (EA::StdC::Strcmp(ResourceBindingDesc.Name, "$Globals") == 0);
 
 					EA_ASSERT(EA::StdC::Strcmp(ResourceBindingDesc.Name, ConstantBufferDesc.Name) == 0);
 
@@ -160,32 +195,48 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 						VariableOfConstantBuffer.Desc = ShaderVariableDesc;
 					}
 
+					ShaderReflectionData.ConstantBufferCount = eastl::max(ShaderReflectionData.ConstantBufferCount, ResourceBindingDesc.BindPoint + ResourceBindingDesc.BindCount);
 					break;
 				}
 				case D3D_SIT_TEXTURE:
 				{
 					ShaderReflectionData.TextureResourceBindingDescList.emplace_back(ResourceBindingDesc);
+
+					ShaderReflectionData.ShaderResourceCount = eastl::max(ShaderReflectionData.ShaderResourceCount, ResourceBindingDesc.BindPoint + ResourceBindingDesc.BindCount);
 					break;
 				}
 				case D3D_SIT_SAMPLER:
 				{
+					ShaderReflectionData.SamplerCount++;
 					ShaderReflectionData.SamplerResourceBindingDescList.emplace_back(ResourceBindingDesc);
+
+					ShaderReflectionData.SamplerCount = eastl::max(ShaderReflectionData.SamplerCount, ResourceBindingDesc.BindPoint + ResourceBindingDesc.BindCount);
 					break;
 				}
 				case D3D_SIT_UAV_RWTYPED:
+				case D3D_SIT_UAV_RWSTRUCTURED:
+				case D3D_SIT_UAV_RWBYTEADDRESS:
+				case D3D_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:
+				case D3D_SIT_UAV_APPEND_STRUCTURED:
 				{
-					ShaderReflectionData.TypedBufferResourceBindingDescList.emplace_back(ResourceBindingDesc);
+					ShaderReflectionData.UnorderedAccessCount++;
+					ShaderReflectionData.UAVResourceBindingDescList.emplace_back(ResourceBindingDesc);
+
+					ShaderReflectionData.UnorderedAccessCount = eastl::max(ShaderReflectionData.UnorderedAccessCount, ResourceBindingDesc.BindPoint + ResourceBindingDesc.BindCount);
 					break;
 				}
 				case D3D_SIT_BYTEADDRESS:
 				{
 					ShaderReflectionData.ByteAddressBufferResourceBindingDescList.emplace_back(ResourceBindingDesc);
+
+					ShaderReflectionData.ShaderResourceCount = eastl::max(ShaderReflectionData.ShaderResourceCount, ResourceBindingDesc.BindPoint + ResourceBindingDesc.BindCount);
 					break;
 				}
-				case D3D_SIT_UAV_RWSTRUCTURED:
 				case D3D_SIT_STRUCTURED:
 				{
 					ShaderReflectionData.StructuredBufferResourceBindingDescList.emplace_back(ResourceBindingDesc);
+
+					ShaderReflectionData.ShaderResourceCount = eastl::max(ShaderReflectionData.ShaderResourceCount, ResourceBindingDesc.BindPoint + ResourceBindingDesc.BindCount);
 					break;
 				}
 				default:
@@ -198,7 +249,7 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 FShaderPreprocessorDefineAdd::FShaderPreprocessorDefineAdd(FD3D12ShaderTemplate& D3D12Shader, const char* const InDefineStr)
 	: DefineStr(InDefineStr)
 {
-	EA_ASSERT(EA::StdC::Strstr(InDefineStr, " ") != NULL);
+	EA_ASSERT_MSG(EA::StdC::Strstr(InDefineStr, " ") == NULL, "White space char is detected");
 	D3D12Shader.AddShaderPreprocessorDefine(FShaderCompileArguments::ParseDefineStr(DefineStr));
 }
 

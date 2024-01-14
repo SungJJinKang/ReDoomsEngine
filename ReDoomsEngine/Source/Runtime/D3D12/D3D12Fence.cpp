@@ -11,7 +11,7 @@ void FD3D12Fence::CreateD3DFence()
 
 void FD3D12Fence::CreateD3DFence(const eastl::wstring& InDebugName)
 {
-	VERIFYD3D12RESULT(FD3D12Device::GetInstance()->GetD3D12Device()->CreateFence(
+	VERIFYD3D12RESULT(GetD3D12Device()->CreateFence(
 		0,
 		D3D12_FENCE_FLAG_NONE,
 		IID_PPV_ARGS(&D3DFence)
