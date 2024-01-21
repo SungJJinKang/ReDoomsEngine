@@ -4,5 +4,7 @@
 class FD3D12StateCache
 {
 	FD3D12PSOInitializer PSOInitializer;
+
+	void Flush();
 };
 

@@ -6,6 +6,11 @@ class FD3D12Descriptor
 {
 };
 
+struct FD3D12DescriptorHeapBlock
+{
+
+};
+
 class FD3D12DescriptorHeap
 {
 public:
@@ -72,6 +77,7 @@ protected:
 /// <summary>
 /// Manage shader visible descriotpr heap
 /// Have a large heap. If the heap is completely exhausted, we just assert it.
+/// Why use online/offline heap? Changing set descriptor heap flushes gpu pipeline
 /// </summary>
 class FD3D12OnlineDescriptorHeapContainer : public FD3D12DescriptorHeapContainer
 {
