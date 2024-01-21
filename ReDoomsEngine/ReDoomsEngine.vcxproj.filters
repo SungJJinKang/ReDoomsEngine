@@ -135,6 +135,12 @@
     <ClCompile Include="Source\Runtime\D3D12\D3DX12\source\dxguids.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Utils\cityhash\src\city-test.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
@@ -1164,6 +1170,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Core\Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Utils\cityhash\src\city.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Utils\cityhash\src\citycrc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
