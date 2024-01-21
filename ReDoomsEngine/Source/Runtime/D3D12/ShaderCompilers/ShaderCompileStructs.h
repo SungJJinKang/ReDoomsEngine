@@ -3,6 +3,7 @@
 #include "D3D12Include.h"
 
 #include "DirectXShaderCompiler/inc/d3d12shader.h"
+#include "DirectXShaderCompiler/inc/dxcapi.h"
 
 struct FShaderPreprocessorDefine
 {
@@ -72,21 +73,43 @@ struct FShaderCompileArguments
 	static FShaderPreprocessorDefine ParseDefineStr(const char* const Str);
 };
 
-using FHash = uint64_t;
-#define SHADER_HASH_SIZE sizeof(FHash)
-
-inline FHash CombineHash(const FHash& A, const FHash& B)
+struct FShaderHash
 {
-	FHash NewHash = A ^ B;
+	uint64_t Value[2];
+};
+#define SHADER_HASH_SIZE sizeof(FShaderHash)
+
+inline bool operator==(const FShaderHash& lhs, const FShaderHash& rhs)
+{
+	return (lhs.Value[0] == rhs.Value[0]) && (lhs.Value[1] == rhs.Value[1]);
+}
+inline bool operator!=(const FShaderHash& lhs, const FShaderHash& rhs)
+{
+	return !(lhs == rhs);
+}
+namespace eastl
+{
+	template <> struct hash<FShaderHash>
+	{
+		size_t operator()(FShaderHash val) const { return static_cast<size_t>(val.Value[0]); }
+	};
+}
+
+inline FShaderHash CombineHash(const FShaderHash& A, const FShaderHash& B)
+{
+	FShaderHash NewHash;
+	NewHash.Value[0] = A.Value[0] ^ B.Value[0];
+	NewHash.Value[1] = A.Value[1] ^ B.Value[1];
+	
 	return NewHash;
 }
 
 struct FShaderCompileResult
 {
 	bool bIsValid;
-	eastl::vector<uint8_t> ShaderBlobData;
+	ComPtr<IDxcBlob> ShaderBlobData;
 	ComPtr<ID3D12ShaderReflection> DxcContainerReflection; // https://learn.microsoft.com/en-us/windows/win32/api/d3d12shader/nn-d3d12shader-id3d12shaderreflection
-	FHash ShaderHash;
+	FShaderHash ShaderHash;
 	D3D12_SHADER_DESC ShaderDesc;
 
 };

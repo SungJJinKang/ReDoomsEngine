@@ -346,6 +346,7 @@ void FD3D12ShaderManager::Init()
 {
 	CompileAllPendingShader();
 
+	//Test Code
 	eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH> ShaderList{};
 	ShaderList[D3D12_SHADER_VISIBILITY_VERTEX] = &HelloTriangleVS;
 	ShaderList[D3D12_SHADER_VISIBILITY_PIXEL] = &HelloTrianglePS;

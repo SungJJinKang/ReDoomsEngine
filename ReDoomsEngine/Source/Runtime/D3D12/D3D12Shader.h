@@ -18,9 +18,18 @@ struct FBoundShaderSet
 	void CacheHash();
 	void Validate();
 
-	const eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH> ShaderList{ nullptr };
-	FHash CachedHash;
+	eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH> ShaderList{ nullptr };
+	FShaderHash CachedHash;
 };
+
+inline bool operator==(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
+{
+	return lhs.CachedHash == rhs.CachedHash;
+}
+inline bool operator!=(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
+{
+	return lhs.CachedHash != rhs.CachedHash;
+}
 
 //
 template<typename Type>
@@ -101,7 +110,7 @@ public:
 	{
 		return ShaderDeclaration.ShaderFrequency;
 	}
-	const eastl::vector<uint8_t>& GetShaderBlob() const
+	ComPtr<IDxcBlob>& GetShaderBlob()
 	{
 		return ShaderBlobData;
 	}
@@ -109,7 +118,7 @@ public:
 	{
 		return ShaderReflectionData;
 	}
-	const FHash& GetShaderHash() const
+	const FShaderHash& GetShaderHash() const
 	{
 		return ShaderHash;
 	}
@@ -123,9 +132,9 @@ private:
 
 	FShaderDeclaration ShaderDeclaration; // ShaderCompileResult variable also contains ShaderDeclaration same with this variable. 
 
-	eastl::vector<uint8_t> ShaderBlobData;
+	ComPtr<IDxcBlob> ShaderBlobData;
 	FD3D12ShaderReflectionData ShaderReflectionData;
-	FHash ShaderHash;
+	FShaderHash ShaderHash;
 
 	eastl::vector<FShaderParameterTemplate*> ShaderParameterList;
 };

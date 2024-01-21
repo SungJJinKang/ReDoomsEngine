@@ -35,5 +35,5 @@ public:
 
 private:
 
-	eastl::hash_map<FHash, eastl::shared_ptr<FD3D12RootSignature>> RootSignatureMap;
+	eastl::hash_map<FShaderHash, eastl::shared_ptr<FD3D12RootSignature>> RootSignatureMap;
 };
