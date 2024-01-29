@@ -51,12 +51,16 @@ void FD3D12DescriptorHeapContainer::Init()
 {
 }
 
-eastl::unique_ptr<FD3D12DescriptorHeap>& FD3D12DescriptorHeapContainer::AllocateNewHeap()
+FD3D12DescriptorHeap* FD3D12DescriptorHeapContainer::AllocateNewHeap()
 {
-    eastl::unique_ptr<FD3D12DescriptorHeap>& OfflineHeap =
-        DescriptorHeapList.emplace_back(eastl::make_unique<FD3D12DescriptorHeap>(NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, HeapType));
-    OfflineHeap->Init();
-    return OfflineHeap;
+    FD3D12DescriptorHeap* const Heap = DescriptorHeapList.emplace_back(eastl::make_unique<FD3D12DescriptorHeap>(NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, HeapType)).get();
+    Heap->Init();
+    return Heap;
+}
+
+void FD3D12DescriptorHeapContainer::FreeNewHeap(FD3D12DescriptorHeap* const InHeap)
+{
+    FreeDescriptorHeapList.emplace_back(InHeap);
 }
 
 FD3D12OnlineDescriptorHeapContainer::FD3D12OnlineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)

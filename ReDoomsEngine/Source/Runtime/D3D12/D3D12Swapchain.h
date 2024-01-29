@@ -2,8 +2,11 @@
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 
+#include "D3D12Resource/D3D12Resource.h"
+
 class FD3D12CommandQueue;
 class FD3D12Window;
+class FD3D12RenderTargetResource;
 class FD3D12Swapchain
 {
 public:
@@ -14,6 +17,7 @@ public:
 	{
 		return D3DSwapchain.Get();
 	}
+	FD3D12RenderTargetResource& GetD3DRenderTargetResource(const uint32_t InBufferIndex);
 
 	void Present(const int32_t SyncInterval);
 	void UpdateCurrentBackbufferIndex();
@@ -24,6 +28,8 @@ public:
 
 private:
 	ComPtr<IDXGISwapChain3> D3DSwapchain;
+
+	eastl::vector<FD3D12RenderTargetResource> RenderTargets;
 
 	FD3D12CommandQueue* CommandQueue;
 	FD3D12Window* Window;

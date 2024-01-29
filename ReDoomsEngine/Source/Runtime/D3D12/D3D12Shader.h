@@ -1,6 +1,7 @@
 #pragma once
 #include "CommonInclude.h"
 #include "ShaderCompilers/ShaderCompileStructs.h"
+#include "D3D12Enums.h"
 
 class FD3D12RootSignature;
 class FD3D12ShaderTemplate;
@@ -14,11 +15,11 @@ struct FShaderPreprocessorDefineAdd;
 struct FBoundShaderSet
 {
 	FBoundShaderSet() = delete;
-	FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH> InShaderList);
+	FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY_NUM> InShaderList);
 	void CacheHash();
 	void Validate();
 
-	eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH> ShaderList{ nullptr };
+	eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY_NUM> ShaderList{ nullptr };
 	FShaderHash CachedHash;
 };
 

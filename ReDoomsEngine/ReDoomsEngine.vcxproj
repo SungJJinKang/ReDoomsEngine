@@ -207,15 +207,17 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12CommandList.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Enums.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12PSO.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12View.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3DX12\source\d3dx12_property_format_table.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3DX12\source\dxguids.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.cpp" />
     <ClCompile Include="Source\Runtime\Engine\AssetManager.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Buffer.cpp" />
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Texture.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12StateCache.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12RootSignature.cpp" />
@@ -251,10 +253,13 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandList.h" />
     <ClInclude Include="Source\Runtime\Core\Macros.h" />
     <ClInclude Include="Source\Runtime\Core\TextHelper.h" />
     <ClInclude Include="Source\Runtime\Core\Utils.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12PSO.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12View.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12compatibility.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12sdklayers.h" />
@@ -295,7 +300,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\D3D12\D3D12Enums.h" />
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Buffer.h" />
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Texture.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12StateCache.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12RootSignature.h" />

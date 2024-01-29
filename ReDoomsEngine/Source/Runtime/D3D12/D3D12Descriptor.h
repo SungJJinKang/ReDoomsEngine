@@ -2,6 +2,8 @@
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 
+#include "EASTL/queue.h"
+
 class FD3D12Descriptor
 {
 };
@@ -18,42 +20,44 @@ public:
 	FD3D12DescriptorHeap() = delete;
 	FD3D12DescriptorHeap(uint32_t InNumDescriptors, D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, D3D12_DESCRIPTOR_HEAP_TYPE InHeapType);
 	void Init();
-	ID3D12DescriptorHeap* GetD3DDescriptorHeap() const
-	{
-		EA_ASSERT(D3DDescriptorHeap.Get());
-		return D3DDescriptorHeap.Get();
-	}
 	
 	bool IsShaderVisible() const
 	{
 		return HeapFlags & D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	}
 
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUBase() const
+	CD3DX12_CPU_DESCRIPTOR_HANDLE GetCPUBase() const
 	{
 		EA_ASSERT(CPUBase.ptr);
 		return CPUBase;
 	}
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUBase() const
+	CD3DX12_GPU_DESCRIPTOR_HANDLE GetGPUBase() const
 	{
 		EA_ASSERT(IsShaderVisible());
 		EA_ASSERT(GPUBase.ptr);
 		return GPUBase;
 	}
 
-private:
-
 	ComPtr<ID3D12DescriptorHeap> D3DDescriptorHeap;
+
+private:
 
 	uint32_t NumDescriptors;
 	D3D12_DESCRIPTOR_HEAP_FLAGS HeapFlags;
 	D3D12_DESCRIPTOR_HEAP_TYPE HeapType;
 	uint32_t DescriptorSize;
 
-	D3D12_CPU_DESCRIPTOR_HANDLE CPUBase;
-	D3D12_GPU_DESCRIPTOR_HANDLE GPUBase;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE CPUBase;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE GPUBase;
 
 	eastl::bitvector<> FreeSlot;
+};
+
+struct FD3D12OfflineDescriptor
+{
+	FD3D12DescriptorHeap* ParentDescriptorHeap;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE CPUBase;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE GPUBase;
 };
 
 class FD3D12DescriptorHeapContainer
@@ -63,13 +67,16 @@ public:
 	FD3D12DescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType, const D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, const uint32_t InNumDescriptor);
 	virtual void Init();
 
+	FD3D12DescriptorHeap* AllocateNewHeap();
+	void FreeNewHeap(FD3D12DescriptorHeap* const InHeap);
+
 protected:
 
-	eastl::unique_ptr<FD3D12DescriptorHeap>& AllocateNewHeap();
 
 	D3D12_DESCRIPTOR_HEAP_TYPE HeapType;
 	D3D12_DESCRIPTOR_HEAP_FLAGS HeapFlag;
 	uint32_t NumDescriptor;
+	eastl::queue<eastl::unique_ptr<FD3D12DescriptorHeap>> FreeDescriptorHeapList;
 	eastl::vector<eastl::unique_ptr<FD3D12DescriptorHeap>> DescriptorHeapList;
 
 };
@@ -88,10 +95,6 @@ public:
 
 private:
 
-	/// <summary>
-	/// Large Heap. Shader Visible Heap
-	/// </summary>
-	eastl::unique_ptr<FD3D12DescriptorHeap> DescriptorHeap;
 };
 
 

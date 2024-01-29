@@ -4,6 +4,177 @@
 
 #define MAX_ROOT_CBVS 16
 
+template <typename ROOT_SIGNATURE_DESC_TYPE>
+static void AnalyizeRootSignature(ROOT_SIGNATURE_DESC_TYPE& Desc, FD3D12RootSignature& RootSignature)
+{
+	for (uint32_t ParameterIndex = 0; ParameterIndex < Desc.NumParameters; ++ParameterIndex)
+	{
+		const auto& RootParameter = Desc.pParameters[ParameterIndex];
+
+		UINT RegisterSpace = -1;
+
+		switch (RootParameter.ParameterType)
+		{
+		case D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE:
+			EA_ASSERT(RootParameter.DescriptorTable.NumDescriptorRanges == 1); // Code currently assumes a single descriptor range.
+			RegisterSpace = RootParameter.DescriptorTable.pDescriptorRanges[0].RegisterSpace;
+			break;
+		case D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS:
+			RegisterSpace = RootParameter.Constants.RegisterSpace;
+			break;
+		case D3D12_ROOT_PARAMETER_TYPE_CBV:
+		case D3D12_ROOT_PARAMETER_TYPE_SRV:
+		case D3D12_ROOT_PARAMETER_TYPE_UAV:
+			RegisterSpace = RootParameter.Descriptor.RegisterSpace;
+			break;
+		default:
+			EA_ASSERT(false);
+			break;
+		}
+
+		EA_ASSERT(RegisterSpace == 0); // only consider register space 0
+
+		// Determine shader resource counts.
+		{
+			const auto& CurrentRange = RootParameter.DescriptorTable.pDescriptorRanges[0];
+			switch (RootParameter.ParameterType)
+			{
+			case D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE:
+				EA_ASSERT(RootParameter.DescriptorTable.NumDescriptorRanges == 1);	// Code currently assumes a single descriptor range.
+				{
+					EA_ASSERT(CurrentRange.BaseShaderRegister == 0);	// Code currently assumes always starting at register 0.
+
+					switch (CurrentRange.RangeType)
+					{
+					case D3D12_DESCRIPTOR_RANGE_TYPE_SRV:
+					{
+						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
+						{
+							for (size_t ShaderVisiblity = D3D12_SHADER_VISIBILITY_START; ShaderVisiblity <= D3D12_SHADER_VISIBILITY_END; ++ShaderVisiblity)
+							{
+								RootSignature.Stage[ShaderVisiblity].MaxSRVCount = CurrentRange.NumDescriptors;
+								RootSignature.SRVBindSlot[ShaderVisiblity] = ParameterIndex;
+							}
+						}
+						else
+						{
+							RootSignature.Stage[RootParameter.ShaderVisibility].MaxSRVCount = CurrentRange.NumDescriptors;
+							RootSignature.SRVBindSlot[RootParameter.ShaderVisibility] = ParameterIndex;
+						}
+						break;
+					}
+					case D3D12_DESCRIPTOR_RANGE_TYPE_UAV:
+					{
+						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
+						{
+							for (size_t ShaderVisiblity = D3D12_SHADER_VISIBILITY_START; ShaderVisiblity <= D3D12_SHADER_VISIBILITY_END; ++ShaderVisiblity)
+							{
+								RootSignature.Stage[ShaderVisiblity].MaxUAVCount = CurrentRange.NumDescriptors;
+							}
+						}
+						else
+						{
+							RootSignature.Stage[RootParameter.ShaderVisibility].MaxUAVCount = CurrentRange.NumDescriptors;
+						}
+						RootSignature.UAVBindSlot = ParameterIndex;
+						break;
+					}
+					case D3D12_DESCRIPTOR_RANGE_TYPE_CBV:
+					{
+						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
+						{
+							for (size_t ShaderVisiblity = D3D12_SHADER_VISIBILITY_START; ShaderVisiblity <= D3D12_SHADER_VISIBILITY_END; ++ShaderVisiblity)
+							{
+								RootSignature.Stage[ShaderVisiblity].MaxCBVCount += CurrentRange.NumDescriptors;
+							}
+						}
+						else
+						{
+							RootSignature.Stage[RootParameter.ShaderVisibility].MaxCBVCount += CurrentRange.NumDescriptors;
+						}
+						RootSignature.CBVBindSlot[RootParameter.ShaderVisibility] = ParameterIndex;
+
+						const uint32_t StartRegister = CurrentRange.BaseShaderRegister;
+						const uint32_t EndRegister = StartRegister + CurrentRange.NumDescriptors;
+						const uint32_t StartStage = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? D3D12_SHADER_VISIBILITY_START : RootParameter.ShaderVisibility;
+						const uint32_t EndStage = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? D3D12_SHADER_VISIBILITY_END : RootParameter.ShaderVisibility;
+						for (uint32_t CurrentStage = StartStage; CurrentStage <= EndStage; CurrentStage++)
+						{
+							for (uint32 Register = StartRegister; Register < EndRegister; Register++)
+							{
+								// The bit shouldn't already be set for the current register.
+								EA_ASSERT((RootSignature.Stage[CurrentStage].CBVRegisterMask & (1 << Register)) == 0);
+								RootSignature.Stage[CurrentStage].CBVRegisterMask |= (1 << Register);
+							}
+						}
+
+						break;
+					}
+					case D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER:
+					{
+						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
+						{
+							for (size_t ShaderVisiblity = D3D12_SHADER_VISIBILITY_START; ShaderVisiblity <= D3D12_SHADER_VISIBILITY_END; ++ShaderVisiblity)
+							{
+								RootSignature.Stage[ShaderVisiblity].MaxSamplerCount = CurrentRange.NumDescriptors;
+							}
+						}
+						else
+						{
+							RootSignature.Stage[RootParameter.ShaderVisibility].MaxSamplerCount = CurrentRange.NumDescriptors;
+						}
+						RootSignature.SamplerBindSlot[RootParameter.ShaderVisibility] = ParameterIndex;
+						break;
+					}
+					default: EA_ASSERT(false); break;
+					}
+				}
+				break;
+
+			case D3D12_ROOT_PARAMETER_TYPE_CBV:
+			{
+				EA_ASSERT(RootParameter.Descriptor.RegisterSpace == 0); // Parameters in other binding spaces are expected to be filtered out at this point
+
+				if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
+				{
+					for (size_t ShaderVisiblity = D3D12_SHADER_VISIBILITY_START; ShaderVisiblity <= D3D12_SHADER_VISIBILITY_END; ++ShaderVisiblity)
+					{
+						RootSignature.Stage[ShaderVisiblity].MaxCBVCount += CurrentRange.NumDescriptors;
+					}
+				}
+				else
+				{
+					RootSignature.Stage[RootParameter.ShaderVisibility].MaxCBVCount += CurrentRange.NumDescriptors;
+				}
+
+				if (RootParameter.Descriptor.ShaderRegister == 0)
+				{
+					RootSignature.RootCBVBindSlot[RootParameter.ShaderVisibility] = ParameterIndex;
+				}
+
+				const uint32_t StartStage = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? D3D12_SHADER_VISIBILITY_START : RootParameter.ShaderVisibility;
+				const uint32_t EndStage = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? D3D12_SHADER_VISIBILITY_END : RootParameter.ShaderVisibility;
+				for (uint32_t CurrentStage = StartStage; CurrentStage <= EndStage; CurrentStage++)
+				{
+					// The bit shouldn't already be set for the current register.
+					EA_ASSERT((RootSignature.Stage[CurrentStage].CBVRegisterMask & (1 << RootParameter.Descriptor.ShaderRegister)) == 0);
+					RootSignature.Stage[CurrentStage].CBVRegisterMask |= (1 << RootParameter.Descriptor.ShaderRegister);
+				}
+
+				// The first CBV for this stage must come first in the root signature, and subsequent root CBVs for this stage must be contiguous.
+				EA_ASSERT(RootSignature.RootCBVBindSlot[RootParameter.ShaderVisibility] != 0xFF);
+				EA_ASSERT(RootSignature.RootCBVBindSlot[RootParameter.ShaderVisibility] + RootParameter.Descriptor.ShaderRegister == ParameterIndex);
+			}
+			break;
+
+			default:
+				EA_ASSERT(false);
+				break;
+			}
+		}
+	}
+}
+
 FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderSet& InBoundShaderSet)
 {
 	FD3D12RootSignature RootSignature;
@@ -15,8 +186,8 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 		D3D12_SHADER_VISIBILITY_VERTEX,
 	};
 
-	// Root ConstantBuffer(RootDescriptor)는 사이즈가 커서 RootSignature 사이즈를 키워 성능 하락을 가져옴(https://learn.microsoft.com/en-us/windows/win32/direct3d12/using-descriptors-directly-in-the-root-signature)
-	// -> 되도록이면 RootDescriptor Table을 사용함 
+	// Root ConstantBuffer can degrade performance because it's size is big(https://learn.microsoft.com/en-us/windows/win32/direct3d12/using-descriptors-directly-in-the-root-signature)
+	// -> Never use root constant buffer if possible
 	const D3D12_ROOT_PARAMETER_TYPE RootParameterTypePriorityOrder[] = { D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE, D3D12_ROOT_PARAMETER_TYPE_CBV };
 	
 	RootSignature.RootParameterCount = 0;
@@ -114,9 +285,12 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 	D3D12_FEATURE_DATA_ROOT_SIGNATURE FeatureData = {};
 
 	// This is the highest version the sample supports. If CheckFeatureSupport succeeds, the HighestVersion returned will not be greater than this.
-	FeatureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
 
-	if (!SUCCEEDED(GetD3D12Device()->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &FeatureData, sizeof(FeatureData))))
+	if (SUCCEEDED(GetD3D12Device()->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &FeatureData, sizeof(FeatureData))))
+	{
+		FeatureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+	}
+	else
 	{
 		FeatureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
 	}
@@ -125,168 +299,15 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 	VERIFYD3D12RESULT_ERRORBLOB(D3DX12SerializeVersionedRootSignature(&RootSignature.RootDesc, FeatureData.HighestVersion, &RootSignature.RootSignatureBlob, &ErrorBlob), ErrorBlob);
 	VERIFYD3D12RESULT(GetD3D12Device()->CreateRootSignature(0, RootSignature.RootSignatureBlob->GetBufferPointer(), RootSignature.RootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&RootSignature.RootSignature)));
 
-	D3D12_ROOT_SIGNATURE_DESC1& Desc = RootSignature.RootDesc.Desc_1_1;
-	for (uint32_t ParameterIndex = 0; ParameterIndex < Desc.NumParameters; ++ParameterIndex)
+	if (FeatureData.HighestVersion == D3D_ROOT_SIGNATURE_VERSION_1_1)
 	{
-		const D3D12_ROOT_PARAMETER1& RootParameter = Desc.pParameters[ParameterIndex];
-
-		UINT RegisterSpace = -1;
-
-		switch (RootParameter.ParameterType)
-		{
-		case D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE:
-			EA_ASSERT(RootParameter.DescriptorTable.NumDescriptorRanges == 1); // Code currently assumes a single descriptor range.
-			RegisterSpace = RootParameter.DescriptorTable.pDescriptorRanges[0].RegisterSpace;
-			break;
-		case D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS:
-			RegisterSpace = RootParameter.Constants.RegisterSpace;
-			break;
-		case D3D12_ROOT_PARAMETER_TYPE_CBV:
-		case D3D12_ROOT_PARAMETER_TYPE_SRV:
-		case D3D12_ROOT_PARAMETER_TYPE_UAV:
-			RegisterSpace = RootParameter.Descriptor.RegisterSpace;
-			break;
-		default:
-			EA_ASSERT(false);
-			break;
-		}
-
-		EA_ASSERT(RegisterSpace == 0); // only consider register space 0
-
-		// Determine shader resource counts.
-		{
-			const D3D12_DESCRIPTOR_RANGE1& CurrentRange = RootParameter.DescriptorTable.pDescriptorRanges[0];
-			switch (RootParameter.ParameterType)
-			{
-			case D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE:
-				EA_ASSERT(RootParameter.DescriptorTable.NumDescriptorRanges == 1);	// Code currently assumes a single descriptor range.
-				{
-					EA_ASSERT(CurrentRange.BaseShaderRegister == 0);	// Code currently assumes always starting at register 0.
-
-					switch (CurrentRange.RangeType)
-					{
-					case D3D12_DESCRIPTOR_RANGE_TYPE_SRV:
-						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
-						{
-							for (size_t ShaderVisiblity = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX; ShaderVisiblity <= D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH; ++ShaderVisiblity)
-							{
-								RootSignature.Stage[ShaderVisiblity].MaxSRVCount = CurrentRange.NumDescriptors;
-								RootSignature.SRVBindSlot[ShaderVisiblity] = ParameterIndex;
-							}
-						}
-						else
-						{
-							RootSignature.Stage[RootParameter.ShaderVisibility].MaxSRVCount = CurrentRange.NumDescriptors;
-							RootSignature.SRVBindSlot[RootParameter.ShaderVisibility] = ParameterIndex;
-						}
-						break;
-					case D3D12_DESCRIPTOR_RANGE_TYPE_UAV:
-						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
-						{
-							for (size_t ShaderVisiblity = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX; ShaderVisiblity <= D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH; ++ShaderVisiblity)
-							{
-								RootSignature.Stage[ShaderVisiblity].MaxUAVCount = CurrentRange.NumDescriptors;
-							}
-						}
-						else
-						{
-							RootSignature.Stage[RootParameter.ShaderVisibility].MaxUAVCount = CurrentRange.NumDescriptors;
-						}
-						RootSignature.UAVBindSlot = ParameterIndex;
-						break;
-					case D3D12_DESCRIPTOR_RANGE_TYPE_CBV:
-
-						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
-						{
-							for (size_t ShaderVisiblity = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX; ShaderVisiblity <= D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH; ++ShaderVisiblity)
-							{
-								RootSignature.Stage[ShaderVisiblity].MaxCBVCount += CurrentRange.NumDescriptors;
-							}
-						}
-						else
-						{
-							RootSignature.Stage[RootParameter.ShaderVisibility].MaxCBVCount += CurrentRange.NumDescriptors;
-						}
-						RootSignature.CBVBindSlot[RootParameter.ShaderVisibility] = ParameterIndex;
-
-						const uint32_t StartRegister = CurrentRange.BaseShaderRegister;
-						const uint32_t EndRegister = StartRegister + CurrentRange.NumDescriptors;
-						const uint32_t StartStage = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX : RootParameter.ShaderVisibility;
-						const uint32_t EndStage = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH : RootParameter.ShaderVisibility;
-						for (uint32_t CurrentStage = StartStage; CurrentStage <= EndStage; CurrentStage++)
-						{
-							for (uint32 Register = StartRegister; Register < EndRegister; Register++)
-							{
-								// The bit shouldn't already be set for the current register.
-								EA_ASSERT((RootSignature.Stage[CurrentStage].CBVRegisterMask & (1 << Register)) == 0);
-								RootSignature.Stage[CurrentStage].CBVRegisterMask |= (1 << Register);
-							}
-						}
-
-						break;
-					case D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER:
-						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
-						{
-							for (size_t ShaderVisiblity = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX; ShaderVisiblity <= D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH; ++ShaderVisiblity)
-							{
-								RootSignature.Stage[ShaderVisiblity].MaxSamplerCount = CurrentRange.NumDescriptors;
-							}
-						}
-						else
-						{
-							RootSignature.Stage[RootParameter.ShaderVisibility].MaxSamplerCount = CurrentRange.NumDescriptors;
-						}
-						RootSignature.SamplerBindSlot[RootParameter.ShaderVisibility] = ParameterIndex;
-						break;
-
-					default: EA_ASSERT(false); break;
-					}
-				}
-				break;
-
-			case D3D12_ROOT_PARAMETER_TYPE_CBV:
-			{
-				EA_ASSERT(RootParameter.Descriptor.RegisterSpace == 0); // Parameters in other binding spaces are expected to be filtered out at this point
-
-				if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
-				{
-					for (size_t ShaderVisiblity = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX; ShaderVisiblity <= D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH; ++ShaderVisiblity)
-					{
-						RootSignature.Stage[ShaderVisiblity].MaxCBVCount += CurrentRange.NumDescriptors;
-					}
-				}
-				else
-				{
-					RootSignature.Stage[RootParameter.ShaderVisibility].MaxCBVCount += CurrentRange.NumDescriptors;
-				}
-
-				if (RootParameter.Descriptor.ShaderRegister == 0)
-				{
-					RootSignature.RootCBVBindSlot[RootParameter.ShaderVisibility] = ParameterIndex;
-				}
-
-				const uint32_t StartStage = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX : RootParameter.ShaderVisibility;
-				const uint32_t EndStage = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH : RootParameter.ShaderVisibility;
-				for (uint32_t CurrentStage = StartStage; CurrentStage <= EndStage; CurrentStage++)
-				{
-					// The bit shouldn't already be set for the current register.
-					EA_ASSERT((RootSignature.Stage[CurrentStage].CBVRegisterMask & (1 << RootParameter.Descriptor.ShaderRegister)) == 0);
-					RootSignature.Stage[CurrentStage].CBVRegisterMask |= (1 << RootParameter.Descriptor.ShaderRegister);
-				}
-
-				// The first CBV for this stage must come first in the root signature, and subsequent root CBVs for this stage must be contiguous.
-				EA_ASSERT(RootSignature.RootCBVBindSlot[RootParameter.ShaderVisibility] != 0xFF);
-				EA_ASSERT(RootSignature.RootCBVBindSlot[RootParameter.ShaderVisibility] + RootParameter.Descriptor.ShaderRegister == ParameterIndex);
-			}
-			break;
-
-			default:
-				EA_ASSERT(false);
-				break;
-			}
-		}
+		AnalyizeRootSignature(RootSignature.RootDesc.Desc_1_1, RootSignature);
 	}
-
+	else if (FeatureData.HighestVersion == D3D_ROOT_SIGNATURE_VERSION_1_1)
+	{
+		AnalyizeRootSignature(RootSignature.RootDesc.Desc_1_0, RootSignature);
+	}
+	
 	return RootSignature;
 }
 
