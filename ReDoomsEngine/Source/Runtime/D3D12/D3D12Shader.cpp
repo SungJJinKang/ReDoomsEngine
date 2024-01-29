@@ -21,7 +21,7 @@ void FShaderConstantBufferTemplate::AddMemberVariable(FShaderParameterTemplate* 
 	MemberVariableList.push_back(InShaderParameter);
 }
 
-FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH> InShaderList)
+FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY_NUM> InShaderList)
 	: ShaderList(InShaderList)
 {
 	CacheHash();
@@ -29,7 +29,7 @@ FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, D3D12
 
 void FBoundShaderSet::CacheHash()
 {
-	for (uint32_t ShaderIndex = 0; ShaderIndex < D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH; ++ShaderIndex)
+	for (uint32_t ShaderIndex = 0; ShaderIndex < D3D12_SHADER_VISIBILITY_NUM; ++ShaderIndex)
 	{
 		if (ShaderList[ShaderIndex])
 		{
@@ -347,7 +347,7 @@ void FD3D12ShaderManager::Init()
 	CompileAllPendingShader();
 
 	//Test Code
-	eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH> ShaderList{};
+	eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY_NUM> ShaderList{};
 	ShaderList[D3D12_SHADER_VISIBILITY_VERTEX] = &HelloTriangleVS;
 	ShaderList[D3D12_SHADER_VISIBILITY_PIXEL] = &HelloTrianglePS;
 	FBoundShaderSet BoundShaderSet{ ShaderList };

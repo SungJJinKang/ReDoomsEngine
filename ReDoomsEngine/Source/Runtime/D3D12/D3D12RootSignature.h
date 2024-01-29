@@ -2,6 +2,7 @@
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 #include "D3D12Shader.h"
+#include "D3D12Enums.h"
 
 class FD3D12ShaderTemplate;
 
@@ -33,13 +34,13 @@ public:
 		bool bVisible = false;
 	};
 
-	uint8_t SRVBindSlot[D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH];
-	uint8_t CBVBindSlot[D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH];
-	uint8_t RootCBVBindSlot[D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH];
-	uint8_t SamplerBindSlot[D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH];
+	eastl::array<uint8_t, D3D12_SHADER_VISIBILITY_NUM> SRVBindSlot;
+	eastl::array<uint8_t, D3D12_SHADER_VISIBILITY_NUM> CBVBindSlot;
+	eastl::array<uint8_t, D3D12_SHADER_VISIBILITY_NUM> RootCBVBindSlot;
+	eastl::array<uint8_t, D3D12_SHADER_VISIBILITY_NUM> SamplerBindSlot;
 	uint8_t UAVBindSlot;
 
-	ShaderStage Stage[D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_MESH];
+	eastl::array<ShaderStage, D3D12_SHADER_VISIBILITY_NUM> Stage;
 
 	static FD3D12RootSignature CreateRootSignature(const FBoundShaderSet& InBoundShaderSet);
 };
