@@ -30,7 +30,7 @@ struct FD3D12PSOInitializer
 
 	uint64 CachedHash;
 
-    void Init();
+    void FinishCreating();
 };
 
 inline bool operator==(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)
@@ -71,11 +71,11 @@ class FD3D12PSOManager : public EA::StdC::Singleton<FD3D12PSOManager>
 {
 public:
 
-    eastl::shared_ptr<FD3D12PSO> GetOrCreatePSO(const FD3D12PSOInitializer& InD3D12PSOInitializer);
+    FD3D12PSO* GetOrCreatePSO(const FD3D12PSOInitializer& InD3D12PSOInitializer);
 
 private:
 
-    eastl::vector_map<FD3D12PSOInitializer, eastl::shared_ptr<FD3D12PSO>> PSOHashMap;
+    eastl::vector_map<FD3D12PSOInitializer, eastl::unique_ptr<FD3D12PSO>> PSOHashMap;
 
 };
 

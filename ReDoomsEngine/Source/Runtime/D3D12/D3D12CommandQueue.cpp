@@ -42,13 +42,11 @@ void FD3D12CommandQueue::Init()
 	VERIFYD3D12RESULT(GetD3D12Device()->CreateCommandQueue(&CommandQueueDesc, IID_PPV_ARGS(&D3DCommandQueue)));
 	D3DCommandQueue->SetName(eastl::wstring{ eastl::wstring::CtorSprintf(), EA_WCHAR("%s Queue"), GetD3D12QueueTypeString(QueueType) }.c_str());
 
-	Fence.CreateD3DFence();
 	Fence.SetDebugNameToFence(eastl::wstring{ eastl::wstring::CtorSprintf(), EA_WCHAR("%s Queue Fence"), GetD3D12QueueTypeString(QueueType) }.c_str());
 }
 
 void FD3D12CommandQueue::WaitForCompletion()
 {
-	const uint64_t SignaledValue = Fence.Signal(this);
-	do {} while (Fence.GetD3DFence()->GetCompletedValue() < SignaledValue);
+	Fence.Signal(this, true);
 }
 

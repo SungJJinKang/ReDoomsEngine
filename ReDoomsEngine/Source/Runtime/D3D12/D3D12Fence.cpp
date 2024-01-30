@@ -4,6 +4,12 @@
 #include "D3D12Fence.h"
 #include "D3D12CommandQueue.h"
 
+FD3D12Fence::FD3D12Fence()
+	: D3DFence(), LastSignaledValue(0), bInterruptAwaited(false)
+{
+	CreateD3DFence();
+}
+
 void FD3D12Fence::CreateD3DFence()
 {
 	CreateD3DFence(EA_WCHAR("Unnamed"));
@@ -24,11 +30,36 @@ void FD3D12Fence::SetDebugNameToFence(const eastl::wstring& InDebugName)
 	D3DFence->SetName(InDebugName.c_str());
 }
 
-uint64_t FD3D12Fence::Signal(FD3D12CommandQueue* const InCommandQueue)
+uint64_t FD3D12Fence::Signal(FD3D12CommandQueue* const InCommandQueue, const bool bWaitInstantly)
 {
 	const uint64_t SignaledValue = LastSignaledValue;
 	VERIFYD3D12RESULT(InCommandQueue->GetD3DCommandQueue()->Signal(GetD3DFence(), SignaledValue));
 	++LastSignaledValue;
 
+	if (bWaitInstantly)
+	{
+		WaitOnSignal(SignaledValue);
+	}
+
 	return SignaledValue;
+}
+
+void FD3D12Fence::WaitOnSignal(const uint64_t SignaledValue)
+{
+	do {} while (!IsCompleteSignal(SignaledValue));
+}
+
+void FD3D12Fence::WaitOnLastSignal()
+{
+	do {} while (!IsCompleteLastSignal());
+}
+
+bool FD3D12Fence::IsCompleteSignal(const uint64_t SignaledValue)
+{
+	return !(GetD3DFence()->GetCompletedValue() < (SignaledValue));
+}
+
+bool FD3D12Fence::IsCompleteLastSignal()
+{
+	return IsCompleteSignal(LastSignaledValue - 1);
 }

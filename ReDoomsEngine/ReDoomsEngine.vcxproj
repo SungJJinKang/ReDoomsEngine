@@ -162,8 +162,8 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc.lib;mimalloc-redirect.lib;mimalloc-override.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Debug;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Debug;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\STL\mimalloc\bin;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Debug;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Debug;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
     <FxCompile>
@@ -180,7 +180,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\;$(SolutionDir)Source\Runtime\Utils\cityhash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -194,8 +194,8 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc.lib;mimalloc-redirect.lib;mimalloc-override.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Release;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\STL\mimalloc\bin;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Release;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
     <FxCompile>
@@ -207,6 +207,8 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Tester.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12CommandList.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Enums.cpp" />
@@ -253,6 +255,9 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12RendererInclude.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Tester.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12CommandList.h" />
     <ClInclude Include="Source\Runtime\Core\Macros.h" />

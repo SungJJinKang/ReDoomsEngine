@@ -5,7 +5,7 @@
 
 static_assert(std::is_pod<FD3D12PSOInitializer::FDesc>::value);
 
-void FD3D12PSOInitializer::Init()
+void FD3D12PSOInitializer::FinishCreating()
 {
     EA_ASSERT(CachedHash == 0);
 
@@ -49,17 +49,22 @@ FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     VERIFYD3D12RESULT(GetD3D12Device()->CreateGraphicsPipelineState(&Desc, IID_PPV_ARGS(&PSOObject)));
 }
 
-eastl::shared_ptr<FD3D12PSO> FD3D12PSOManager::GetOrCreatePSO(const FD3D12PSOInitializer& InD3D12PSOInitializer)
+FD3D12PSO* FD3D12PSOManager::GetOrCreatePSO(const FD3D12PSOInitializer& InD3D12PSOInitializer)
 {
+    FD3D12PSO* NewPSO = nullptr;
+
     auto Iter = PSOHashMap.find(InD3D12PSOInitializer);
     if (Iter == PSOHashMap.end())
     {
-        eastl::shared_ptr<FD3D12PSO> NewPSO = eastl::make_shared<FD3D12PSO>(InD3D12PSOInitializer);
-        PSOHashMap.emplace(InD3D12PSOInitializer, NewPSO);
-        return NewPSO;
+        eastl::unique_ptr<FD3D12PSO> NewPSOUniquePtr = eastl::make_unique<FD3D12PSO>(InD3D12PSOInitializer);
+        NewPSO = NewPSOUniquePtr.get();
+        PSOHashMap.emplace(InD3D12PSOInitializer, eastl::move(NewPSOUniquePtr));
     }
     else
     {
-        return Iter->second;
+        NewPSO = Iter->second.get();
     }
+
+    EA_ASSERT(NewPSO);
+    return NewPSO;
 }
