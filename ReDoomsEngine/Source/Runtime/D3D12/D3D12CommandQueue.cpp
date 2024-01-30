@@ -1,0 +1,52 @@
+#include "D3D12CommandQueue.h"
+#include "D3D12Device.h"
+
+D3D12_COMMAND_LIST_TYPE GetD3D12CommandListType(ED3D12QueueType QueueType)
+{
+	switch (QueueType)
+	{
+	case ED3D12QueueType::Direct: return D3D12_COMMAND_LIST_TYPE_DIRECT;
+	case ED3D12QueueType::Copy:   return D3D12_COMMAND_LIST_TYPE_COPY;
+	case ED3D12QueueType::Async:  return D3D12_COMMAND_LIST_TYPE_COMPUTE;
+	default: EA_ASSUME(0); // fallthrough
+	}
+}
+
+const wchar_t* GetD3D12QueueTypeString(ED3D12QueueType QueueType)
+{
+	switch (QueueType)
+	{
+	case ED3D12QueueType::Direct: return EA_WCHAR("Direct");
+	case ED3D12QueueType::Copy:   return EA_WCHAR("Copy");
+	case ED3D12QueueType::Async:  return EA_WCHAR("Async");
+	default: EA_ASSUME(0); // fallthrough
+	}
+}
+
+
+FD3D12CommandQueue::FD3D12CommandQueue(const ED3D12QueueType InQueueType)
+	: QueueType(InQueueType), D3DCommandQueue(), Fence()
+{
+}
+
+void FD3D12CommandQueue::Init()
+{
+	EA_ASSERT(D3DCommandQueue.Get() == nullptr);
+
+	D3D12_COMMAND_QUEUE_DESC CommandQueueDesc;
+	MEM_ZERO(CommandQueueDesc);
+	CommandQueueDesc.Type = GetD3D12CommandListType((ED3D12QueueType)QueueType);
+	CommandQueueDesc.Priority = 0;
+	CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+
+	VERIFYD3D12RESULT(GetD3D12Device()->CreateCommandQueue(&CommandQueueDesc, IID_PPV_ARGS(&D3DCommandQueue)));
+	D3DCommandQueue->SetName(eastl::wstring{ eastl::wstring::CtorSprintf(), EA_WCHAR("%s Queue"), GetD3D12QueueTypeString(QueueType) }.c_str());
+
+	Fence.SetDebugNameToFence(eastl::wstring{ eastl::wstring::CtorSprintf(), EA_WCHAR("%s Queue Fence"), GetD3D12QueueTypeString(QueueType) }.c_str());
+}
+
+void FD3D12CommandQueue::WaitForCompletion()
+{
+	Fence.Signal(this, true);
+}
+

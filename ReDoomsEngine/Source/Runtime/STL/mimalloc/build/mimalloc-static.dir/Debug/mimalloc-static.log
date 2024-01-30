@@ -1,0 +1,18 @@
+﻿  Building Custom Rule F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/CMakeLists.txt
+  alloc.c
+  alloc-aligned.c
+  alloc-posix.c
+  arena.c
+  bitmap.c
+  heap.c
+  init.c
+  options.c
+  os.c
+  page.c
+  random.c
+  segment.c
+  segment-map.c
+  stats.c
+  prim.c
+  Generating Code...
+  mimalloc-static.vcxproj -> F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\Debug\mimalloc-static.lib

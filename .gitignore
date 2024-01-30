@@ -12,9 +12,9 @@
 *.pch
 
 # Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# *.so
+# *.dylib
+# *.dll
 
 # Fortran module files
 *.mod
@@ -24,9 +24,24 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
 *.out
 *.app
+
+*.tlog
+#*.pdb
+*.ipch
+ReDoomsEngine/.vs/ReDoomsEngine/v17
+ReDoomsEngine/x64
+ReDoomsEngine/Source/Runtime/STL/mimalloc/build/Debug
+ReDoomsEngine/Source/Runtime/STL/mimalloc/build/mimalloc.dir
+ReDoomsEngine/.vs
+ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAThread/EAThread.dir
+ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAStdC/EAStdC.dir
+ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAAssert/EAAssert.dir
+ReDoomsEngine/Source/Runtime/STL/mimalloc/build/CMakeFiles
+ReDoomsEngine/Source/Runtime/STL/EASTL/build/EASTL.dir
+
+CMakeCache.txt

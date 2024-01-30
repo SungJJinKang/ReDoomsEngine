@@ -1,0 +1,18 @@
+#pragma once
+#include "CommonInclude.h"
+
+#include "D3D12Include.h"
+
+enum class EShaderFrequency : uint8_t
+{
+	Vertex,
+	Pixel,
+	Compute,
+	NumShaderFrequency
+};
+
+constexpr D3D12_SHADER_VISIBILITY D3D12_SHADER_VISIBILITY_START = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX;
+constexpr D3D12_SHADER_VISIBILITY D3D12_SHADER_VISIBILITY_END = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL;
+constexpr D3D12_SHADER_VISIBILITY D3D12_SHADER_VISIBILITY_NUM = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_AMPLIFICATION;
+
+const wchar_t* GetShaderFrequencyString(const EShaderFrequency ShaderFrequency);
