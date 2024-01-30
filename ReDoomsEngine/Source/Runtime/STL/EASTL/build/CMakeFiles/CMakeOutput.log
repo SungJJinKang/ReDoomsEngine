@@ -103,7 +103,7 @@ The output was:
 msbuild 버전 17.8.5+b5265ef37(.NET Framework용)
 빌드 시작: 2024-01-25 오후 1:41:23
 
-1 노드의 "F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트(기본 대상)입니다.
+1 노드의 "$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트(기본 대상)입니다.
 PrepareForBuild:
   "Debug\" 디렉터리를 만들고 있습니다.
   Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
@@ -116,7 +116,7 @@ ClCompile:
   CMakeCXXCompilerId.cpp
 Link:
   C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.38.33130\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X64 Debug\CMakeCXXCompilerId.obj
-  CompilerIdCXX.vcxproj -> F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.exe
+  CompilerIdCXX.vcxproj -> $(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.exe
 PostBuildEvent:
   for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
   :VCEnd
@@ -124,7 +124,7 @@ PostBuildEvent:
 FinalizeBuildStatus:
   "Debug\CompilerIdCXX.tlog\unsuccessfulbuild" 파일을 삭제하고 있습니다.
   "Debug\CompilerIdCXX.tlog\CompilerIdCXX.lastbuildstate"에 연결(touching)하고 있습니다.
-"F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트를 빌드했습니다(기본 대상).
+"$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트를 빌드했습니다(기본 대상).
 
 빌드했습니다.
     경고 0개
@@ -137,31 +137,45 @@ Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" p
 
 Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
 
-The CXX compiler identification is MSVC, found in "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/3.24.2/CompilerIdCXX/CompilerIdCXX.exe"
+The CXX compiler identification is MSVC, found in "$(SolutionDir)/Source/Runtime/STL/EASTL/build/CMakeFiles/3.24.2/CompilerIdCXX/CompilerIdCXX.exe"
 
 Detecting CXX compiler ABI info compiled with the following output:
-Change Dir: F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeTmp
+Change Dir: $(SolutionDir)/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_14f0c.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && msbuild 버전 17.8.5+b5265ef37(.NET Framework용)
-
-  Microsoft (R) C/C++ Optimizing Compiler Version 19.38.33134 for x64
-  Copyright (C) Microsoft Corporation.  All rights reserved.
-  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_14f0c.dir\Debug\\" /Fd"cmTC_14f0c.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp"
-  CMakeCXXCompilerABI.cpp
-  cmTC_14f0c.vcxproj -> F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\Debug\cmTC_14f0c.exe
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_14f0c.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && msbuild 버전 17.8.5+b5265ef37(.NET Framework용)
 
 
 
-Performing C++ SOURCE FILE Test EASTL_HAS_ZCCHAR8T_FLAG succeeded with the following output:
-Change Dir: F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeTmp
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.38.33134 for x64
 
-Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_293e1.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && msbuild 버전 17.8.5+b5265ef37(.NET Framework용)
-
-  Microsoft (R) C/C++ Optimizing Compiler Version 19.38.33134 for x64
-  Copyright (C) Microsoft Corporation.  All rights reserved.
-  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D EASTL_HAS_ZCCHAR8T_FLAG /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_293e1.dir\Debug\\" /Fd"cmTC_293e1.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue  /Zc:char8_t F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\src.cxx
-  src.cxx
-  cmTC_293e1.vcxproj -> F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\Debug\cmTC_293e1.exe
+  Copyright (C) Microsof$(SolutionDir)erved.
+
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_14f0c.dir\Debug\\" /Fd"cmTC_14f0c.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp"
+
+  CMakeCXXCompilerABI.cpp
+
+  cmTC_14f0c.vcxproj -> F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\Debug\cmTC_14f0c.exe
+
+
+
+
+Performing C++ SOURCE FILE Test EASTL_HAS_ZCCHAR8T_FLAG succeeded with the following output:$(SolutionDir)
+Change Dir: $(SolutionDir)/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeTmp
+$(SolutionDir)
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_293e1.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && msbuild 버전 17.8.5+b5265ef37(.NET Framework용)
+
+
+
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.38.33134 for x64
+
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D EASTL_HAS_ZCCHAR8T_FLAG /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_293e1.dir\Debug\\" /Fd"cmTC_293e1.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue  /Zc:char8_t F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\src.cxx
+
+  src.cxx
+
+  cmTC_293e1.vcxproj -> F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\Debug\cmTC_293e1.exe
+
 
 
 Source file was:

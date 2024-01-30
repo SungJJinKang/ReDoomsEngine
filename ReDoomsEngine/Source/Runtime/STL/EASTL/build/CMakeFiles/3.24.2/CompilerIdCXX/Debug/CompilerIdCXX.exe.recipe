@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.exe</FullPath>
+      <FullPath>$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

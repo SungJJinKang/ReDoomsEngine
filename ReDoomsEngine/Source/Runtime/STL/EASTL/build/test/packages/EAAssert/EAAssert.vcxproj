@@ -24,7 +24,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BC214079-45D8-36BD-A49F-65A0D29A4D50}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>EAAssert</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
@@ -59,26 +59,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EAAssert.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EAAssert</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">EAAssert.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">EAAssert</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">EAAssert.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">EAAssert</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">EAAssert.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">EAAssert</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
@@ -92,15 +92,15 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
       <WarningLevel>Level4</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;CMAKE_INTDIR="Debug";EA_ASSERT_ENABLED=1</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -113,7 +113,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -132,10 +132,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -148,7 +148,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -167,10 +167,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -183,7 +183,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -201,10 +201,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\include;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -216,11 +216,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\CMakeLists.txt">
+    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAAssert/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAAssert/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL -BF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build --check-stamp-file F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAAssert/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build --check-stamp-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAAssert/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -228,12 +228,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\CheckCXXCompilerFlag.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.28\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAAssert/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAAssert/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL -BF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build --check-stamp-file F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAAssert/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build --check-stamp-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAAssert/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -241,12 +241,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\CheckCXXCompilerFlag.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.28\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAAssert/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAAssert/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL -BF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build --check-stamp-file F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAAssert/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build --check-stamp-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAAssert/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -254,12 +254,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\CheckCXXCompilerFlag.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.28\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAAssert/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAAssert/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL -BF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build --check-stamp-file F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAAssert/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build --check-stamp-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAAssert/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -267,17 +267,17 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\CheckCXXCompilerFlag.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.28\Modules\CheckCXXCompilerFlag.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\scripts\CMake\CommonCppFlags.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\test\packages\EAAssert\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\source\eaassert.cpp" />
+    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAAssert\source\eaassert.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\ZERO_CHECK.vcxproj">
-      <Project>{9190038F-3321-32F8-8556-41AB29BA0376}</Project>
+    <ProjectReference Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\ZERO_CHECK.vcxproj">
+      <Project>{FF71505A-CF35-3BB2-B61F-06F8A68F4518}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

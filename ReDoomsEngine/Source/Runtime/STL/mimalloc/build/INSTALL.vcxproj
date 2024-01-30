@@ -12,11 +12,19 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{04D6108D-862A-35A0-8B9F-F82017A714A8}</ProjectGuid>
+    <ProjectGuid>{343DF88E-214F-3A9F-9B12-193A22EDDBAA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>INSTALL</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
@@ -32,6 +40,16 @@
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -43,6 +61,8 @@
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PostBuildEvent>
@@ -74,8 +94,39 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <PostBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message></Message>
+      <Command>setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -DBUILD_TYPE=$(Configuration) -P cmake_install.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <PostBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message></Message>
+      <Command>setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -DBUILD_TYPE=$(Configuration) -P cmake_install.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\CMakeFiles\a6dbd016d97ec56fdb3f833cc0cbeb05\INSTALL_force.rule">
+    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\CMakeFiles\8d7bf8d1509c1c7d8ab33db99f07fa0d\INSTALL_force.rule">
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</BuildInParallel>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
 cd .
@@ -87,9 +138,10 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\CMakeFiles\INSTALL_force</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\CMakeFiles\INSTALL_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</VerifyInputsAndOutputsExist>
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</BuildInParallel>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
 cd .
@@ -101,20 +153,50 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\CMakeFiles\INSTALL_force</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\CMakeFiles\INSTALL_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</BuildInParallel>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'"> </Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\CMakeFiles\INSTALL_force</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</VerifyInputsAndOutputsExist>
+      <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</BuildInParallel>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'"> </Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\CMakeFiles\INSTALL_force</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+      <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</VerifyInputsAndOutputsExist>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\ZERO_CHECK.vcxproj">
-      <Project>{0A9777AC-4CDB-374D-AD22-B5B9D8E6440D}</Project>
+    <ProjectReference Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\ZERO_CHECK.vcxproj">
+      <Project>{C9136475-1D3B-3C21-8D5D-BA21188CD0A2}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\ALL_BUILD.vcxproj">
-      <Project>{EAC9B0FB-D7B4-3580-9101-EC40461FF9FF}</Project>
+    <ProjectReference Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\ALL_BUILD.vcxproj">
+      <Project>{2AF1FA37-E9B6-3E3A-B0AD-1BFB75C63501}</Project>
       <Name>ALL_BUILD</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
