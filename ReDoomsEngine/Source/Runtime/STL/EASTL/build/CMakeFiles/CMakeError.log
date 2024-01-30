@@ -33,7 +33,7 @@ The output was:
 msbuild 버전 17.8.5+b5265ef37(.NET Framework용)
 빌드 시작: 2024-01-25 오후 1:41:16
 
-1 노드의 "F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트(기본 대상)입니다.
+1 노드의 "$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트(기본 대상)입니다.
 PrepareForBuild:
   "Debug\" 디렉터리를 만들고 있습니다.
   Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
@@ -44,16 +44,16 @@ InitializeBuildStatus:
 ClCompile:
   C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.38.33130\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
   CMakeCXXCompilerId.cpp
-/CMakeCXXCompilerId.cpp(1,1): error C1083: Cannot open source file: 'CMakeCXXCompilerId.cpp': No such file or directory [F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
+/CMakeCXXCompilerId.cpp(1,1): error C1083: Cannot open source file: 'CMakeCXXCompilerId.cpp': No such file or directory [$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
   (compiling source file '/CMakeCXXCompilerId.cpp')
   
-"F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트를 빌드했습니다(기본 대상). - 실패
+"$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트를 빌드했습니다(기본 대상). - 실패
 
 빌드하지 못했습니다.
 
-"F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj"(기본 대상)(1)->
+"$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj"(기본 대상)(1)->
 (ClCompile 대상) -> 
-  /CMakeCXXCompilerId.cpp(1,1): error C1083: Cannot open source file: 'CMakeCXXCompilerId.cpp': No such file or directory [F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
+  /CMakeCXXCompilerId.cpp(1,1): error C1083: Cannot open source file: 'CMakeCXXCompilerId.cpp': No such file or directory [$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
 
     경고 0개
     오류 1개
@@ -71,7 +71,7 @@ The output was:
 msbuild 버전 17.8.5+b5265ef37(.NET Framework용)
 빌드 시작: 2024-01-25 오후 1:41:19
 
-1 노드의 "F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트(기본 대상)입니다.
+1 노드의 "$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트(기본 대상)입니다.
 PrepareForBuild:
   "Debug\" 디렉터리를 만들고 있습니다.
   Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
@@ -80,14 +80,14 @@ InitializeBuildStatus:
 ClCompile:
   C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.38.33130\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
   CMakeCXXCompilerId.cpp
-FileTracker : error FTK1011: could not create the new file tracking log file: F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\Debug\CompilerIdCXX.tlog\CL.write.1.tlog. 파일이 있습니다. [F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
-"F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트를 빌드했습니다(기본 대상). - 실패
+FileTracker : error FTK1011: could not create the new file tracking log file: $(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\Debug\CompilerIdCXX.tlog\CL.write.1.tlog. 파일이 있습니다. [$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
+"$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트를 빌드했습니다(기본 대상). - 실패
 
 빌드하지 못했습니다.
 
-"F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj"(기본 대상)(1)->
+"$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj"(기본 대상)(1)->
 (ClCompile 대상) -> 
-  FileTracker : error FTK1011: could not create the new file tracking log file: F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\Debug\CompilerIdCXX.tlog\CL.write.1.tlog. 파일이 있습니다. [F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
+  FileTracker : error FTK1011: could not create the new file tracking log file: $(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\Debug\CompilerIdCXX.tlog\CL.write.1.tlog. 파일이 있습니다. [$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
 
     경고 0개
     오류 1개
@@ -105,7 +105,7 @@ The output was:
 msbuild 버전 17.8.5+b5265ef37(.NET Framework용)
 빌드 시작: 2024-01-25 오후 1:41:19
 
-1 노드의 "F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트(기본 대상)입니다.
+1 노드의 "$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트(기본 대상)입니다.
 PrepareForBuild:
   "Debug\" 디렉터리를 만들고 있습니다.
   Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
@@ -118,14 +118,14 @@ ClCompile:
   CMakeCXXCompilerId.cpp
 Link:
   C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.38.33130\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X64 Debug\CMakeCXXCompilerId.obj
-LINK : fatal error LNK1181: cannot open input file 'Debug\CMakeCXXCompilerId.obj' [F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
-"F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트를 빌드했습니다(기본 대상). - 실패
+LINK : fatal error LNK1181: cannot open input file 'Debug\CMakeCXXCompilerId.obj' [$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
+"$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj" 프로젝트를 빌드했습니다(기본 대상). - 실패
 
 빌드하지 못했습니다.
 
-"F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj"(기본 대상)(1)->
+"$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj"(기본 대상)(1)->
 (Link 대상) -> 
-  LINK : fatal error LNK1181: cannot open input file 'Debug\CMakeCXXCompilerId.obj' [F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
+  LINK : fatal error LNK1181: cannot open input file 'Debug\CMakeCXXCompilerId.obj' [$(SolutionDir)\Source\Runtime\STL\EASTL\build\CMakeFiles\3.24.2\CompilerIdCXX\CompilerIdCXX.vcxproj]
 
     경고 0개
     오류 1개
@@ -134,16 +134,24 @@ LINK : fatal error LNK1181: cannot open input file 'Debug\CMakeCXXCompilerId.obj
 
 
 Performing C++ SOURCE FILE Test EASTL_HAS_FCHAR8T_FLAG failed with the following output:
-Change Dir: F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeTmp
+Change Dir: $(SolutionDir)/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_cb92d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && msbuild 버전 17.8.5+b5265ef37(.NET Framework용)
-
-  Microsoft (R) C/C++ Optimizing Compiler Version 19.38.33134 for x64
-  Copyright (C) Microsoft Corporation.  All rights reserved.
-  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D EASTL_HAS_FCHAR8T_FLAG /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_cb92d.dir\Debug\\" /Fd"cmTC_cb92d.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue  -fchar8_t F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\src.cxx
-cl : command line  warning D9002: ignoring unknown option '-fchar8_t' [F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\cmTC_cb92d.vcxproj]
-  src.cxx
-  cmTC_cb92d.vcxproj -> F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\Debug\cmTC_cb92d.exe
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_cb92d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && msbuild 버전 17.8.5+b5265ef37(.NET Framework용)
+
+
+
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.38.33134 for x64$(SolutionDir)
+$(SolutionDir)
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+$(SolutionDir)
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D EASTL_HAS_FCHAR8T_FLAG /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_cb92d.dir\Debug\\" /Fd"cmTC_cb92d.dir\Debug\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue  -fchar8_t F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\src.cxx
+
+cl : command line  warning D9002: ignoring unknown option '-fchar8_t' [F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\cmTC_cb92d.vcxproj]
+
+  src.cxx
+
+  cmTC_cb92d.vcxproj -> F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\CMakeTmp\Debug\cmTC_cb92d.exe
+
 
 
 Source file was:
