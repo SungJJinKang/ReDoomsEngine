@@ -15,7 +15,7 @@
 	///////////////////////////////////////////////////////////////////////////
 
 	EA::Thread::EARWMutexIPData::EARWMutexIPData()
-	  : mSharedData(),  // This still needs to be Init-ed.
+	  : mSharedData(),  // This still needs to be FinishCreating-ed.
 		mMutex(NULL),
 		mReadSemaphore(NULL),
 		mWriteSemaphore(NULL)

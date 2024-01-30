@@ -64,7 +64,7 @@ namespace // We construct an anonymous namespace because doing so keeps the defi
 			// Empty. The shutdown is done externally, due to tricky startup/shutdown ordering issues.
 		}
 
-		void Init()
+		void FinishCreating()
 		{
 			if(!mhDbgHelp)
 			{
@@ -135,7 +135,7 @@ static bool IsAddressReadable(const void* pAddress)
 EATHREADLIB_API void InitCallstack()
 {
 	if(++sInitCount == 1)
-		sWin32DbgHelp.Init();
+		sWin32DbgHelp.FinishCreating();
 }
 
 
@@ -157,7 +157,7 @@ EATHREADLIB_API size_t GetCallstack(void* pReturnAddressArray[], size_t nReturnA
 	size_t nEntryIndex(0);
 
 	if(!sWin32DbgHelp.mhDbgHelp)
-		sWin32DbgHelp.Init();
+		sWin32DbgHelp.FinishCreating();
 
 	if(sWin32DbgHelp.mpStackWalk)
 	{

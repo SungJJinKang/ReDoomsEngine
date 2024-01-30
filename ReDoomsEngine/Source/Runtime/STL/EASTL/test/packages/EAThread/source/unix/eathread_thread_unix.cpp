@@ -248,7 +248,7 @@ namespace
 
     // This function needs to be called by Java code on app startup, before 
     // the C main entrypoint is called, or very shortly thereafter. It's called
-    // via Java with EAThread.Init(); If your Java code doesn't call EAThread.Init
+    // via Java with EAThread.FinishCreating(); If your Java code doesn't call EAThread.FinishCreating
     // then any C++ calls to Java code will fail (though those C++ calls could 
     // manually set the JNIEnv per call).
     extern "C" __attribute__ ((visibility("default"))) JNIEXPORT void JNICALL Java_com_ea_EAThread_EAThread_Init(JNIEnv* env, jclass eaThreadClass)

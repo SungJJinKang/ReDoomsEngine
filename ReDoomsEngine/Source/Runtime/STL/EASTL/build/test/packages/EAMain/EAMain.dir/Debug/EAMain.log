@@ -1,4 +1,4 @@
-﻿  Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/test/packages/EAMain/CMakeLists.txt
+﻿  Building Custom Rule $(SolutionDir)Source/Runtime/STL/EASTL/test/packages/EAMain/CMakeLists.txt
   EAEntryPointMain.cpp
   EAMain.cpp
 $(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include\EAStdC/EAString.h(310,94): warning C4100: 'nSourceLength': unreferenced formal parameter

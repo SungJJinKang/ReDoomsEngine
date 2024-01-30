@@ -38,10 +38,10 @@
 		if(!pConditionParameters && bDefaultParameters)
 		{
 			ConditionParameters parameters;
-			Init(&parameters);
+			FinishCreating(&parameters);
 		}
 		else
-			Init(pConditionParameters);
+			FinishCreating(pConditionParameters);
 	}
 
 
@@ -51,7 +51,7 @@
 	}
 
 
-	bool EA::Thread::Condition::Init(const ConditionParameters* pConditionParameters)
+	bool EA::Thread::Condition::FinishCreating(const ConditionParameters* pConditionParameters)
 	{
 		if(pConditionParameters)
 		{

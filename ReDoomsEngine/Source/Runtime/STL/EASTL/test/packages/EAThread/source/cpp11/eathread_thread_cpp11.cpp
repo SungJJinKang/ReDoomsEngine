@@ -97,7 +97,7 @@ namespace EA
 
 EA_DISABLE_VC_WARNING(4355) // this used in base member initializer list - should be safe in this context
 EAThreadDynamicData::EAThreadDynamicData(void* userFunc, void* userContext, void* userWrapperFunc, ThreadFunc threadFunc) : 
-	mnRefCount(2), // Init ref count to 2, one corresponding release happens on threadFunc exit and the other when Thread class is destroyed or Begin is called again
+	mnRefCount(2), // FinishCreating ref count to 2, one corresponding release happens on threadFunc exit and the other when Thread class is destroyed or Begin is called again
 	mStatus(EA::Thread::Thread::kStatusNone),
 	mpComp(nullptr)
 {
@@ -109,7 +109,7 @@ EAThreadDynamicData::EAThreadDynamicData(void* userFunc, void* userContext, void
 
 
 EAThreadDynamicData::EAThreadDynamicData(EA::Thread::ThreadUniqueId uniqueThreadId, const char* pThreadName) : 
-	mnRefCount(2), // Init ref count to 2, one corresponding release happens on threadFunc exit and the other when Thread class is destroyed or Begin is called again
+	mnRefCount(2), // FinishCreating ref count to 2, one corresponding release happens on threadFunc exit and the other when Thread class is destroyed or Begin is called again
 	mStatus(EA::Thread::Thread::kStatusNone),
 	mpComp(nullptr),
 	mUniqueThreadId(uniqueThreadId)

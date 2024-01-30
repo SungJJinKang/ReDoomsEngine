@@ -9,7 +9,7 @@ extern "C" {
 #endif
 /*
  * Class:     com_ea_EAThread_EAThread
- * Method:    Init
+ * Method:    FinishCreating
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_com_ea_EAThread_EAThread_Init

@@ -77,8 +77,8 @@ C:/Program Files/CMake/share/cmake-3.22/Modules/Platform/Windows-MSVC.cmake
 C:/Program Files/CMake/share/cmake-3.22/Modules/Platform/Windows.cmake
 C:/Program Files/CMake/share/cmake-3.22/Modules/Platform/WindowsPaths.cmake
 C:/Program Files/CMake/share/cmake-3.22/Modules/WriteBasicConfigVersionFile.cmake
-C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/CMakeLists.txt
-C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/3.22.2/CMakeCXXCompiler.cmake
-C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/3.22.2/CMakeRCCompiler.cmake
-C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/3.22.2/CMakeSystem.cmake
-C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/DirectXMath-config.cmake.in
+$(SolutionDir)Source/Runtime/Math/DirectXMath/CMakeLists.txt
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/3.22.2/CMakeCXXCompiler.cmake
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/3.22.2/CMakeRCCompiler.cmake
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/3.22.2/CMakeSystem.cmake
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/DirectXMath-config.cmake.in

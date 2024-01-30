@@ -109,7 +109,7 @@
       <UseUtf8Encoding>Always</UseUtf8Encoding>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Checking Build System</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/DirectXMath.sln
+"C:\Program Files\CMake\bin\cmake.exe" -S$(SolutionDir)Source/Runtime/Math/DirectXMath -B$(SolutionDir)Source/Runtime/Math/DirectXMath/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file $(SolutionDir)Source/Runtime/Math/DirectXMath/build/DirectXMath.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -122,7 +122,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Checking Build System</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/DirectXMath.sln
+"C:\Program Files\CMake\bin\cmake.exe" -S$(SolutionDir)Source/Runtime/Math/DirectXMath -B$(SolutionDir)Source/Runtime/Math/DirectXMath/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file $(SolutionDir)Source/Runtime/Math/DirectXMath/build/DirectXMath.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -135,7 +135,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Checking Build System</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/DirectXMath.sln
+"C:\Program Files\CMake\bin\cmake.exe" -S$(SolutionDir)Source/Runtime/Math/DirectXMath -B$(SolutionDir)Source/Runtime/Math/DirectXMath/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file $(SolutionDir)Source/Runtime/Math/DirectXMath/build/DirectXMath.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -148,7 +148,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Checking Build System</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/DirectXMath.sln
+"C:\Program Files\CMake\bin\cmake.exe" -S$(SolutionDir)Source/Runtime/Math/DirectXMath -B$(SolutionDir)Source/Runtime/Math/DirectXMath/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file $(SolutionDir)Source/Runtime/Math/DirectXMath/build/DirectXMath.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone

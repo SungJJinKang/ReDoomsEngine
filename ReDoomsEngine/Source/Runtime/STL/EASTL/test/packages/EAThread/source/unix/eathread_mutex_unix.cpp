@@ -64,10 +64,10 @@
 		if(!pMutexParameters && bDefaultParameters)
 		{
 			MutexParameters parameters;
-			Init(&parameters);
+			FinishCreating(&parameters);
 		}
 		else
-			Init(pMutexParameters);
+			FinishCreating(pMutexParameters);
 	}
 
 
@@ -78,7 +78,7 @@
 	}
 
 
-	bool EA::Thread::Mutex::Init(const MutexParameters* pMutexParameters)
+	bool EA::Thread::Mutex::FinishCreating(const MutexParameters* pMutexParameters)
 	{
 		if(pMutexParameters)
 		{

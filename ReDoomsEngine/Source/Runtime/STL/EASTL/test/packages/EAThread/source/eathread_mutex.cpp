@@ -94,10 +94,10 @@ void EA::Thread::MutexFactory::DestructMutex(EA::Thread::Mutex* pMutex)
 		if(!pMutexParameters && bDefaultParameters)
 		{
 			MutexParameters parameters;
-			Init(&parameters);
+			FinishCreating(&parameters);
 		}
 		else
-			Init(pMutexParameters);
+			FinishCreating(pMutexParameters);
 	}
 
 
@@ -107,7 +107,7 @@ void EA::Thread::MutexFactory::DestructMutex(EA::Thread::Mutex* pMutex)
 	}
 
 
-	bool EA::Thread::Mutex::Init(const MutexParameters* /*pMutexParameters*/)
+	bool EA::Thread::Mutex::FinishCreating(const MutexParameters* /*pMutexParameters*/)
 	{
 		// Possibly copy pMutexParameters->mName to mMutexData.mName
 		return true;
