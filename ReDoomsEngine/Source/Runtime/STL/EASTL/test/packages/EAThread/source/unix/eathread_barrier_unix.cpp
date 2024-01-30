@@ -41,17 +41,17 @@
 		if(!pBarrierParameters && bDefaultParameters)
 		{
 			BarrierParameters parameters;
-			Init(&parameters);
+			FinishCreating(&parameters);
 		}
 		else
-			Init(pBarrierParameters);
+			FinishCreating(pBarrierParameters);
 	}
 
 
 	EA::Thread::Barrier::Barrier(int height)
 	{
 		BarrierParameters parameters(height);
-		Init(&parameters);
+		FinishCreating(&parameters);
 	}
 
 
@@ -69,7 +69,7 @@
 	}
 
 
-	bool EA::Thread::Barrier::Init(const BarrierParameters* pBarrierParameters)
+	bool EA::Thread::Barrier::FinishCreating(const BarrierParameters* pBarrierParameters)
 	{
 		if(pBarrierParameters && !mBarrierData.mbValid){
 			mBarrierData.mbValid   = false;

@@ -271,7 +271,7 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
       
       The CXX compiler identification is MSVC, found in:
-        C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/3.28.1/CompilerIdCXX/CompilerIdCXX.exe
+        $(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/3.28.1/CompilerIdCXX/CompilerIdCXX.exe
       
   -
     kind: "message-v1"
@@ -325,7 +325,7 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
       
       The CXX compiler identification is MSVC, found in:
-        C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/3.28.1/CompilerIdCXX/CompilerIdCXX.exe
+        $(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/3.28.1/CompilerIdCXX/CompilerIdCXX.exe
       
   -
     kind: "try_compile-v1"
@@ -336,15 +336,15 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-g4zuzs"
-      binary: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-g4zuzs"
+      source: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-g4zuzs"
+      binary: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-g4zuzs"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
     buildResult:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-g4zuzs'
+        Change Dir: '$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-g4zuzs'
         
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_f03a6.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         msbuild 버전 17.8.3+195e7f5a3(.NET Framework용)
@@ -365,7 +365,7 @@ events:
           Copyright (C) Microsoft Corporation.  All rights reserved.
           cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f03a6.dir\\Debug\\\\" /Fd"cmTC_f03a6.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.28\\Modules\\CMakeCXXCompilerABI.cpp"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g4zuzs\\Debug\\cmTC_f03a6.exe" /INCREMENTAL /ILK:"cmTC_f03a6.dir\\Debug\\cmTC_f03a6.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-g4zuzs/Debug/cmTC_f03a6.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-g4zuzs/Debug/cmTC_f03a6.lib" /MACHINE:X64  /machine:x64 cmTC_f03a6.dir\\Debug\\CMakeCXXCompilerABI.obj
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g4zuzs\\Debug\\cmTC_f03a6.exe" /INCREMENTAL /ILK:"cmTC_f03a6.dir\\Debug\\cmTC_f03a6.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-g4zuzs/Debug/cmTC_f03a6.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-g4zuzs/Debug/cmTC_f03a6.lib" /MACHINE:X64  /machine:x64 cmTC_f03a6.dir\\Debug\\CMakeCXXCompilerABI.obj
           cmTC_f03a6.vcxproj -> C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-g4zuzs\\Debug\\cmTC_f03a6.exe
         FinalizeBuildStatus:
           "cmTC_f03a6.dir\\Debug\\cmTC_f03a6.tlog\\unsuccessfulbuild" 파일을 삭제하고 있습니다.
@@ -388,15 +388,15 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-kvtsqn"
-      binary: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-kvtsqn"
+      source: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-kvtsqn"
+      binary: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-kvtsqn"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
     buildResult:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-kvtsqn'
+        Change Dir: '$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-kvtsqn'
         
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_9f6c9.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         msbuild 버전 17.8.3+195e7f5a3(.NET Framework용)
@@ -417,7 +417,7 @@ events:
           Copyright (C) Microsoft Corporation.  All rights reserved.
           cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_9f6c9.dir\\Debug\\\\" /Fd"cmTC_9f6c9.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.28\\Modules\\CMakeCXXCompilerABI.cpp"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kvtsqn\\Debug\\cmTC_9f6c9.exe" /INCREMENTAL /ILK:"cmTC_9f6c9.dir\\Debug\\cmTC_9f6c9.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-kvtsqn/Debug/cmTC_9f6c9.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-kvtsqn/Debug/cmTC_9f6c9.lib" /MACHINE:X64  /machine:x64 cmTC_9f6c9.dir\\Debug\\CMakeCXXCompilerABI.obj
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kvtsqn\\Debug\\cmTC_9f6c9.exe" /INCREMENTAL /ILK:"cmTC_9f6c9.dir\\Debug\\cmTC_9f6c9.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-kvtsqn/Debug/cmTC_9f6c9.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-kvtsqn/Debug/cmTC_9f6c9.lib" /MACHINE:X64  /machine:x64 cmTC_9f6c9.dir\\Debug\\CMakeCXXCompilerABI.obj
           cmTC_9f6c9.vcxproj -> C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kvtsqn\\Debug\\cmTC_9f6c9.exe
         FinalizeBuildStatus:
           "cmTC_9f6c9.dir\\Debug\\cmTC_9f6c9.tlog\\unsuccessfulbuild" 파일을 삭제하고 있습니다.
@@ -442,16 +442,16 @@ events:
     checks:
       - "Performing Test EASTL_HAS_FCHAR8T_FLAG"
     directories:
-      source: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-wl772z"
-      binary: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-wl772z"
+      source: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-wl772z"
+      binary: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-wl772z"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
-      CMAKE_MODULE_PATH: ";C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/scripts/CMake"
+      CMAKE_MODULE_PATH: ";$(SolutionDir)Source/Runtime/STL/EASTL/scripts/CMake"
     buildResult:
       variable: "EASTL_HAS_FCHAR8T_FLAG"
       cached: true
       stdout: |
-        Change Dir: 'C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-wl772z'
+        Change Dir: '$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-wl772z'
         
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_60e84.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         msbuild 버전 17.8.3+195e7f5a3(.NET Framework용)
@@ -473,7 +473,7 @@ events:
           cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D EASTL_HAS_FCHAR8T_FLAG /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_60e84.dir\\Debug\\\\" /Fd"cmTC_60e84.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue  -fchar8_t "C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wl772z\\src.cxx"
         cl : command line  warning D9002: ignoring unknown option '-fchar8_t' [C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wl772z\\cmTC_60e84.vcxproj]
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wl772z\\Debug\\cmTC_60e84.exe" /INCREMENTAL /ILK:"cmTC_60e84.dir\\Debug\\cmTC_60e84.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-wl772z/Debug/cmTC_60e84.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-wl772z/Debug/cmTC_60e84.lib" /MACHINE:X64  /machine:x64 cmTC_60e84.dir\\Debug\\src.obj
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wl772z\\Debug\\cmTC_60e84.exe" /INCREMENTAL /ILK:"cmTC_60e84.dir\\Debug\\cmTC_60e84.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-wl772z/Debug/cmTC_60e84.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-wl772z/Debug/cmTC_60e84.lib" /MACHINE:X64  /machine:x64 cmTC_60e84.dir\\Debug\\src.obj
           cmTC_60e84.vcxproj -> C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-wl772z\\Debug\\cmTC_60e84.exe
         FinalizeBuildStatus:
           "cmTC_60e84.dir\\Debug\\cmTC_60e84.tlog\\unsuccessfulbuild" 파일을 삭제하고 있습니다.
@@ -503,16 +503,16 @@ events:
     checks:
       - "Performing Test EASTL_HAS_FCHAR8T_FLAG"
     directories:
-      source: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-2v97qn"
-      binary: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-2v97qn"
+      source: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-2v97qn"
+      binary: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-2v97qn"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
-      CMAKE_MODULE_PATH: ";C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/scripts/CMake"
+      CMAKE_MODULE_PATH: ";$(SolutionDir)Source/Runtime/STL/EASTL/scripts/CMake"
     buildResult:
       variable: "EASTL_HAS_FCHAR8T_FLAG"
       cached: true
       stdout: |
-        Change Dir: 'C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-2v97qn'
+        Change Dir: '$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-2v97qn'
         
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_6afe2.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         msbuild 버전 17.8.3+195e7f5a3(.NET Framework용)
@@ -534,7 +534,7 @@ events:
           cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D EASTL_HAS_FCHAR8T_FLAG /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_6afe2.dir\\Debug\\\\" /Fd"cmTC_6afe2.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue  -fchar8_t "C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2v97qn\\src.cxx"
         cl : command line  warning D9002: ignoring unknown option '-fchar8_t' [C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2v97qn\\cmTC_6afe2.vcxproj]
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2v97qn\\Debug\\cmTC_6afe2.exe" /INCREMENTAL /ILK:"cmTC_6afe2.dir\\Debug\\cmTC_6afe2.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-2v97qn/Debug/cmTC_6afe2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-2v97qn/Debug/cmTC_6afe2.lib" /MACHINE:X64  /machine:x64 cmTC_6afe2.dir\\Debug\\src.obj
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2v97qn\\Debug\\cmTC_6afe2.exe" /INCREMENTAL /ILK:"cmTC_6afe2.dir\\Debug\\cmTC_6afe2.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-2v97qn/Debug/cmTC_6afe2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-2v97qn/Debug/cmTC_6afe2.lib" /MACHINE:X64  /machine:x64 cmTC_6afe2.dir\\Debug\\src.obj
           cmTC_6afe2.vcxproj -> C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-2v97qn\\Debug\\cmTC_6afe2.exe
         FinalizeBuildStatus:
           "cmTC_6afe2.dir\\Debug\\cmTC_6afe2.tlog\\unsuccessfulbuild" 파일을 삭제하고 있습니다.
@@ -564,16 +564,16 @@ events:
     checks:
       - "Performing Test EASTL_HAS_ZCCHAR8T_FLAG"
     directories:
-      source: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-6ucx1l"
-      binary: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-6ucx1l"
+      source: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-6ucx1l"
+      binary: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-6ucx1l"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
-      CMAKE_MODULE_PATH: ";C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/scripts/CMake"
+      CMAKE_MODULE_PATH: ";$(SolutionDir)Source/Runtime/STL/EASTL/scripts/CMake"
     buildResult:
       variable: "EASTL_HAS_ZCCHAR8T_FLAG"
       cached: true
       stdout: |
-        Change Dir: 'C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-6ucx1l'
+        Change Dir: '$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-6ucx1l'
         
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_15e70.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         msbuild 버전 17.8.3+195e7f5a3(.NET Framework용)
@@ -594,7 +594,7 @@ events:
           Copyright (C) Microsoft Corporation.  All rights reserved.
           cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D EASTL_HAS_ZCCHAR8T_FLAG /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_15e70.dir\\Debug\\\\" /Fd"cmTC_15e70.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue  /Zc:char8_t "C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6ucx1l\\src.cxx"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6ucx1l\\Debug\\cmTC_15e70.exe" /INCREMENTAL /ILK:"cmTC_15e70.dir\\Debug\\cmTC_15e70.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-6ucx1l/Debug/cmTC_15e70.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-6ucx1l/Debug/cmTC_15e70.lib" /MACHINE:X64  /machine:x64 cmTC_15e70.dir\\Debug\\src.obj
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6ucx1l\\Debug\\cmTC_15e70.exe" /INCREMENTAL /ILK:"cmTC_15e70.dir\\Debug\\cmTC_15e70.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-6ucx1l/Debug/cmTC_15e70.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-6ucx1l/Debug/cmTC_15e70.lib" /MACHINE:X64  /machine:x64 cmTC_15e70.dir\\Debug\\src.obj
           cmTC_15e70.vcxproj -> C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-6ucx1l\\Debug\\cmTC_15e70.exe
         FinalizeBuildStatus:
           "cmTC_15e70.dir\\Debug\\cmTC_15e70.tlog\\unsuccessfulbuild" 파일을 삭제하고 있습니다.
@@ -620,16 +620,16 @@ events:
     checks:
       - "Performing Test EASTL_HAS_ZCCHAR8T_FLAG"
     directories:
-      source: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-tzslvc"
-      binary: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-tzslvc"
+      source: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-tzslvc"
+      binary: "$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-tzslvc"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
-      CMAKE_MODULE_PATH: ";C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/scripts/CMake"
+      CMAKE_MODULE_PATH: ";$(SolutionDir)Source/Runtime/STL/EASTL/scripts/CMake"
     buildResult:
       variable: "EASTL_HAS_ZCCHAR8T_FLAG"
       cached: true
       stdout: |
-        Change Dir: 'C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-tzslvc'
+        Change Dir: '$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-tzslvc'
         
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_5fff2.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         msbuild 버전 17.8.3+195e7f5a3(.NET Framework용)
@@ -650,7 +650,7 @@ events:
           Copyright (C) Microsoft Corporation.  All rights reserved.
           cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D EASTL_HAS_ZCCHAR8T_FLAG /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_5fff2.dir\\Debug\\\\" /Fd"cmTC_5fff2.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue  /Zc:char8_t "C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-tzslvc\\src.cxx"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-tzslvc\\Debug\\cmTC_5fff2.exe" /INCREMENTAL /ILK:"cmTC_5fff2.dir\\Debug\\cmTC_5fff2.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-tzslvc/Debug/cmTC_5fff2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-tzslvc/Debug/cmTC_5fff2.lib" /MACHINE:X64  /machine:x64 cmTC_5fff2.dir\\Debug\\src.obj
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-tzslvc\\Debug\\cmTC_5fff2.exe" /INCREMENTAL /ILK:"cmTC_5fff2.dir\\Debug\\cmTC_5fff2.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-tzslvc/Debug/cmTC_5fff2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"$(SolutionDir)Source/Runtime/STL/EASTL/build/CMakeFiles/CMakeScratch/TryCompile-tzslvc/Debug/cmTC_5fff2.lib" /MACHINE:X64  /machine:x64 cmTC_5fff2.dir\\Debug\\src.obj
           cmTC_5fff2.vcxproj -> C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\STL\\EASTL\\build\\CMakeFiles\\CMakeScratch\\TryCompile-tzslvc\\Debug\\cmTC_5fff2.exe
         FinalizeBuildStatus:
           "cmTC_5fff2.dir\\Debug\\cmTC_5fff2.tlog\\unsuccessfulbuild" 파일을 삭제하고 있습니다.

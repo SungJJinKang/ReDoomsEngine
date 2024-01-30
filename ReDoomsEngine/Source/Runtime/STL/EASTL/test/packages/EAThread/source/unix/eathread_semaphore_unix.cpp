@@ -42,17 +42,17 @@
 		if(!pSemaphoreParameters && bDefaultParameters)
 		{
 			SemaphoreParameters parameters;
-			Init(&parameters);
+			FinishCreating(&parameters);
 		}
 		else
-			Init(pSemaphoreParameters);
+			FinishCreating(pSemaphoreParameters);
 	}
 
 
 	EA::Thread::Semaphore::Semaphore(int initialCount)
 	{
 		SemaphoreParameters parameters(initialCount);
-		Init(&parameters);
+		FinishCreating(&parameters);
 	}
 
 
@@ -78,7 +78,7 @@
 	}
 
 
-	bool EA::Thread::Semaphore::Init(const SemaphoreParameters* pSemaphoreParameters)
+	bool EA::Thread::Semaphore::FinishCreating(const SemaphoreParameters* pSemaphoreParameters)
 	{
 		if(pSemaphoreParameters)
 		{

@@ -1,3 +1,0 @@
-﻿  Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/CMakeLists.txt
-  test-stress.c
-  mimalloc-test-stress.vcxproj -> $(SolutionDir)Source\Runtime\STL\mimalloc\build\Debug\mimalloc-test-stress.exe

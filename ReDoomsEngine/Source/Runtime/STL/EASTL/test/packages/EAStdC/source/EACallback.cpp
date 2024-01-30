@@ -498,7 +498,7 @@ void CallbackManager::UpdateInternal(int64_t& curTick, int64_t& curTime, int64_t
 {
 	EA_CALLBACK_PROCESSOR_MUTEX_LOCK();
 
-	EA_ASSERT(mbRunning); // The user must have called CallbackManager::Init before using it.
+	EA_ASSERT(mbRunning); // The user must have called CallbackManager::FinishCreating before using it.
 
 	curTick      = ++mTickCounter;
 	curTime      = (int64_t)mStopwatch.GetElapsedTime();

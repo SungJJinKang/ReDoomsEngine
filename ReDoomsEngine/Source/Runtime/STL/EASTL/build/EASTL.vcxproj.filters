@@ -1,861 +1,861 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\source\allocator_eastl.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\source\allocator_eastl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\source\assert.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\source\assert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\source\atomic.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\source\atomic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\source\fixed_pool.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\source\fixed_pool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\source\hashtable.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\source\hashtable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\source\intrusive_list.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\source\intrusive_list.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\source\numeric_limits.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\source\numeric_limits.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\source\red_black_tree.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\source\red_black_tree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\source\string.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\source\string.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\source\thread_support.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\source\thread_support.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\algorithm.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\algorithm.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\allocator.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\allocator.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\allocator_malloc.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\allocator_malloc.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\any.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\any.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\array.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\array.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\atomic.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\atomic.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bit.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bit.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bitset.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bitset.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bitvector.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bitvector.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\call_traits.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\call_traits.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\compressed_pair.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\compressed_pair.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\fixed_ring_buffer.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\fixed_ring_buffer.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\fixed_tuple_vector.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\fixed_tuple_vector.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\intrusive_sdlist.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\intrusive_sdlist.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\intrusive_slist.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\intrusive_slist.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\list_map.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\list_map.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\lru_cache.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\lru_cache.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\overloaded.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\overloaded.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\ring_buffer.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\ring_buffer.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\sort_extra.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\sort_extra.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\bonus\tuple_vector.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\bonus\tuple_vector.h">
       <Filter>Header Files\include\EASTL\bonus</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\chrono.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\chrono.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\compare.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\compare.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\core_allocator.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\core_allocator.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\core_allocator_adapter.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\core_allocator_adapter.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\deque.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\deque.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\finally.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\finally.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_allocator.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_allocator.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_function.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_function.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_hash_map.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_hash_map.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_hash_set.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_hash_set.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_list.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_list.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_map.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_map.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_set.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_set.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_slist.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_slist.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_string.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_string.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_substring.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_substring.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\fixed_vector.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\fixed_vector.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\functional.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\functional.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\hash_map.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\hash_map.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\hash_set.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\hash_set.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\heap.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\heap.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\initializer_list.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\initializer_list.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_add_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_add_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_and_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_and_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cmpxchg_strong.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cmpxchg_strong.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cmpxchg_weak.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cmpxchg_weak.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_compiler_barrier.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_compiler_barrier.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cpu_pause.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cpu_pause.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_exchange.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_exchange.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_add.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_add.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_and.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_and.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_or.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_or.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_sub.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_sub.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_xor.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_xor.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_load.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_load.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_memory_barrier.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_memory_barrier.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_or_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_or_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_signal_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_signal_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_store.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_store.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_sub_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_sub_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_thread_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_thread_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_xor_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_xor_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\arm</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_load.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_load.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\arm</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_memory_barrier.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_memory_barrier.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\arm</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_store.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_store.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\arm</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_thread_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_thread_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\arm</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_add_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_add_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_and_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_and_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_cmpxchg_strong.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_cmpxchg_strong.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_cmpxchg_weak.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_cmpxchg_weak.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_exchange.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_exchange.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_add.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_add.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_and.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_and.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_or.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_or.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_sub.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_sub.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_xor.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_xor.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_load.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_load.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_memory_barrier.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_memory_barrier.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_or_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_or_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_store.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_store.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_sub_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_sub_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_thread_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_thread_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_xor_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_xor_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\arch\x86</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_asserts.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_asserts.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_base_width.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_base_width.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_casts.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_casts.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_flag.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_flag.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_flag_standalone.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_flag_standalone.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_integral.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_integral.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_add_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_add_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_and_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_and_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_base.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_base.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cmpxchg_strong.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cmpxchg_strong.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cmpxchg_weak.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cmpxchg_weak.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_compiler_barrier.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_compiler_barrier.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cpu_pause.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cpu_pause.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_exchange.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_exchange.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_add.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_add.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_and.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_and.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_or.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_or.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_sub.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_sub.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_xor.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_xor.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_load.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_load.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_memory_barrier.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_memory_barrier.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_or_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_or_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_signal_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_signal_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_store.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_store.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_sub_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_sub_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_thread_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_thread_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_xor_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_xor_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\atomic_macros</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_memory_order.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_memory_order.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_pointer.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_pointer.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_size_aligned.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_size_aligned.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_standalone.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_standalone.h">
       <Filter>Header Files\include\EASTL\internal\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_add_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_add_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_and_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_and_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_barrier.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_barrier.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cmpxchg_strong.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cmpxchg_strong.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cmpxchg_weak.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cmpxchg_weak.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cpu_pause.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cpu_pause.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_exchange.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_exchange.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_add.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_add.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_and.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_and.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_or.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_or.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_sub.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_sub.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_xor.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_xor.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_load.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_load.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_memory_barrier.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_memory_barrier.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_or_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_or_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_signal_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_signal_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_store.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_store.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_sub_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_sub_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_thread_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_thread_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_xor_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_xor_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_add_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_add_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_and_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_and_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_barrier.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_barrier.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cmpxchg_strong.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cmpxchg_strong.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cmpxchg_weak.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cmpxchg_weak.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cpu_pause.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cpu_pause.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_exchange.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_exchange.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_add.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_add.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_and.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_and.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_or.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_or.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_sub.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_sub.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_xor.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_xor.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_load.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_load.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_or_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_or_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_signal_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_signal_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_store.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_store.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_sub_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_sub_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_thread_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_thread_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_xor_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_xor_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\gcc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_add_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_add_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_and_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_and_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_barrier.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_barrier.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cmpxchg_strong.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cmpxchg_strong.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cmpxchg_weak.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cmpxchg_weak.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cpu_pause.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cpu_pause.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_exchange.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_exchange.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_add.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_add.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_and.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_and.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_or.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_or.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_sub.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_sub.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_xor.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_xor.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_or_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_or_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_signal_fence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_signal_fence.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_sub_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_sub_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_xor_fetch.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_xor_fetch.h">
       <Filter>Header Files\include\EASTL\internal\atomic\compiler\msvc</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\char_traits.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\char_traits.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\config.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\config.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\copy_help.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\copy_help.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\enable_shared.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\enable_shared.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\fill_help.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\fill_help.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\fixed_pool.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\fixed_pool.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\function.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\function.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\function_detail.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\function_detail.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\function_help.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\function_help.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\functional_base.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\functional_base.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\generic_iterator.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\generic_iterator.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\hashtable.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\hashtable.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\in_place_t.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\in_place_t.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\integer_sequence.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\integer_sequence.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\intrusive_hashtable.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\intrusive_hashtable.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\mem_fn.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\mem_fn.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\memory_base.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\memory_base.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\move_help.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\move_help.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\pair_fwd_decls.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\pair_fwd_decls.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\piecewise_construct_t.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\piecewise_construct_t.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\red_black_tree.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\red_black_tree.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\smart_ptr.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\smart_ptr.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\thread_support.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\thread_support.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\tuple_fwd_decls.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\tuple_fwd_decls.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\type_compound.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\type_compound.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\type_detected.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\type_detected.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\type_fundamental.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\type_fundamental.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\type_pod.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\type_pod.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\type_properties.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\type_properties.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\type_transformations.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\type_transformations.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\internal\type_void_t.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\internal\type_void_t.h">
       <Filter>Header Files\include\EASTL\internal</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\intrusive_hash_map.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\intrusive_hash_map.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\intrusive_hash_set.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\intrusive_hash_set.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\intrusive_list.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\intrusive_list.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\intrusive_ptr.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\intrusive_ptr.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\iterator.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\iterator.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\linked_array.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\linked_array.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\linked_ptr.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\linked_ptr.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\list.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\list.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\map.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\map.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\memory.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\memory.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\meta.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\meta.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\numeric.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\numeric.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\numeric_limits.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\numeric_limits.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\optional.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\optional.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\priority_queue.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\priority_queue.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\queue.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\queue.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\random.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\random.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\ratio.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\ratio.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\safe_ptr.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\safe_ptr.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\scoped_array.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\scoped_array.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\scoped_ptr.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\scoped_ptr.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\segmented_vector.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\segmented_vector.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\set.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\set.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\shared_array.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\shared_array.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\shared_ptr.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\shared_ptr.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\slist.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\slist.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\sort.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\sort.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\span.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\span.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\stack.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\stack.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\string.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\string.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\string_hash_map.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\string_hash_map.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\string_map.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\string_map.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\string_view.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\string_view.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\tuple.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\tuple.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\type_traits.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\type_traits.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\unique_ptr.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\unique_ptr.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\unordered_map.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\unordered_map.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\unordered_set.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\unordered_set.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\utility.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\utility.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\variant.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\variant.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\vector.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\vector.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\vector_map.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\vector_map.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\vector_multimap.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\vector_multimap.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\vector_multiset.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\vector_multiset.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\vector_set.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\vector_set.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\version.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\version.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
-    <ClInclude Include="$(SolutionDir)Source\Runtime\STL\EASTL\include\EASTL\weak_ptr.h">
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\include\EASTL\weak_ptr.h">
       <Filter>Header Files\include\EASTL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="$(SolutionDir)Source\Runtime\STL\EASTL\CMakeLists.txt" />
+    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="$(SolutionDir)Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
+    <Natvis Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{A5CD4551-018E-3A11-BABD-CCB900A9DB15}</UniqueIdentifier>
+      <UniqueIdentifier>{371F4AFD-A8F8-3F1D-A979-8F88910C5651}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include">
-      <UniqueIdentifier>{BE26B468-A136-30D4-AAAD-8397F6D74894}</UniqueIdentifier>
+      <UniqueIdentifier>{4715DA62-4110-30C1-AEFC-8A7FE4E1C19D}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL">
-      <UniqueIdentifier>{3B0225FB-C87F-3E78-B9D4-3EAE408E7853}</UniqueIdentifier>
+      <UniqueIdentifier>{E4328D47-8DCA-3BC8-AC3D-4DBCB253DA49}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL\bonus">
-      <UniqueIdentifier>{33BBEC35-438E-3753-89A3-677573503C5A}</UniqueIdentifier>
+      <UniqueIdentifier>{AE303003-D494-3A57-9BCB-3F815FDDE477}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL\internal">
-      <UniqueIdentifier>{2B27F158-2849-3D4E-A85C-5E40DA7067B3}</UniqueIdentifier>
+      <UniqueIdentifier>{DFA07189-45B0-3592-BE66-F0A8294E40A9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL\internal\atomic">
-      <UniqueIdentifier>{9D79F829-1E8F-328E-B005-74DE6B2DEDD3}</UniqueIdentifier>
+      <UniqueIdentifier>{1B24BAEB-DD69-3B9F-B0C0-04A82B0065E6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL\internal\atomic\arch">
-      <UniqueIdentifier>{807F6A69-96C4-32FD-80C5-108CEA3646F9}</UniqueIdentifier>
+      <UniqueIdentifier>{7E28E0F2-50F1-3092-97AE-37F7125309FF}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL\internal\atomic\arch\arm">
-      <UniqueIdentifier>{A0A06A5E-B932-3B96-8351-27EA95AB01FA}</UniqueIdentifier>
+      <UniqueIdentifier>{903FC2E5-75C1-3461-9FEB-59CB73CF0F2B}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL\internal\atomic\arch\x86">
-      <UniqueIdentifier>{CE2D246F-A0D6-3CA8-A41A-CC03F00D47C6}</UniqueIdentifier>
+      <UniqueIdentifier>{03ECE0CD-B004-3B8D-943F-30E3F01582C8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL\internal\atomic\atomic_macros">
-      <UniqueIdentifier>{C5999A72-84E7-3D3D-B184-CE6D9ABE9C06}</UniqueIdentifier>
+      <UniqueIdentifier>{1D12B037-AC8A-3C10-853A-FFF63A1D14A5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL\internal\atomic\compiler">
-      <UniqueIdentifier>{5E205FF2-FADD-3A0B-9A13-C0AFA3F14DAC}</UniqueIdentifier>
+      <UniqueIdentifier>{B476E6D2-4EC8-3C7B-8AD6-4E9F72C6528A}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL\internal\atomic\compiler\gcc">
-      <UniqueIdentifier>{2EAAAB34-B4DF-33C9-850C-7D21DD6FC848}</UniqueIdentifier>
+      <UniqueIdentifier>{DABD3F3A-79C4-31CE-A8C1-DCDFD4773934}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\include\EASTL\internal\atomic\compiler\msvc">
-      <UniqueIdentifier>{7B88B46B-8459-39ED-BBFB-F94B7AFF5DD3}</UniqueIdentifier>
+      <UniqueIdentifier>{8BDE1067-F992-38FC-8722-2AD2CCABFA9D}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{1A871218-21C6-372C-972B-3F332405862B}</UniqueIdentifier>
+      <UniqueIdentifier>{D91CD01A-4A37-3D71-B97D-9F2BF6F4F6F1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

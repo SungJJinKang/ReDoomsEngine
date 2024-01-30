@@ -44,7 +44,7 @@
 
 	void EA::Thread::Futex::CreateFSemaphore()
 	{   
-		mSemaphore.Init(0);
+		mSemaphore.FinishCreating(0);
 	}
 
 	void EA::Thread::Futex::DestroyFSemaphore()

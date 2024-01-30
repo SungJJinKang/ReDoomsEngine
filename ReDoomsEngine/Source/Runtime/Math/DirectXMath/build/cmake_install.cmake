@@ -1,4 +1,4 @@
-# Install script for directory: C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath
+# Install script for directory: $(SolutionDir)Source/Runtime/Math/DirectXMath
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -36,7 +36,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/directxmath/DirectXMath-targets.cmake")
     file(DIFFERENT EXPORT_FILE_CHANGED FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/directxmath/DirectXMath-targets.cmake"
-         "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/Export/share/directxmath/DirectXMath-targets.cmake")
+         "$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/Export/share/directxmath/DirectXMath-targets.cmake")
     if(EXPORT_FILE_CHANGED)
       file(GLOB OLD_CONFIG_FILES "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/directxmath/DirectXMath-targets-*.cmake")
       if(OLD_CONFIG_FILES)
@@ -45,28 +45,28 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
       endif()
     endif()
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxmath" TYPE FILE FILES "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/CMakeFiles/Export/share/directxmath/DirectXMath-targets.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxmath" TYPE FILE FILES "$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/Export/share/directxmath/DirectXMath-targets.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/directxmath" TYPE FILE FILES
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/Inc/DirectXCollision.h"
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/Inc/DirectXCollision.inl"
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/Inc/DirectXColors.h"
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/Inc/DirectXMath.h"
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/Inc/DirectXMathConvert.inl"
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/Inc/DirectXMathMatrix.inl"
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/Inc/DirectXMathMisc.inl"
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/Inc/DirectXMathVector.inl"
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/Inc/DirectXPackedVector.h"
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/Inc/DirectXPackedVector.inl"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/Inc/DirectXCollision.h"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/Inc/DirectXCollision.inl"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/Inc/DirectXColors.h"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/Inc/DirectXMath.h"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/Inc/DirectXMathConvert.inl"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/Inc/DirectXMathMatrix.inl"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/Inc/DirectXMathMisc.inl"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/Inc/DirectXMathVector.inl"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/Inc/DirectXPackedVector.h"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/Inc/DirectXPackedVector.inl"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxmath" TYPE FILE FILES
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/directxmath-config.cmake"
-    "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/directxmath-config-version.cmake"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/build/directxmath-config.cmake"
+    "$(SolutionDir)Source/Runtime/Math/DirectXMath/build/directxmath-config-version.cmake"
     )
 endif()
 
@@ -78,5 +78,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Math/DirectXMath/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "$(SolutionDir)Source/Runtime/Math/DirectXMath/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

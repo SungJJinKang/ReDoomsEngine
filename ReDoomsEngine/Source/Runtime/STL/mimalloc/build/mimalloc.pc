@@ -1,4 +1,4 @@
-prefix=C:/Program Files/libmimalloc
+prefix=C:/Program Files (x86)/libmimalloc
 libdir=${prefix}/lib
 includedir=${prefix}/include
 
