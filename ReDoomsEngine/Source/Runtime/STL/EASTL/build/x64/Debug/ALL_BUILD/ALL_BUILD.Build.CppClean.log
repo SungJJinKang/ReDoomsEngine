@@ -1,0 +1,4 @@
+$(SolutionDir)source\runtime\stl\eastl\build\cmakefiles\generate.stamp
+$(SolutionDir)source\runtime\stl\eastl\build\x64\debug\all_build\all_build.tlog\custombuild.command.1.tlog
+$(SolutionDir)source\runtime\stl\eastl\build\x64\debug\all_build\all_build.tlog\custombuild.read.1.tlog
+$(SolutionDir)source\runtime\stl\eastl\build\x64\debug\all_build\all_build.tlog\custombuild.write.1.tlog

@@ -1,0 +1,8 @@
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/Experimental.dir
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/Nightly.dir
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/Continuous.dir
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/NightlyMemoryCheck.dir
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/RUN_TESTS.dir
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/INSTALL.dir
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/ALL_BUILD.dir
+$(SolutionDir)Source/Runtime/Math/DirectXMath/build/CMakeFiles/ZERO_CHECK.dir
