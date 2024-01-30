@@ -67,19 +67,11 @@ void D3D12Tester::Test()
 	const size_t VerticeSize = sizeof(TriangleVertices);
 	const size_t VerticeStride = sizeof(Vertex);
 
-	FD3D12Resource::FResourceCreateProperties ResourceCreateProperties{};
-	ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD); // @todo : use upload heap for performance(https://therealmjp.github.io/posts/gpu-memory-pool/)
-	ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_GENERIC_READ;
-
-	FD3D12BufferResource VertexBuffer{ ResourceCreateProperties, VerticeSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, 0 };
+	FD3D12BufferResource VertexBuffer{ VerticeSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, 0, true };
 	VertexBuffer.InitResource();
 
-	uint8_t* VertexDataBegin;
-	CD3DX12_RANGE ReadRange(0, 0);        // We do not intend to read from this resource on the CPU.
-	VERIFYD3D12RESULT(VertexBuffer.GetResource()->Map(0, &ReadRange, reinterpret_cast<void**>(&VertexDataBegin)));
-	EA::StdC::Memcpy(VertexDataBegin, TriangleVertices, VerticeSize);
-	VertexBuffer.GetResource()->Unmap(0, nullptr);
-
+	EA::StdC::Memcpy(VertexBuffer.GetMappedAddress(), TriangleVertices, VerticeSize);
+	
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView = VertexBuffer.GetVertexBufferView(VerticeStride);
 
 	FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);

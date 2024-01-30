@@ -23,8 +23,16 @@ public:
 	{
 
 	}
+	~FD3D12View()
+	{
+		FreeDescriptorHeapBlock();
+	}
 
 	virtual void UpdateDescriptor() = 0;
+	void FreeDescriptorHeapBlock()
+	{
+		OfflineDescriptorHeapBlock.ParentDescriptorHeap->FreeDescriptorHeapBlock(OfflineDescriptorHeapBlock);
+	}
 
 	inline FD3D12Resource* GetUnderlyingResource() const
 	{
@@ -64,6 +72,22 @@ protected:
 private:
 
 };
+
+class FD3D12ConstantBufferView : public FD3D12View<D3D12_CONSTANT_BUFFER_VIEW_DESC>
+{
+public:
+
+	FD3D12ConstantBufferView(FD3D12Resource* const InResource);
+
+	virtual void UpdateDescriptor();
+
+protected:
+
+
+private:
+
+};
+
 
 class FD3D12UnorderedAccessView : public FD3D12View<D3D12_UNORDERED_ACCESS_VIEW_DESC>
 {

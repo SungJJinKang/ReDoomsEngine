@@ -105,12 +105,6 @@
     <ClCompile Include="Source\Runtime\D3D12\D3D12StateCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Buffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1044,12 +1038,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\D3D12\D3D12StateCache.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Buffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.h">
