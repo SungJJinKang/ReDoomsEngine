@@ -1,4 +1,4 @@
-﻿  Building Custom Rule F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/CMakeLists.txt
+﻿  Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/STL/mimalloc/CMakeLists.txt
   alloc.c
   alloc-aligned.c
   alloc-posix.c
@@ -15,4 +15,4 @@
   stats.c
   prim.c
   Generating Code...
-  mimalloc-static.vcxproj -> F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\Debug\mimalloc-static.lib
+  mimalloc-static.vcxproj -> C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\mimalloc\build\Debug\mimalloc-static.lib
