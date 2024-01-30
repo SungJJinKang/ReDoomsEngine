@@ -14,6 +14,8 @@ struct FD3D12DescriptorHeapBlock
 	FD3D12DescriptorHeapBlock() = default;
 	FD3D12DescriptorHeapBlock(FD3D12DescriptorHeap* const InParentDescriptorHeap, int32_t InBaseSlot, uint32 InDescriptorSlotCount, uint32 InUsedDescriptorSlotCount);
 
+	void Clear();
+
 	FD3D12DescriptorHeap* ParentDescriptorHeap = nullptr;
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE CPUDescriptorHandle();
@@ -45,7 +47,7 @@ public:
 	void MakeFreed();
 
 	bool AllocateFreeDescriptorHeapBlock(FD3D12DescriptorHeapBlock& bOutDescriptorHeapBlock, const uint32 InDescriptorCount);
-	void FreeDescriptorHeapBlock(const FD3D12DescriptorHeapBlock& InHeapBlock);
+	void FreeDescriptorHeapBlock(FD3D12DescriptorHeapBlock& InHeapBlock);
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetCPUBase() const
 	{

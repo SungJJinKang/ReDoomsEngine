@@ -16,6 +16,7 @@ public:
 	};
 
 	virtual void InitResource();
+	virtual void ClearResource();
 	void ValidateResourceProperties() const;
 
 	inline const CD3DX12_HEAP_PROPERTIES& GetHeapProperties() const
@@ -40,6 +41,10 @@ public:
 		return Resource.Get();
 	}
 
+	virtual bool IsBuffer() const = 0;
+	virtual bool IsTexture() const = 0;
+
+	FD3D12ConstantBufferView* GetCBV();
 	FD3D12ShaderResourceView* GetSRV();
 	FD3D12UnorderedAccessView* GetUAV();
 	FD3D12RenderTargetView* GetRTV();
@@ -54,8 +59,11 @@ protected:
 	FResourceCreateProperties ResourceCreateProperties;
 	CD3DX12_RESOURCE_DESC Desc;
 
+private:
+
 	ComPtr<ID3D12Resource> Resource;
 
+	eastl::shared_ptr<FD3D12ConstantBufferView> DefaultCBV;
 	eastl::shared_ptr<FD3D12ShaderResourceView> DefaultSRV;
 	eastl::shared_ptr<FD3D12UnorderedAccessView> DefaultUAV;
 	eastl::shared_ptr<FD3D12RenderTargetView> DefaultRTV;
@@ -64,9 +72,19 @@ protected:
 
 class FD3D12TextureResource : public FD3D12Resource
 {
+public:
+
+	virtual bool IsBuffer() const
+	{
+		return false;
+	}
+	virtual bool IsTexture() const
+	{
+		return true;
+	}
+
 protected:
 	FD3D12TextureResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
-	FD3D12TextureResource(ComPtr<ID3D12Resource> InResource);
 };
 
 class FD3D12Texture2DResource : public FD3D12TextureResource
@@ -84,7 +102,6 @@ class FD3D12Texture2DResource : public FD3D12TextureResource
 		const D3D12_TEXTURE_LAYOUT InLayout = D3D12_TEXTURE_LAYOUT_UNKNOWN,
 		const uint64_t InAlignment = 0
 	);
-	FD3D12Texture2DResource(ComPtr<ID3D12Resource> InResource);
 };
 
 
@@ -92,14 +109,51 @@ class FD3D12BufferResource : public FD3D12Resource
 {
 public:
 
-	FD3D12BufferResource(const FResourceCreateProperties& InResourceCreateProperties, const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0);
-	FD3D12BufferResource(ComPtr<ID3D12Resource> InResource);
+	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false);
+	
+	virtual bool IsBuffer() const
+	{
+		return true;
+	}
+	virtual bool IsTexture() const
+	{
+		return false;
+	}
+
+	virtual void InitResource();
+	virtual void ClearResource();
+
+	uint8_t* GetMappedAddress() const;
 
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint32_t InStrideInBytes) const;
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint64_t InBaseOffsetInBytes, const uint32_t InSizeInBytes, const uint32_t InStrideInBytes) const;
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView(const uint64_t InBaseOffsetInBytes, const DXGI_FORMAT InFormat, const uint32_t InSizeInBytes) const;
-	
-private:
+
+protected:
+
+	FResourceCreateProperties MakeResourceCreateProperties(const bool bDynamic) const;
+
+	bool bDynamic;
+	uint8_t* MappedAddress = nullptr;
+};
+
+class FD3D12ConstantBufferResource : public FD3D12BufferResource
+{
+public:
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="InSize"></param>
+	/// <param name="bDynamic">Whether buffer reside on system memory. 
+	/// If true, GPU should read fresh data from system memory everytime when it access.
+	/// This can be slow. But it's acceptable when it's size is small
+	/// https://therealmjp.github.io/posts/gpu-memory-pool/
+	/// </param>
+	FD3D12ConstantBufferResource(const uint64_t InSize, const bool bInDynamic = true);
+
+protected:
+
 };
 
 class FD3D12RenderTargetResource : public FD3D12Resource
@@ -107,6 +161,15 @@ class FD3D12RenderTargetResource : public FD3D12Resource
 public:
 
 	FD3D12RenderTargetResource(ComPtr<ID3D12Resource> InRenderTargetResource);
+
+	virtual bool IsBuffer() const
+	{
+		return false;
+	}
+	virtual bool IsTexture() const
+	{
+		return true;
+	}
 
 	virtual void InitResource();
 
@@ -116,5 +179,15 @@ private:
 
 class FD3D12DepthStencilTargetResource : public FD3D12Resource
 {
+public:
+
+	virtual bool IsBuffer() const
+	{
+		return false;
+	}
+	virtual bool IsTexture() const
+	{
+		return true;
+	}
 
 };

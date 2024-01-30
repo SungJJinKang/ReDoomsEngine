@@ -15,12 +15,14 @@ struct PSInput
     float4 color : COLOR;
 };
 
+float4 ColorOffset;
+
 PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
 {
     PSInput result;
 
     result.position = position;
-    result.color = color;
+    result.color = color + ColorOffset;
 
     return result;
 }

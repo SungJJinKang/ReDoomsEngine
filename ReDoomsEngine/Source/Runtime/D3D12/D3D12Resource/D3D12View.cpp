@@ -20,6 +20,22 @@ void FD3D12ShaderResourceView::UpdateDescriptor()
 	GetD3D12Device()->CreateShaderResourceView(Resource->GetResource(), Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
 }
 
+FD3D12ConstantBufferView::FD3D12ConstantBufferView(FD3D12Resource* const InResource)
+	: FD3D12View(InResource)
+{
+}
+
+void FD3D12ConstantBufferView::UpdateDescriptor()
+{
+	OfflineDescriptorHeapBlock = FD3D12DescriptorHeapManager::GetInstance()->AllocateOfflineHeapDescriptorHeapBlock(D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+
+	D3D12_CONSTANT_BUFFER_VIEW_DESC CBVDesc = {};
+	CBVDesc.BufferLocation = Resource->GetResource()->GetGPUVirtualAddress();
+	CBVDesc.SizeInBytes = Resource->GetDesc().Width;
+
+	GetD3D12Device()->CreateConstantBufferView(&CBVDesc, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
+}
+
 FD3D12UnorderedAccessView::FD3D12UnorderedAccessView(FD3D12Resource* const InResource)
 	: FD3D12View(InResource)
 {

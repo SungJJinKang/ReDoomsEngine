@@ -219,8 +219,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.cpp" />
     <ClCompile Include="Source\Runtime\Engine\AssetManager.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.cpp" />
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Buffer.cpp" />
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Texture.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12StateCache.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12RootSignature.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Descriptor.cpp" />
@@ -304,8 +302,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Engine\AssetManager.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Enums.h" />
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.h" />
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Buffer.h" />
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Texture.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12StateCache.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12RootSignature.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Descriptor.h" />
