@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\c3b0ecbe4bc10da7b1671f9a2bf8af6e\INSTALL_force.rule">
+    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\eb42320b7e37735225b9d0a0796ce51a\INSTALL_force.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{08C5D28E-5E25-370F-A8BA-DD3EAD658652}</UniqueIdentifier>
+      <UniqueIdentifier>{B74709E9-E32F-33D8-87B3-9E39A67940C1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
