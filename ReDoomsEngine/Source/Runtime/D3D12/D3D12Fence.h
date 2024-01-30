@@ -8,6 +8,7 @@ class FD3D12Fence
 {
 public:
 
+	FD3D12Fence();
 	void CreateD3DFence();
 	void CreateD3DFence(const eastl::wstring& InDebugName);
 	void SetDebugNameToFence(const eastl::wstring& InDebugName);
@@ -15,7 +16,11 @@ public:
 	{
 		return D3DFence.Get();
 	}
-	uint64_t Signal(FD3D12CommandQueue* const InCommandQueue);
+	uint64_t Signal(FD3D12CommandQueue* const InCommandQueue, const bool bWaitInstantly = false);
+	void WaitOnSignal(const uint64_t SignaledValue);
+	void WaitOnLastSignal();
+	bool IsCompleteSignal(const uint64_t SignaledValue);
+	bool IsCompleteLastSignal();
 
 private:
 

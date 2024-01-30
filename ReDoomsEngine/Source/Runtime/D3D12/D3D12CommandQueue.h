@@ -4,7 +4,7 @@
 #include "D3D12Include.h"
 #include "D3D12Fence.h"
 
-enum class ED3D12QueueType : uint64_t
+enum ED3D12QueueType : uint64_t
 {
 	Direct = 0,
 	Copy,

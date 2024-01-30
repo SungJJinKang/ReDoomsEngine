@@ -4,18 +4,6 @@
 #include "AssetManager.h"
 #include "D3D12RootSignature.h"
 
-DEFINE_SHADER(HelloTriangleVS, "HelloTriangle.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None, 
-	ADD_CONSTANT_BUFFER(SceneConstantBuffer,
-		ADD_SHADER_VARIABLE(XMVECTOR, offset)
-	)
-	ADD_SHADER_VARIABLE(int, Time)
-	ADD_PREPROCESSOR_DEFINE(NO_ERROR=1)
-	ADD_PREPROCESSOR_DEFINE(NO_ERROR1=1)
-);
-DEFINE_SHADER(HelloTrianglePS, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
-DEFINE_SHADER(HelloTrianglePS2, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
-
-
 void FShaderConstantBufferTemplate::AddMemberVariable(FShaderParameterTemplate* InShaderParameter)
 {
 	MemberVariableList.push_back(InShaderParameter);
@@ -338,7 +326,7 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 FShaderPreprocessorDefineAdd::FShaderPreprocessorDefineAdd(FD3D12ShaderTemplate& D3D12Shader, const char* const InDefineStr)
 	: DefineStr(InDefineStr)
 {
-	EA_ASSERT_MSG(EA::StdC::Strstr(InDefineStr, " ") == NULL, "White space char is detected");
+	EA_ASSERT_FORMATTED(EA::StdC::Strstr(InDefineStr, " ") == NULL, ("White space char is detected ( %s )", InDefineStr));
 	D3D12Shader.AddShaderPreprocessorDefine(FShaderCompileArguments::ParseDefineStr(DefineStr));
 }
 
@@ -346,13 +334,6 @@ void FD3D12ShaderManager::Init()
 {
 	CompileAllPendingShader();
 
-	//Test Code
-	eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY_NUM> ShaderList{};
-	ShaderList[D3D12_SHADER_VISIBILITY_VERTEX] = &HelloTriangleVS;
-	ShaderList[D3D12_SHADER_VISIBILITY_PIXEL] = &HelloTrianglePS;
-	FBoundShaderSet BoundShaderSet{ ShaderList };
-
-	FD3D12RootSignatureManager::GetInstance()->GetOrCreateRootSignature(BoundShaderSet);
 }
 
 bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12ShaderTemplate& Shader, const FShaderCompileArguments& InShaderCompileArguments)

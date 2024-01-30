@@ -14,7 +14,7 @@ struct FShaderPreprocessorDefineAdd;
 
 struct FBoundShaderSet
 {
-	FBoundShaderSet() = delete;
+	FBoundShaderSet() = default;
 	FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY_NUM> InShaderList);
 	void CacheHash();
 	void Validate();

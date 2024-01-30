@@ -6,7 +6,10 @@
 #include "D3D12Swapchain.h"
 #include "D3D12Descriptor.h"
 #include "D3D12Shader.h"
+#include "D3D12PSO.h"
 #include "D3D12RootSignature.h"
+#include "D3D12CommandList.h"
+#include "D3D12Tester.h"
 
 static const uint32_t GNumBackBufferCount = 3;
 static const int32_t GWindowWidth = 1024;
@@ -63,6 +66,11 @@ void FD3D12Manager::Init()
     }
 
     {
+        D3D12CommandListManager = eastl::make_unique<FD3D12CommandListManager>();
+        D3D12CommandListManager->Init();
+    }
+    
+    {
         Swapchain = eastl::make_unique<FD3D12Swapchain> (GetChoosenAdapter()->GetDevice()->GetCommandQueue(ED3D12QueueType::Direct),
             D3D12Window.get(), GNumBackBufferCount, GWindowWidth, GWindowHeight, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT);
         Swapchain->Init();
@@ -82,5 +90,10 @@ void FD3D12Manager::Init()
         D3D12ShaderManager = eastl::make_unique<FD3D12ShaderManager>();
         D3D12ShaderManager->Init();
     }
-    
+
+    {
+        D3D12PSOManager = eastl::make_unique<FD3D12PSOManager>();
+    }
+
+    D3D12Tester::Test();
 }

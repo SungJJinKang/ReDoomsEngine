@@ -1,6 +1,5 @@
 //#include "Common.hlsl"
 #include "Common.hlsl"
-#include "Test/Test.hlsl"
 
 cbuffer SceneConstantBuffer
 {

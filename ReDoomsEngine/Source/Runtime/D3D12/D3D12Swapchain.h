@@ -25,6 +25,27 @@ public:
 	{
 		return CurrentBackbufferIndex;
 	}
+	FD3D12RenderTargetResource& GetRenderTarget(const size_t Index) 
+	{
+		return RenderTargets[Index];
+	}
+
+	uint32_t GetNumBuffer() const
+	{
+		return NumBuffer;
+	}
+	uint32_t GetWidth() const
+	{
+		return Width;
+	}
+	uint32_t GetHeight() const
+	{
+		return Height;
+	}
+	DXGI_FORMAT GetFormat() const
+	{
+		return Format;
+	}
 
 private:
 	ComPtr<IDXGISwapChain3> D3DSwapchain;

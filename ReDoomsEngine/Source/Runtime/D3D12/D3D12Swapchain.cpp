@@ -45,10 +45,12 @@ void FD3D12Swapchain::Init()
 
         VERIFYD3D12RESULT(TempD3DSwapchain.As(&D3DSwapchain));
 
-        RenderTargets.resize(NumBuffer);
         for (uint32_t BufferIndex = 0; BufferIndex < NumBuffer; ++BufferIndex)
         {
-            VERIFYD3D12RESULT(D3DSwapchain->GetBuffer(BufferIndex, IID_PPV_ARGS(&(RenderTargets[BufferIndex].Resource))));
+            ComPtr<ID3D12Resource> SwapChainBuffer{};
+
+            VERIFYD3D12RESULT(D3DSwapchain->GetBuffer(BufferIndex, IID_PPV_ARGS(&SwapChainBuffer)));
+            RenderTargets.emplace_back(SwapChainBuffer);
         }
     }
     
