@@ -147,9 +147,12 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(const FResourceCreateProperties
 }
 
 FD3D12BufferResource::FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic)
-	: FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)), bDynamic(bInDynamic), MappedAddress(nullptr)
+	: FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)), bDynamic(bInDynamic), MappedAddress(nullptr), ShadowData()
 {
-
+	if (!bDynamic)
+	{
+		ShadowData.resize(InSize);
+	}
 }
 
 D3D12_VERTEX_BUFFER_VIEW FD3D12BufferResource::GetVertexBufferView(const uint32_t InStrideInBytes) const
@@ -188,6 +191,7 @@ FD3D12BufferResource::FResourceCreateProperties FD3D12BufferResource::MakeResour
 {
 	FResourceCreateProperties ResourceCreateProperties{};
 
+	// if dynamic, use upload heap for gpu
 	ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(bDynamic ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT);
 	ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
 	ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_GENERIC_READ;
@@ -201,10 +205,7 @@ void FD3D12BufferResource::InitResource()
 
 	if (bDynamic)
 	{
-		CD3DX12_RANGE ReadRange(0, 0);
-
-		// Doesn't require unmap for being visible to gpu
-		VERIFYD3D12RESULT(GetResource()->Map(0, &ReadRange, reinterpret_cast<void**>(&MappedAddress)));
+		Map();
 	}
 }
 
@@ -222,14 +223,41 @@ void FD3D12BufferResource::ClearResource()
 
 uint8_t* FD3D12BufferResource::GetMappedAddress() const
 {
-	EA_ASSERT(MappedAddress!= nullptr);
+	EA_ASSERT(MappedAddress != nullptr);
 
 	return MappedAddress;
 }
 
-FD3D12ConstantBufferResource::FD3D12ConstantBufferResource(const uint64_t InSize, const bool bInDynamic)
-	: FD3D12BufferResource(InSize, D3D12_RESOURCE_FLAG_NONE, 0, bDynamic)
+uint8_t* FD3D12BufferResource::Map()
 {
+	EA_ASSERT(MappedAddress == nullptr);
+
+	CD3DX12_RANGE ReadRange(0, 0);
+
+	// Doesn't require unmap for being visible to gpu
+	VERIFYD3D12RESULT(GetResource()->Map(0, &ReadRange, reinterpret_cast<void**>(&MappedAddress)));
+
+	return MappedAddress;
+}
+
+void FD3D12BufferResource::Unmap()
+{
+	GetResource()->Unmap(0, nullptr);
+	MappedAddress = nullptr;
+}
+
+uint8_t* FD3D12BufferResource::GetShadowDataAddress()
+{
+	EA_ASSERT(!bDynamic);
+
+	return ShadowData.data();
+}
+
+void FD3D12BufferResource::FlushShadowData()
+{
+	EA_ASSERT(!bDynamic);
+
+	// @todo implement copying upload heap to default heap
 }
 
 FD3D12RenderTargetResource::FD3D12RenderTargetResource(ComPtr<ID3D12Resource> InRenderTargetResource)

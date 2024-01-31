@@ -5,7 +5,7 @@ class FD3D12DescriptorHeap;
 
 struct FD3D12ResourceCache
 {
-	eastl::bitvector<> DirtyFlags[D3D12_SHADER_VISIBILITY_NUM];
+	eastl::bitvector<> DirtyFlags[EShaderFrequency::NumShaderFrequency];
 };
 
 struct FD3D12ResourceViewCache : public FD3D12ResourceCache

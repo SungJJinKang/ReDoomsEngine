@@ -15,19 +15,20 @@ struct PSInput
     float4 color : COLOR;
 };
 
-float4 ColorOffset;
+float4 ColorOffset1;
+float4 ColorOffset2;
 
 PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
 {
     PSInput result;
 
     result.position = position;
-    result.color = color + ColorOffset;
+    result.color = color + ColorOffset1 + ColorOffset2;
 
     return result;
 }
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-    return input.color;
+    return input.color + ColorOffset1 + ColorOffset2;
 }

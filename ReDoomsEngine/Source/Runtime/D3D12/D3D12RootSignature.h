@@ -34,13 +34,13 @@ public:
 		bool bVisible = false;
 	};
 
-	eastl::array<uint8_t, D3D12_SHADER_VISIBILITY_NUM> SRVBindSlot;
-	eastl::array<uint8_t, D3D12_SHADER_VISIBILITY_NUM> CBVBindSlot;
-	eastl::array<uint8_t, D3D12_SHADER_VISIBILITY_NUM> RootCBVBindSlot;
-	eastl::array<uint8_t, D3D12_SHADER_VISIBILITY_NUM> SamplerBindSlot;
+	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> SRVBindSlot;
+	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> CBVBindSlot;
+	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> RootCBVBindSlot;
+	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> SamplerBindSlot;
 	uint8_t UAVBindSlot;
 
-	eastl::array<ShaderStage, D3D12_SHADER_VISIBILITY_NUM> Stage;
+	eastl::array<ShaderStage, EShaderFrequency::NumShaderFrequency> Stage;
 
 	static FD3D12RootSignature CreateRootSignature(const FBoundShaderSet& InBoundShaderSet);
 };

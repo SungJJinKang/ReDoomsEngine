@@ -31,7 +31,7 @@ void FD3D12ConstantBufferView::UpdateDescriptor()
 
 	D3D12_CONSTANT_BUFFER_VIEW_DESC CBVDesc = {};
 	CBVDesc.BufferLocation = Resource->GetResource()->GetGPUVirtualAddress();
-	CBVDesc.SizeInBytes = Resource->GetDesc().Width;
+	CBVDesc.SizeInBytes = Align(Resource->GetDesc().Width, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT); // Constant buffers must be 256 byte aligned, which is different than the alignment requirement for a resource heap
 
 	GetD3D12Device()->CreateConstantBufferView(&CBVDesc, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
 }
