@@ -146,12 +146,20 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(const FResourceCreateProperties
 
 }
 
-FD3D12BufferResource::FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic)
-	: FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)), bDynamic(bInDynamic), MappedAddress(nullptr), ShadowData()
+FD3D12BufferResource::FD3D12BufferResource(
+	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowData)
+	: 
+	FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
+	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowData(InShadowData)
 {
-	if (!bDynamic)
+	if (!bDynamic && !ShadowData)
 	{
-		ShadowData.resize(InSize);
+		ShadowData = new uint8[InSize];
+		bShadowDataCreatedFromThisInstance = true;
+	}
+	else
+	{
+		bShadowDataCreatedFromThisInstance = false;
 	}
 }
 
@@ -250,7 +258,7 @@ uint8_t* FD3D12BufferResource::GetShadowDataAddress()
 {
 	EA_ASSERT(!bDynamic);
 
-	return ShadowData.data();
+	return ShadowData;
 }
 
 void FD3D12BufferResource::FlushShadowData()

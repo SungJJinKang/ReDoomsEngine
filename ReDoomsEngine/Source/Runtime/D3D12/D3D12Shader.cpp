@@ -80,7 +80,7 @@ void FD3D12ShaderTemplate::AddShaderPreprocessorDefine(const FShaderPreprocessor
 
 void FD3D12ShaderTemplate::ValidateShaderParameter()
 {
-	for (auto ShaderParameterPair : ShaderParameterMap)
+	for (auto& ShaderParameterPair : ShaderParameterMap)
 	{
 		FShaderParameterTemplate* ShaderParameter = ShaderParameterPair.second;
 
@@ -88,14 +88,14 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 		{
 			FShaderConstantBuffer* ShaderConstantBuffer = dynamic_cast<FShaderConstantBuffer*>(ShaderParameter);
 		
-			auto ValidateConstantBufferReflectionData = [ShaderConstantBuffer](const FD3D12ConstantBufferReflectionData& ConstantBufferFromReflection)
+			auto ValidateConstantBufferReflectionData = [ShaderConstantBuffer](const FD3D12ConstantBufferReflectionData& ConstantBufferFromReflection) -> bool
 			{
 				bool bFoundConstantBuffer = false;
 				if (ConstantBufferFromReflection.Name == ShaderConstantBuffer->VariableName)
 				{
 					bFoundConstantBuffer = true;
 
-					for (auto MemberVariablePair : ShaderConstantBuffer->MemberVariableMap)
+					for (auto& MemberVariablePair : ShaderConstantBuffer->MemberVariableMap)
 					{
 						bool bFoundMemberVariable = false;
 						for (const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& MemberVariableFromReflection : ConstantBufferFromReflection.VariableList)
@@ -111,8 +111,8 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 
 						EA_ASSERT(bFoundMemberVariable);
 					}
-					return bFoundConstantBuffer;
 				}
+				return bFoundConstantBuffer;
 			};
 
 			if (ShaderConstantBuffer->bGlobalConstantBuffer)
@@ -121,8 +121,8 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 				if (ValidateConstantBufferReflectionData(ShaderReflectionData.GlobalConstantBuffer))
 				{
 					bFoundConstantBuffer = true;
-					break;
 				}
+				EA_ASSERT(bFoundConstantBuffer);
 			}
 			else
 			{

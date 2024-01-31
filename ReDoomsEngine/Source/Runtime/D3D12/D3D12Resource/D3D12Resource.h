@@ -109,7 +109,7 @@ class FD3D12BufferResource : public FD3D12Resource
 {
 public:
 
-	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false);
+	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowData = nullptr);
 	
 	virtual bool IsBuffer() const
 	{
@@ -149,11 +149,26 @@ protected:
 	bool bDynamic;
 	uint8_t* MappedAddress = nullptr;
 
-	eastl::vector<uint8_t> ShadowData;
+	bool bShadowDataCreatedFromThisInstance;
+	uint8_t* ShadowData;
+};
+
+template <typename BufferDataType>
+class TD3D12BufferResource : public FD3D12BufferResource
+{
+public:
+	
+	TD3D12BufferResource(const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false)
+		: FD3D12BufferResource(sizeof(BufferDataType), InFlags, InAlignment, bInDynamic, &ShadowData)
+	{
+		MEM_ZERO(ShadowData);
+	}
+
+	BufferDataType ShadowData;
 };
 
 template <typename ConstantBufferDataType>
-class FD3D12ConstantBufferResource : public FD3D12BufferResource
+class FD3D12ConstantBufferResource : public TD3D12BufferResource<ConstantBufferDataType>
 {
 public:
 
@@ -167,13 +182,11 @@ public:
 	/// https://therealmjp.github.io/posts/gpu-memory-pool/
 	/// </param>
 	FD3D12ConstantBufferResource(const bool bInDynamic = true)
-		: FD3D12BufferResource(
-			Align(sizeof(ConstantBufferDataType), D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT), // Single-texture and buffer resources must be 64KB aligned. Multi-sampled texture resources must be 4MB aligned.
+		: TD3D12BufferResource(
 			D3D12_RESOURCE_FLAG_NONE,
 			0,
-			bDynamic)
+			bInDynamic)
 	{
-		MEM_ZERO(ShadowData);
 	}
 
 	virtual bool IsConstantBuffer() const
