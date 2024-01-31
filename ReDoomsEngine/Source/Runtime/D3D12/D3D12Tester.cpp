@@ -43,7 +43,8 @@ void D3D12Tester::Test()
 	ShaderList[EShaderFrequency::Vertex] = &TestVS;
 	ShaderList[EShaderFrequency::Pixel] = &TestPS;
 
-	TestVS.GlobalConstantBuffer.ColorOffset1 = XMVECTOR{4};
+	TestVS.ShaderParameter.GlobalConstantBuffer.ColorOffset1 = XMVECTOR{4};
+	TestVS.ShaderParameter.GlobalConstantBuffer.ColorOffset2 = XMVECTOR{7};
 
 	FBoundShaderSet BoundShaderSet{ ShaderList };
 
