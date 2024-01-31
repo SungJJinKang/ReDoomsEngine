@@ -3,17 +3,18 @@
 #include "ShaderCompilers/ShaderCompileStructs.h"
 #include "D3D12Enums.h"
 #include "D3D12Resource/D3D12ConstantBufferHelper.h"
+#include "D3D12Resource/D3D12Resource.h"
 
 class FD3D12RootSignature;
 class FD3D12ShaderTemplate;
 struct FShaderParameterTemplate;
 
 template<typename Type>
-struct FShaderParameter;
+struct TShaderParameter;
 
 struct FShaderParameterConstantBufferMemberVariableTemplate;
 template<typename VariableType>
-struct FShaderParameterConstantBufferMemberVariable;
+struct TShaderParameterConstantBufferMemberVariable;
 struct FShaderPreprocessorDefineAdd;
 
 #define GLOBAL_CONSTANT_BUFFER_NAME "$Globals"
@@ -197,14 +198,14 @@ struct FShaderConstantBuffer : public FShaderParameterTemplate
 	}
 
 	template<typename VariableType>
-	void AddMemberVariable(FShaderParameterConstantBufferMemberVariable<VariableType>* InShaderParameterConstantBufferMemberVariable, const char* const InVariableName)
+	void AddMemberVariable(TShaderParameterConstantBufferMemberVariable<VariableType>* InShaderParameterConstantBufferMemberVariable, const char* const InVariableName)
 	{
 		EA_ASSERT(MemberVariableMap.find(InVariableName) == MemberVariableMap.end());
 
 		FMemberVariableContainer MemberVariableContainer;
 		MemberVariableContainer.VariableName = InVariableName;
 		MemberVariableContainer.ShaderParameterConstantBufferMemberVariableTemplate = InShaderParameterConstantBufferMemberVariable;
-		MemberVariableContainer.VariableSize = sizeof(FShaderParameterConstantBufferMemberVariable<VariableType>);
+		MemberVariableContainer.VariableSize = sizeof(TShaderParameterConstantBufferMemberVariable<VariableType>);
 
 		MemberVariableMap.emplace(InVariableName, MemberVariableContainer);
 	}
@@ -225,9 +226,9 @@ struct FShaderConstantBuffer : public FShaderParameterTemplate
 };
 
 template<typename VariableType>
-struct FShaderParameter : public FShaderParameterTemplate
+struct TShaderParameter : public FShaderParameterTemplate
 {
-	FShaderParameter(FD3D12ShaderTemplate& D3D12Shader, const char* const InVariableName)
+	TShaderParameter(FD3D12ShaderTemplate& D3D12Shader, const char* const InVariableName)
 		: FShaderParameterTemplate(D3D12Shader, InVariableName)
 	{
 		MEM_ZERO(Value);
@@ -268,9 +269,9 @@ struct FShaderParameterConstantBufferMemberVariableTemplate
 };
 
 template<typename VariableType>
-struct FShaderParameterConstantBufferMemberVariable : public FShaderParameterConstantBufferMemberVariableTemplate
+struct TShaderParameterConstantBufferMemberVariable : public FShaderParameterConstantBufferMemberVariableTemplate
 {
-	FShaderParameterConstantBufferMemberVariable(FShaderConstantBuffer& ConstantBuffer, const char* const InVariableName)
+	TShaderParameterConstantBufferMemberVariable(FShaderConstantBuffer& ConstantBuffer, const char* const InVariableName)
 	{
 		MEM_ZERO(Value);
 		ConstantBuffer.AddMemberVariable(this, InVariableName);
@@ -279,9 +280,13 @@ struct FShaderParameterConstantBufferMemberVariable : public FShaderParameterCon
 	using VariableAlignedType = typename FD3D12ConstantBufferMemberVariableHelper<VariableType>::AlignedType;
 	VariableAlignedType Value;
 
-	FShaderParameterConstantBufferMemberVariable& operator=(const VariableType& InValue)
+	operator VariableType& ()
 	{
-		Value = InValue;
+		return reinterpret_cast<VariableType&>(*Value.mCharData);
+	}
+	TShaderParameterConstantBufferMemberVariable& operator=(const VariableType& InValue)
+	{
+		static_cast<VariableType&>(*this) = InValue;
 		return *this;
 	}
 };
@@ -292,36 +297,33 @@ struct FShaderPreprocessorDefineAdd
 	const char* const DefineStr;
 };
 
-// #define ADD_CONSTANT_BUFFER(VariableNameStr, ...) \
-// 	public : \
-// 	struct FShaderConstantBuffer##VariableNameStr : public FShaderConstantBuffer \
-// 	{ \
-// 		FShaderConstantBuffer##VariableNameStr(FD3D12ShaderTemplate& D3D12Shader, const char* const InVariableName) \
-// 			: FShaderConstantBuffer(D3D12Shader, InVariableName) \
-// 		{ \
-// 			D3D12Shader.AddShaderParameter(this); \
-// 		} \
-// 		__VA_ARGS__ \
-// 	}; \
-// 	public: \
-// 	FShaderConstantBuffer##VariableNameStr VariableNameStr{ *this, #VariableNameStr };
-// 
-// #define ADD_CONSTANT_BUFFER
+#define DEFINE_SHADER_PARAMTERS(...) \
+	public: \
+	struct FShaderParameter \
+	{ \
+		FShaderParameter(FD3D12ShaderTemplate& InD3D12Shader) \
+			: D3D12Shader(InD3D12Shader) \
+		{ \
+		} \
+	__VA_ARGS__ \
+	FD3D12ShaderTemplate& D3D12Shader; \
+	} ShaderParameter{*this}; \
 
 #define DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(...) \
-	struct FGlobalVariable : public FShaderConstantBuffer { \
-		FGlobalVariable(FD3D12ShaderTemplate& D3D12Shader) \
+	public: \
+	struct FGlobalConstantBufferType : public FShaderConstantBuffer { \
+		FGlobalConstantBufferType(FD3D12ShaderTemplate& D3D12Shader) \
 		: FShaderConstantBuffer(D3D12Shader, GLOBAL_CONSTANT_BUFFER_NAME, true) \
 		{ \
 		} \
 		__VA_ARGS__ \
-	} GlobalVariable{*this};
+	} GlobalConstantBuffer{D3D12Shader}; 
 
 // This should match with variable declared in shader
 #define ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(Type, VariableNameStr) \
 	public: \
-	static_assert(sizeof(FShaderParameterConstantBufferMemberVariable<Type>) == sizeof(FD3D12ConstantBufferMemberVariableHelper<Type>::AlignedType));\
-	FShaderParameterConstantBufferMemberVariable<Type> VariableNameStr{*this, #VariableNameStr};
+	static_assert(sizeof(TShaderParameterConstantBufferMemberVariable<Type>) == sizeof(FD3D12ConstantBufferMemberVariableHelper<Type>::AlignedType));\
+	TShaderParameterConstantBufferMemberVariable<Type> VariableNameStr{*this, #VariableNameStr};
 
 #define ADD_SHADER_SRV_VARIABLE
 #define ADD_SHADER_UAV_VARIABLE
@@ -337,6 +339,7 @@ struct FShaderPreprocessorDefineAdd
 // Parameters)
 // ShaderTextFileRelativePath : Shader file path relative to Asset/Shader
 #define DEFINE_SHADER(ShaderName, ShaderTextFileRelativePath, ShaderEntryPoint, ShaderFrequency, ShaderCompileFlags, ...) \
+	class FD3D12Shader##ShaderName##Instance; \
 	class FD3D12Shader##ShaderName : public FD3D12ShaderTemplate \
 	{ \
 	public: \
@@ -345,6 +348,10 @@ struct FShaderPreprocessorDefineAdd
 			: FD3D12ShaderTemplate(InShaderName, InShaderTextFileRelativePath, InShaderEntryPoint, InShaderFrequency, InShaderCompileFlags) \
 		{ \
 		} \
+		class FD3D12ShaderInstance \
+		{	\
+			\
+		};	\
 		__VA_ARGS__ \
 	}; \
 	FD3D12Shader##ShaderName ShaderName{EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \

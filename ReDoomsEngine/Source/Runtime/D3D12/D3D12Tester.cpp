@@ -14,16 +14,20 @@
 // DEFINE_SHADER(HelloTrianglePS2, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
 
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None, 
-	DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(
-		ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
-		ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+	DEFINE_SHADER_PARAMTERS(
+		DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
+			ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+		)
 	)
 );
 
 DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShaderCompileFlag::None,
-	DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(
-		ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
-		ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+	DEFINE_SHADER_PARAMTERS(
+		DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
+			ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+		)
 	)
 );
 
@@ -38,6 +42,9 @@ void D3D12Tester::Test()
 	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 	ShaderList[EShaderFrequency::Vertex] = &TestVS;
 	ShaderList[EShaderFrequency::Pixel] = &TestPS;
+
+	TestVS.GlobalConstantBuffer.ColorOffset1 = XMVECTOR{4};
+
 	FBoundShaderSet BoundShaderSet{ ShaderList };
 
 	// Define the vertex input layout.
