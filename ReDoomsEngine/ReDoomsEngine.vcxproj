@@ -207,6 +207,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Tester.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.cpp" />
@@ -253,6 +254,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12RendererInclude.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Tester.h" />
@@ -314,6 +316,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXColors.h" />
     <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMath.h" />
     <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.h" />
+    <ClInclude Include="Source\Runtime\Math\MathUtils.h" />
     <ClInclude Include="Source\Runtime\Rendering\RendererManager.h" />
     <ClInclude Include="Source\Runtime\Core\Commandline.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Assert.h" />

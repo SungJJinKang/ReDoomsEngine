@@ -119,11 +119,24 @@ public:
 	{
 		return false;
 	}
+	virtual bool IsConstantBuffer() const 
+	{
+		return false;
+	}
 
 	virtual void InitResource();
 	virtual void ClearResource();
 
+	/// <summary>
+	/// Mapped address is write-combined type so it's recommended to copy data using memcpy style copy
+	/// </summary>
+	/// <returns></returns>
 	uint8_t* GetMappedAddress() const;
+	uint8_t* Map();
+	void Unmap();
+
+	uint8_t* GetShadowDataAddress();
+	void FlushShadowData();
 
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint32_t InStrideInBytes) const;
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint64_t InBaseOffsetInBytes, const uint32_t InSizeInBytes, const uint32_t InStrideInBytes) const;
@@ -135,8 +148,11 @@ protected:
 
 	bool bDynamic;
 	uint8_t* MappedAddress = nullptr;
+
+	eastl::vector<uint8_t> ShadowData;
 };
 
+template <typename ConstantBufferDataType>
 class FD3D12ConstantBufferResource : public FD3D12BufferResource
 {
 public:
@@ -150,7 +166,21 @@ public:
 	/// This can be slow. But it's acceptable when it's size is small
 	/// https://therealmjp.github.io/posts/gpu-memory-pool/
 	/// </param>
-	FD3D12ConstantBufferResource(const uint64_t InSize, const bool bInDynamic = true);
+	FD3D12ConstantBufferResource(const bool bInDynamic = true)
+		: FD3D12BufferResource(
+			Align(sizeof(ConstantBufferDataType), D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT), // Single-texture and buffer resources must be 64KB aligned. Multi-sampled texture resources must be 4MB aligned.
+			D3D12_RESOURCE_FLAG_NONE,
+			0,
+			bDynamic)
+	{
+		MEM_ZERO(ShadowData);
+	}
+
+	virtual bool IsConstantBuffer() const
+	{
+		return true;
+	}
+
 
 protected:
 

@@ -45,3 +45,5 @@ ReDoomsEngine/Source/Runtime/STL/mimalloc/build/CMakeFiles
 ReDoomsEngine/Source/Runtime/STL/EASTL/build/EASTL.dir
 
 CMakeCache.txt
+
+*.log

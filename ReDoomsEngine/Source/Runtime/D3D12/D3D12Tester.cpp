@@ -2,19 +2,30 @@
 
 #include "D3D12RendererInclude.h"
 
-DEFINE_SHADER(HelloTriangleVS, "HelloTriangle.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
-	ADD_CONSTANT_BUFFER(SceneConstantBuffer,
-		ADD_SHADER_VARIABLE(XMVECTOR, offset)
-	)
-	ADD_SHADER_VARIABLE(int, Time)
-	ADD_PREPROCESSOR_DEFINE(NO_ERROR=1)
-	ADD_PREPROCESSOR_DEFINE(NO_ERROR1=1)
-);
-DEFINE_SHADER(HelloTrianglePS, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
-DEFINE_SHADER(HelloTrianglePS2, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
+// DEFINE_SHADER(HelloTriangleVS, "HelloTriangle.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
+// 	ADD_CONSTANT_BUFFER(SceneConstantBuffer,
+// 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, offset)
+// 	)
+// 	ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(int, Time)
+// 	ADD_PREPROCESSOR_DEFINE(NO_ERROR=1)
+// 	ADD_PREPROCESSOR_DEFINE(NO_ERROR1=1)
+// );
+// DEFINE_SHADER(HelloTrianglePS, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
+// DEFINE_SHADER(HelloTrianglePS2, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
 
-DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None);
-DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShaderCompileFlag::None);
+DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None, 
+	DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+	)
+);
+
+DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+	DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+	)
+);
 
 void D3D12Tester::Test()
 {
@@ -24,9 +35,9 @@ void D3D12Tester::Test()
 	FD3D12CommandList* const CommandList = CommandAllocator->GetOrCreateNewCommandList();
 
 	//Test Code
-	eastl::array<FD3D12ShaderTemplate*, D3D12_SHADER_VISIBILITY_NUM> ShaderList{};
-	ShaderList[D3D12_SHADER_VISIBILITY_VERTEX] = &TestVS;
-	ShaderList[D3D12_SHADER_VISIBILITY_PIXEL] = &TestPS;
+	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderList{};
+	ShaderList[EShaderFrequency::Vertex] = &TestVS;
+	ShaderList[EShaderFrequency::Pixel] = &TestPS;
 	FBoundShaderSet BoundShaderSet{ ShaderList };
 
 	// Define the vertex input layout.
@@ -67,11 +78,13 @@ void D3D12Tester::Test()
 	const size_t VerticeSize = sizeof(TriangleVertices);
 	const size_t VerticeStride = sizeof(Vertex);
 
-	FD3D12BufferResource VertexBuffer{ VerticeSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, 0, true };
+	FD3D12BufferResource VertexBuffer{ VerticeSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, 0, false };
 	VertexBuffer.InitResource();
 
+	VertexBuffer.Map();
 	EA::StdC::Memcpy(VertexBuffer.GetMappedAddress(), TriangleVertices, VerticeSize);
-	
+	VertexBuffer.Unmap();
+
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView = VertexBuffer.GetVertexBufferView(VerticeStride);
 
 	FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);

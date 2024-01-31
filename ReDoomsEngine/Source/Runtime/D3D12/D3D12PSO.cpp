@@ -24,10 +24,10 @@ FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     D3D12_GRAPHICS_PIPELINE_STATE_DESC Desc{};
   
     Desc.pRootSignature = FD3D12RootSignatureManager::GetInstance()->GetOrCreateRootSignature(PSOInitializer.BoundShaderSet)->RootSignature.Get();
-    Desc.VS.pShaderBytecode = PSOInitializer.BoundShaderSet.ShaderList[D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX]->GetShaderBlob()->GetBufferPointer();
-    Desc.VS.BytecodeLength = PSOInitializer.BoundShaderSet.ShaderList[D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX]->GetShaderBlob()->GetBufferSize();
-    Desc.PS.pShaderBytecode = PSOInitializer.BoundShaderSet.ShaderList[D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL]->GetShaderBlob()->GetBufferPointer();
-    Desc.PS.BytecodeLength = PSOInitializer.BoundShaderSet.ShaderList[D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL]->GetShaderBlob()->GetBufferSize();
+    Desc.VS.pShaderBytecode = PSOInitializer.BoundShaderSet.ShaderList[EShaderFrequency::Vertex]->GetShaderBlob()->GetBufferPointer();
+    Desc.VS.BytecodeLength = PSOInitializer.BoundShaderSet.ShaderList[EShaderFrequency::Vertex]->GetShaderBlob()->GetBufferSize();
+    Desc.PS.pShaderBytecode = PSOInitializer.BoundShaderSet.ShaderList[EShaderFrequency::Pixel]->GetShaderBlob()->GetBufferPointer();
+    Desc.PS.BytecodeLength = PSOInitializer.BoundShaderSet.ShaderList[EShaderFrequency::Pixel]->GetShaderBlob()->GetBufferSize();
 
     #define COPY_DESC_MEMBER(MemberName) Desc.MemberName = PSOInitializer.Desc.MemberName;
     COPY_DESC_MEMBER(StreamOutput)
