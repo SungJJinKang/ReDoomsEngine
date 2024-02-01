@@ -432,6 +432,11 @@ void FShaderParameterContainerTemplate::Init()
 {
 	for (FShaderParameterTemplate* ShaderParameter : ShaderParameterList)
 	{
+		if (ShaderParameter->IsConstantBuffer())
+		{
+			ConstantBufferList.emplace_back(dynamic_cast<FShaderConstantBuffer*>(ShaderParameter));
+		}
+
 		ShaderParameter->Init();
 	}
 }
@@ -439,11 +444,6 @@ void FShaderParameterContainerTemplate::Init()
 void FShaderParameterContainerTemplate::AddShaderParamter(FShaderParameterTemplate* const InShaderParameter)
 {
 	ShaderParameterList.emplace_back(InShaderParameter);
-
-	if (InShaderParameter->IsConstantBuffer())
-	{
-		ConstantBufferList.emplace_back(dynamic_cast<FShaderConstantBuffer*>(InShaderParameter));
-	}
 }
 
 void FShaderParameterContainerTemplate::AllocateResources()
@@ -467,6 +467,8 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 		FD3D12StateCache::FConstantBufferBindPointInfo BindPoint;
 		BindPoint.ConstantBufferResource = ConstantBuffer->GetConstantBufferResource();
 		BindPoint.ReflectionData = ConstantBuffer->GetConstantBufferReflectionData();
+
+		ConstantBufferBindPointInfoList.emplace_back(eastl::move(BindPoint));
 	}
 	InCommandContext.StateCache.ApplyConstantBuffer(InCommandContext, GetD3D12ShaderTemplate()->GetShaderFrequency(), InRootSignature, ConstantBufferBindPointInfoList);
 
@@ -478,10 +480,7 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 
 void FShaderParameterTemplate::Init()
 {
-	if (IsTemplateVariable())
-	{
-		SetReflectionDataFromShader();
-	}
+	SetReflectionDataFromShaderReflectionData();
 }
 
 void FShaderParameterTemplate::AllocateResource()
@@ -495,11 +494,11 @@ void FShaderParameterTemplate::ApplyResource(FD3D12CommandContext& const InComma
 
 }
 
-void FShaderConstantBuffer::SetReflectionDataFromShader()
+void FShaderConstantBuffer::SetReflectionDataFromShaderReflectionData()
 {
 	bool bFoundReflectionData = false;
 
-	const FD3D12ShaderReflectionData& ShaderReflection = OwnerShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
+	const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
 	if (IsGlobalConstantBuffer())
 	{
 		ReflectionData = &ShaderReflection.GlobalConstantBuffer;
