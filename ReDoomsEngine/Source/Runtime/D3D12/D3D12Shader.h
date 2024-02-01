@@ -5,10 +5,12 @@
 #include "D3D12Resource/D3D12ConstantBufferHelper.h"
 #include "D3D12Resource/D3D12Resource.h"
 
+struct FD3D12CommandContext;
 class FD3D12RootSignature;
 class FD3D12ShaderTemplate;
 class FShaderParameterTemplate;
 class FD3D12ShaderInstance;
+class FShaderConstantBuffer;
 
 template<typename Type>
 class TShaderParameter;
@@ -31,6 +33,8 @@ struct FBoundShaderSet
 
 	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderList{ nullptr };
 	FShaderHash CachedHash;
+
+	FD3D12RootSignature* GetRootSignature() const;
 };
 
 inline bool operator==(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
@@ -111,7 +115,7 @@ public:
 
 	void SetShaderCompileResult(FShaderCompileResult& InShaderCompileResult);
 	void PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection);
-	void OnFinishShaderCompile();
+	virtual void OnFinishShaderCompile();
 
 	const FShaderDeclaration& GetShaderDeclaration() const
 	{
@@ -139,7 +143,14 @@ public:
 
 	void ValidateShaderParameter();
 
+	inline bool IsFinishToCompile() const 
+	{
+		return bFinishToCompile;
+	}
+
 private:
+
+	bool bFinishToCompile;
 
 	FShaderDeclaration ShaderDeclaration; // ShaderCompileResult variable also contains ShaderDeclaration same with this variable. 
 
@@ -163,6 +174,7 @@ public:
 	{
 	}
 
+	void Init();
 
 	FD3D12ShaderTemplate* GetD3D12ShaderTemplate() const
 	{
@@ -179,7 +191,7 @@ public:
 
 	void AddShaderParamter(FShaderParameterTemplate* const InShaderParameter);
 	void AllocateResources();
-	void ApplyShaderParamters();
+	void ApplyShaderParameters(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature);
 
 protected:
 
@@ -187,6 +199,9 @@ protected:
 	FD3D12ShaderInstance* D3D12ShaderInstance;
 	
 	bool bIsShaderInstance;
+
+	eastl::vector<FShaderConstantBuffer*> ConstantBufferList;
+
 	eastl::vector<FShaderParameterTemplate*> ShaderParameterList;
 };
 
@@ -207,6 +222,8 @@ public:
 			InShaderParameter->GetD3D12ShaderTemplate()->AddShaderParameter(this, VariableName);
 		}
 	}
+
+	virtual void Init();
 
 	const char* const GetVariableName() const
 	{
@@ -230,15 +247,20 @@ public:
 	{
 		return false;
 	}
+	virtual bool IsTemplateVariable() const = 0;
 
 	void AllocateResource();
-	void ApplyResource();
+	void ApplyResource(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature);
 	virtual FD3D12Resource* GetD3D12Resource() = 0;
 
 protected:
 
 	FShaderParameterContainerTemplate* const OwnerShaderParameterContainerTemplate;
 	const char* const VariableName;
+
+private:
+
+	virtual void SetReflectionDataFromShader() = 0;
 };
 
 class FShaderConstantBuffer : public FShaderParameterTemplate
@@ -286,11 +308,22 @@ public:
 	{
 		return MemberVariableMap;
 	}
+	virtual FD3D12ConstantBufferResource* GetConstantBufferResource() = 0;
+	const FD3D12ConstantBufferReflectionData* GetConstantBufferReflectionData() const 
+	{
+		return ReflectionData;
+	}
 
 protected:
 
 	bool bGlobalConstantBuffer;
 	eastl::vector_map<const char*, FMemberVariableContainer> MemberVariableMap;
+
+private:
+
+	virtual void SetReflectionDataFromShader();
+
+	const FD3D12ConstantBufferReflectionData* ReflectionData;
 };
 
 template<typename VariableType>
@@ -386,7 +419,7 @@ public:
 		return ShaderParameterContainerTemplate;
 	}
 
-	void ApplyShaderParameter();
+	void ApplyShaderParameter(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature);
 
 protected:
 
@@ -442,6 +475,7 @@ private:
 		{ \
 			__VA_ARGS__ \
 		};\
+		virtual bool IsTemplateVariable() const { return (TemplateVariable == this);} \
 		private: \
 		TD3D12ConstantBufferResource<FData> ConstantBufferResource; \
 		virtual uint8_t* GetData() { return reinterpret_cast<uint8_t*>(&(ConstantBufferResource.Data())); } \
@@ -449,6 +483,7 @@ private:
 		public: \
 		FData& Data() { return ConstantBufferResource.Data(); } \
 		virtual FD3D12Resource* GetD3D12Resource() { return &ConstantBufferResource; } \
+		virtual FD3D12ConstantBufferResource* GetConstantBufferResource()  { return &ConstantBufferResource; } \
 	} GlobalConstantBuffer{this}; 
 
 // This should match with variable declared in shader
@@ -483,13 +518,16 @@ private:
 			TemplateVariable = this; \
 		} \
 		__VA_ARGS__ \
-		inline static F##ShaderName* TemplateVariable = nullptr; \
+		virtual void OnFinishShaderCompile() { FD3D12ShaderTemplate::OnFinishShaderCompile(); ShaderParameter.Init(); } \
 		static eastl::unique_ptr<TD3D12ShaderInstance<F##ShaderName>> MakeShaderInstance()  \
 		{ \
+			EA_ASSERT(TemplateVariable->IsFinishToCompile()); \
 			eastl::unique_ptr<TD3D12ShaderInstance<F##ShaderName>> ShaderInstance = eastl::make_unique<TD3D12ShaderInstance<F##ShaderName>>(TemplateVariable); \
 			ShaderInstance->Init(); \
 			return ShaderInstance;	\
 		} \
+		private: \
+		inline static F##ShaderName* TemplateVariable = nullptr; \
 	}; \
 	static F##ShaderName ShaderName{ EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \
 		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags };

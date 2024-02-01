@@ -36,155 +36,159 @@ static void AnalyizeRootSignature(ROOT_SIGNATURE_DESC_TYPE& Desc, FD3D12RootSign
 
 		// Determine shader resource counts.
 		{
-			const auto& CurrentRange = RootParameter.DescriptorTable.pDescriptorRanges[0];
 			switch (RootParameter.ParameterType)
 			{
-			case D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE:
-				EA_ASSERT(RootParameter.DescriptorTable.NumDescriptorRanges == 1);	// Code currently assumes a single descriptor range.
+				case D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE:
 				{
-					EA_ASSERT(CurrentRange.BaseShaderRegister == 0);	// Code currently assumes always starting at register 0.
+					EA_ASSERT(RootParameter.DescriptorTable.NumDescriptorRanges == 1);	// Code currently assumes a single descriptor range.
+					const auto& CurrentRange = RootParameter.DescriptorTable.pDescriptorRanges[0];
 
-					switch (CurrentRange.RangeType)
 					{
-					case D3D12_DESCRIPTOR_RANGE_TYPE_SRV:
-					{
-						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
+						EA_ASSERT(CurrentRange.BaseShaderRegister == 0);	// Code currently assumes always starting at register 0.
+
+						switch (CurrentRange.RangeType)
 						{
-							for (size_t ShaderFrequency = 0; ShaderFrequency <= EShaderFrequency::NumShaderFrequency; ++ShaderFrequency)
+						case D3D12_DESCRIPTOR_RANGE_TYPE_SRV:
+						{
+							if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
+							{
+								for (size_t ShaderFrequency = 0; ShaderFrequency <= EShaderFrequency::NumShaderFrequency; ++ShaderFrequency)
+								{
+									if (IsSupportedShaderFrequency(D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)))
+									{
+										RootSignature.Stage[ShaderFrequency].MaxSRVCount = CurrentRange.NumDescriptors;
+										RootSignature.SRVBindSlot[ShaderFrequency] = ParameterIndex;
+									}
+								}
+							}
+							else
 							{
 								if (IsSupportedShaderFrequency(D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)))
 								{
-									RootSignature.Stage[ShaderFrequency].MaxSRVCount = CurrentRange.NumDescriptors;
-									RootSignature.SRVBindSlot[ShaderFrequency] = ParameterIndex;
+									RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxSRVCount = CurrentRange.NumDescriptors;
+									RootSignature.SRVBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] = ParameterIndex;
 								}
 							}
+							break;
 						}
-						else
+						case D3D12_DESCRIPTOR_RANGE_TYPE_UAV:
 						{
-							if (IsSupportedShaderFrequency(D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)))
+							if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
 							{
-								RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxSRVCount = CurrentRange.NumDescriptors;
-								RootSignature.SRVBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] = ParameterIndex;
+								for (size_t ShaderFrequency = 0; ShaderFrequency <= EShaderFrequency::NumShaderFrequency; ++ShaderFrequency)
+								{
+									if (IsSupportedShaderFrequency(D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)))
+									{
+										RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxUAVCount = CurrentRange.NumDescriptors;
+									}
+								}
 							}
-						}
-						break;
-					}
-					case D3D12_DESCRIPTOR_RANGE_TYPE_UAV:
-					{
-						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
-						{
-							for (size_t ShaderFrequency = 0; ShaderFrequency <= EShaderFrequency::NumShaderFrequency; ++ShaderFrequency)
+							else
 							{
 								if (IsSupportedShaderFrequency(D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)))
 								{
 									RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxUAVCount = CurrentRange.NumDescriptors;
 								}
 							}
+							RootSignature.UAVBindSlot = ParameterIndex;
+							break;
 						}
-						else
+						case D3D12_DESCRIPTOR_RANGE_TYPE_CBV:
 						{
-							if (IsSupportedShaderFrequency(D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)))
+							if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
 							{
-								RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxUAVCount = CurrentRange.NumDescriptors;
-							}
-						}
-						RootSignature.UAVBindSlot = ParameterIndex;
-						break;
-					}
-					case D3D12_DESCRIPTOR_RANGE_TYPE_CBV:
-					{
-						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
-						{
-							for (size_t ShaderFrequency = 0; ShaderFrequency <= EShaderFrequency::NumShaderFrequency; ++ShaderFrequency)
-							{
-								if (IsSupportedShaderFrequency(D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)))
+								for (size_t ShaderFrequency = 0; ShaderFrequency <= EShaderFrequency::NumShaderFrequency; ++ShaderFrequency)
 								{
-									RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxCBVCount += CurrentRange.NumDescriptors;
+									if (IsSupportedShaderFrequency(D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)))
+									{
+										RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxCBVCount += CurrentRange.NumDescriptors;
+									}
 								}
 							}
-						}
-						else
-						{
-							RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxCBVCount += CurrentRange.NumDescriptors;
-						}
-						RootSignature.CBVBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] = ParameterIndex;
-
-						const uint32_t StartRegister = CurrentRange.BaseShaderRegister;
-						const uint32_t EndRegister = StartRegister + CurrentRange.NumDescriptors;
-						const EShaderFrequency StartShaderFrequency = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? EShaderFrequency::Vertex : D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility);
-						const EShaderFrequency EndShaderFrequency = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? EShaderFrequency::Vertex : D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility);
-						for (uint8_t CurrentShaderFrequency = StartShaderFrequency; CurrentShaderFrequency <= EndShaderFrequency; CurrentShaderFrequency++)
-						{
-							for (uint32 Register = StartRegister; Register < EndRegister; Register++)
+							else
 							{
-								// The bit shouldn't already be set for the current register.
-								EA_ASSERT((RootSignature.Stage[CurrentShaderFrequency].CBVRegisterMask & (1 << Register)) == 0);
-								RootSignature.Stage[CurrentShaderFrequency].CBVRegisterMask |= (1 << Register);
+								RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxCBVCount += CurrentRange.NumDescriptors;
 							}
-						}
+							RootSignature.CBVBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] = ParameterIndex;
 
-						break;
-					}
-					case D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER:
-					{
-						if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
+							const uint32_t StartRegister = CurrentRange.BaseShaderRegister;
+							const uint32_t EndRegister = StartRegister + CurrentRange.NumDescriptors;
+							const EShaderFrequency StartShaderFrequency = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? EShaderFrequency::Vertex : D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility);
+							const EShaderFrequency EndShaderFrequency = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? EShaderFrequency::Vertex : D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility);
+							for (uint8_t CurrentShaderFrequency = StartShaderFrequency; CurrentShaderFrequency <= EndShaderFrequency; CurrentShaderFrequency++)
+							{
+								for (uint32 Register = StartRegister; Register < EndRegister; Register++)
+								{
+									// The bit shouldn't already be set for the current register.
+									EA_ASSERT((RootSignature.Stage[CurrentShaderFrequency].CBVRegisterMask & (1 << Register)) == 0);
+									RootSignature.Stage[CurrentShaderFrequency].CBVRegisterMask |= (1 << Register);
+								}
+							}
+
+							break;
+						}
+						case D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER:
 						{
-							for (size_t ShaderFrequency = 0; ShaderFrequency <= EShaderFrequency::NumShaderFrequency; ++ShaderFrequency)
+							if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
+							{
+								for (size_t ShaderFrequency = 0; ShaderFrequency <= EShaderFrequency::NumShaderFrequency; ++ShaderFrequency)
+								{
+									RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxSamplerCount = CurrentRange.NumDescriptors;
+								}
+							}
+							else
 							{
 								RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxSamplerCount = CurrentRange.NumDescriptors;
 							}
+							RootSignature.SamplerBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] = ParameterIndex;
+							break;
 						}
-						else
-						{
-							RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxSamplerCount = CurrentRange.NumDescriptors;
+						default: EA_ASSERT(false); break;
 						}
-						RootSignature.SamplerBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] = ParameterIndex;
-						break;
 					}
-					default: EA_ASSERT(false); break;
-					}
+					break;
 				}
-				break;
-
-			case D3D12_ROOT_PARAMETER_TYPE_CBV:
-			{
-				EA_ASSERT(RootParameter.Descriptor.RegisterSpace == 0); // Parameters in other binding spaces are expected to be filtered out at this point
-
-				if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
+				case D3D12_ROOT_PARAMETER_TYPE_CBV:
 				{
-					for (size_t ShaderFrequency = 0; ShaderFrequency <= EShaderFrequency::NumShaderFrequency; ++ShaderFrequency)
+					EA_ASSERT(RootParameter.Descriptor.RegisterSpace == 0); // Parameters in other binding spaces are expected to be filtered out at this point
+
+					if (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL)
 					{
-						RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxCBVCount += CurrentRange.NumDescriptors;
+						for (size_t ShaderFrequency = 0; ShaderFrequency <= EShaderFrequency::NumShaderFrequency; ++ShaderFrequency)
+						{
+							RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxCBVCount += 1;
+						}
 					}
-				}
-				else
-				{
-					RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxCBVCount += CurrentRange.NumDescriptors;
-				}
+					else
+					{
+						RootSignature.Stage[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)].MaxCBVCount += 1;
+					}
 
-				if (RootParameter.Descriptor.ShaderRegister == 0)
-				{
-					RootSignature.RootCBVBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] = ParameterIndex;
+					if (RootParameter.Descriptor.ShaderRegister == 0)
+					{
+						RootSignature.RootCBVBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] = ParameterIndex;
+					}
+
+					const EShaderFrequency StartShaderFrequency = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? EShaderFrequency::Vertex : D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility);
+					const EShaderFrequency EndShaderFrequency = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? EShaderFrequency::Vertex : D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility);
+					for (uint8_t CurrentShaderFrequency = StartShaderFrequency; CurrentShaderFrequency <= EndShaderFrequency; CurrentShaderFrequency++)
+					{
+						// The bit shouldn't already be set for the current register.
+						EA_ASSERT((RootSignature.Stage[CurrentShaderFrequency].CBVRegisterMask & (1 << RootParameter.Descriptor.ShaderRegister)) == 0);
+						RootSignature.Stage[CurrentShaderFrequency].CBVRegisterMask |= (1 << RootParameter.Descriptor.ShaderRegister);
+					}
+
+					// The first CBV for this stage must come first in the root signature, and subsequent root CBVs for this stage must be contiguous.
+					EA_ASSERT(RootSignature.RootCBVBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] != 0xFF);
+					EA_ASSERT(RootSignature.RootCBVBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] + RootParameter.Descriptor.ShaderRegister == ParameterIndex);
 				}
-
-				const EShaderFrequency StartShaderFrequency = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? EShaderFrequency::Vertex : D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility);
-				const EShaderFrequency EndShaderFrequency = (RootParameter.ShaderVisibility == D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_ALL) ? EShaderFrequency::Vertex : D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility);
-				for (uint8_t CurrentShaderFrequency = StartShaderFrequency; CurrentShaderFrequency <= EndShaderFrequency; CurrentShaderFrequency++)
-				{
-					// The bit shouldn't already be set for the current register.
-					EA_ASSERT((RootSignature.Stage[CurrentShaderFrequency].CBVRegisterMask & (1 << RootParameter.Descriptor.ShaderRegister)) == 0);
-					RootSignature.Stage[CurrentShaderFrequency].CBVRegisterMask |= (1 << RootParameter.Descriptor.ShaderRegister);
-				}
-
-				// The first CBV for this stage must come first in the root signature, and subsequent root CBVs for this stage must be contiguous.
-				EA_ASSERT(RootSignature.RootCBVBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] != 0xFF);
-				EA_ASSERT(RootSignature.RootCBVBindSlot[D3D12ShaderVisibilityToShaderFrequency(RootParameter.ShaderVisibility)] + RootParameter.Descriptor.ShaderRegister == ParameterIndex);
-			}
-			break;
-
-			default:
-				EA_ASSERT(false);
 				break;
+
+				default:
+				{
+					EA_ASSERT(false);
+					break;
+				}
 			}
 		}
 	}
@@ -319,9 +323,13 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 	{
 		AnalyizeRootSignature(RootSignature.RootDesc.Desc_1_1, RootSignature);
 	}
-	else if (FeatureData.HighestVersion == D3D_ROOT_SIGNATURE_VERSION_1_1)
+	else if (FeatureData.HighestVersion == D3D_ROOT_SIGNATURE_VERSION_1_0)
 	{
 		AnalyizeRootSignature(RootSignature.RootDesc.Desc_1_0, RootSignature);
+	}
+	else
+	{
+		EA_ASSERT(false);
 	}
 	
 	return RootSignature;

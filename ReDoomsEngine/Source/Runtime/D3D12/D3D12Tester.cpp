@@ -35,18 +35,16 @@ void D3D12Tester::Test()
 {
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
+	FD3D12CommandContext Context{};
+
 	FD3D12CommandAllocator* const CommandAllocator = FD3D12CommandListManager::GetInstance()->GetOrCreateNewCommandAllocator(ED3D12QueueType::Direct);
 	FD3D12CommandList* const CommandList = CommandAllocator->GetOrCreateNewCommandList();
+	Context.CommandList = CommandList;
 
 	//Test Code
 	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 	ShaderList[EShaderFrequency::Vertex] = &TestVS;
 	ShaderList[EShaderFrequency::Pixel] = &TestPS;
-
-	auto TestVSInstance = FTestPS::MakeShaderInstance();
-	TestVSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset1 = XMVECTOR{4};
-	TestVSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset2 = XMVECTOR{1};
-	TestVSInstance->ApplyShaderParameter();
 
 	FBoundShaderSet BoundShaderSet{ ShaderList };
 
@@ -72,6 +70,11 @@ void D3D12Tester::Test()
 	PSOInitializer.FinishCreating();
 
 	FD3D12PSO* const PSO = FD3D12PSOManager::GetInstance()->GetOrCreatePSO(PSOInitializer);
+
+	auto TestVSInstance = FTestPS::MakeShaderInstance();
+	TestVSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset1 = XMVECTOR{ 4 };
+	TestVSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset2 = XMVECTOR{ 1 };
+	TestVSInstance->ApplyShaderParameter(Context, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
 
 	struct Vertex
 	{

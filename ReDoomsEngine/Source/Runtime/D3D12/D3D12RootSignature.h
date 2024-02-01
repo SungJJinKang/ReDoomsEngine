@@ -13,15 +13,15 @@ public:
 
 	static constexpr int32_t MaxRootParameters = 32;	// Arbitrary max, increase as needed.
 
-	uint32_t RootParameterCount;
-	uint32_t BindingSpace;
+	uint32_t RootParameterCount{ 0 };
+	uint32_t BindingSpace{ 0 };
 
 	ComPtr<ID3DBlob> RootSignatureBlob;
 	ComPtr<ID3D12RootSignature> RootSignature;
 
-	CD3DX12_ROOT_PARAMETER1 TableSlots[MaxRootParameters];
-	CD3DX12_DESCRIPTOR_RANGE1 DescriptorRanges[MaxRootParameters];
-	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC RootDesc;
+	CD3DX12_ROOT_PARAMETER1 TableSlots[MaxRootParameters]{};
+	CD3DX12_DESCRIPTOR_RANGE1 DescriptorRanges[MaxRootParameters]{};
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC RootDesc{};
 
 	struct ShaderStage
 	{
@@ -30,15 +30,15 @@ public:
 		uint8_t MaxSRVCount = 0;
 		uint8_t MaxSamplerCount = 0;
 		uint8_t MaxUAVCount = 0;
-		uint16_t CBVRegisterMask;
+		uint16_t CBVRegisterMask = 0;
 		bool bVisible = false;
 	};
 
-	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> SRVBindSlot;
-	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> CBVBindSlot;
-	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> RootCBVBindSlot;
-	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> SamplerBindSlot;
-	uint8_t UAVBindSlot;
+	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> SRVBindSlot{ 0 };
+	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> CBVBindSlot{ 0 };
+	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> RootCBVBindSlot{ 0 };
+	eastl::array<uint8_t, EShaderFrequency::NumShaderFrequency> SamplerBindSlot{ 0 };
+	uint8_t UAVBindSlot{ 0 };
 
 	eastl::array<ShaderStage, EShaderFrequency::NumShaderFrequency> Stage;
 
