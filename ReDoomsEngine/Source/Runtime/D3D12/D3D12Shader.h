@@ -157,10 +157,10 @@ private:
 
 struct FShaderParameterTemplate
 {
-	FShaderParameterTemplate(FD3D12ShaderTemplate& D3D12Shader, const char* const InVariableName)
+	FShaderParameterTemplate(FD3D12ShaderTemplate& InD3D12Shader, const char* const InVariableName)
 		: VariableName(InVariableName)
 	{
-		D3D12Shader.AddShaderParameter(this, VariableName);
+		InD3D12Shader.AddShaderParameter(this, VariableName);
 	}
 	const char* const VariableName;
 
@@ -192,8 +192,8 @@ struct FShaderConstantBuffer : public FShaderParameterTemplate
 		size_t VariableSize;
 	};
 
-	FShaderConstantBuffer(FD3D12ShaderTemplate& D3D12Shader, const char* const InVariableName, const bool bInGlobalConstantBuffer)
-		: FShaderParameterTemplate(D3D12Shader, InVariableName), bGlobalConstantBuffer(bInGlobalConstantBuffer), MemberVariableMap()
+	FShaderConstantBuffer(FD3D12ShaderTemplate& InD3D12Shader, const char* const InVariableName, const bool bInGlobalConstantBuffer)
+		: FShaderParameterTemplate(InD3D12Shader, InVariableName), bGlobalConstantBuffer(bInGlobalConstantBuffer), MemberVariableMap()
 	{
 	}
 
@@ -305,15 +305,15 @@ struct FShaderPreprocessorDefineAdd
 			: D3D12Shader(InD3D12Shader) \
 		{ \
 		} \
-	__VA_ARGS__ \
 	FD3D12ShaderTemplate& D3D12Shader; \
+	__VA_ARGS__ \
 	} ShaderParameter{*this}; \
 
 #define DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(...) \
 	public: \
 	struct FGlobalConstantBufferType : public FShaderConstantBuffer { \
-		FGlobalConstantBufferType(FD3D12ShaderTemplate& D3D12Shader) \
-		: FShaderConstantBuffer(D3D12Shader, GLOBAL_CONSTANT_BUFFER_NAME, true) \
+		FGlobalConstantBufferType(FD3D12ShaderTemplate& InD3D12Shader) \
+		: FShaderConstantBuffer(InD3D12Shader, GLOBAL_CONSTANT_BUFFER_NAME, true) \
 		{ \
 		} \
 		__VA_ARGS__ \
