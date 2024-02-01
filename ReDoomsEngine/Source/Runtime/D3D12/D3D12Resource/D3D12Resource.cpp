@@ -147,14 +147,16 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(const FResourceCreateProperties
 }
 
 FD3D12BufferResource::FD3D12BufferResource(
-	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowData)
+	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress)
 	: 
 	FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
-	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowData(InShadowData)
+	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress)
 {
-	if (!bDynamic && !ShadowData)
+	if (!IsDynamicBuffer() && !ShadowDataAddress)
 	{
-		ShadowData = new uint8[InSize];
+		ShadowData.resize(GetBufferSize());
+		ShadowDataAddress = ShadowData.data();
+
 		bShadowDataCreatedFromThisInstance = true;
 	}
 	else
@@ -256,16 +258,27 @@ void FD3D12BufferResource::Unmap()
 
 uint8_t* FD3D12BufferResource::GetShadowDataAddress()
 {
-	EA_ASSERT(!bDynamic);
-
-	return ShadowData;
+	if (bDynamic)
+	{
+		return GetMappedAddress(); // this is for writing to mapped address directly
+	}
+	else
+	{
+		return ShadowDataAddress;
+	}
 }
 
 void FD3D12BufferResource::FlushShadowData()
 {
-	EA_ASSERT(!bDynamic);
-
-	// @todo implement copying upload heap to default heap
+	if (bDynamic)
+	{
+		// Returned shadow data address is actually gpu visible system memory
+		// So doesn't need to flush it
+	}
+	else
+	{
+		// @todo : upload to gpu
+	}
 }
 
 FD3D12RenderTargetResource::FD3D12RenderTargetResource(ComPtr<ID3D12Resource> InRenderTargetResource)

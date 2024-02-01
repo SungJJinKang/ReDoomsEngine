@@ -109,7 +109,7 @@ class FD3D12BufferResource : public FD3D12Resource
 {
 public:
 
-	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowData = nullptr);
+	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowDataAddress = nullptr);
 	
 	virtual bool IsBuffer() const
 	{
@@ -126,6 +126,16 @@ public:
 
 	virtual void InitResource();
 	virtual void ClearResource();
+
+	inline bool IsDynamicBuffer() const 
+	{
+		return bDynamic;
+	}
+
+	uint64_t GetBufferSize() const
+	{
+		return Desc.Width;
+	}
 
 	/// <summary>
 	/// Mapped address is write-combined type so it's recommended to copy data using memcpy style copy
@@ -150,7 +160,9 @@ protected:
 	uint8_t* MappedAddress = nullptr;
 
 	bool bShadowDataCreatedFromThisInstance;
-	uint8_t* ShadowData;
+	uint8_t* ShadowDataAddress;
+
+	eastl::vector<uint8_t> ShadowData;
 };
 
 template <typename BufferDataType>
@@ -159,16 +171,20 @@ class TD3D12BufferResource : public FD3D12BufferResource
 public:
 	
 	TD3D12BufferResource(const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false)
-		: FD3D12BufferResource(sizeof(BufferDataType), InFlags, InAlignment, bInDynamic, &ShadowData)
+		: FD3D12BufferResource(sizeof(BufferDataType), InFlags, InAlignment, bInDynamic, nullptr)
 	{
-		MEM_ZERO(ShadowData);
 	}
 
-	BufferDataType ShadowData;
+	BufferDataType& GetShadowData()
+	{
+		return reinterpret_cast<BufferDataType&>(*GetShadowDataAddress());
+	}
+
+private:
+
 };
 
-template <typename ConstantBufferDataType>
-class FD3D12ConstantBufferResource : public TD3D12BufferResource<ConstantBufferDataType>
+class FD3D12ConstantBufferResource : public FD3D12BufferResource
 {
 public:
 
@@ -181,8 +197,9 @@ public:
 	/// This can be slow. But it's acceptable when it's size is small and the data changes frequently
 	/// https://therealmjp.github.io/posts/gpu-memory-pool/
 	/// </param>
-	FD3D12ConstantBufferResource(const bool bInDynamic = true)
-		: TD3D12BufferResource( // @todo : 
+	FD3D12ConstantBufferResource(const uint64_t InSize, const bool bInDynamic = true)
+		: FD3D12BufferResource( // @todo : 
+			InSize,
 			D3D12_RESOURCE_FLAG_NONE,
 			0,
 			bInDynamic)
@@ -194,6 +211,34 @@ public:
 		return true;
 	}
 
+
+protected:
+
+};
+
+template <typename ConstantBufferDataType>
+class TD3D12ConstantBufferResource : public FD3D12ConstantBufferResource
+{
+public:
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="InSize"></param>
+	/// <param name="bDynamic">Whether buffer data resides on system memory. 
+	/// If true, GPU should read fresh data from system memory everytime when it access.
+	/// This can be slow. But it's acceptable when it's size is small and the data changes frequently
+	/// https://therealmjp.github.io/posts/gpu-memory-pool/
+	/// </param>
+	TD3D12ConstantBufferResource(const bool bInDynamic = true)
+		: FD3D12ConstantBufferResource(sizeof(ConstantBufferDataType), bInDynamic)
+	{
+	}
+
+	ConstantBufferDataType& Data()
+	{
+		return reinterpret_cast<ConstantBufferDataType&>(*GetShadowDataAddress());
+	}
 
 protected:
 

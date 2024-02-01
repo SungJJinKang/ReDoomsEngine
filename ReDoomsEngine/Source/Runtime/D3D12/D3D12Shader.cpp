@@ -91,11 +91,11 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 			auto ValidateConstantBufferReflectionData = [ShaderConstantBuffer](const FD3D12ConstantBufferReflectionData& ConstantBufferFromReflection) -> bool
 			{
 				bool bFoundConstantBuffer = false;
-				if (ConstantBufferFromReflection.Name == ShaderConstantBuffer->VariableName)
+				if (ConstantBufferFromReflection.Name == ShaderConstantBuffer->GetVariableName())
 				{
 					bFoundConstantBuffer = true;
 
-					for (auto& MemberVariablePair : ShaderConstantBuffer->MemberVariableMap)
+					for (auto& MemberVariablePair : ShaderConstantBuffer->GetMemberVariableMap())
 					{
 						bool bFoundMemberVariable = false;
 						for (const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& MemberVariableFromReflection : ConstantBufferFromReflection.VariableList)
@@ -115,7 +115,7 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 				return bFoundConstantBuffer;
 			};
 
-			if (ShaderConstantBuffer->bGlobalConstantBuffer)
+			if (ShaderConstantBuffer->IsGlobalConstantBuffer())
 			{
 				bool bFoundConstantBuffer = false;
 				if (ValidateConstantBufferReflectionData(ShaderReflectionData.GlobalConstantBuffer))
@@ -160,7 +160,7 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 				bool bFoundMemberVariable = false;
 				for (const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& MemberVariableFromReflection : ShaderReflectionData.GlobalConstantBuffer.VariableList)
 				{
-					if (MemberVariableFromReflection.Name == ShaderParameter->VariableName)
+					if (MemberVariableFromReflection.Name == ShaderParameter->GetVariableName())
 					{
 						bFoundMemberVariable = true;
 
@@ -413,4 +413,45 @@ eastl::vector<FD3D12ShaderTemplate*>& FD3D12ShaderManager::GetCompilePendingShad
 void FD3D12ShaderManager::AddCompilePendingShader(FD3D12ShaderTemplate& CompilePendingShader)
 {
 	GetCompilePendingShaderList().push_back(&CompilePendingShader);
+}
+
+void FD3D12ShaderInstance::ApplyShaderParameter()
+{
+	ShaderParameterContainerTemplate->ApplyShaderParamters();
+}
+
+void FShaderParameterContainerTemplate::AddShaderParamter(FShaderParameterTemplate* const InShaderParameter)
+{
+	ShaderParameterList.emplace_back(InShaderParameter);
+}
+
+void FShaderParameterContainerTemplate::AllocateResources()
+{
+	EA_ASSERT(IsShaderInstance());
+
+	for (FShaderParameterTemplate* ShaderParameter : ShaderParameterList)
+	{
+		ShaderParameter->AllocateResource();
+	}
+}
+
+void FShaderParameterContainerTemplate::ApplyShaderParamters()
+{
+	EA_ASSERT(IsShaderInstance());
+
+	for (FShaderParameterTemplate* ShaderParameter : ShaderParameterList)
+	{
+		ShaderParameter->ApplyResource();
+	}
+}
+
+void FShaderParameterTemplate::AllocateResource()
+{
+	GetD3D12Resource()->InitResource();
+}
+
+void FShaderParameterTemplate::ApplyResource()
+{
+	// @todo : apply resource
+
 }
