@@ -209,7 +209,7 @@ class FShaderParameterTemplate
 {
 public:
 	FShaderParameterTemplate(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName)
-		: OwnerShaderParameterContainerTemplate(InShaderParameter), VariableName(InVariableName)
+		: ShaderParameterContainerTemplate(InShaderParameter), VariableName(InVariableName)
 	{
 		InShaderParameter->AddShaderParamter(this);
 
@@ -248,6 +248,7 @@ public:
 		return false;
 	}
 	virtual bool IsTemplateVariable() const = 0;
+	virtual bool HasReflectionData() const = 0;
 
 	void AllocateResource();
 	void ApplyResource(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature);
@@ -255,12 +256,12 @@ public:
 
 protected:
 
-	FShaderParameterContainerTemplate* const OwnerShaderParameterContainerTemplate;
+	FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate;
 	const char* const VariableName;
 
 private:
 
-	virtual void SetReflectionDataFromShader() = 0;
+	virtual void SetReflectionDataFromShaderReflectionData() = 0;
 };
 
 class FShaderConstantBuffer : public FShaderParameterTemplate
@@ -274,7 +275,7 @@ public:
 	};
 
 	FShaderConstantBuffer(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInGlobalConstantBuffer)
-		: FShaderParameterTemplate(InShaderParameter, InVariableName), bGlobalConstantBuffer(bInGlobalConstantBuffer), MemberVariableMap()
+		: FShaderParameterTemplate(InShaderParameter, InVariableName), bGlobalConstantBuffer(bInGlobalConstantBuffer), MemberVariableMap(), ReflectionData(nullptr)
 	{
 	}
 
@@ -313,6 +314,14 @@ public:
 	{
 		return ReflectionData;
 	}
+	const FD3D12ConstantBufferReflectionData* GetReflectionData() const
+	{
+		return ReflectionData;
+	}
+	virtual bool HasReflectionData() const
+	{
+		return GetReflectionData() != nullptr;
+	}
 
 protected:
 
@@ -321,7 +330,7 @@ protected:
 
 private:
 
-	virtual void SetReflectionDataFromShader();
+	virtual void SetReflectionDataFromShaderReflectionData();
 
 	const FD3D12ConstantBufferReflectionData* ReflectionData;
 };
@@ -441,6 +450,7 @@ public:
 
 	void Init()
 	{
+		Parameter.Init();
 		Parameter.AllocateResources();
 	}
 

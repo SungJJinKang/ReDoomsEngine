@@ -71,10 +71,8 @@ void D3D12Tester::Test()
 
 	FD3D12PSO* const PSO = FD3D12PSOManager::GetInstance()->GetOrCreatePSO(PSOInitializer);
 
-	auto TestVSInstance = FTestPS::MakeShaderInstance();
-	TestVSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset1 = XMVECTOR{ 4 };
-	TestVSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset2 = XMVECTOR{ 1 };
-	TestVSInstance->ApplyShaderParameter(Context, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
+	auto TestVSInstance = FTestVS::MakeShaderInstance();
+	auto TestPSInstance = FTestPS::MakeShaderInstance();
 
 	struct Vertex
 	{
@@ -102,6 +100,7 @@ void D3D12Tester::Test()
 
 	FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);
 
+	float Value = 0.0f;
 	while (true)
 	{
 		CommandAllocator->ResetCommandAllocator(false);
@@ -109,7 +108,18 @@ void D3D12Tester::Test()
 		CommandList->ResetRecordingCommandList(PSO);
 
 		// Set necessary state.
-		CommandList->GetD3DCommandList()->SetGraphicsRootSignature(FD3D12RootSignatureManager::GetInstance()->GetOrCreateRootSignature(BoundShaderSet)->RootSignature.Get());
+		CommandList->GetD3DCommandList()->SetGraphicsRootSignature(BoundShaderSet.GetRootSignature()->RootSignature.Get());
+
+		Value += 0.2f;
+
+		TestVSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset1 = XMVECTOR{ Value };
+		TestVSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset2 = XMVECTOR{ Value };
+
+		TestPSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset1 = XMVECTOR{ Value };
+		TestPSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset2 = XMVECTOR{ Value };
+
+		TestVSInstance->ApplyShaderParameter(Context, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
+		TestPSInstance->ApplyShaderParameter(Context, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
 
 		CD3DX12_VIEWPORT Viewport{ 0.0f, 0.0f, static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
 		CD3DX12_RECT Rect{ 0, 0, static_cast<LONG>(SwapChain->GetWidth()), static_cast<LONG>(SwapChain->GetHeight()) };
