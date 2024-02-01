@@ -176,13 +176,13 @@ public:
 	/// 
 	/// </summary>
 	/// <param name="InSize"></param>
-	/// <param name="bDynamic">Whether buffer reside on system memory. 
+	/// <param name="bDynamic">Whether buffer data resides on system memory. 
 	/// If true, GPU should read fresh data from system memory everytime when it access.
-	/// This can be slow. But it's acceptable when it's size is small
+	/// This can be slow. But it's acceptable when it's size is small and the data changes frequently
 	/// https://therealmjp.github.io/posts/gpu-memory-pool/
 	/// </param>
 	FD3D12ConstantBufferResource(const bool bInDynamic = true)
-		: TD3D12BufferResource(
+		: TD3D12BufferResource( // @todo : 
 			D3D12_RESOURCE_FLAG_NONE,
 			0,
 			bInDynamic)
