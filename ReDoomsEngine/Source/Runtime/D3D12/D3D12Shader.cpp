@@ -494,6 +494,18 @@ void FShaderParameterTemplate::ApplyResource(FD3D12CommandContext& const InComma
 
 }
 
+void FShaderConstantBuffer::AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize, const char* const InVariableName)
+{
+	EA_ASSERT(MemberVariableMap.find(InVariableName) == MemberVariableMap.end());
+
+	FMemberVariableContainer MemberVariableContainer;
+	MemberVariableContainer.VariableName = InVariableName;
+	MemberVariableContainer.ShaderParameterConstantBufferMemberVariableTemplate = InShaderParameterConstantBufferMemberVariable;
+	MemberVariableContainer.VariableSize = InVariableSize;
+
+	MemberVariableMap.emplace(InVariableName, MemberVariableContainer);
+}
+
 void FShaderConstantBuffer::SetReflectionDataFromShaderReflectionData()
 {
 	bool bFoundReflectionData = false;

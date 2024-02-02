@@ -4,29 +4,35 @@
 
 // DEFINE_SHADER(HelloTriangleVS, "HelloTriangle.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 // 	ADD_CONSTANT_BUFFER(SceneConstantBuffer,
-// 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, offset)
+// 		ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, offset)
 // 	)
-// 	ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(int, Time)
+// 	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(int, Time)
 // 	ADD_PREPROCESSOR_DEFINE(NO_ERROR=1)
 // 	ADD_PREPROCESSOR_DEFINE(NO_ERROR1=1)
 // );
 // DEFINE_SHADER(HelloTrianglePS, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
 // DEFINE_SHADER(HelloTrianglePS2, "HelloTriangle.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None, ADD_PREPROCESSOR_DEFINE(NO_ERROR=1));
 
+DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
+	VertexOffset,
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, Offset)
+)
+
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None, 
 	DEFINE_SHADER_PARAMTERS(
-		DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
-			ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
 		)
+		ADD_SHADER_CONSTANT_BUFFER(VertexOffset, VertexOffset)
 	)
 );
 
 DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
-		DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
-			ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
 		)
 	)
 );
@@ -100,7 +106,6 @@ void D3D12Tester::Test()
 
 	FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);
 
-	float Value = 0.0f;
 	while (true)
 	{
 		CommandAllocator->ResetCommandAllocator(false);
@@ -110,13 +115,12 @@ void D3D12Tester::Test()
 		// Set necessary state.
 		CommandList->GetD3DCommandList()->SetGraphicsRootSignature(BoundShaderSet.GetRootSignature()->RootSignature.Get());
 
-		Value += 0.2f;
+		TestVSInstance->Parameter.VertexOffset.MemberVariables.Offset = XMVECTOR{0.2f};
+		TestVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset1 = XMVECTOR{ 10.0f };
+		TestVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset2 = XMVECTOR{ 12.0f };
 
-		TestVSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset1 = XMVECTOR{ Value };
-		TestVSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset2 = XMVECTOR{ Value };
-
-		TestPSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset1 = XMVECTOR{ Value };
-		TestPSInstance->Parameter.GlobalConstantBuffer.Data().ColorOffset2 = XMVECTOR{ Value };
+		TestPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset1 = XMVECTOR{ 10.0f };
+		TestPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset2 = XMVECTOR{ 12.0f };
 
 		TestVSInstance->ApplyShaderParameter(Context, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
 		TestPSInstance->ApplyShaderParameter(Context, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());

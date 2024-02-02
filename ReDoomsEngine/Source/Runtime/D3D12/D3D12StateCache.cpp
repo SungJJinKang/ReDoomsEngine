@@ -17,6 +17,7 @@ void FD3D12StateCache::ApplyConstantBuffer(FD3D12CommandContext& const InCommand
 
 	for (const FConstantBufferBindPointInfo& BindInfo : BindPoints)
 	{
+		BindInfo.ConstantBufferResource->FlushShadowData();
 		InCommandContext.CommandList->GetD3DCommandList()->SetGraphicsRootConstantBufferView(BaseIndex + BindInfo.ReflectionData->ResourceBindingDesc.BindPoint, BindInfo.ConstantBufferResource->GetResource()->GetGPUVirtualAddress());
 	}
 

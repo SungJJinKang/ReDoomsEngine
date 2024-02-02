@@ -152,7 +152,7 @@ FD3D12BufferResource::FD3D12BufferResource(
 	FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
 	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress)
 {
-	if (!IsDynamicBuffer() && !ShadowDataAddress)
+	if (!ShadowDataAddress)
 	{
 		ShadowData.resize(GetBufferSize());
 		ShadowDataAddress = ShadowData.data();
@@ -258,22 +258,16 @@ void FD3D12BufferResource::Unmap()
 
 uint8_t* FD3D12BufferResource::GetShadowDataAddress()
 {
-	if (bDynamic)
-	{
-		return GetMappedAddress(); // this is for writing to mapped address directly
-	}
-	else
-	{
-		return ShadowDataAddress;
-	}
+	EA_ASSERT(ShadowDataAddress);
+	return ShadowDataAddress;
 }
 
 void FD3D12BufferResource::FlushShadowData()
 {
 	if (bDynamic)
 	{
-		// Returned shadow data address is actually gpu visible system memory
-		// So doesn't need to flush it
+		// memcpy to write combined address
+		EA::StdC::Memcpy(GetMappedAddress(), GetShadowDataAddress(), GetBufferSize());
 	}
 	else
 	{
