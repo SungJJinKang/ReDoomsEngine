@@ -31,6 +31,8 @@ FD3D12CommandQueue::FD3D12CommandQueue(const ED3D12QueueType InQueueType)
 
 void FD3D12CommandQueue::Init()
 {
+	Fence.Init();
+
 	EA_ASSERT(D3DCommandQueue.Get() == nullptr);
 
 	D3D12_COMMAND_QUEUE_DESC CommandQueueDesc;
