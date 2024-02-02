@@ -1,6 +1,7 @@
 #include "D3D12Resource.h"
 
 #include "D3D12Device.h"
+#include "D3D12ConstantBufferRingBufferManager.h"
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), Resource(),
@@ -35,6 +36,14 @@ FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource> InResource)
 
 void FD3D12Resource::InitResource()
 {
+	if (IsCreateD3D12ResourceOnInitResource())
+	{
+		CreateD3D12Resource();
+	}
+}
+
+void FD3D12Resource::CreateD3D12Resource()
+{
 	EA_ASSERT(Resource == nullptr);
 
 	// todo : use placed resource
@@ -62,6 +71,11 @@ void FD3D12Resource::ValidateResourceProperties() const
 	{
 		EA_ASSERT(ResourceCreateProperties.ClearValue == nullptr);
 	}
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS FD3D12Resource::GPUVirtualAddress() const
+{
+	return GetResource()->GetGPUVirtualAddress();
 }
 
 FD3D12ConstantBufferView* FD3D12Resource::GetCBV()
@@ -147,12 +161,12 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(const FResourceCreateProperties
 }
 
 FD3D12BufferResource::FD3D12BufferResource(
-	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress)
+	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress, const bool bNeverCreateShadowData)
 	: 
 	FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
 	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress)
 {
-	if (!ShadowDataAddress)
+	if (!ShadowDataAddress && !bNeverCreateShadowData)
 	{
 		ShadowData.resize(GetBufferSize());
 		ShadowDataAddress = ShadowData.data();
@@ -169,7 +183,7 @@ D3D12_VERTEX_BUFFER_VIEW FD3D12BufferResource::GetVertexBufferView(const uint32_
 {
 	D3D12_VERTEX_BUFFER_VIEW View{};
 
-	View.BufferLocation = GetResource()->GetGPUVirtualAddress();
+	View.BufferLocation = GPUVirtualAddress();
 	View.SizeInBytes = Desc.Width;
 	View.StrideInBytes = InStrideInBytes;
 
@@ -180,7 +194,7 @@ D3D12_VERTEX_BUFFER_VIEW FD3D12BufferResource::GetVertexBufferView(const uint64_
 {
 	D3D12_VERTEX_BUFFER_VIEW View{};
 
-	View.BufferLocation = GetResource()->GetGPUVirtualAddress() + InBaseOffsetInBytes;
+	View.BufferLocation = GPUVirtualAddress() + InBaseOffsetInBytes;
 	View.SizeInBytes = InSizeInBytes;
 	View.StrideInBytes = InStrideInBytes;
 
@@ -190,7 +204,7 @@ D3D12_VERTEX_BUFFER_VIEW FD3D12BufferResource::GetVertexBufferView(const uint64_
 D3D12_INDEX_BUFFER_VIEW FD3D12BufferResource::GetIndexBufferView(const uint64_t InBaseOffsetInBytes, const DXGI_FORMAT InFormat, const uint32_t InSizeInBytes) const
 {
 	D3D12_INDEX_BUFFER_VIEW View;
-	View.BufferLocation = GetResource()->GetGPUVirtualAddress() + InBaseOffsetInBytes;
+	View.BufferLocation = GPUVirtualAddress() + InBaseOffsetInBytes;
 	View.Format = InFormat;
 	View.SizeInBytes = InSizeInBytes;
 
@@ -212,6 +226,11 @@ FD3D12BufferResource::FResourceCreateProperties FD3D12BufferResource::MakeResour
 void FD3D12BufferResource::InitResource()
 {
 	FD3D12Resource::InitResource();
+}
+
+void FD3D12BufferResource::CreateD3D12Resource()
+{
+	FD3D12Resource::CreateD3D12Resource();
 
 	if (bDynamic)
 	{
@@ -266,7 +285,7 @@ void FD3D12BufferResource::FlushShadowData()
 {
 	if (bDynamic)
 	{
-		// memcpy to write combined address
+		// memcpy is recommended to write on write combined type page. it's for preventing from flushing write combined buffer before fill up it
 		EA::StdC::Memcpy(GetMappedAddress(), GetShadowDataAddress(), GetBufferSize());
 	}
 	else
@@ -275,12 +294,35 @@ void FD3D12BufferResource::FlushShadowData()
 	}
 }
 
+void FD3D12ConstantBufferResource::InitResource()
+{
+	FD3D12BufferResource::InitResource();
+}
+
+void FD3D12ConstantBufferResource::Versioning()
+{
+	EA_ASSERT(IsDynamicBuffer()); // todo : support no-dynamic buffer
+
+	ConstantBufferBlock = FD3D12ConstantBufferRingBufferManager::GetInstance()->Allocate(GetBufferSize());
+
+	MappedAddress = ConstantBufferBlock.MappedAddress;
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS FD3D12ConstantBufferResource::GPUVirtualAddress() const
+{
+	if (GetResource())
+	{
+		return GetResource()->GetGPUVirtualAddress();
+	}
+	else
+	{
+		EA_ASSERT(ConstantBufferBlock.GPUVirtualAddress != 0);
+		return ConstantBufferBlock.GPUVirtualAddress;
+	}
+}
+
 FD3D12RenderTargetResource::FD3D12RenderTargetResource(ComPtr<ID3D12Resource> InRenderTargetResource)
 	: FD3D12Resource(InRenderTargetResource)
 {
 
-}
-
-void FD3D12RenderTargetResource::InitResource()
-{
 }

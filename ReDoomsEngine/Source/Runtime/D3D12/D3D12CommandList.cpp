@@ -154,3 +154,13 @@ void FD3D12CommandListManager::FreeCommandAllocator(FD3D12CommandAllocator* cons
 
 	EA_ASSERT(bSuccess);
 }
+
+void FD3D12CommandListManager::OnStartFrame()
+{
+
+}
+
+void FD3D12CommandListManager::OnEndFrame()
+{
+
+}

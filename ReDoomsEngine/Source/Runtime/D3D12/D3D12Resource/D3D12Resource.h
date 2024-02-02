@@ -2,10 +2,13 @@
 #include "D3D12Include.h"
 
 #include "D3D12View.h"
+#include "D3D12ConstantBufferRingBufferManager.h"
 
 class FD3D12Resource
 {
 public:
+
+	virtual ~FD3D12Resource() = default;
 
 	struct FResourceCreateProperties
 	{
@@ -16,6 +19,11 @@ public:
 	};
 
 	virtual void InitResource();
+	virtual void CreateD3D12Resource();
+	virtual bool IsCreateD3D12ResourceOnInitResource() const
+	{
+		return true;
+	}
 	virtual void ClearResource();
 	void ValidateResourceProperties() const;
 
@@ -40,6 +48,7 @@ public:
 	{
 		return Resource.Get();
 	}
+	virtual D3D12_GPU_VIRTUAL_ADDRESS GPUVirtualAddress() const;
 
 	virtual bool IsBuffer() const = 0;
 	virtual bool IsTexture() const = 0;
@@ -109,7 +118,7 @@ class FD3D12BufferResource : public FD3D12Resource
 {
 public:
 
-	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowDataAddress = nullptr);
+	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowDataAddress = nullptr, const bool bNeverCreateShadowData = false);
 	
 	virtual bool IsBuffer() const
 	{
@@ -125,6 +134,7 @@ public:
 	}
 
 	virtual void InitResource();
+	virtual void CreateD3D12Resource();
 	virtual void ClearResource();
 
 	inline bool IsDynamicBuffer() const 
@@ -141,7 +151,7 @@ public:
 	/// Mapped address is write-combined type so it's recommended to copy data using memcpy style copy
 	/// </summary>
 	/// <returns></returns>
-	uint8_t* GetMappedAddress() const;
+	virtual uint8_t* GetMappedAddress() const;
 	uint8_t* Map();
 	void Unmap();
 
@@ -197,26 +207,34 @@ public:
 	/// This can be slow. But it's acceptable when it's size is small and the data changes frequently
 	/// https://therealmjp.github.io/posts/gpu-memory-pool/
 	/// </param>
-	FD3D12ConstantBufferResource(const uint64_t InSize, const bool bInDynamic = true, uint8_t* const InShadowDataAddress = nullptr)
+	FD3D12ConstantBufferResource(const uint64_t InSize, const bool bInDynamic = true, uint8_t* const InShadowDataAddress = nullptr, const bool bNeverCreateShadowData = false)
 		: FD3D12BufferResource( // @todo : 
 			Align(InSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT),
 			D3D12_RESOURCE_FLAG_NONE,
 			0,
 			bInDynamic,
-			InShadowDataAddress)
+			InShadowDataAddress,
+			bNeverCreateShadowData),
+		ConstantBufferBlock()
 	{
 	}
+
+	virtual void InitResource();
+	virtual bool IsCreateD3D12ResourceOnInitResource() const
+	{
+		return false;
+	}
+	void Versioning();
 
 	virtual bool IsConstantBuffer() const
 	{
 		return true;
 	}
-
-	// @todo : versioning
-
+	virtual D3D12_GPU_VIRTUAL_ADDRESS GPUVirtualAddress() const;
 
 protected:
 
+	FD3D12ConstantBufferBlock ConstantBufferBlock;
 };
 
 template <typename ConstantBufferDataType>
@@ -261,8 +279,6 @@ public:
 	{
 		return true;
 	}
-
-	virtual void InitResource();
 
 private:
 

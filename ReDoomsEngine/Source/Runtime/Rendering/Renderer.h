@@ -10,9 +10,11 @@ public:
 
 	FRenderer();
 	virtual void Init();
+	virtual void OnPreStartFrame();
 	virtual void OnStartFrame();
 	virtual bool Draw();
 	virtual void OnEndFrame();
+	virtual void OnPostEndFrame();
 	virtual void Destroy();
 
 	FD3D12Manager D3D12Manager;
