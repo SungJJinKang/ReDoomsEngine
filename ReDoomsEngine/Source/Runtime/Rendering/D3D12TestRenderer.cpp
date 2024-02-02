@@ -105,10 +105,10 @@ bool D3D12TestRenderer::Draw()
 
 	TestVSInstance->Parameter.VertexOffset.MemberVariables.Offset = XMVECTOR{ 0.2f };
 	TestVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset1 = XMVECTOR{ 10.0f };
-	TestVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset2 = XMVECTOR{ 12.0f };
+	TestVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset2 = XMVECTOR{ 11.0f };
 
-	TestPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset1 = XMVECTOR{ 10.0f };
-	TestPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset2 = XMVECTOR{ 12.0f };
+	TestPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset1 = XMVECTOR{ 12.0f };
+	TestPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset2 = XMVECTOR{ 13.0f };
 
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
 	TestPSInstance->ApplyShaderParameter(CurrentFrameCommandContext, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
