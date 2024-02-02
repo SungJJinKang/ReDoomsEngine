@@ -4,6 +4,7 @@
 #include "D3D12Include.h"
 #include "D3D12CommandQueue.h"
 #include "D3D12Fence.h"
+#include "D3D12ManagerInterface.h"
 
 class FD3D12CommandAllocator;
 class FD3D12CommandQueue;
@@ -64,13 +65,16 @@ private:
 	eastl::vector<eastl::unique_ptr<FD3D12CommandList>> AllocatedCommandListPool;
 };
 
-class FD3D12CommandListManager : public EA::StdC::Singleton<FD3D12CommandListManager>
+class FD3D12CommandListManager : public EA::StdC::Singleton<FD3D12CommandListManager>, public ID3D12ManagerInterface
 {
 public:
 
 	void Init();
 	FD3D12CommandAllocator* GetOrCreateNewCommandAllocator(const ED3D12QueueType QueueType);
 	void FreeCommandAllocator(FD3D12CommandAllocator* const InCommandAllocator);
+
+	virtual void OnStartFrame();
+	virtual void OnEndFrame();
 
 private:
 

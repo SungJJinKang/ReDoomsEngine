@@ -23,7 +23,7 @@ public:
 	{
 
 	}
-	~FD3D12View()
+	virtual ~FD3D12View()
 	{
 		FreeDescriptorHeapBlock();
 	}

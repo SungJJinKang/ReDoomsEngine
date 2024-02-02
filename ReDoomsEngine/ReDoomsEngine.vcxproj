@@ -207,9 +207,12 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12GlobalVariables.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBufferManager.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\D3D12TestRenderer.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12CommandContext.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.cpp" />
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Tester.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12CommandList.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Enums.cpp" />
@@ -228,7 +231,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Core\MemoryCore.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Fence.cpp" />
     <ClCompile Include="Source\Runtime\Core\Parse.cpp" />
-    <ClCompile Include="Source\Runtime\Rendering\RendererManager.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\Renderer.cpp" />
     <ClCompile Include="Source\Runtime\Core\Commandline.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Assert.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Utils.cpp" />
@@ -254,10 +257,15 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12GlobalVariables.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Macros.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12ManagerInterface.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBufferManager.h" />
+    <ClInclude Include="Source\Runtime\Rendering\D3D12TestRenderer.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandContext.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12RendererInclude.h" />
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Tester.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12CommandList.h" />
     <ClInclude Include="Source\Runtime\Core\Macros.h" />
@@ -317,7 +325,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMath.h" />
     <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.h" />
     <ClInclude Include="Source\Runtime\Math\MathUtils.h" />
-    <ClInclude Include="Source\Runtime\Rendering\RendererManager.h" />
+    <ClInclude Include="Source\Runtime\Rendering\Renderer.h" />
     <ClInclude Include="Source\Runtime\Core\Commandline.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Assert.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Utils.h" />

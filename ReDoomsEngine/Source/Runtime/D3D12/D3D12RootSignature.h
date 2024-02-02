@@ -3,6 +3,7 @@
 #include "D3D12Include.h"
 #include "D3D12Shader.h"
 #include "D3D12Enums.h"
+#include "D3D12ManagerInterface.h"
 
 class FD3D12ShaderTemplate;
 
@@ -45,12 +46,15 @@ public:
 	static FD3D12RootSignature CreateRootSignature(const FBoundShaderSet& InBoundShaderSet);
 };
 
-class FD3D12RootSignatureManager : public EA::StdC::Singleton<FD3D12RootSignatureManager>
+class FD3D12RootSignatureManager : public EA::StdC::Singleton<FD3D12RootSignatureManager>, public ID3D12ManagerInterface
 {
 public:
 
 	void Init();
 	eastl::shared_ptr<FD3D12RootSignature> GetOrCreateRootSignature(const FBoundShaderSet& InBoundShaderSet);
+	virtual void OnStartFrame();
+	virtual void OnEndFrame();
+
 
 private:
 

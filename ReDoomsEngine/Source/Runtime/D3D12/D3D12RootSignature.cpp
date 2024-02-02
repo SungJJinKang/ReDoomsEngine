@@ -4,6 +4,8 @@
 
 #define MAX_ROOT_CBVS 16
 
+// this code is copied from ue5
+
 template <typename ROOT_SIGNATURE_DESC_TYPE>
 static void AnalyizeRootSignature(ROOT_SIGNATURE_DESC_TYPE& Desc, FD3D12RootSignature& RootSignature)
 {
@@ -354,4 +356,14 @@ eastl::shared_ptr<FD3D12RootSignature> FD3D12RootSignatureManager::GetOrCreateRo
 	}
 	
 	return RootSignature;
+}
+
+void FD3D12RootSignatureManager::OnStartFrame()
+{
+
+}
+
+void FD3D12RootSignatureManager::OnEndFrame()
+{
+
 }

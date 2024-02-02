@@ -213,6 +213,16 @@ void FD3D12DescriptorHeapManager::Init()
     SamplerOfflineDescriptorHeapContainer.Init();
 }
 
+void FD3D12DescriptorHeapManager::OnStartFrame()
+{
+
+}
+
+void FD3D12DescriptorHeapManager::OnEndFrame()
+{
+
+}
+
 FD3D12DescriptorHeapContainer* FD3D12DescriptorHeapManager::GetOnlineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
 {
     switch (InHeapType)

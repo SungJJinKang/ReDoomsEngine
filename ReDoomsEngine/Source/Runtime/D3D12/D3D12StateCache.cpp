@@ -17,8 +17,12 @@ void FD3D12StateCache::ApplyConstantBuffer(FD3D12CommandContext& const InCommand
 
 	for (const FConstantBufferBindPointInfo& BindInfo : BindPoints)
 	{
+		BindInfo.ConstantBufferResource->Versioning();
 		BindInfo.ConstantBufferResource->FlushShadowData();
-		InCommandContext.CommandList->GetD3DCommandList()->SetGraphicsRootConstantBufferView(BaseIndex + BindInfo.ReflectionData->ResourceBindingDesc.BindPoint, BindInfo.ConstantBufferResource->GetResource()->GetGPUVirtualAddress());
+
+		const D3D12_GPU_VIRTUAL_ADDRESS GPUVirtualAddress = BindInfo.ConstantBufferResource->GPUVirtualAddress();
+		EA_ASSERT(IsAligned(GPUVirtualAddress, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
+		InCommandContext.CommandList->GetD3DCommandList()->SetGraphicsRootConstantBufferView(BaseIndex + BindInfo.ReflectionData->ResourceBindingDesc.BindPoint, GPUVirtualAddress);
 	}
 
 }

@@ -364,6 +364,16 @@ void FD3D12ShaderManager::Init()
 
 }
 
+void FD3D12ShaderManager::OnStartFrame()
+{
+
+}
+
+void FD3D12ShaderManager::OnEndFrame()
+{
+
+}
+
 bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12ShaderTemplate& Shader, const FShaderCompileArguments& InShaderCompileArguments)
 {
 	bool bIsSuccess = false;
@@ -439,21 +449,19 @@ void FShaderParameterContainerTemplate::Init()
 
 		ShaderParameter->Init();
 	}
+	
+	if (IsShaderInstance())
+	{
+		for (FShaderParameterTemplate* ShaderParameter : ShaderParameterList)
+		{
+			ShaderParameter->InitD3DResource();
+		}
+	}
 }
 
 void FShaderParameterContainerTemplate::AddShaderParamter(FShaderParameterTemplate* const InShaderParameter)
 {
 	ShaderParameterList.emplace_back(InShaderParameter);
-}
-
-void FShaderParameterContainerTemplate::AllocateResources()
-{
-	EA_ASSERT(IsShaderInstance());
-
-	for (FShaderParameterTemplate* ShaderParameter : ShaderParameterList)
-	{
-		ShaderParameter->AllocateResource();
-	}
 }
 
 void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature)
@@ -483,7 +491,7 @@ void FShaderParameterTemplate::Init()
 	SetReflectionDataFromShaderReflectionData();
 }
 
-void FShaderParameterTemplate::AllocateResource()
+void FShaderParameterTemplate::InitD3DResource()
 {
 	GetD3D12Resource()->InitResource();
 }

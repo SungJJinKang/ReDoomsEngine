@@ -68,3 +68,13 @@ FD3D12PSO* FD3D12PSOManager::GetOrCreatePSO(const FD3D12PSOInitializer& InD3D12P
     EA_ASSERT(NewPSO);
     return NewPSO;
 }
+
+void FD3D12PSOManager::OnStartFrame()
+{
+
+}
+
+void FD3D12PSOManager::OnEndFrame()
+{
+
+}

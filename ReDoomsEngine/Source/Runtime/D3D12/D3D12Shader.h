@@ -4,6 +4,7 @@
 #include "D3D12Enums.h"
 #include "D3D12Resource/D3D12ConstantBufferHelper.h"
 #include "D3D12Resource/D3D12Resource.h"
+#include "D3D12ManagerInterface.h"
 
 struct FD3D12CommandContext;
 class FD3D12RootSignature;
@@ -190,7 +191,6 @@ public:
 	}
 
 	void AddShaderParamter(FShaderParameterTemplate* const InShaderParameter);
-	void AllocateResources();
 	void ApplyShaderParameters(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature);
 
 protected:
@@ -257,7 +257,7 @@ public:
 	virtual bool IsTemplateVariable() const = 0;
 	virtual bool HasReflectionData() const = 0;
 
-	void AllocateResource();
+	void InitD3DResource();
 	void ApplyResource(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature);
 	virtual FD3D12Resource* GetD3D12Resource() = 0;
 
@@ -454,7 +454,6 @@ public:
 	void Init()
 	{
 		Parameter.Init();
-		Parameter.AllocateResources();
 	}
 
 	typename ShaderType::FShaderParameterContainer Parameter;
@@ -572,11 +571,14 @@ private:
 	static F##ShaderName ShaderName{ EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \
 		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags };
 
-class FD3D12ShaderManager : public EA::StdC::Singleton<FD3D12ShaderManager>
+class FD3D12ShaderManager : public EA::StdC::Singleton<FD3D12ShaderManager>, public ID3D12ManagerInterface
 {
 public:
 
 	void Init();
+	virtual void OnStartFrame();
+	virtual void OnEndFrame();
+
 	bool CompileAndAddNewShader(FD3D12ShaderTemplate& Shader, const FShaderCompileArguments& InShaderCompileArguments);
 	void CompileAllPendingShader();
 
