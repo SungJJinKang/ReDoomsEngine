@@ -208,6 +208,13 @@ protected:
 class FShaderParameterTemplate
 {
 public:
+
+	FShaderParameterTemplate()
+		: ShaderParameterContainerTemplate(nullptr), VariableName()
+	{
+
+	}
+
 	FShaderParameterTemplate(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName)
 		: ShaderParameterContainerTemplate(InShaderParameter), VariableName(InVariableName)
 	{
@@ -271,26 +278,20 @@ public:
 	{
 		const char* VariableName;
 		FShaderParameterConstantBufferMemberVariableTemplate* ShaderParameterConstantBufferMemberVariableTemplate;
-		size_t VariableSize;
+		uint64_t VariableSize;
 	};
+
+	FShaderConstantBuffer()
+		: FShaderParameterTemplate(), bGlobalConstantBuffer(false), MemberVariableMap(), ReflectionData(nullptr)
+	{
+	}
 
 	FShaderConstantBuffer(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInGlobalConstantBuffer)
 		: FShaderParameterTemplate(InShaderParameter, InVariableName), bGlobalConstantBuffer(bInGlobalConstantBuffer), MemberVariableMap(), ReflectionData(nullptr)
 	{
 	}
 
-	template<typename VariableType>
-	void AddMemberVariable(TShaderParameterConstantBufferMemberVariable<VariableType>* InShaderParameterConstantBufferMemberVariable, const char* const InVariableName)
-	{
-		EA_ASSERT(MemberVariableMap.find(InVariableName) == MemberVariableMap.end());
-
-		FMemberVariableContainer MemberVariableContainer;
-		MemberVariableContainer.VariableName = InVariableName;
-		MemberVariableContainer.ShaderParameterConstantBufferMemberVariableTemplate = InShaderParameterConstantBufferMemberVariable;
-		MemberVariableContainer.VariableSize = sizeof(TShaderParameterConstantBufferMemberVariable<VariableType>);
-
-		MemberVariableMap.emplace(InVariableName, MemberVariableContainer);
-	}
+	void AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize, const char* const InVariableName);
 
 	virtual bool IsConstantBuffer() const
 	{
@@ -382,10 +383,12 @@ template<typename VariableType>
 class TShaderParameterConstantBufferMemberVariable : public FShaderParameterConstantBufferMemberVariableTemplate
 {
 public:
-	TShaderParameterConstantBufferMemberVariable(FShaderConstantBuffer& ConstantBuffer, const char* const InVariableName)
+	TShaderParameterConstantBufferMemberVariable(FShaderConstantBuffer* ConstantBuffer, const char* const InVariableName)
 	{
+		EA_ASSERT(ConstantBuffer);
+		
 		MEM_ZERO(Value);
-		ConstantBuffer.AddMemberVariable(this, InVariableName);
+		ConstantBuffer->AddMemberVariable(this, sizeof(TShaderParameterConstantBufferMemberVariable<VariableType>), InVariableName);
 	}
 
 	using VariableAlignedType = typename FD3D12ConstantBufferMemberVariableHelper<VariableType>::AlignedType;
@@ -469,38 +472,65 @@ private:
 			: FShaderParameterContainerTemplate(InD3D12ShaderTemplate) {} \
 		FShaderParameterContainer(FD3D12ShaderTemplate* InD3D12ShaderTemplate, FD3D12ShaderInstance* InD3D12ShaderInstance) \
 			: FShaderParameterContainerTemplate(InD3D12ShaderTemplate, InD3D12ShaderInstance) {} \
-	__VA_ARGS__ \
+		__VA_ARGS__ \
 	} ShaderParameter{this}; \
 
-#define DEFINE_SHADER_GLOBAL_CONSTANT_BUFFER(...) \
-	public: \
-	struct FGlobalConstantBufferType : public FShaderConstantBuffer { \
-		FGlobalConstantBufferType(FShaderParameterContainer* InShaderParameter) \
-		: FShaderConstantBuffer(InShaderParameter, GLOBAL_CONSTANT_BUFFER_NAME, true), ConstantBufferResource(true) \
+#define SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, ...) \
+	class FConstantBufferType##ConstantBufferTypeName : public FShaderConstantBuffer { \
+		public: \
+		FConstantBufferType##ConstantBufferTypeName() \
+		: FShaderConstantBuffer(), SetConstructingVariable(this), ConstantBufferResource(), MemberVariables() \
+		{ \
+			EA_ASSERT(TemplateVariable == nullptr); \
+			TemplateVariable = this; \
+			ConstructingVariable = nullptr; \
+		} \
+		struct FMemberVariableContainer; \
+		FConstantBufferType##ConstantBufferTypeName(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bIsGlobalConstantBuffer) \
+		: FShaderConstantBuffer(InShaderParameter, InVariableName, bIsGlobalConstantBuffer), SetConstructingVariable(this), ConstantBufferResource(), MemberVariables() \
 		{ \
 			if(!TemplateVariable) TemplateVariable = this; \
+			if(!IsTemplateVariable()) ConstantBufferResource = eastl::make_unique<TD3D12ConstantBufferResource<FMemberVariableContainer>>(true, reinterpret_cast<uint8*>(&MemberVariables)); \
+			ConstructingVariable = nullptr; \
 		} \
-		inline static FGlobalConstantBufferType* TemplateVariable = nullptr; \
-		struct FData \
+		private: \
+		inline static FConstantBufferType##ConstantBufferTypeName* ConstructingVariable = nullptr; \
+		struct FSetConstructingVariable \
+		{ \
+			FSetConstructingVariable(FConstantBufferType##ConstantBufferTypeName* InConstructingVariable) \
+			{ \
+				ConstructingVariable = InConstructingVariable; \
+			} \
+		} SetConstructingVariable; \
+		inline static FConstantBufferType##ConstantBufferTypeName* TemplateVariable = nullptr; \
+		eastl::unique_ptr<TD3D12ConstantBufferResource<FMemberVariableContainer>> ConstantBufferResource; \
+		public: \
+		struct FMemberVariableContainer \
 		{ \
 			__VA_ARGS__ \
-		};\
+		} MemberVariables; \
+		virtual uint8_t* GetData() { return reinterpret_cast<uint8_t*>(&MemberVariables); } \
+		virtual uint64_t GetSize() const { return sizeof(FMemberVariableContainer); } \
 		virtual bool IsTemplateVariable() const { return (TemplateVariable == this);} \
-		private: \
-		TD3D12ConstantBufferResource<FData> ConstantBufferResource; \
-		virtual uint8_t* GetData() { return reinterpret_cast<uint8_t*>(&(ConstantBufferResource.Data())); } \
-		virtual uint64_t GetSize() const { return sizeof(FData); } \
-		public: \
-		FData& Data() { return ConstantBufferResource.Data(); } \
-		virtual FD3D12Resource* GetD3D12Resource() { return &ConstantBufferResource; } \
-		virtual FD3D12ConstantBufferResource* GetConstantBufferResource()  { return &ConstantBufferResource; } \
-	} GlobalConstantBuffer{this}; 
+		virtual FD3D12Resource* GetD3D12Resource() { return ConstantBufferResource.get(); } \
+		virtual FD3D12ConstantBufferResource* GetConstantBufferResource()  { return ConstantBufferResource.get(); } \
+	}  
+
+#define DEFINE_SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, ...) \
+	SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, __VA_ARGS__) ConstantBufferTypeName{};
+
+#define ADD_SHADER_CONSTANT_BUFFER(ConstantBufferTypeName, VariableNameStr) \
+	public: \
+	FConstantBufferType##ConstantBufferTypeName VariableNameStr{this, #VariableNameStr, false};
+
+#define ADD_SHADER_GLOBAL_CONSTANT_BUFFER(...) \
+	public: \
+	SHADER_CONSTANT_BUFFER_TYPE(GlobalConstantBuffer, __VA_ARGS__) GlobalConstantBuffer{this, GLOBAL_CONSTANT_BUFFER_NAME, true};
 
 // This should match with variable declared in shader
-#define ADD_SHADER_GLOBAL_CONSTANT_BUFFER_MEMBER_VARIABLE(Type, VariableNameStr) \
-	public: \
-	static_assert(sizeof(TShaderParameterConstantBufferMemberVariable<Type>) == sizeof(FD3D12ConstantBufferMemberVariableHelper<Type>::AlignedType));\
-	TShaderParameterConstantBufferMemberVariable<Type> VariableNameStr{*TemplateVariable, #VariableNameStr};
+#define ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Type, VariableNameStr) \
+	static_assert(sizeof(TShaderParameterConstantBufferMemberVariable<Type>) == sizeof(FD3D12ConstantBufferMemberVariableHelper<Type>::AlignedType)); \
+	TShaderParameterConstantBufferMemberVariable<Type> VariableNameStr{ConstructingVariable, #VariableNameStr};
 
 #define ADD_SHADER_SRV_VARIABLE
 #define ADD_SHADER_UAV_VARIABLE
