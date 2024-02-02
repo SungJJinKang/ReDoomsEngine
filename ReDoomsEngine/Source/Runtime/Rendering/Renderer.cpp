@@ -1,19 +1,31 @@
 #include "Renderer.h"
 
-FRenderer::FRenderer()
-	: 
-	D3D12Manager(true)
+void FFrameResourceContainer::Init()
 {
+	FrameWorkEndFence.Init();
+
+	GraphicsCommandAllocator = FD3D12CommandListManager::GetInstance()->GetOrCreateNewCommandAllocator(ED3D12QueueType::Direct);
+	GraphicsCommandList = GraphicsCommandAllocator->GetOrCreateNewCommandList();
 }
 
 void FRenderer::Init()
 {
 	D3D12Manager.Init();
 
+	for (FFrameResourceContainer& FrameContainer : FrameContainerList)
+	{
+		FrameContainer.Init();
+	}
 }
 
 void FRenderer::OnPreStartFrame()
 {
+	if (GCurrentFrameIndex >= GNumBackBufferCount)
+	{
+		FFrameResourceContainer& FrameContainer = FrameContainerList[(GCurrentFrameIndex - GNumBackBufferCount) % GNumBackBufferCount];
+		FrameContainer.FrameWorkEndFence.WaitOnLastSignal();
+	}
+
 	++GCurrentFrameIndex;
 
 	D3D12Manager.OnPreStartFrame();
@@ -25,11 +37,10 @@ void FRenderer::OnStartFrame()
 
 	// @todo : Block if gpu work of "GCurrentFrameIndex - GNumBackBufferCount" Frame doesn't finish yet
 
-	FD3D12CommandAllocator* const CommandAllocator = FD3D12CommandListManager::GetInstance()->GetOrCreateNewCommandAllocator(ED3D12QueueType::Direct);
-	FD3D12CommandList* const CommandList = CommandAllocator->GetOrCreateNewCommandList();
-	CurrentFrameCommandContext.CommandList = CommandList;
+	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameContainer();
+	CurrentFrameContainer.GraphicsCommandAllocator->ResetCommandAllocator(false);
 
-	CommandAllocator->ResetCommandAllocator(false);
+	CurrentFrameCommandContext.CommandList = CurrentFrameContainer.GraphicsCommandList;
 }
 
 bool FRenderer::Draw()
@@ -51,7 +62,7 @@ void FRenderer::OnEndFrame()
 	ID3D12CommandList* CommandLists[] = { CurrentFrameCommandContext.CommandList->GetD3DCommandList() };
 	TargetCommandQueue->GetD3DCommandQueue()->ExecuteCommandLists(_countof(CommandLists), CommandLists);
 
-	TargetCommandQueue->WaitForCompletion(); // @todo remove this!
+	GetCurrentFrameContainer().FrameWorkEndFence.Signal(TargetCommandQueue, false);
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 	SwapChain->Present(1);
@@ -62,4 +73,10 @@ void FRenderer::OnEndFrame()
 
 void FRenderer::Destroy()
 {
+	GetCurrentFrameContainer().FrameWorkEndFence.WaitOnLastSignal();
+}
+
+FFrameResourceContainer& FRenderer::GetCurrentFrameContainer()
+{
+	return FrameContainerList[GCurrentFrameIndex % GNumBackBufferCount];
 }

@@ -7,6 +7,10 @@
 FD3D12Fence::FD3D12Fence()
 	: D3DFence(), LastSignaledValue(0), bInterruptAwaited(false)
 {
+}
+
+void FD3D12Fence::Init()
+{
 	CreateD3DFence();
 }
 

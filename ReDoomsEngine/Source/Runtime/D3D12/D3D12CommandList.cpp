@@ -11,6 +11,8 @@ FD3D12CommandList::FD3D12CommandList(FD3D12CommandAllocator* const InOwnerComman
 
 void FD3D12CommandList::InitCommandList()
 {
+	Fence.Init();
+
 	EA_ASSERT(CommandList == nullptr);
 	VERIFYD3D12RESULT(GetD3D12Device()->CreateCommandList(0, GetD3D12CommandListType(GetQueueType()), OwnerCommandAllocator->GetD3DCommandAllocator(), nullptr, IID_PPV_ARGS(&CommandList)));
 

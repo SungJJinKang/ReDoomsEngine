@@ -17,12 +17,9 @@ class FD3D12Manager : public EA::StdC::Singleton<FD3D12Manager>, public ID3D12Ma
 {
 public:
 
-	FD3D12Manager() = delete;
-	FD3D12Manager(const bool bInEnableDebugLayer);
-	FD3D12Manager(const FD3D12Manager&) = delete;
-	FD3D12Manager(FD3D12Manager&&) = delete;
-	FD3D12Manager& operator=(const FD3D12Manager&) = delete;
-	FD3D12Manager& operator=(FD3D12Manager&&) = delete;
+	FD3D12Manager();
+	FD3D12Manager(FD3D12Manager&&);
+	FD3D12Manager& operator=(FD3D12Manager&&);
 	~FD3D12Manager();
 	void Init();
 	virtual void OnPreStartFrame();
@@ -62,7 +59,5 @@ private:
 	eastl::unique_ptr<FD3D12ConstantBufferRingBufferManager> D3D12ConstantBufferRingBufferManager;
 
 	eastl::vector<ID3D12ManagerInterface*> TickedManagerList;
-
-	bool bEnableDebugLayer;
 };
 

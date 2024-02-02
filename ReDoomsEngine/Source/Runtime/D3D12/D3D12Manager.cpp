@@ -11,19 +11,8 @@
 #include "D3D12CommandList.h"
 #include "D3D12Resource/D3D12ConstantBufferRingBufferManager.h"
 
-FD3D12Manager::FD3D12Manager(const bool bInEnableDebugLayer)
-    :
-    DXGIFactory(), 
-    D3D12Window(),
-    ChoosenAdapter(),
-    Swapchain(),
-    bEnableDebugLayer(bInEnableDebugLayer), 
-    D3D12DescriptorHeapManager(),
-    D3D12ShaderManager(),
-    D3D12RootSignatureManager()
-{
-}
 
+FD3D12Manager::FD3D12Manager() = default;
 FD3D12Manager::~FD3D12Manager() = default;
 
 void FD3D12Manager::Init()
@@ -40,7 +29,7 @@ void FD3D12Manager::Init()
 #if RD_DEBUG
         // Enable the debug layer (requires the Graphics Tools "optional feature").
         // NOTE: Enabling the debug layer after device creation will invalidate the active device.
-        if (bEnableDebugLayer)
+        if (true)
         {
             ComPtr<ID3D12Debug> DebugController;
             if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&DebugController))))
