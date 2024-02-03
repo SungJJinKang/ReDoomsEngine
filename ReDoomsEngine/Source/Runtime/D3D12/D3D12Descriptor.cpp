@@ -25,6 +25,14 @@ FD3D12DescriptorHeapBlock::FD3D12DescriptorHeapBlock(FD3D12DescriptorHeap* const
 
 }
 
+void FD3D12DescriptorHeapBlock::Clear()
+{
+    ParentDescriptorHeap = nullptr;
+    BaseSlot = 0;
+    DescriptorSlotCount = 0;
+    UsedDescriptorSlotCount = 0;
+}
+
 
 CD3DX12_CPU_DESCRIPTOR_HANDLE FD3D12DescriptorHeapBlock::CPUDescriptorHandle()
 {
@@ -99,7 +107,7 @@ bool FD3D12DescriptorHeap::AllocateFreeDescriptorHeapBlock(FD3D12DescriptorHeapB
     return bSuccess;
 }
 
-void FD3D12DescriptorHeap::FreeDescriptorHeapBlock(const FD3D12DescriptorHeapBlock& InHeapBlock)
+void FD3D12DescriptorHeap::FreeDescriptorHeapBlock(FD3D12DescriptorHeapBlock& InHeapBlock)
 {
     EA_ASSERT(InHeapBlock.UsedDescriptorSlotCount == 0);
     FreeDescriptorHeapBlockList.emplace_back(InHeapBlock);
@@ -120,9 +128,9 @@ FD3D12DescriptorHeapBlock FD3D12DescriptorHeapContainer::AllocateDescriptorHeapB
 
     bool bSuccess = false;
 
-    for (eastl::unique_ptr<FD3D12DescriptorHeap>& AllocaedDescriptorHeap : DescriptorHeapListAllocatedToUser)
+    for (eastl::unique_ptr<FD3D12DescriptorHeap>& AllocatedDescriptorHeap : DescriptorHeapListAllocatedToUser)
     {
-        if (AllocaedDescriptorHeap->AllocateFreeDescriptorHeapBlock(NewHeapBlock, InDescriptorCount))
+        if (AllocatedDescriptorHeap->AllocateFreeDescriptorHeapBlock(NewHeapBlock, InDescriptorCount))
         {
             bSuccess = true;
             break;
@@ -203,6 +211,16 @@ void FD3D12DescriptorHeapManager::Init()
     CbvSrvUavOfflineDescriptorHeapContainer.Init();
     SamplerOnlineDescriptorHeapContainer.Init();
     SamplerOfflineDescriptorHeapContainer.Init();
+}
+
+void FD3D12DescriptorHeapManager::OnStartFrame()
+{
+
+}
+
+void FD3D12DescriptorHeapManager::OnEndFrame()
+{
+
 }
 
 FD3D12DescriptorHeapContainer* FD3D12DescriptorHeapManager::GetOnlineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)

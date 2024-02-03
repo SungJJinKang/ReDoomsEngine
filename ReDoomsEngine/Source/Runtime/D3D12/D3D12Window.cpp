@@ -45,6 +45,16 @@ void FD3D12Window::Init()
     ShowWindow(WindowHandle, FWindowsApplication::NumCmdShow);
 }
 
+void FD3D12Window::OnStartFrame()
+{
+
+}
+
+void FD3D12Window::OnEndFrame()
+{
+
+}
+
 LRESULT FD3D12Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)

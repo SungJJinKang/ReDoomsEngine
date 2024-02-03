@@ -45,3 +45,12 @@ ReDoomsEngine/Source/Runtime/STL/mimalloc/build/CMakeFiles
 ReDoomsEngine/Source/Runtime/STL/EASTL/build/EASTL.dir
 
 CMakeCache.txt
+
+*.log
+ReDoomsEngine/Source/Runtime/STL/EASTL/build/Debug
+ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAThread/Debug
+ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAStdC/Debug
+ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAAssert/Debug
+ReDoomsEngine/Source/Runtime/STL/mimalloc/build/mimalloc-static.dir/Debug/mimalloc-static.tlog
+ReDoomsEngine/Source/Runtime/STL/mimalloc/build/mimalloc-static.dir/Debug/mimalloc-static.log
+*.log

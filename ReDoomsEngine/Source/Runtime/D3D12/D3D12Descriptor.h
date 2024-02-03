@@ -3,6 +3,7 @@
 #include "D3D12Include.h"
 
 #include "EASTL/queue.h"
+#include "D3D12ManagerInterface.h"
 
 class FD3D12DescriptorHeap;
 class FD3D12Descriptor
@@ -13,6 +14,8 @@ struct FD3D12DescriptorHeapBlock
 {
 	FD3D12DescriptorHeapBlock() = default;
 	FD3D12DescriptorHeapBlock(FD3D12DescriptorHeap* const InParentDescriptorHeap, int32_t InBaseSlot, uint32 InDescriptorSlotCount, uint32 InUsedDescriptorSlotCount);
+
+	void Clear();
 
 	FD3D12DescriptorHeap* ParentDescriptorHeap = nullptr;
 
@@ -29,6 +32,7 @@ class FD3D12DescriptorHeap
 public:
 
 	FD3D12DescriptorHeap() = delete;
+	virtual ~FD3D12DescriptorHeap() = default;
 	FD3D12DescriptorHeap(uint32_t InNumDescriptors, D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, D3D12_DESCRIPTOR_HEAP_TYPE InHeapType);
 	void Init();
 	
@@ -45,7 +49,7 @@ public:
 	void MakeFreed();
 
 	bool AllocateFreeDescriptorHeapBlock(FD3D12DescriptorHeapBlock& bOutDescriptorHeapBlock, const uint32 InDescriptorCount);
-	void FreeDescriptorHeapBlock(const FD3D12DescriptorHeapBlock& InHeapBlock);
+	void FreeDescriptorHeapBlock(FD3D12DescriptorHeapBlock& InHeapBlock);
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetCPUBase() const
 	{
@@ -142,12 +146,15 @@ private:
 
 };
 
-class FD3D12DescriptorHeapManager : public EA::StdC::Singleton<FD3D12DescriptorHeapManager>
+class FD3D12DescriptorHeapManager : public EA::StdC::Singleton<FD3D12DescriptorHeapManager>, public ID3D12ManagerInterface
 {
 public:
 
 	FD3D12DescriptorHeapManager();
 	void Init();
+	virtual void OnStartFrame();
+	virtual void OnEndFrame();
+
 
 	FD3D12DescriptorHeapContainer* GetOnlineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType);
 	FD3D12DescriptorHeapContainer* GetOfflineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType);
