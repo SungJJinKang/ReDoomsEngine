@@ -38,7 +38,7 @@ void FRenderer::OnStartFrame()
 	// @todo : Block if gpu work of "GCurrentFrameIndex - GNumBackBufferCount" Frame doesn't finish yet
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameContainer();
-	CurrentFrameContainer.GraphicsCommandAllocator->ResetCommandAllocator(false);
+	CurrentFrameContainer.GraphicsCommandAllocator->ResetCommandAllocator(true);
 
 	CurrentFrameCommandContext.CommandList = CurrentFrameContainer.GraphicsCommandList;
 }
