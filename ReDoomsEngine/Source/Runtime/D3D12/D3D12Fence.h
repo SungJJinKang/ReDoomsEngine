@@ -4,11 +4,14 @@
 
 class FD3D12Device;
 class FD3D12CommandQueue;
+
+// @TODO : Implement fence pool
 class FD3D12Fence
 {
 public:
 
 	FD3D12Fence();
+	void Init();
 	void CreateD3DFence();
 	void CreateD3DFence(const eastl::wstring& InDebugName);
 	void SetDebugNameToFence(const eastl::wstring& InDebugName);

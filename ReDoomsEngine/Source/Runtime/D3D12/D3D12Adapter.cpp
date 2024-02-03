@@ -87,3 +87,13 @@ void FD3D12Adapter::Init()
         Device->Init();
     }
 }
+
+void FD3D12Adapter::OnStartFrame()
+{
+
+}
+
+void FD3D12Adapter::OnEndFrame()
+{
+
+}

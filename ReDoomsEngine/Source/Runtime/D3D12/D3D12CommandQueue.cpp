@@ -8,7 +8,7 @@ D3D12_COMMAND_LIST_TYPE GetD3D12CommandListType(ED3D12QueueType QueueType)
 	case ED3D12QueueType::Direct: return D3D12_COMMAND_LIST_TYPE_DIRECT;
 	case ED3D12QueueType::Copy:   return D3D12_COMMAND_LIST_TYPE_COPY;
 	case ED3D12QueueType::Async:  return D3D12_COMMAND_LIST_TYPE_COMPUTE;
-	default: EA_ASSUME(0); // fallthrough
+	default: EA_ASSUME(0);
 	}
 }
 
@@ -19,7 +19,7 @@ const wchar_t* GetD3D12QueueTypeString(ED3D12QueueType QueueType)
 	case ED3D12QueueType::Direct: return EA_WCHAR("Direct");
 	case ED3D12QueueType::Copy:   return EA_WCHAR("Copy");
 	case ED3D12QueueType::Async:  return EA_WCHAR("Async");
-	default: EA_ASSUME(0); // fallthrough
+	default: EA_ASSUME(0);
 	}
 }
 
@@ -31,6 +31,8 @@ FD3D12CommandQueue::FD3D12CommandQueue(const ED3D12QueueType InQueueType)
 
 void FD3D12CommandQueue::Init()
 {
+	Fence.Init();
+
 	EA_ASSERT(D3DCommandQueue.Get() == nullptr);
 
 	D3D12_COMMAND_QUEUE_DESC CommandQueueDesc;

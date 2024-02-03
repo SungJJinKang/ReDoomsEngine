@@ -7,3 +7,5 @@
 
 #include "D3D12Assert.h"
 #include "D3D12Enums.h"
+#include "D3D12Macros.h"
+#include "D3D12GlobalVariables.h"

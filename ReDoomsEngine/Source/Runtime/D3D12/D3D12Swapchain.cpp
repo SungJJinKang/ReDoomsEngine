@@ -59,6 +59,16 @@ void FD3D12Swapchain::Init()
     FD3D12Manager::GetInstance()->GetDXGIFactory()->MakeWindowAssociation(Window->GetWindowHandle(), DXGI_MWA_NO_WINDOW_CHANGES);
 }
 
+void FD3D12Swapchain::OnStartFrame()
+{
+
+}
+
+void FD3D12Swapchain::OnEndFrame()
+{
+
+}
+
 FD3D12RenderTargetResource& FD3D12Swapchain::GetD3DRenderTargetResource(const uint32_t InBufferIndex)
 {
     return RenderTargets[InBufferIndex];

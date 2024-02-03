@@ -1,6 +1,7 @@
 #pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
+#include "D3D12ManagerInterface.h"
 
 class FD3D12Window;
 class FD3D12Adapter;
@@ -10,19 +11,22 @@ class FD3D12ShaderManager;
 class FD3D12PSOManager;
 class FD3D12RootSignatureManager;
 class FD3D12CommandListManager;
+class FD3D12ConstantBufferRingBufferManager;
 
-class FD3D12Manager : public EA::StdC::Singleton<FD3D12Manager>
+class FD3D12Manager : public EA::StdC::Singleton<FD3D12Manager>, public ID3D12ManagerInterface
 {
 public:
 
-	FD3D12Manager() = delete;
-	FD3D12Manager(const bool bInEnableDebugLayer);
-	FD3D12Manager(const FD3D12Manager&) = delete;
-	FD3D12Manager(FD3D12Manager&&) = delete;
-	FD3D12Manager& operator=(const FD3D12Manager&) = delete;
-	FD3D12Manager& operator=(FD3D12Manager&&) = delete;
+	FD3D12Manager();
+	FD3D12Manager(FD3D12Manager&&);
+	FD3D12Manager& operator=(FD3D12Manager&&);
 	~FD3D12Manager();
 	void Init();
+	virtual void OnPreStartFrame();
+	virtual void OnStartFrame();
+	virtual void OnEndFrame();
+	virtual void OnPostEndFrame();
+
 
 	IDXGIFactory4* GetDXGIFactory() const
 	{
@@ -52,7 +56,8 @@ private:
 	eastl::unique_ptr<FD3D12PSOManager> D3D12PSOManager;
 	eastl::unique_ptr<FD3D12RootSignatureManager> D3D12RootSignatureManager;
 	eastl::unique_ptr<FD3D12CommandListManager> D3D12CommandListManager;
+	eastl::unique_ptr<FD3D12ConstantBufferRingBufferManager> D3D12ConstantBufferRingBufferManager;
 
-	bool bEnableDebugLayer;
+	eastl::vector<ID3D12ManagerInterface*> TickedManagerList;
 };
 
