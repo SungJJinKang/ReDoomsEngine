@@ -14,24 +14,17 @@ FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource> InResource)
 	: ResourceCreateProperties(), Resource(InResource),
 	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
-	D3D12_RESOURCE_DESC ResourceDesc = Resource->GetDesc();
-
-#define COPY_DESC_MEMBER(MEMBER_NAME) Desc.MEMBER_NAME = ResourceDesc.MEMBER_NAME
-
-	COPY_DESC_MEMBER(Dimension);
-	COPY_DESC_MEMBER(Alignment);
-	COPY_DESC_MEMBER(Width);
-	COPY_DESC_MEMBER(Height);
-	COPY_DESC_MEMBER(DepthOrArraySize);
-	COPY_DESC_MEMBER(MipLevels);
-	COPY_DESC_MEMBER(Format);
-	COPY_DESC_MEMBER(SampleDesc);
-	COPY_DESC_MEMBER(Layout);
-	COPY_DESC_MEMBER(Flags);
+	Desc = CD3DX12_RESOURCE_DESC{ Resource->GetDesc() };
 
 	Resource->GetHeapProperties(&ResourceCreateProperties.HeapProperties, &ResourceCreateProperties.HeapFlags);
 
 	ValidateResourceProperties();
+}
+
+FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource> InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
+	: ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), Resource(InResource),
+	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
+{
 }
 
 void FD3D12Resource::InitResource()
@@ -52,7 +45,7 @@ void FD3D12Resource::CreateD3D12Resource()
 		ResourceCreateProperties.HeapFlags,
 		&Desc,
 		ResourceCreateProperties.InitialResourceStates,
-		ResourceCreateProperties.ClearValue,
+		ResourceCreateProperties.ClearValue.has_value() ? &(ResourceCreateProperties.ClearValue.value()) : nullptr,
 		IID_PPV_ARGS(&Resource)));
 }
 
@@ -69,7 +62,7 @@ void FD3D12Resource::ValidateResourceProperties() const
 	
 	if (Desc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER)
 	{
-		EA_ASSERT(ResourceCreateProperties.ClearValue == nullptr);
+		EA_ASSERT(!(ResourceCreateProperties.ClearValue.has_value()));
 	}
 }
 
@@ -143,8 +136,19 @@ FD3D12DepthStencilView* FD3D12Resource::GetDSV()
 	return DefaultDSV.get();
 }
 
+FD3D12TextureResource::FD3D12TextureResource(ComPtr<ID3D12Resource> InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
+	: FD3D12Resource(InResource, InResourceCreateProperties, InDesc)
+{
+}
+
 FD3D12TextureResource::FD3D12TextureResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: FD3D12Resource(InResourceCreateProperties, InDesc)
+{
+
+}
+
+FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource> InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
+	: FD3D12TextureResource(InResource, InResourceCreateProperties, InDesc)
 {
 
 }

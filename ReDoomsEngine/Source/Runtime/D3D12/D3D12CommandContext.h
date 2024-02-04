@@ -2,6 +2,7 @@
 #include "CommonInclude.h"
 #include "D3D12StateCache.h"
 
+class FD3D12CommandQueue;
 class FD3D12CommandList;
 struct FD3D12CommandContext
 {
