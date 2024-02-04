@@ -1,0 +1,11 @@
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/texassemble.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/texdiag.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Experimental.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Nightly.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Continuous.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/NightlyMemoryCheck.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/RUN_TESTS.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/INSTALL.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/ALL_BUILD.dir
+C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/ZERO_CHECK.dir

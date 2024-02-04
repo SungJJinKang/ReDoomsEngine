@@ -108,7 +108,7 @@
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\Engine\AssetManager.cpp">
+    <ClCompile Include="Source\Runtime\IO\AssetManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.cpp">
@@ -157,6 +157,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Runtime\D3D12\D3D12GlobalVariables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Rendering\TextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1058,7 +1064,7 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12Enums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\Engine\AssetManager.h">
+    <ClInclude Include="Source\Runtime\IO\AssetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.h">
@@ -1196,7 +1202,7 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12RendererInclude.h">
+    <ClInclude Include="Source\Runtime\Rendering\RendererCommonInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.h">
@@ -1226,6 +1232,12 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12ManagerInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Runtime\Rendering\TextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12TextureManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
@@ -1249,5 +1261,8 @@
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl">
       <Filter>Header Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\seafloor.dds" />
   </ItemGroup>
 </Project>
