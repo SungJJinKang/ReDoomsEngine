@@ -2,7 +2,7 @@
 #include "CommonInclude.h"
 #include "D3D12Manager.h"
 #include "D3D12Window.h"
-#include "D3D12RendererInclude.h"
+#include "RendererCommonInclude.h"
 #include "D3D12Fence.h"
 
 class FD3D12CommandAllocator;

@@ -15,7 +15,7 @@ public:
 		CD3DX12_HEAP_PROPERTIES HeapProperties{};
 		D3D12_HEAP_FLAGS HeapFlags = D3D12_HEAP_FLAG_NONE;
 		D3D12_RESOURCE_STATES InitialResourceStates = D3D12_RESOURCE_STATE_COMMON;
-		D3D12_CLEAR_VALUE* ClearValue = nullptr;
+		eastl::optional<D3D12_CLEAR_VALUE> ClearValue;
 	};
 
 	virtual void InitResource();
@@ -39,9 +39,13 @@ public:
 	{
 		return Desc;
 	}
-	inline D3D12_CLEAR_VALUE* GetClearValue() const
+	inline bool HasClearValue() const
 	{
-		return ResourceCreateProperties.ClearValue;
+		return ResourceCreateProperties.ClearValue.has_value();
+	}
+	inline D3D12_CLEAR_VALUE GetClearValue() const
+	{
+		return ResourceCreateProperties.ClearValue.value();
 	}
 
 	inline ID3D12Resource* GetResource() const 
@@ -64,6 +68,7 @@ protected:
 	FD3D12Resource() = delete;
 	FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12Resource(ComPtr<ID3D12Resource> InResource);
+	FD3D12Resource(ComPtr<ID3D12Resource> InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 
 	FResourceCreateProperties ResourceCreateProperties;
 	CD3DX12_RESOURCE_DESC Desc;
@@ -81,7 +86,10 @@ private:
 
 class FD3D12TextureResource : public FD3D12Resource
 {
-public:
+
+protected:
+
+	FD3D12TextureResource(ComPtr<ID3D12Resource> InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 
 	virtual bool IsBuffer() const
 	{
@@ -92,12 +100,13 @@ public:
 		return true;
 	}
 
-protected:
 	FD3D12TextureResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 };
 
 class FD3D12Texture2DResource : public FD3D12TextureResource
 {
+public:
+	FD3D12Texture2DResource(ComPtr<ID3D12Resource> InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12Texture2DResource(
 		const FResourceCreateProperties& InResourceCreateProperties,
 		const DXGI_FORMAT InFormat,

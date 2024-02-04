@@ -24,6 +24,24 @@ const eastl::wstring& FAssetManager::GetShaderFolderDirectory()
     return ShaderFolderDirectory;
 }
 
+eastl::wstring FAssetManager::MakeAbsolutePathFromShaderFolder(const eastl::wstring& InRelativePath)
+{
+	eastl::wstring AbsolutePath{};
+	AbsolutePath += FAssetManager::GetShaderFolderDirectory();
+	AbsolutePath += InRelativePath;
+
+	return AbsolutePath;
+}
+
+eastl::wstring FAssetManager::MakeAbsolutePathFromAssetFolder(const eastl::wstring& InRelativePath)
+{
+	eastl::wstring AbsolutePath{};
+	AbsolutePath += FAssetManager::GetAssetFolderDirectory();
+	AbsolutePath += InRelativePath;
+    
+    return AbsolutePath;
+}
+
 bool FAssetManager::SimpleReadEntireFile(const const wchar_t* const FilePath, eastl::vector<uint8_t>& OutData)
 {
     bool bIsSuccess = false;
