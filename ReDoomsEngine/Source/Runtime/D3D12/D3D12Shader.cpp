@@ -382,10 +382,8 @@ bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12ShaderTemplate& Shader, c
 	
 	eastl::vector<uint8_t> OutTextData{};
 
-	eastl::wstring AssetPath{};
-	AssetPath += FAssetManager::GetShaderFolderDirectory();
-	AssetPath += FinalShaderCompileArguments.ShaderDeclaration.ShaderTextFileRelativePath;
-	 
+	const eastl::wstring AssetPath = FAssetManager::MakeAbsolutePathFromShaderFolder(FinalShaderCompileArguments.ShaderDeclaration.ShaderTextFileRelativePath);
+
 	if (FAssetManager::SimpleReadEntireFile(AssetPath.data(), OutTextData))
 	{
 		OutTextData.emplace_back(0);

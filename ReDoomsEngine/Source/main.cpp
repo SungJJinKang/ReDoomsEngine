@@ -7,6 +7,12 @@
 
 int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, char*, int32_t nCmdShow)
 {
+	HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	if (FAILED(hr))
+	{
+		return 1;
+	}
+
 	FWindowsApplication::HInstance = hInstance;
 	FWindowsApplication::NumCmdShow = nCmdShow;
 
