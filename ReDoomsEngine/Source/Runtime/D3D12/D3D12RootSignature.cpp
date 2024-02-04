@@ -306,8 +306,7 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 
 	D3D12_FEATURE_DATA_ROOT_SIGNATURE FeatureData = {};
 
-	// This is the highest version the sample supports. If CheckFeatureSupport succeeds, the HighestVersion returned will not be greater than this.
-
+	// @todo support 1_2
 	if (SUCCEEDED(GetD3D12Device()->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &FeatureData, sizeof(FeatureData))))
 	{
 		FeatureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;

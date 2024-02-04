@@ -140,6 +140,12 @@ bool D3D12TestRenderer::Draw()
 	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget.GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 	CurrentFrameCommandContext.CommandList->GetD3DCommandList()->ResourceBarrier(1, &ResourceBarrierB);
 
+	if (!TestTexture)
+	{
+		TestTexture = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
+			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT);
+	}
+
 	return true;
 }
 
