@@ -1,16 +1,16 @@
-#include "D3D12ConstantBufferRingBufferManager.h"
+#include "D3D12PerFrameConstantBufferManager.h"
 #include "D3D12Resource.h"
 
 static uint64_t GRingBufferSize = D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT * 30;
 
-void FD3D12ConstantBufferRingBuffer::Reset()
+void FD3D12PerFrameConstantBuffer::Reset()
 {
 	CurrentOffset = 0;
 }
 
-void FD3D12ConstantBufferRingBufferManager::Init()
+void FD3D12PerFrameConstantBufferManager::Init()
 {
-	for (FD3D12ConstantBufferRingBuffer& RingBuffer : ConstantBufferRingBufferList)
+	for (FD3D12PerFrameConstantBuffer& RingBuffer : ConstantBufferRingBufferList)
 	{
 		RingBuffer.ConstantBufferResource = eastl::make_shared<FD3D12ConstantBufferResource>(GRingBufferSize, true, nullptr, true);
 		RingBuffer.ConstantBufferResource->InitResource();
@@ -18,11 +18,11 @@ void FD3D12ConstantBufferRingBufferManager::Init()
 	}
 }
 
-FD3D12ConstantBufferBlock FD3D12ConstantBufferRingBufferManager::Allocate(const uint64_t InSize)
+FD3D12ConstantBufferBlock FD3D12PerFrameConstantBufferManager::Allocate(const uint64_t InSize)
 {
 	FD3D12ConstantBufferBlock Block;
 
-	FD3D12ConstantBufferRingBuffer& RingBuffer = ConstantBufferRingBufferList[GCurrentFrameIndex % GNumBackBufferCount];
+	FD3D12PerFrameConstantBuffer& RingBuffer = ConstantBufferRingBufferList[GCurrentFrameIndex % GNumBackBufferCount];
 	EA_ASSERT(IsAligned(RingBuffer.CurrentOffset, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
 	
 	const uint64_t AlignedSize = Align(InSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
@@ -43,21 +43,21 @@ FD3D12ConstantBufferBlock FD3D12ConstantBufferRingBufferManager::Allocate(const 
 	return Block;
 }
 
-void FD3D12ConstantBufferRingBufferManager::OnPreStartFrame()
+void FD3D12PerFrameConstantBufferManager::OnPreStartFrame()
 {
 	if (GCurrentFrameIndex >= GNumBackBufferCount)
 	{
-		FD3D12ConstantBufferRingBuffer& RingBuffer = ConstantBufferRingBufferList[(GCurrentFrameIndex - GNumBackBufferCount) % GNumBackBufferCount];
+		FD3D12PerFrameConstantBuffer& RingBuffer = ConstantBufferRingBufferList[(GCurrentFrameIndex - GNumBackBufferCount) % GNumBackBufferCount];
 		RingBuffer.Reset();
 	}
 }
 
-void FD3D12ConstantBufferRingBufferManager::OnStartFrame()
+void FD3D12PerFrameConstantBufferManager::OnStartFrame()
 {
 
 }
 
-void FD3D12ConstantBufferRingBufferManager::OnEndFrame()
+void FD3D12PerFrameConstantBufferManager::OnEndFrame()
 {
 
 }
