@@ -4,7 +4,7 @@
 #include "D3D12PSO.h"
 
 FD3D12CommandList::FD3D12CommandList(FD3D12CommandAllocator* const InOwnerCommandAllocator)
-	: OwnerCommandAllocator(InOwnerCommandAllocator), Fence()
+	: OwnerCommandAllocator(InOwnerCommandAllocator), Fence(false)
 {
 
 }

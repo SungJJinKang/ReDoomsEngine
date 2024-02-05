@@ -2,7 +2,9 @@
 #include "D3D12Include.h"
 
 #include "D3D12View.h"
-#include "D3D12ConstantBufferRingBufferManager.h"
+#include "D3D12PerFrameConstantBufferManager.h"
+#include "D3D12ResourcePool.h"
+#include "D3D12Fence.h"
 
 class FD3D12Resource
 {
@@ -18,6 +20,10 @@ public:
 		eastl::optional<D3D12_CLEAR_VALUE> ClearValue;
 	};
 
+	inline bool IsInit() const 
+	{
+		return bInit;
+	}
 	virtual void InitResource();
 	virtual void CreateD3D12Resource();
 	virtual bool IsCreateD3D12ResourceOnInitResource() const
@@ -63,17 +69,21 @@ public:
 	FD3D12RenderTargetView* GetRTV();
 	FD3D12DepthStencilView* GetDSV();
 
+	FD3D12Fence Fence;
+
 protected:
 
 	FD3D12Resource() = delete;
 	FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
-	FD3D12Resource(ComPtr<ID3D12Resource> InResource);
-	FD3D12Resource(ComPtr<ID3D12Resource> InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+	FD3D12Resource(ComPtr<ID3D12Resource>& InResource);
+	FD3D12Resource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 
 	FResourceCreateProperties ResourceCreateProperties;
 	CD3DX12_RESOURCE_DESC Desc;
 
 private:
+
+	bool bInit;
 
 	ComPtr<ID3D12Resource> Resource;
 
@@ -89,7 +99,9 @@ class FD3D12TextureResource : public FD3D12Resource
 
 protected:
 
-	FD3D12TextureResource(ComPtr<ID3D12Resource> InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+	FD3D12TextureResource(ComPtr<ID3D12Resource>& InResource, const FD3D12ResourcePoolBlock& InResourcePoolBlock, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+	FD3D12TextureResource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+	FD3D12TextureResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 
 	virtual bool IsBuffer() const
 	{
@@ -99,14 +111,17 @@ protected:
 	{
 		return true;
 	}
+	virtual bool Is2DTexture() const = 0;
 
-	FD3D12TextureResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+	eastl::optional<FD3D12ResourcePoolBlock> ResourcePoolBlock;
 };
 
 class FD3D12Texture2DResource : public FD3D12TextureResource
 {
 public:
-	FD3D12Texture2DResource(ComPtr<ID3D12Resource> InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+	FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResource, const FD3D12ResourcePoolBlock& InResourcePoolBlock, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+	FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+	FD3D12Texture2DResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12Texture2DResource(
 		const FResourceCreateProperties& InResourceCreateProperties,
 		const DXGI_FORMAT InFormat,
@@ -120,6 +135,11 @@ public:
 		const D3D12_TEXTURE_LAYOUT InLayout = D3D12_TEXTURE_LAYOUT_UNKNOWN,
 		const uint64_t InAlignment = 0
 	);
+
+	virtual bool Is2DTexture() const
+	{
+		return true;
+	}
 };
 
 
@@ -182,6 +202,15 @@ protected:
 	uint8_t* ShadowDataAddress;
 
 	eastl::vector<uint8_t> ShadowData;
+};
+
+class FD3D12VertexIndexBufferResource : public FD3D12BufferResource
+{
+public:
+
+	FD3D12VertexIndexBufferResource(const uint64_t InSize, const bool bInDynamic = false);
+
+
 };
 
 template <typename BufferDataType>

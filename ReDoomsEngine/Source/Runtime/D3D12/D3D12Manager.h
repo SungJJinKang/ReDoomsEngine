@@ -11,7 +11,8 @@ class FD3D12ShaderManager;
 class FD3D12PSOManager;
 class FD3D12RootSignatureManager;
 class FD3D12CommandListManager;
-class FD3D12ConstantBufferRingBufferManager;
+class FD3D12PerFrameConstantBufferManager;
+class FD3D12ResourceAllocator;
 
 class FD3D12Manager : public EA::StdC::Singleton<FD3D12Manager>, public ID3D12ManagerInterface
 {
@@ -56,7 +57,8 @@ private:
 	eastl::unique_ptr<FD3D12PSOManager> D3D12PSOManager;
 	eastl::unique_ptr<FD3D12RootSignatureManager> D3D12RootSignatureManager;
 	eastl::unique_ptr<FD3D12CommandListManager> D3D12CommandListManager;
-	eastl::unique_ptr<FD3D12ConstantBufferRingBufferManager> D3D12ConstantBufferRingBufferManager;
+	eastl::unique_ptr<FD3D12PerFrameConstantBufferManager> D3D12PerFrameConstantBufferManager;
+	eastl::unique_ptr<FD3D12ResourceAllocator> D3D12ResourceAllocator;
 
 	eastl::vector<ID3D12ManagerInterface*> TickedManagerList;
 };
