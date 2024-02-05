@@ -38,9 +38,10 @@ void FRenderer::OnStartFrame()
 	// @todo : Block if gpu work of "GCurrentFrameIndex - GNumBackBufferCount" Frame doesn't finish yet
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameContainer();
-	CurrentFrameContainer.GraphicsCommandAllocator->ResetCommandAllocator(true);
 
-	CurrentFrameCommandContext.CommandList = CurrentFrameContainer.GraphicsCommandList;
+	CurrentFrameCommandContext.StateCache.Reset();
+	CurrentFrameCommandContext.GraphicsCommandAllocator = CurrentFrameContainer.GraphicsCommandAllocator;
+	CurrentFrameCommandContext.GraphicsCommandList = CurrentFrameContainer.GraphicsCommandList;
 }
 
 bool FRenderer::Draw()
@@ -57,10 +58,8 @@ void FRenderer::OnEndFrame()
 {
 	FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);
 
-	CurrentFrameCommandContext.CommandList->FinishRecordingCommandList(TargetCommandQueue);
-
-	ID3D12CommandList* CommandLists[] = { CurrentFrameCommandContext.CommandList->GetD3DCommandList() };
-	TargetCommandQueue->GetD3DCommandQueue()->ExecuteCommandLists(_countof(CommandLists), CommandLists);
+	eastl::vector<eastl::shared_ptr<FD3D12CommandList>> CommandLists = { CurrentFrameCommandContext.GraphicsCommandList };
+	TargetCommandQueue->ExecuteCommandLists(CommandLists);
 
 	GetCurrentFrameContainer().FrameWorkEndFence.Signal(TargetCommandQueue, false);
 

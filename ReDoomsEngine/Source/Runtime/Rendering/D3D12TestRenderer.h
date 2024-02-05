@@ -15,5 +15,6 @@ public:
 private:
 
 	eastl::shared_ptr<FD3D12TextureResource> TestTexture;
+	eastl::shared_ptr<FD3D12TextureResource> TestTexture1;
 };
 

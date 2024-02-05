@@ -37,7 +37,7 @@ void FD3D12ResourceAllocator::Init()
 	}
 }
 
-eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::Allocate(FD3D12CommandContext& InCommandContext, const eastl::vector<D3D12_SUBRESOURCE_DATA>& SubresourceDataList,
+eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::Allocate(FD3D12CommandContext& InCommandContext, eastl::vector<FD3D12SubresourceContainer>&& SubresourceDataList,
 	const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties, CD3DX12_RESOURCE_DESC InD3DResourceDesc)
 {
 	EA_ASSERT(InD3DResourceDesc.SampleDesc.Count == 1);
@@ -56,8 +56,8 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::Allocate(FD3
 
 	ComPtr<ID3D12Resource> TextureResource;
 
-	eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersBeforeUpload;
-	eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersAfterUpload;
+	eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersBeforeUpload{};
+	eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersAfterUpload{};
 
 	if (TargetPool.HeapDesc.SizeInBytes > 0)
 	{
@@ -89,13 +89,13 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::Allocate(FD3
 		D3D12TextureResource = eastl::make_shared<FD3D12Texture2DResource>(InResourceCreateProperties, InD3DResourceDesc);
 	}
 
-	FResourceUpload ResourceUpload{};
+	FD3D12ResourceUpload ResourceUpload{};
 	ResourceUpload.Resource = D3D12TextureResource;
-	ResourceUpload.SubresourceData = SubresourceDataList[0]; // @todo support mips
+	ResourceUpload.SubresourceContainer = eastl::move(SubresourceDataList[0]); // @todo support mips
 	ResourceUpload.ResourceBarriersBeforeUpload = eastl::move(ResourceBarriersBeforeUpload);
 	ResourceUpload.ResourceBarriersAfterUpload = eastl::move(ResourceBarriersAfterUpload);
 
-	ResourceUploadBatcher.AddPendingResourceUpload(ResourceUpload);
+	ResourceUploadBatcher.AddPendingResourceUpload(eastl::move(ResourceUpload));
 
 	// Copy initial data to resource memory
 

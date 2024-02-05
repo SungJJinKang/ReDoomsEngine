@@ -207,9 +207,11 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12TextureManager.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12PerFrameConstantBufferManager.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12GlobalVariables.cpp" />
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBufferManager.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\D3D12TestRenderer.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12CommandContext.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.cpp" />
@@ -259,11 +261,13 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Rendering\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12TextureManager.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12PerFrameConstantBufferManager.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12GlobalVariables.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Macros.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12ManagerInterface.h" />
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBufferManager.h" />
     <ClInclude Include="Source\Runtime\Rendering\D3D12TestRenderer.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12CommandContext.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.h" />
