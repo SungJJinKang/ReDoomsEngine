@@ -9,6 +9,10 @@
 #include "D3D12Resource/D3D12Resource.h"
 #include "D3D12CommandList.h"
 
+void FD3D12StateCache::Reset()
+{
+}
+
 void FD3D12StateCache::ApplyConstantBuffer(FD3D12CommandContext& const InCommandContext, const EShaderFrequency InShaderFrequency, const FD3D12RootSignature* const InRootSignature, const eastl::vector<FConstantBufferBindPointInfo>& BindPoints)
 {
 	// @todo : set only dirty slot
@@ -22,7 +26,7 @@ void FD3D12StateCache::ApplyConstantBuffer(FD3D12CommandContext& const InCommand
 
 		const D3D12_GPU_VIRTUAL_ADDRESS GPUVirtualAddress = BindInfo.ConstantBufferResource->GPUVirtualAddress();
 		EA_ASSERT(IsAligned(GPUVirtualAddress, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
-		InCommandContext.CommandList->GetD3DCommandList()->SetGraphicsRootConstantBufferView(BaseIndex + BindInfo.ReflectionData->ResourceBindingDesc.BindPoint, GPUVirtualAddress);
+		InCommandContext.GraphicsCommandList->GetD3DCommandList()->SetGraphicsRootConstantBufferView(BaseIndex + BindInfo.ReflectionData->ResourceBindingDesc.BindPoint, GPUVirtualAddress);
 	}
 
 }

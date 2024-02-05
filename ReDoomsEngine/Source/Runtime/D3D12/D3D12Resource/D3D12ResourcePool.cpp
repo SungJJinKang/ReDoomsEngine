@@ -21,7 +21,6 @@ bool FD3D12ResourcePool::AllocateBlock(const uint64_t InSize, const uint64_t InA
 				OutAllocatedBlock.OwnerResourcePoolHeapContainer = ResourcePoolHeapContainer;
 				OutAllocatedBlock.Size = AlignedSize;
 				OutAllocatedBlock.OffsetFromBase = FreedBlock.OffsetFromBase;
-				EA_ASSERT(IsAligned(OutAllocatedBlock.OffsetFromBase, HeapDesc.Alignment));
 
 				if (FreedBlock.Size > AlignedSize)
 				{

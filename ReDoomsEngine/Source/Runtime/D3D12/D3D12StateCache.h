@@ -24,6 +24,8 @@ public:
 		FD3D12ConstantBufferResource* ConstantBufferResource;
 		const FD3D12ConstantBufferReflectionData* ReflectionData;
 	};
+
+	void Reset();
 	void ApplyConstantBuffer(FD3D12CommandContext& const InCommandContext, const EShaderFrequency InShaderFrequency, const FD3D12RootSignature* const InRootSignature, const eastl::vector<FConstantBufferBindPointInfo>& BindPoints);
 	void Flush();
 

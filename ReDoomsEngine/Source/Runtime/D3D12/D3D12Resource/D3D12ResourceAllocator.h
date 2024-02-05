@@ -20,7 +20,7 @@ public:
 
 	eastl::shared_ptr<FD3D12Texture2DResource> Allocate(
 		FD3D12CommandContext& InCommandContext,
-		const eastl::vector<D3D12_SUBRESOURCE_DATA>& SubresourceDataList,
+		eastl::vector<FD3D12SubresourceContainer>&& SubresourceDataList,
 		const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties,
 		CD3DX12_RESOURCE_DESC InD3DResourceDesc);
 

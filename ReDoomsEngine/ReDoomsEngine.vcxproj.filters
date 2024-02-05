@@ -153,16 +153,22 @@
     <ClCompile Include="Source\Runtime\Rendering\D3D12TestRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBufferManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Runtime\D3D12\D3D12GlobalVariables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Runtime\Rendering\TextureLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12TextureManager.cpp">
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12PerFrameConstantBufferManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1220,9 +1226,6 @@
     <ClInclude Include="Source\Runtime\Rendering\D3D12TestRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBufferManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Runtime\D3D12\D3D12Macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1235,7 +1238,16 @@
     <ClInclude Include="Source\Runtime\Rendering\TextureLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12TextureManager.h">
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12PerFrameConstantBufferManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

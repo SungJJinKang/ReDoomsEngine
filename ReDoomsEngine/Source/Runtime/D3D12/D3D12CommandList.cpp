@@ -16,10 +16,10 @@ void FD3D12CommandList::InitCommandList()
 	EA_ASSERT(CommandList == nullptr);
 	VERIFYD3D12RESULT(GetD3D12Device()->CreateCommandList(0, GetD3D12CommandListType(GetQueueType()), OwnerCommandAllocator->GetD3DCommandAllocator(), nullptr, IID_PPV_ARGS(&CommandList)));
 
-
 	// Command lists are created in the recording state, but there is nothing
 	// to record yet. The main loop expects it to be closed, so close it now.
 	CommandList->Close();
+	ResetRecordingCommandList(nullptr);
 }
 
 ED3D12QueueType FD3D12CommandList::GetQueueType() const
@@ -29,18 +29,17 @@ ED3D12QueueType FD3D12CommandList::GetQueueType() const
 
 void FD3D12CommandList::ResetRecordingCommandList(FD3D12PSO* const InInitialPSO)
 {
-	VERIFYD3D12RESULT(CommandList->Reset(OwnerCommandAllocator->GetD3DCommandAllocator(), InInitialPSO->PSOObject.Get()));
+	// By using Reset, you can re-use command list tracking structures without any allocations. 
+	// Unlike ID3D12CommandAllocator::Reset, you can call Reset while the command list is still being executed. 
+	// A typical pattern is to submit a command list and then immediately reset it to reuse the allocated memory for another command list.
+	VERIFYD3D12RESULT(CommandList->Reset(OwnerCommandAllocator->GetD3DCommandAllocator(), InInitialPSO ? InInitialPSO->PSOObject.Get() : nullptr));
+
+	OwnerCommandAllocator->FreeCommandList(shared_from_this());
 }
 
 void FD3D12CommandList::FinishRecordingCommandList(FD3D12CommandQueue* const InCommandQueue)
 {
 	VERIFYD3D12RESULT(CommandList->Close());
-	Fence.Signal(InCommandQueue, false);
-}
-
-void FD3D12CommandList::WaitOnCompletation()
-{
-	Fence.WaitOnLastSignal();
 }
 
 FD3D12CommandAllocator::FD3D12CommandAllocator(const ED3D12QueueType InQueueType)
@@ -54,44 +53,32 @@ void FD3D12CommandAllocator::InitCommandAllocator()
 	VERIFYD3D12RESULT(GetD3D12Device()->CreateCommandAllocator(GetD3D12CommandListType(QueueType), IID_PPV_ARGS(&CommandAllocator)));
 }
 
-FD3D12CommandList* FD3D12CommandAllocator::GetOrCreateNewCommandList()
+eastl::shared_ptr<FD3D12CommandList> FD3D12CommandAllocator::GetOrCreateNewCommandList()
 {
-	FD3D12CommandList* CommandList = nullptr;
+	eastl::shared_ptr<FD3D12CommandList> CommandList{};
 
-	if (FreedCommandListPool.size() > 0)
+	for (size_t FreedCommandListIndex = 0; FreedCommandListIndex < FreedCommandListPool.size(); ++FreedCommandListIndex)
 	{
-		eastl::unique_ptr<FD3D12CommandList> FreedCommandAllocator = eastl::move(FreedCommandListPool.front());
-		FreedCommandListPool.pop();
-
-		CommandList = AllocatedCommandListPool.emplace_back(eastl::move(FreedCommandAllocator)).get();
+		if (FreedCommandListPool[FreedCommandListIndex]->Fence.IsCompleteLastSignal())
+		{
+			CommandList = FreedCommandListPool[FreedCommandListIndex];
+			FreedCommandListPool.erase(FreedCommandListPool.begin() + FreedCommandListIndex);
+			break;
+		}
 	}
-	else
+
+	if(!CommandList)
 	{
-		CommandList = AllocatedCommandListPool.emplace_back(eastl::make_unique<FD3D12CommandList>(this)).get();
+		CommandList = AllocatedCommandListPool.emplace_back(eastl::make_shared<FD3D12CommandList>(this));
 		CommandList->InitCommandList();
 	}
 
 	return CommandList;
 }
 
-void FD3D12CommandAllocator::FreeCommandList(FD3D12CommandList* const InCommandList, FD3D12PSO* const InInitialPSO)
+void FD3D12CommandAllocator::FreeCommandList(eastl::shared_ptr<FD3D12CommandList> InCommandList)
 {
-	bool bSuccess = false;
-
-	for (size_t Index = 0; Index < AllocatedCommandListPool.size(); ++Index)
-	{
-		if (AllocatedCommandListPool[Index].get() == InCommandList)
-		{
-			InCommandList->ResetRecordingCommandList(InInitialPSO);
-
-			FreedCommandListPool.emplace(eastl::move(AllocatedCommandListPool[Index]));
-			AllocatedCommandListPool.erase(AllocatedCommandListPool.begin() + Index);
-			bSuccess = true;
-			break;
-		}
-	}
-
-	EA_ASSERT(bSuccess);
+	FreedCommandListPool.emplace_back(InCommandList);
 }
 
 void FD3D12CommandAllocator::ResetCommandAllocator(const bool bWaitForCompletationOfCommandLists)
@@ -100,13 +87,13 @@ void FD3D12CommandAllocator::ResetCommandAllocator(const bool bWaitForCompletati
 	// 	From this call to Reset, the runtime and driver determine that the graphics processing unit(GPU) is no longer executing any command lists that have recorded commands with the command allocator.
 	// 	Unlike ID3D12GraphicsCommandList::Reset, it is not recommended that you call Reset on the command allocator while a command list is still being executed.
 
-	if (bWaitForCompletationOfCommandLists)
-	{
-		for (eastl::unique_ptr<FD3D12CommandList>& CommandList : AllocatedCommandListPool)
-		{
-			CommandList->WaitOnCompletation();
-		}
-	}
+ 	if (bWaitForCompletationOfCommandLists)
+ 	{
+ 		for (eastl::shared_ptr<FD3D12CommandList>& CommandList : AllocatedCommandListPool)
+ 		{
+ 			CommandList->Fence.WaitOnLastSignal();
+ 		}
+ 	}
 
 	VERIFYD3D12RESULT(CommandAllocator->Reset());
 

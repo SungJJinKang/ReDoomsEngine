@@ -13,7 +13,7 @@ class FD3D12CommandAllocator;
 struct FFrameResourceContainer
 {
 	FD3D12CommandAllocator* GraphicsCommandAllocator;
-	FD3D12CommandList* GraphicsCommandList; // currently support only graphcis command list
+	eastl::shared_ptr<FD3D12CommandList> GraphicsCommandList; // currently support only graphcis command list
 	FD3D12Fence FrameWorkEndFence;
 
 	void Init();
