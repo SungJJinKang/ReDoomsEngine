@@ -16,7 +16,7 @@ struct FD3D12ConstantBufferBlock
 	uint64_t OffsetFromBase;
 };
 
-struct FD3D12ConstantBufferRingBuffer
+struct FD3D12PerFrameConstantBuffer
 {
 	eastl::shared_ptr<FD3D12ConstantBufferResource> ConstantBufferResource{};
 	uint64_t CurrentOffset = 0;
@@ -24,7 +24,7 @@ struct FD3D12ConstantBufferRingBuffer
 	void Reset();
 };
 
-class FD3D12ConstantBufferRingBufferManager : public EA::StdC::Singleton<FD3D12ConstantBufferRingBufferManager>, public ID3D12ManagerInterface
+class FD3D12PerFrameConstantBufferManager : public EA::StdC::Singleton<FD3D12PerFrameConstantBufferManager>, public ID3D12ManagerInterface
 {
 public:
 
@@ -37,6 +37,6 @@ public:
 
 private:
 
-	eastl::array<FD3D12ConstantBufferRingBuffer, GNumBackBufferCount> ConstantBufferRingBufferList;
+	eastl::array<FD3D12PerFrameConstantBuffer, GNumBackBufferCount> ConstantBufferRingBufferList;
 };
 
