@@ -50,7 +50,7 @@ void FD3D12Swapchain::Init()
             ComPtr<ID3D12Resource> SwapChainBuffer{};
 
             VERIFYD3D12RESULT(D3DSwapchain->GetBuffer(BufferIndex, IID_PPV_ARGS(&SwapChainBuffer)));
-            RenderTargets.emplace_back(SwapChainBuffer);
+            RenderTargets.emplace_back(SwapChainBuffer).InitResource();
         }
     }
     

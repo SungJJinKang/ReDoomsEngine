@@ -9,8 +9,8 @@
 #include "D3D12PSO.h"
 #include "D3D12RootSignature.h"
 #include "D3D12CommandList.h"
-#include "D3D12Resource/D3D12ConstantBufferRingBufferManager.h"
-
+#include "D3D12Resource/D3D12PerFrameConstantBufferManager.h"
+#include "D3D12Resource/D3D12ResourceAllocator.h"
 
 FD3D12Manager::FD3D12Manager() = default;
 FD3D12Manager::~FD3D12Manager() = default;
@@ -88,9 +88,15 @@ void FD3D12Manager::Init()
     }
 
     {
-        D3D12ConstantBufferRingBufferManager = eastl::make_unique<FD3D12ConstantBufferRingBufferManager>();
-        D3D12ConstantBufferRingBufferManager->Init();
-        TickedManagerList.emplace_back(D3D12ConstantBufferRingBufferManager.get());
+        D3D12PerFrameConstantBufferManager = eastl::make_unique<FD3D12PerFrameConstantBufferManager>();
+        D3D12PerFrameConstantBufferManager->Init();
+        TickedManagerList.emplace_back(D3D12PerFrameConstantBufferManager.get());
+    }
+
+    {
+        D3D12ResourceAllocator = eastl::make_unique<FD3D12ResourceAllocator>();
+        D3D12ResourceAllocator->Init();
+        TickedManagerList.emplace_back(D3D12ResourceAllocator.get());
     }
 }
 
