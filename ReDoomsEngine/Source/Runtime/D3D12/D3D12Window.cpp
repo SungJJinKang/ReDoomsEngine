@@ -1,8 +1,10 @@
 #include "D3D12Window.h"
 #include "WindowsApplication.h"
+#include "Renderer.h"
 
-FD3D12Window::FD3D12Window(const long InWidth, const long InHeight, const wchar_t* const InWindowTitle)
+FD3D12Window::FD3D12Window(const long InWidth, const long InHeight, const wchar_t* const InWindowTitle, FRenderer* const InRenderer)
     :
+    TargetRenderer(InRenderer),
     WindowHandle(),
     Width(InWidth),
     Height(InHeight),
@@ -38,7 +40,7 @@ void FD3D12Window::Init()
         nullptr,        // We have no parent window.
         nullptr,        // We aren't using menus.
         FWindowsApplication::HInstance,
-        NULL);
+        TargetRenderer);
     
     RD_CLOG(!WindowHandle, ELogVerbosity::Fatal, EA_WCHAR("\"CreateWindow\" fail (Error Code : %lu)"), GetLastError());
 
@@ -57,6 +59,8 @@ void FD3D12Window::OnEndFrame()
 
 LRESULT FD3D12Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    FRenderer* Renderer = reinterpret_cast<FRenderer*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+
     switch (message)
     {
     case WM_CREATE:
@@ -76,7 +80,15 @@ LRESULT FD3D12Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
         return 0;
 
     case WM_PAINT:
-        
+        if (Renderer && (Renderer->GetCurrentRendererState() != ERendererState::Initializing))
+        {
+            Renderer->OnPreStartFrame();
+            Renderer->OnStartFrame();
+            //bExit = !(Renderer->Draw());
+            Renderer->Draw();
+            Renderer->OnEndFrame();
+            Renderer->OnPostEndFrame();
+        }
         return 0;
 
     case WM_DESTROY:

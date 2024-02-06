@@ -10,16 +10,22 @@ void FFrameResourceContainer::Init()
 
 void FRenderer::Init()
 {
-	D3D12Manager.Init();
+	CurrentRendererState = ERendererState::Initializing;
+
+	D3D12Manager.Init(this);
 
 	for (FFrameResourceContainer& FrameContainer : FrameContainerList)
 	{
 		FrameContainer.Init();
 	}
+
+	CurrentRendererState = ERendererState::FinishInitialzing;
 }
 
 void FRenderer::OnPreStartFrame()
 {
+	CurrentRendererState = ERendererState::OnPreStartFrame;
+
 	if (GCurrentFrameIndex >= GNumBackBufferCount)
 	{
 		FFrameResourceContainer& FrameContainer = FrameContainerList[(GCurrentFrameIndex - GNumBackBufferCount) % GNumBackBufferCount];
@@ -33,6 +39,8 @@ void FRenderer::OnPreStartFrame()
 
 void FRenderer::OnStartFrame()
 {
+	CurrentRendererState = ERendererState::OnStartFrame;
+
 	D3D12Manager.OnStartFrame();
 
 	// @todo : Block if gpu work of "GCurrentFrameIndex - GNumBackBufferCount" Frame doesn't finish yet
@@ -46,33 +54,46 @@ void FRenderer::OnStartFrame()
 
 bool FRenderer::Draw()
 {
+	CurrentRendererState = ERendererState::Draw;
+
 	return true;
 }
 
 void FRenderer::OnPostEndFrame()
 {
+	CurrentRendererState = ERendererState::OnPostEndFrame;
+
 	D3D12Manager.OnPostEndFrame();
 }
 
 void FRenderer::OnEndFrame()
 {
+	CurrentRendererState = ERendererState::OnEndFrame;
+
+	D3D12Manager.OnEndFrame();
+
 	FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);
 
 	eastl::vector<eastl::shared_ptr<FD3D12CommandList>> CommandLists = { CurrentFrameCommandContext.GraphicsCommandList };
 	TargetCommandQueue->ExecuteCommandLists(CommandLists);
 
-	GetCurrentFrameContainer().FrameWorkEndFence.Signal(TargetCommandQueue, false);
-
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 	SwapChain->Present(1);
 	SwapChain->UpdateCurrentBackbufferIndex();
 
-	D3D12Manager.OnEndFrame();
+	GetCurrentFrameContainer().FrameWorkEndFence.Signal(TargetCommandQueue, false);
 }
 
 void FRenderer::Destroy()
 {
+	CurrentRendererState = ERendererState::Destroying;
+
 	GetCurrentFrameContainer().FrameWorkEndFence.WaitOnLastSignal();
+}
+
+FFrameResourceContainer& FRenderer::GetLastFrameContainer()
+{
+	return FrameContainerList[(GCurrentFrameIndex - 1) % GNumBackBufferCount];
 }
 
 FFrameResourceContainer& FRenderer::GetCurrentFrameContainer()

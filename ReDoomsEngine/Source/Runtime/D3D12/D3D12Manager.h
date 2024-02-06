@@ -13,6 +13,7 @@ class FD3D12RootSignatureManager;
 class FD3D12CommandListManager;
 class FD3D12PerFrameConstantBufferManager;
 class FD3D12ResourceAllocator;
+class FRenderer;
 
 class FD3D12Manager : public EA::StdC::Singleton<FD3D12Manager>, public ID3D12ManagerInterface
 {
@@ -22,7 +23,7 @@ public:
 	FD3D12Manager(FD3D12Manager&&);
 	FD3D12Manager& operator=(FD3D12Manager&&);
 	~FD3D12Manager();
-	void Init();
+	void Init(FRenderer* const InRenderer);
 	virtual void OnPreStartFrame();
 	virtual void OnStartFrame();
 	virtual void OnEndFrame();

@@ -3,11 +3,12 @@
 #include "D3D12Include.h"
 #include "D3D12ManagerInterface.h"
 
+class FRenderer;
 class FD3D12Window : public EA::StdC::Singleton<FD3D12Window>, public ID3D12ManagerInterface
 {
 public:
 
-	FD3D12Window(const long InWidth, const long InHeight, const wchar_t* const InWindowTitle);
+	FD3D12Window(const long InWidth, const long InHeight, const wchar_t* const InWindowTitle, FRenderer* const InRenderer);
 	void Init();
 
 	virtual void OnStartFrame();
@@ -22,6 +23,7 @@ public:
 
 private:
 
+	FRenderer* const TargetRenderer;
 	HWND WindowHandle;
 
 	int32_t Width;

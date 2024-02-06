@@ -15,10 +15,10 @@
 FD3D12Manager::FD3D12Manager() = default;
 FD3D12Manager::~FD3D12Manager() = default;
 
-void FD3D12Manager::Init()
+void FD3D12Manager::Init(FRenderer* const InRenderer)
 {
     {
-        D3D12Window = eastl::make_unique<FD3D12Window>(GWindowWidth, GWindowHeight, EA_WCHAR("ReDoomsEngine"));
+        D3D12Window = eastl::make_unique<FD3D12Window>(GWindowWidth, GWindowHeight, EA_WCHAR("ReDoomsEngine"), InRenderer);
         D3D12Window->Init();
         TickedManagerList.emplace_back(D3D12Window.get());
     }

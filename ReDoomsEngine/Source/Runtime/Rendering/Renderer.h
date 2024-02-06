@@ -19,6 +19,18 @@ struct FFrameResourceContainer
 	void Init();
 };
 
+enum class ERendererState
+{
+	Initializing,
+	FinishInitialzing,
+	OnPreStartFrame,
+	OnStartFrame,
+	Draw,
+	OnEndFrame,
+	OnPostEndFrame,
+	Destroying
+};
+
 class FRenderer : public EA::StdC::Singleton<FRenderer>
 {
 public:
@@ -33,9 +45,15 @@ public:
 	virtual void OnPostEndFrame();
 	virtual void Destroy();
 
+	FFrameResourceContainer& GetLastFrameContainer();
 	FFrameResourceContainer& GetCurrentFrameContainer();
 
 	FD3D12Manager D3D12Manager;
+
+	inline ERendererState GetCurrentRendererState() const
+	{
+		return CurrentRendererState;
+	}
 
 protected:
 
@@ -45,5 +63,8 @@ protected:
 	uint32_t VerticeStride;
 
 	eastl::array<FFrameResourceContainer, GNumBackBufferCount> FrameContainerList;
+
+private :
+	ERendererState CurrentRendererState = ERendererState::Initializing;
 };
 

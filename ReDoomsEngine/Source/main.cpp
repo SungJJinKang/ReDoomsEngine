@@ -21,14 +21,15 @@ int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, char*, int32_t nCmdShow)
 	D3D12TestRenderer TestRenderer{};
 	TestRenderer.Init();
 
-	bool bExit = false;
-	while (!bExit)
+	MSG msg = {};
+	while (msg.message != WM_QUIT)
 	{
-		TestRenderer.OnPreStartFrame();
-		TestRenderer.OnStartFrame();
-		bExit = !(TestRenderer.Draw());
-		TestRenderer.OnEndFrame();
-		TestRenderer.OnPostEndFrame();
+		// Process any messages in the queue.
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
 	}
 	TestRenderer.Destroy();
 	

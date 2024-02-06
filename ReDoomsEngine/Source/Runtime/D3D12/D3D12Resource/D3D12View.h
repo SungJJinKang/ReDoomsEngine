@@ -31,7 +31,10 @@ public:
 	virtual void UpdateDescriptor() = 0;
 	void FreeDescriptorHeapBlock()
 	{
-		OfflineDescriptorHeapBlock.ParentDescriptorHeap->FreeDescriptorHeapBlock(OfflineDescriptorHeapBlock);
+		if (eastl::shared_ptr<FD3D12DescriptorHeap> OfflineDescriptorHeap = OfflineDescriptorHeapBlock.ParentDescriptorHeap.lock())
+		{
+			OfflineDescriptorHeap->FreeDescriptorHeapBlock(OfflineDescriptorHeapBlock);
+		}
 	}
 
 	inline FD3D12Resource* GetUnderlyingResource() const

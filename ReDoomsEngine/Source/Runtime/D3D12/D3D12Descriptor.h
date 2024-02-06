@@ -13,11 +13,11 @@ class FD3D12Descriptor
 struct FD3D12DescriptorHeapBlock
 {
 	FD3D12DescriptorHeapBlock() = default;
-	FD3D12DescriptorHeapBlock(FD3D12DescriptorHeap* const InParentDescriptorHeap, int32_t InBaseSlot, uint32 InDescriptorSlotCount, uint32 InUsedDescriptorSlotCount);
+	FD3D12DescriptorHeapBlock(eastl::weak_ptr<FD3D12DescriptorHeap> InParentDescriptorHeap, int32_t InBaseSlot, uint32 InDescriptorSlotCount, uint32 InUsedDescriptorSlotCount);
 
 	void Clear();
 
-	FD3D12DescriptorHeap* ParentDescriptorHeap = nullptr;
+	eastl::weak_ptr<FD3D12DescriptorHeap> ParentDescriptorHeap;
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE CPUDescriptorHandle();
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GPUDescriptorHandle();
@@ -27,7 +27,7 @@ struct FD3D12DescriptorHeapBlock
 	uint32 UsedDescriptorSlotCount = 0; // assume slot is used from first to last
 };
 
-class FD3D12DescriptorHeap
+class FD3D12DescriptorHeap : public eastl::enable_shared_from_this<FD3D12DescriptorHeap>
 {
 public:
 
@@ -102,8 +102,8 @@ protected:
 	D3D12_DESCRIPTOR_HEAP_FLAGS HeapFlag;
 	uint32_t NumDescriptor;
 
-	eastl::vector<eastl::unique_ptr<FD3D12DescriptorHeap>> DescriptorHeapListAllocatedToUser;
-	eastl::queue<eastl::unique_ptr<FD3D12DescriptorHeap>> FreeDescriptorHeapList;
+	eastl::vector<eastl::shared_ptr<FD3D12DescriptorHeap>> DescriptorHeapListAllocatedToUser;
+	eastl::queue<eastl::shared_ptr<FD3D12DescriptorHeap>> FreeDescriptorHeapList;
 
 };
 
