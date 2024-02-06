@@ -20,6 +20,7 @@ void FD3D12CommandList::InitCommandList()
 	// to record yet. The main loop expects it to be closed, so close it now.
 	CommandList->Close();
 	ResetRecordingCommandList(nullptr);
+	OwnerCommandAllocator->FreeCommandList(shared_from_this());
 }
 
 ED3D12QueueType FD3D12CommandList::GetQueueType() const
@@ -33,8 +34,6 @@ void FD3D12CommandList::ResetRecordingCommandList(FD3D12PSO* const InInitialPSO)
 	// Unlike ID3D12CommandAllocator::Reset, you can call Reset while the command list is still being executed. 
 	// A typical pattern is to submit a command list and then immediately reset it to reuse the allocated memory for another command list.
 	VERIFYD3D12RESULT(CommandList->Reset(OwnerCommandAllocator->GetD3DCommandAllocator(), InInitialPSO ? InInitialPSO->PSOObject.Get() : nullptr));
-
-	OwnerCommandAllocator->FreeCommandList(shared_from_this());
 }
 
 void FD3D12CommandList::FinishRecordingCommandList(FD3D12CommandQueue* const InCommandQueue)
@@ -78,6 +77,7 @@ eastl::shared_ptr<FD3D12CommandList> FD3D12CommandAllocator::GetOrCreateNewComma
 
 void FD3D12CommandAllocator::FreeCommandList(eastl::shared_ptr<FD3D12CommandList> InCommandList)
 {
+	EA_ASSERT(eastl::find(FreedCommandListPool.begin(), FreedCommandListPool.end(), InCommandList) == FreedCommandListPool.end());
 	FreedCommandListPool.emplace_back(InCommandList);
 }
 

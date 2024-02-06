@@ -10,6 +10,8 @@ void FFrameResourceContainer::Init()
 
 void FRenderer::Init()
 {
+	SCOPED_MEMORY_TRACE(Renderer_Init)
+
 	CurrentRendererState = ERendererState::Initializing;
 
 	D3D12Manager.Init(this);
@@ -24,6 +26,8 @@ void FRenderer::Init()
 
 void FRenderer::OnPreStartFrame()
 {
+	SCOPED_MEMORY_TRACE(Renderer_OnPreStartFrame)
+
 	CurrentRendererState = ERendererState::OnPreStartFrame;
 
 	if (GCurrentFrameIndex >= GNumBackBufferCount)
@@ -39,6 +43,8 @@ void FRenderer::OnPreStartFrame()
 
 void FRenderer::OnStartFrame()
 {
+	SCOPED_MEMORY_TRACE(Renderer_OnStartFrame)
+
 	CurrentRendererState = ERendererState::OnStartFrame;
 
 	D3D12Manager.OnStartFrame();
@@ -54,6 +60,8 @@ void FRenderer::OnStartFrame()
 
 bool FRenderer::Draw()
 {
+	SCOPED_MEMORY_TRACE(Renderer_Draw)
+
 	CurrentRendererState = ERendererState::Draw;
 
 	return true;
@@ -61,6 +69,8 @@ bool FRenderer::Draw()
 
 void FRenderer::OnPostEndFrame()
 {
+	SCOPED_MEMORY_TRACE(Renderer_OnPostEndFrame)
+
 	CurrentRendererState = ERendererState::OnPostEndFrame;
 
 	D3D12Manager.OnPostEndFrame();
@@ -68,6 +78,8 @@ void FRenderer::OnPostEndFrame()
 
 void FRenderer::OnEndFrame()
 {
+	SCOPED_MEMORY_TRACE(Renderer_OnEndFrame)
+
 	CurrentRendererState = ERendererState::OnEndFrame;
 
 	D3D12Manager.OnEndFrame();
@@ -86,6 +98,8 @@ void FRenderer::OnEndFrame()
 
 void FRenderer::Destroy()
 {
+	SCOPED_MEMORY_TRACE(Renderer_Destroy)
+
 	CurrentRendererState = ERendererState::Destroying;
 
 	GetCurrentFrameContainer().FrameWorkEndFence.WaitOnLastSignal();
