@@ -152,7 +152,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;EA_DEBUG;_HAS_EXCEPTIONS=0;MIMALLOC_VERBOSE=1</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\DirectXTex;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\IO;$(SolutionDir)Source\Runtime\;$(SolutionDir)Source\Runtime\Utils\cityhash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\include;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\DirectXTex;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\IO;$(SolutionDir)Source\Runtime\;$(SolutionDir)Source\Runtime\Utils\cityhash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>false</ExceptionHandling>
@@ -171,7 +171,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </FxCompile>
     <PostBuildEvent>
       <Command>xcopy /y /d /E /H /C /I "$(ProjectDir)Assets" "$(TargetDir)Assets"
-xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\bin\x64" "$(TargetDir)"</Command>
+xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\out\build\x64-Debug\bin" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -182,7 +182,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\DirectXTex;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\IO;$(SolutionDir)Source\Runtime\;$(SolutionDir)Source\Runtime\Utils\cityhash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\include;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\DirectXTex;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\IO;$(SolutionDir)Source\Runtime\;$(SolutionDir)Source\Runtime\Utils\cityhash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>false</ExceptionHandling>
@@ -203,7 +203,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </FxCompile>
     <PostBuildEvent>
       <Command>xcopy /y /d /E /H /C /I "$(ProjectDir)Assets" "$(TargetDir)Assets"
-xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\bin\x64" "$(TargetDir)"</Command>
+xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\out\build\x64-Debug\bin" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
