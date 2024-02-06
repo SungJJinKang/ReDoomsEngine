@@ -20,20 +20,31 @@ cbuffer VertexOffset
     float4 Offset;
 }
 
+bool AddOffset;
 float4 ColorOffset1;
 float4 ColorOffset2;
+float4 ColorOffset3;
 
 PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
 {
     PSInput result;
 
     result.position = position + Offset;
-    result.color = color + ColorOffset1 + ColorOffset2;
+    result.color = color;
+    if(AddOffset)
+    {
+        result.color += ColorOffset1 + ColorOffset2;
+    }
 
     return result;
 }
 
+Texture2D<float4> Texture;
+
 float4 PSMain(PSInput input) : SV_TARGET
 {
-    return input.color + ColorOffset1 + ColorOffset2;
+    //float4 Sample = Texture.Load(input.position);
+    //return input.color + ColorOffset1 + ColorOffset2 + Sample;
+
+    return input.color + ColorOffset1 + ColorOffset2 + ColorOffset3;
 }

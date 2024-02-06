@@ -1250,6 +1250,9 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\HLSLTypeHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />

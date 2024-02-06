@@ -60,13 +60,14 @@ struct FD3D12ConstantBufferReflectionData
 	{
 		eastl::string Name;
 		D3D12_SHADER_VARIABLE_DESC Desc;
+		D3D12_SHADER_TYPE_DESC TypeDesc;
 	};
 
 	bool bIsGlobalVariable;
 	eastl::string Name;
 	D3D12_SHADER_INPUT_BIND_DESC ResourceBindingDesc;
 	D3D12_SHADER_BUFFER_DESC Desc;
-	eastl::vector<FD3D12VariableOfConstantBufferReflectionData> VariableList; // variables declared in cbuffer
+	eastl::vector<FD3D12VariableOfConstantBufferReflectionData> VariableList; // variables declared in cbuffer or global variables
 };
 
 struct FD3D12ShaderReflectionData
@@ -159,7 +160,7 @@ private:
 	FD3D12ShaderReflectionData ShaderReflectionData;
 	FShaderHash ShaderHash;
 
-	eastl::vector_map<const char*, FShaderParameterTemplate*> ShaderParameterMap;
+	eastl::vector_map<eastl::string, FShaderParameterTemplate*> ShaderParameterMap;
 };
 
 class FShaderParameterContainerTemplate
@@ -279,6 +280,7 @@ public:
 		const char* VariableName;
 		FShaderParameterConstantBufferMemberVariableTemplate* ShaderParameterConstantBufferMemberVariableTemplate;
 		uint64_t VariableSize;
+		const std::type_info* VariableTypeInfo;
 	};
 
 	FShaderConstantBuffer()
@@ -291,7 +293,8 @@ public:
 	{
 	}
 
-	void AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize, const char* const InVariableName);
+	void AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize, 
+		const char* const InVariableName, const std::type_info& InTypeId);
 
 	virtual bool IsConstantBuffer() const
 	{
@@ -306,7 +309,7 @@ public:
 	{
 		return bGlobalConstantBuffer;
 	}
-	const eastl::vector_map<const char*, FMemberVariableContainer>& GetMemberVariableMap() const
+	const eastl::vector_map<eastl::string, FMemberVariableContainer>& GetMemberVariableMap() const
 	{
 		return MemberVariableMap;
 	}
@@ -327,7 +330,7 @@ public:
 protected:
 
 	bool bGlobalConstantBuffer;
-	eastl::vector_map<const char*, FMemberVariableContainer> MemberVariableMap;
+	eastl::vector_map<eastl::string, FMemberVariableContainer> MemberVariableMap;
 
 private:
 
@@ -383,12 +386,13 @@ template<typename VariableType>
 class TShaderParameterConstantBufferMemberVariable : public FShaderParameterConstantBufferMemberVariableTemplate
 {
 public:
+
 	TShaderParameterConstantBufferMemberVariable(FShaderConstantBuffer* ConstantBuffer, const char* const InVariableName)
 	{
 		EA_ASSERT(ConstantBuffer);
 		
 		MEM_ZERO(Value);
-		ConstantBuffer->AddMemberVariable(this, sizeof(TShaderParameterConstantBufferMemberVariable<VariableType>), InVariableName);
+		ConstantBuffer->AddMemberVariable(this, sizeof(TShaderParameterConstantBufferMemberVariable<VariableType>), InVariableName, typeid(VariableType));
 	}
 
 	using VariableAlignedType = typename FD3D12ConstantBufferMemberVariableHelper<VariableType>::AlignedType;

@@ -5,6 +5,7 @@
 #include "D3D12RootSignature.h"
 #include "D3D12StateCache.h"
 #include "D3D12CommandContext.h"
+#include "ShaderCompilers/HLSLTypeHelper.h"
 
 FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> InShaderList)
 	: ShaderList(InShaderList)
@@ -88,64 +89,91 @@ void FD3D12ShaderTemplate::AddShaderPreprocessorDefine(const FShaderPreprocessor
 
 void FD3D12ShaderTemplate::ValidateShaderParameter()
 {
+	const FD3D12ShaderReflectionData& ShaderReflectionData = GetD3D12ShaderReflection();
+
 	for (auto& ShaderParameterPair : ShaderParameterMap)
 	{
 		FShaderParameterTemplate* ShaderParameter = ShaderParameterPair.second;
 
+		bool bFoundMatchingReflectionData = false;
+
 		if (ShaderParameter->IsConstantBuffer())
 		{
-			FShaderConstantBuffer* ShaderConstantBuffer = dynamic_cast<FShaderConstantBuffer*>(ShaderParameter);
-		
-			auto ValidateConstantBufferReflectionData = [ShaderConstantBuffer](const FD3D12ConstantBufferReflectionData& ConstantBufferFromReflection) -> bool
-			{
-				bool bFoundConstantBuffer = false;
-				if (ConstantBufferFromReflection.Name == ShaderConstantBuffer->GetVariableName())
-				{
-					bFoundConstantBuffer = true;
+			const FShaderConstantBuffer* const ConstantBuffer = dynamic_cast<FShaderConstantBuffer*>(ShaderParameter);
 
-					for (auto& MemberVariablePair : ShaderConstantBuffer->GetMemberVariableMap())
+			auto ValidateConstantBuffer = [&](const FShaderConstantBuffer& ConstantBuffer, const FD3D12ConstantBufferReflectionData& ReflectionData)
+				{
+					EA_ASSERT(EA::StdC::Strcmp(ReflectionData.Desc.Name, ConstantBuffer.GetVariableName()) == 0);
+
+					struct FConstantBufferMemberVariableTest
 					{
-						bool bFoundMemberVariable = false;
-						for (const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& MemberVariableFromReflection : ConstantBufferFromReflection.VariableList)
-						{
-							if (MemberVariableFromReflection.Name == MemberVariablePair.first)
-							{
-								bFoundMemberVariable = true;
+						const FShaderConstantBuffer::FMemberVariableContainer* ShaderParameterMemberVariable = nullptr;
+						const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData* ReflectionData = nullptr;
+						bool bTested = false;
+					};
+					eastl::hash_map<eastl::string, FConstantBufferMemberVariableTest> TestedMemberVariableMap{};
 
-								EA_ASSERT(MemberVariablePair.second.VariableSize == MemberVariableFromReflection.Desc.Size);
-								break;
-							}
-						}
-
-						EA_ASSERT(bFoundMemberVariable);
+					// collect possible variables
+					for (auto& MemberVariablePair : ConstantBuffer.GetMemberVariableMap())
+					{
+						TestedMemberVariableMap.try_emplace(MemberVariablePair.first).first->second.ShaderParameterMemberVariable = &MemberVariablePair.second;
 					}
-				}
-				return bFoundConstantBuffer;
-			};
+					for (const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& MemberVariable : ReflectionData.VariableList)
+					{
+						TestedMemberVariableMap.try_emplace(MemberVariable.Name.data()).first->second.ReflectionData = &MemberVariable;
+					}
 
-			if (ShaderConstantBuffer->IsGlobalConstantBuffer())
+					for (auto& ConstantBufferMemberVariableTest : TestedMemberVariableMap)
+					{
+						EA_ASSERT(ConstantBufferMemberVariableTest.second.bTested == false);
+
+						const FShaderConstantBuffer::FMemberVariableContainer* const ShaderParameterMemberVariable = ConstantBufferMemberVariableTest.second.ShaderParameterMemberVariable;
+						EA_ASSERT(ShaderParameterMemberVariable);
+						const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData* const MemberVariableReflectionData = ConstantBufferMemberVariableTest.second.ReflectionData;
+						EA_ASSERT(MemberVariableReflectionData);
+
+						EA_ASSERT(*(ShaderParameterMemberVariable->VariableTypeInfo) == MemberVariableReflectionData->TypeDesc);
+					
+						ConstantBufferMemberVariableTest.second.bTested = true;
+					}
+
+					for (auto& ConstantBufferMemberVariableTest : TestedMemberVariableMap)
+					{
+						EA_ASSERT(ConstantBufferMemberVariableTest.second.bTested == true);
+					}
+
+					EA_ASSERT(ReflectionData.Desc.Size == ConstantBuffer.GetSize());
+				};
+
+			if (ConstantBuffer->IsGlobalConstantBuffer())
 			{
-				bool bFoundConstantBuffer = false;
-				if (ValidateConstantBufferReflectionData(ShaderReflectionData.GlobalConstantBuffer))
-				{
-					bFoundConstantBuffer = true;
-				}
-				EA_ASSERT(bFoundConstantBuffer);
+				ValidateConstantBuffer(*ConstantBuffer, ShaderReflectionData.GlobalConstantBuffer);
+				bFoundMatchingReflectionData = true;
 			}
 			else
 			{
-				if (ShaderReflectionData.ConstantBufferList.size() > 0)
+				auto FindConstantBufferWithName = [&](const char* const Name) -> const FD3D12ConstantBufferReflectionData*
 				{
-					bool bFoundConstantBuffer = false;
-					for (const FD3D12ConstantBufferReflectionData& ConstantBufferFromReflection : ShaderReflectionData.ConstantBufferList)
+					const FD3D12ConstantBufferReflectionData* Found = nullptr;
+
+					for (const FD3D12ConstantBufferReflectionData& ReflectionData : ShaderReflectionData.ConstantBufferList)
 					{
-						if (ValidateConstantBufferReflectionData(ConstantBufferFromReflection))
+						if (ReflectionData.Name == Name)
 						{
-							bFoundConstantBuffer = true;
+							Found = &ReflectionData;
 							break;
 						}
 					}
-					EA_ASSERT(bFoundConstantBuffer);
+					return Found;
+				};
+
+				const FD3D12ConstantBufferReflectionData* MatchingConstantBufferReflectionData = FindConstantBufferWithName(ConstantBuffer->GetVariableName());
+				EA_ASSERT(MatchingConstantBufferReflectionData);
+				if (MatchingConstantBufferReflectionData)
+				{
+					EA_ASSERT(MatchingConstantBufferReflectionData->bIsGlobalVariable == false);
+					ValidateConstantBuffer(*ConstantBuffer, *MatchingConstantBufferReflectionData);
+					bFoundMatchingReflectionData = true;
 				}
 			}
 		}
@@ -180,6 +208,8 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 				EA_ASSERT(bFoundMemberVariable);
 			}
 		}
+
+		EA_ASSERT(bFoundMatchingReflectionData);
 	}
 }
 
@@ -286,16 +316,22 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 					for (uint32_t IndexOfVariableInConstantBuffer = 0; IndexOfVariableInConstantBuffer < ConstantBufferDesc.Variables; ++IndexOfVariableInConstantBuffer)
 					{
 						ID3D12ShaderReflectionVariable* const VariableInConstantBuffer = ShaderReflectionConstantBuffer->GetVariableByIndex(IndexOfVariableInConstantBuffer);
+						ID3D12ShaderReflectionType* TypeReflectionData = VariableInConstantBuffer->GetType();
 
-						D3D12_SHADER_VARIABLE_DESC ShaderParameterDesc;
+						D3D12_SHADER_VARIABLE_DESC ShaderParameterDesc{};
 						MEM_ZERO(ShaderParameterDesc);
 						VariableInConstantBuffer->GetDesc(&ShaderParameterDesc);
+
+						D3D12_SHADER_TYPE_DESC TypeDesc{};
+						MEM_ZERO(TypeDesc);
+						TypeReflectionData->GetDesc(&TypeDesc);
 
 						FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBuffer = ConstantBuffer.VariableList[IndexOfVariableInConstantBuffer];
 						VariableOfConstantBuffer.Name = ShaderParameterDesc.Name;
 						ShaderParameterDesc.Name = VariableOfConstantBuffer.Name.c_str();
 
 						VariableOfConstantBuffer.Desc = ShaderParameterDesc;
+						VariableOfConstantBuffer.TypeDesc = TypeDesc;
 					}
 
 					ShaderReflectionData.ConstantBufferCount = eastl::max(ShaderReflectionData.ConstantBufferCount, ResourceBindingDesc.BindPoint + ResourceBindingDesc.BindCount);
@@ -455,6 +491,9 @@ void FShaderParameterContainerTemplate::Init()
 			ShaderParameter->InitD3DResource();
 		}
 	}
+	else
+	{
+	}
 }
 
 void FShaderParameterContainerTemplate::AddShaderParamter(FShaderParameterTemplate* const InShaderParameter)
@@ -500,14 +539,15 @@ void FShaderParameterTemplate::ApplyResource(FD3D12CommandContext& const InComma
 
 }
 
-void FShaderConstantBuffer::AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize, const char* const InVariableName)
+void FShaderConstantBuffer::AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize, 
+	const char* const InVariableName, const std::type_info& VariableTypeInfo)
 {
 	EA_ASSERT(MemberVariableMap.find(InVariableName) == MemberVariableMap.end());
 
 	FMemberVariableContainer MemberVariableContainer;
 	MemberVariableContainer.VariableName = InVariableName;
 	MemberVariableContainer.ShaderParameterConstantBufferMemberVariableTemplate = InShaderParameterConstantBufferMemberVariable;
-	MemberVariableContainer.VariableSize = InVariableSize;
+	MemberVariableContainer.VariableTypeInfo = &VariableTypeInfo;
 
 	MemberVariableMap.emplace(InVariableName, MemberVariableContainer);
 }
