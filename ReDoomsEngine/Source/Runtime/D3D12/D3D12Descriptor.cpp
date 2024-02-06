@@ -19,7 +19,7 @@ static uint32_t GetNumDescriptorsForOfflineHeap(const D3D12_DESCRIPTOR_HEAP_TYPE
 // This should be tweaked for each title as heaps require VRAM. The default value of 512k takes up ~16MB
 static uint32_t GOnlineDescriptorHeapSize = 500 * 1000;
 
-FD3D12DescriptorHeapBlock::FD3D12DescriptorHeapBlock(FD3D12DescriptorHeap* const InParentDescriptorHeap, int32_t InBaseSlot, uint32 InDescriptorSlotCount, uint32 InUsedDescriptorSlotCount)
+FD3D12DescriptorHeapBlock::FD3D12DescriptorHeapBlock(eastl::weak_ptr<FD3D12DescriptorHeap> InParentDescriptorHeap, int32_t InBaseSlot, uint32 InDescriptorSlotCount, uint32 InUsedDescriptorSlotCount)
     : ParentDescriptorHeap(InParentDescriptorHeap), BaseSlot(InBaseSlot), DescriptorSlotCount(InDescriptorSlotCount), UsedDescriptorSlotCount(InUsedDescriptorSlotCount)
 {
 
@@ -27,7 +27,7 @@ FD3D12DescriptorHeapBlock::FD3D12DescriptorHeapBlock(FD3D12DescriptorHeap* const
 
 void FD3D12DescriptorHeapBlock::Clear()
 {
-    ParentDescriptorHeap = nullptr;
+    ParentDescriptorHeap.reset();;
     BaseSlot = 0;
     DescriptorSlotCount = 0;
     UsedDescriptorSlotCount = 0;
@@ -37,13 +37,13 @@ void FD3D12DescriptorHeapBlock::Clear()
 CD3DX12_CPU_DESCRIPTOR_HANDLE FD3D12DescriptorHeapBlock::CPUDescriptorHandle()
 {
     EA_ASSERT(DescriptorSlotCount > 0);
-    return CD3DX12_CPU_DESCRIPTOR_HANDLE{ ParentDescriptorHeap->GetCPUBase(), BaseSlot, ParentDescriptorHeap->GetDescriptorSize() };
+    return CD3DX12_CPU_DESCRIPTOR_HANDLE{ ParentDescriptorHeap.lock()->GetCPUBase(), BaseSlot, ParentDescriptorHeap.lock()->GetDescriptorSize() };
 }
 
 CD3DX12_GPU_DESCRIPTOR_HANDLE FD3D12DescriptorHeapBlock::GPUDescriptorHandle()
 {
     EA_ASSERT(DescriptorSlotCount > 0);
-    return CD3DX12_GPU_DESCRIPTOR_HANDLE{ ParentDescriptorHeap->GetGPUBase(), BaseSlot, ParentDescriptorHeap->GetDescriptorSize() };
+    return CD3DX12_GPU_DESCRIPTOR_HANDLE{ ParentDescriptorHeap.lock()->GetGPUBase(), BaseSlot, ParentDescriptorHeap.lock()->GetDescriptorSize() };
 }
 
 FD3D12DescriptorHeap::FD3D12DescriptorHeap(uint32_t InNumDescriptors, D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
@@ -66,7 +66,7 @@ void FD3D12DescriptorHeap::Init()
     CPUBase = D3DDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
     GPUBase = D3DDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
 
-    FD3D12DescriptorHeapBlock NewBlock{ this, 0, NumDescriptors * DescriptorSize, 0 };
+    FD3D12DescriptorHeapBlock NewBlock{ weak_from_this(), 0, NumDescriptors * DescriptorSize, 0};
     FreeDescriptorHeapBlock(NewBlock);
 }
 
@@ -91,7 +91,7 @@ bool FD3D12DescriptorHeap::AllocateFreeDescriptorHeapBlock(FD3D12DescriptorHeapB
 
             if (FreeHeapBlock.DescriptorSlotCount > InDescriptorCount)
             {
-                FD3D12DescriptorHeapBlock NewlyFreedBlock{ this, FreeHeapBlock.BaseSlot +  static_cast<int32_t>(InDescriptorCount), FreeHeapBlock.DescriptorSlotCount - InDescriptorCount, 0 };
+                FD3D12DescriptorHeapBlock NewlyFreedBlock{ weak_from_this(), FreeHeapBlock.BaseSlot + static_cast<int32_t>(InDescriptorCount), FreeHeapBlock.DescriptorSlotCount - InDescriptorCount, 0};
                 FreeDescriptorHeapBlockList.emplace_back(NewlyFreedBlock);
             }
 
@@ -109,7 +109,6 @@ bool FD3D12DescriptorHeap::AllocateFreeDescriptorHeapBlock(FD3D12DescriptorHeapB
 
 void FD3D12DescriptorHeap::FreeDescriptorHeapBlock(FD3D12DescriptorHeapBlock& InHeapBlock)
 {
-    EA_ASSERT(InHeapBlock.UsedDescriptorSlotCount == 0);
     FreeDescriptorHeapBlockList.emplace_back(InHeapBlock);
 }
 
@@ -128,7 +127,7 @@ FD3D12DescriptorHeapBlock FD3D12DescriptorHeapContainer::AllocateDescriptorHeapB
 
     bool bSuccess = false;
 
-    for (eastl::unique_ptr<FD3D12DescriptorHeap>& AllocatedDescriptorHeap : DescriptorHeapListAllocatedToUser)
+    for (eastl::shared_ptr<FD3D12DescriptorHeap>& AllocatedDescriptorHeap : DescriptorHeapListAllocatedToUser)
     {
         if (AllocatedDescriptorHeap->AllocateFreeDescriptorHeapBlock(NewHeapBlock, InDescriptorCount))
         {
