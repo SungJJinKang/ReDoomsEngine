@@ -1,5 +1,6 @@
 #include "ShaderCompileHelper.h"
-#include "DirectXShaderCompiler/inc/dxcapi.h"
+#include "DirectXShaderCompiler/include/dxc/dxcapi.h"
+#include "DirectXShaderCompiler/include/dxc/dxctools.h"
 #include  <filesystem>
 
 ComPtr<IDxcLibrary> FShaderCompileHelper::GetDxcLibrary()
@@ -37,9 +38,16 @@ ComPtr<IDxcContainerReflection> FShaderCompileHelper::GetDxcContainerReflectionI
 	return Reflection;
 }
 
+ComPtr<IDxcRewriter> FShaderCompileHelper::GetDxcRewriterInstance()
+{
+	static ComPtr<IDxcRewriter> Rewriter;
+	VERIFYD3D12RESULT(DxcCreateInstance(CLSID_DxcRewriter, IID_PPV_ARGS(&Rewriter)));
+	return Rewriter;
+}
+
 FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments InShaderCompileArguments)
 {
-	ComPtr<IDxcBlobEncoding> DxcTextBlob{};
+	ComPtr<IDxcBlobEncoding> ShaderTextBlob{};
 
 	EA_ASSERT(!InShaderCompileArguments.ShaderText.empty());
 	if (InShaderCompileArguments.ShaderTextLength == 0)
@@ -48,7 +56,7 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 	}
 
 	VERIFYD3D12RESULT(GetDxcLibrary()->CreateBlobWithEncodingFromPinned((LPCVOID)InShaderCompileArguments.ShaderText.data(),
-		InShaderCompileArguments.ShaderTextLength, DXC_CP_UTF8, DxcTextBlob.GetAddressOf()));
+		InShaderCompileArguments.ShaderTextLength, DXC_CP_UTF8, ShaderTextBlob.GetAddressOf()));
 
 	std::filesystem::path ShaderTextFilePath{ InShaderCompileArguments.ShaderTextFilePath.data() };
 	ShaderTextFilePath.make_preferred();
@@ -143,6 +151,10 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 
 		// @lh-todo: This fixes a loop unrolling issue that showed up in DOFGatherKernel with cs_6_6 with the latest DXC revision
 		Arguments.emplace_back(EA_WCHAR("-disable-lifetime-markers"));
+
+// 		Arguments.emplace_back(EA_WCHAR("-dxr"));
+// 		Arguments.emplace_back(EA_WCHAR("-remove-unused-globals"));
+
 		Arguments.emplace_back(EA_WCHAR("-encoding"));
 		Arguments.emplace_back(EA_WCHAR("utf8"));
 
@@ -151,6 +163,7 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 		std::filesystem::path ParentDirectory = ShaderTextFilePath.parent_path();
 		Arguments.emplace_back(ParentDirectory.make_preferred().c_str());
 	}
+
 
 	ComPtr<IDxcCompilerArgs> DxcCompilerArgs{};
 
@@ -169,6 +182,57 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 		WcharArguments.push_back(Arg.data());
 	}
 
+	FShaderCompileResult ShaderCompileResult{};
+
+	{
+		ComPtr<IDxcOperationResult> DxcRewriteResult{};
+		VERIFYD3D12RESULT(GetDxcRewriterInstance()->RemoveUnusedGlobals(
+			ShaderTextBlob.Get(),
+			InShaderCompileArguments.ShaderDeclaration.ShaderEntryPoint,
+			DxcDefineList.data(),
+			DxcDefineList.size(),
+			DxcRewriteResult.GetAddressOf()));
+
+		HRESULT DxcResultStatus = 0;
+		VERIFYD3D12RESULT(DxcRewriteResult->GetStatus(&DxcResultStatus));
+
+		if (SUCCEEDED(DxcResultStatus))
+		{
+			ComPtr<IDxcBlob> RewrittenShaderTextBlob{};
+			VERIFYD3D12RESULT(DxcRewriteResult->GetResult(RewrittenShaderTextBlob.GetAddressOf()));
+
+			VERIFYD3D12RESULT(GetDxcLibrary()->GetBlobAsUtf8(RewrittenShaderTextBlob.Get(), ShaderTextBlob.GetAddressOf()));
+
+			// print rewritten shader text
+ 			//eastl::string8 RewrittenShaderText{ reinterpret_cast<const char8_t*>(ShaderTextBlob->GetBufferPointer()), ShaderTextBlob->GetBufferSize() };
+ 			//RD_LOG(ELogVerbosity::Log, EA_WCHAR("%s"), RewrittenShaderText);
+		}
+		else
+		{
+			ComPtr<IDxcBlobEncoding> ErrorBuffer{};
+
+			VERIFYD3D12RESULT(DxcRewriteResult->GetErrorBuffer(ErrorBuffer.GetAddressOf()));
+
+			eastl::string8 ErrorStr{ reinterpret_cast<const char8_t*>(ErrorBuffer->GetBufferPointer()), ErrorBuffer->GetBufferSize() };
+			RD_LOG(ELogVerbosity::Fatal, EA_WCHAR("\
+------------------------------------\n \
+- Shader Rewrite Fail -\n \
+ShaderName : %s\n \
+ShaderPath : %s\n \
+ShaderFrequency : %s\n \
+Reason :\n\n \
+%s\n \
+------------------------------------\n"),
+InShaderCompileArguments.ShaderDeclaration.ShaderName,
+InShaderCompileArguments.ShaderDeclaration.ShaderTextFileRelativePath,
+GetShaderFrequencyString(InShaderCompileArguments.ShaderDeclaration.ShaderFrequency),
+ANSI_TO_WCHAR(ErrorStr.c_str()));
+
+			ShaderCompileResult.bIsValid = false;
+			return ShaderCompileResult;
+		}
+	}
+
 	VERIFYD3D12RESULT(GetDxcUtiles()->BuildArguments(ShaderTextFilePath.filename().c_str(),
 		InShaderCompileArguments.ShaderDeclaration.ShaderEntryPoint,
 		FShaderCompileArguments::ConvertShaderFrequencyToShaderProfile(InShaderCompileArguments.ShaderDeclaration.ShaderFrequency),
@@ -182,12 +246,12 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 
 	// Create DxcBuffer from IDxcBlob
 	DxcBuffer DxcShaderBuffer = {};
-	DxcShaderBuffer.Ptr = DxcTextBlob->GetBufferPointer();
-	DxcShaderBuffer.Size = DxcTextBlob->GetBufferSize();
+	DxcShaderBuffer.Ptr = ShaderTextBlob->GetBufferPointer();
+	DxcShaderBuffer.Size = ShaderTextBlob->GetBufferSize();
 
 	BOOL bKnown = 0;
 	UINT32 Encoding = 0;
-	if (SUCCEEDED(DxcTextBlob->GetEncoding(&bKnown, &Encoding)))
+	if (SUCCEEDED(ShaderTextBlob->GetEncoding(&bKnown, &Encoding)))
 	{
 		if (bKnown)
 		{
@@ -201,7 +265,6 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 	HRESULT DxcResultStatus = 0;
 	VERIFYD3D12RESULT(DxcResult->GetStatus(&DxcResultStatus));
 
-	FShaderCompileResult ShaderCompileResult{};
 
 	if (SUCCEEDED(DxcResultStatus))
 	{

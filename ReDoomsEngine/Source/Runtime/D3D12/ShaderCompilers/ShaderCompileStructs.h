@@ -2,8 +2,8 @@
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 
-#include "DirectXShaderCompiler/inc/d3d12shader.h"
-#include "DirectXShaderCompiler/inc/dxcapi.h"
+#include "DirectXShaderCompiler/external/DirectX-Headers/include/directx/d3d12shader.h"
+#include "DirectXShaderCompiler/include/dxc/dxcapi.h"
 
 struct FShaderPreprocessorDefine
 {

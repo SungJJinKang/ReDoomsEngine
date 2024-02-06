@@ -1,7 +1,7 @@
 #include "D3D12PSO.h"
 #include "D3D12Device.h"
 #include "D3D12RootSignature.h"
-#include "ShaderCompilers/DirectXShaderCompiler/inc/dxcapi.h"
+#include "ShaderCompilers/DirectXShaderCompiler/include/dxc/dxcapi.h"
 
 static_assert(std::is_pod<FD3D12PSOInitializer::FDesc>::value);
 
