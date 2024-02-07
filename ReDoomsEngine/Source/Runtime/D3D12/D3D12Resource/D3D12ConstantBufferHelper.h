@@ -47,6 +47,15 @@ struct FD3D12ConstantBufferMemberVariableHelper<float>
 };
 
 template <>
+struct FD3D12ConstantBufferMemberVariableHelper<double>
+{
+	static constexpr bool CanBeMemberOfConstantBuffer = true;
+	static constexpr size_t Alignment = 8;
+
+	using AlignedType = eastl::aligned_storage_t<sizeof(double), Alignment>;
+};
+
+template <>
 struct FD3D12ConstantBufferMemberVariableHelper<XMFLOAT2>
 {
 	static constexpr bool CanBeMemberOfConstantBuffer = true;

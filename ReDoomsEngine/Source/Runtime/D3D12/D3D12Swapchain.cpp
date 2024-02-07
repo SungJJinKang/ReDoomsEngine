@@ -50,7 +50,7 @@ void FD3D12Swapchain::Init()
             ComPtr<ID3D12Resource> SwapChainBuffer{};
 
             VERIFYD3D12RESULT(D3DSwapchain->GetBuffer(BufferIndex, IID_PPV_ARGS(&SwapChainBuffer)));
-            RenderTargets.emplace_back(SwapChainBuffer);
+            RenderTargets.emplace_back(SwapChainBuffer).InitResource();
         }
     }
     
@@ -59,12 +59,12 @@ void FD3D12Swapchain::Init()
     FD3D12Manager::GetInstance()->GetDXGIFactory()->MakeWindowAssociation(Window->GetWindowHandle(), DXGI_MWA_NO_WINDOW_CHANGES);
 }
 
-void FD3D12Swapchain::OnStartFrame()
+void FD3D12Swapchain::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12Swapchain::OnEndFrame()
+void FD3D12Swapchain::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }

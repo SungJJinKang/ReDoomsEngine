@@ -2,7 +2,7 @@
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 #include "D3D12Shader.h"
-#include "D3D12ManagerInterface.h"
+#include "D3D12RendererStateCallbackInterface.h"
 
 class FD3D12RootSignature;
 
@@ -31,6 +31,8 @@ struct FD3D12PSOInitializer
 
 	uint64 CachedHash;
 
+    bool IsValid() const;
+    void Reset();
     void FinishCreating();
 };
 
@@ -68,14 +70,14 @@ namespace eastl
     };
 }
 
-class FD3D12PSOManager : public EA::StdC::Singleton<FD3D12PSOManager>, public ID3D12ManagerInterface
+class FD3D12PSOManager : public EA::StdC::Singleton<FD3D12PSOManager>, public ID3D12RendererStateCallbackInterface
 {
 public:
 
     FD3D12PSO* GetOrCreatePSO(const FD3D12PSOInitializer& InD3D12PSOInitializer);
 
-    virtual void OnStartFrame();
-    virtual void OnEndFrame();
+    virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+    virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 
 private:
 

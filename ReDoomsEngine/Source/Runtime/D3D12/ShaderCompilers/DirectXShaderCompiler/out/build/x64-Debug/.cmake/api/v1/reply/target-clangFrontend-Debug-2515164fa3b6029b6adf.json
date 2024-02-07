@@ -1,0 +1,693 @@
+{
+	"archive" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "/machine:x64",
+				"role" : "flags"
+			}
+		]
+	},
+	"artifacts" : 
+	[
+		{
+			"path" : "lib/clangFrontend.lib"
+		}
+	],
+	"backtrace" : 3,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"llvm_add_library",
+			"add_clang_library",
+			"install",
+			"add_dependencies",
+			"add_compile_options",
+			"add_definitions",
+			"llvm_update_compile_flags",
+			"include_directories",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"tools/clang/CMakeLists.txt",
+			"tools/clang/lib/Frontend/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 12,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 372,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 417,
+				"parent" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 378,
+				"parent" : 1
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 512,
+				"parent" : 2
+			},
+			{
+				"file" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 3,
+				"line" : 114,
+				"parent" : 6
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 426,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 50,
+				"parent" : 8
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 8,
+				"file" : 1,
+				"line" : 402,
+				"parent" : 10
+			},
+			{
+				"command" : 8,
+				"file" : 3,
+				"line" : 613,
+				"parent" : 6
+			},
+			{
+				"command" : 8,
+				"file" : 3,
+				"line" : 617,
+				"parent" : 6
+			},
+			{
+				"command" : 8,
+				"file" : 3,
+				"line" : 619,
+				"parent" : 6
+			},
+			{
+				"command" : 8,
+				"file" : 3,
+				"line" : 677,
+				"parent" : 6
+			},
+			{
+				"command" : 9,
+				"file" : 2,
+				"line" : 61,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "/DWIN32 /D_WINDOWS   -wd4146 -wd4180 -wd4244 -wd4258 -wd4267 -wd4291 -wd4345 -wd4351 -wd4355 -wd4456 -wd4457 -wd4458 -wd4459 -wd4503 -wd4624 -wd4722 -wd4800 -wd4100 -wd4127 -wd4512 -wd4505 -wd4610 -wd4510 -wd4702 -wd4245 -wd4706 -wd4310 -wd4701 -wd4703 -wd4389 -wd4611 -wd4805 -wd4204 -wd4324 -we4238 /W4 /Zc:sizedDealloc- /Zi /Ob0 /Od /RTC1 /WX -MDd"
+				},
+				{
+					"fragment" : "/EHsc"
+				},
+				{
+					"backtrace" : 7,
+					"fragment" : "/guard:cf"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"define" : "ENABLE_SPIRV_CODEGEN"
+				},
+				{
+					"define" : "MSFT_SUPPORTS_CHILD_PROCESSES"
+				},
+				{
+					"define" : "SUPPORT_QUERY_GIT_COMMIT_INFO"
+				},
+				{
+					"define" : "_CRT_NONSTDC_NO_DEPRECATE"
+				},
+				{
+					"define" : "_CRT_NONSTDC_NO_WARNINGS"
+				},
+				{
+					"define" : "_CRT_SECURE_NO_DEPRECATE"
+				},
+				{
+					"define" : "_CRT_SECURE_NO_WARNINGS"
+				},
+				{
+					"define" : "_GNU_SOURCE"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "_ITERATOR_DEBUG_LEVEL=0"
+				},
+				{
+					"define" : "_SCL_SECURE_NO_DEPRECATE"
+				},
+				{
+					"define" : "_SCL_SECURE_NO_WARNINGS"
+				},
+				{
+					"define" : "__STDC_CONSTANT_MACROS"
+				},
+				{
+					"define" : "__STDC_FORMAT_MACROS"
+				},
+				{
+					"define" : "__STDC_LIMIT_MACROS"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/tools/clang/lib/Frontend"
+				},
+				{
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/tools/clang/lib/Frontend"
+				},
+				{
+					"backtrace" : 11,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/tools/clang/include"
+				},
+				{
+					"backtrace" : 11,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/tools/clang/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
+				},
+				{
+					"backtrace" : 13,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
+				},
+				{
+					"backtrace" : 13,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
+				},
+				{
+					"backtrace" : 15,
+					"path" : "/directx"
+				},
+				{
+					"backtrace" : 15,
+					"path" : "/wsl/stubs"
+				},
+				{
+					"backtrace" : 16,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/utils/version"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "HCTGen::@5fa7c416598cd72250bb"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "TablegenHLSLOptions::@3cc4d6774efc8aa8fa9f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "hlsl_dxcversion_autogen::@7a784c7205b6e04fb7b9"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangCommentHTMLTags::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangCommentCommandInfo::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangCommentCommandList::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticAST::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrClasses::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangCommentNodes::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangCommentHTMLTagsProperties::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrDump::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrVisitor::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrImpl::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangStmtNodes::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDeclNodes::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangCommentHTMLNamedCharacterReferences::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticAnalysis::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrList::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticSerialization::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrHasAttributeImpl::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrParserStringSwitches::@5cf04ee5b17dff0d3a38"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticFrontend::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticComment::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticGroups::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDriverOptions::@c5f28d7a065278720772"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticCommon::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticSema::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticParse::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticIndexName::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticLex::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangDiagnosticDriver::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrTemplateInstantiate::@352f190b7085a88b26a9"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrParsedAttrList::@352f190b7085a88b26a9"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrParsedAttrKinds::@352f190b7085a88b26a9"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrSpellingListIndex::@352f190b7085a88b26a9"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrPCHWrite::@9318d68cf7f6a213be76"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrParsedAttrImpl::@352f190b7085a88b26a9"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "ClangAttrPCHRead::@9318d68cf7f6a213be76"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "Clang libraries"
+	},
+	"id" : "clangFrontend::@ae9a5840ad140bf270f8",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 4,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/install/x64-Debug"
+		}
+	},
+	"name" : "clangFrontend",
+	"nameOnDisk" : "clangFrontend.lib",
+	"paths" : 
+	{
+		"build" : "tools/clang/lib/Frontend",
+		"source" : "tools/clang/lib/Frontend"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/ASTConsumers.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/ASTMerge.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/ASTUnit.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/CacheTokens.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/ChainedDiagnosticConsumer.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/CodeGenOptions.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/CompilerInstance.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/CompilerInvocation.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/CreateInvocationFromCommandLine.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/DependencyFile.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/DependencyGraph.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/DiagnosticRenderer.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/FrontendAction.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/FrontendActions.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/FrontendOptions.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/HeaderIncludeGen.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/InitHeaderSearch.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/InitPreprocessor.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/LangStandards.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/LayoutOverrideSource.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/LogDiagnosticPrinter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/ModuleDependencyCollector.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/MultiplexConsumer.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/PCHContainerOperations.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/PrintPreprocessedOutput.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/SerializedDiagnosticPrinter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/SerializedDiagnosticReader.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/TextDiagnostic.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/TextDiagnosticBuffer.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/TextDiagnosticPrinter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/lib/Frontend/VerifyDiagnosticConsumer.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

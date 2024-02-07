@@ -1,0 +1,45 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"tools/clang/tools/dxl/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 46,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/dxl.exe"
+			],
+			"targetId" : "dxl::@6627fcd7b0c0245705af",
+			"targetIndex" : 837,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "tools/clang/tools/dxl",
+		"source" : "tools/clang/tools/dxl"
+	}
+}

@@ -1,0 +1,69 @@
+{
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"add_dependencies"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 809,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 812,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 812,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 812,
+				"parent" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "install-dxc-headers::@5fa7c416598cd72250bb"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "install-dxc::@ce527a51a07a3a6e0767"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "install-dxcompiler::@adeae0308928029729ab"
+		}
+	],
+	"id" : "install-distribution::@6890427a1f51a3e7e1df",
+	"name" : "install-distribution",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

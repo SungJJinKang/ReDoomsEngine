@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_clang_library"
+		],
+		"files" : 
+		[
+			"tools/clang/CMakeLists.txt",
+			"tools/clang/unittests/HLSLTestLib/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 10,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 378,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/HLSLTestLib.lib"
+			],
+			"targetId" : "HLSLTestLib::@91791adf5bcecbf8eb9e",
+			"targetIndex" : 90,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "tools/clang/unittests/HLSLTestLib",
+		"source" : "tools/clang/unittests/HLSLTestLib"
+	}
+}

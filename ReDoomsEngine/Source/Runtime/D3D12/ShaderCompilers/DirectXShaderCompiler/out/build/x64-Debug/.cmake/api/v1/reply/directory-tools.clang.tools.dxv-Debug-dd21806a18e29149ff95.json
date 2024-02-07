@@ -1,0 +1,45 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"tools/clang/tools/dxv/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 34,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/dxv.exe"
+			],
+			"targetId" : "dxv::@2af867ba4406c099b923",
+			"targetIndex" : 842,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "tools/clang/tools/dxv",
+		"source" : "tools/clang/tools/dxv"
+	}
+}

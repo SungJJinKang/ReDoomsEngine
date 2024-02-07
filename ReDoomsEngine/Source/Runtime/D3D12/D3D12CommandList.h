@@ -4,12 +4,12 @@
 #include "D3D12Include.h"
 #include "D3D12CommandQueue.h"
 #include "D3D12Fence.h"
-#include "D3D12ManagerInterface.h"
+#include "D3D12RendererStateCallbackInterface.h"
 
 class FD3D12CommandAllocator;
 class FD3D12CommandQueue;
 struct FD3D12PSO;
-class FD3D12CommandList
+class FD3D12CommandList : public eastl::enable_shared_from_this<FD3D12CommandList>
 {
 public:
 
@@ -24,13 +24,13 @@ public:
 
 	void ResetRecordingCommandList(FD3D12PSO* const InInitialPSO);
 	void FinishRecordingCommandList(FD3D12CommandQueue* const InCommandQueue);
-	void WaitOnCompletation();
+
+	FD3D12Fence Fence;
 
 private:
 
 	FD3D12CommandAllocator* const OwnerCommandAllocator;
 	ComPtr<ID3D12GraphicsCommandList> CommandList;
-	FD3D12Fence Fence;
 };
 
 class FD3D12CommandAllocator
@@ -39,7 +39,8 @@ public:
 
 	FD3D12CommandAllocator() = delete;
 	FD3D12CommandAllocator(const ED3D12QueueType InQueueType);
-	void InitCommandAllocator();
+
+	void Init();
 
 	inline ED3D12QueueType GetQueueType() const 
 	{
@@ -51,33 +52,18 @@ public:
 		return CommandAllocator.Get();
 	}
 
-	FD3D12CommandList* GetOrCreateNewCommandList();
-	void FreeCommandList(FD3D12CommandList* const InCommandList, FD3D12PSO* const InInitialPSO = nullptr);
+	eastl::shared_ptr<FD3D12CommandList> GetOrCreateNewCommandList();
 
 	void ResetCommandAllocator(const bool bWaitForCompletation = true);
 
 private:
 
+	void InitCommandAllocator();
+
+	bool bInit = false;
+
 	ED3D12QueueType QueueType;
 	ComPtr<ID3D12CommandAllocator> CommandAllocator;
 
-	eastl::queue<eastl::unique_ptr<FD3D12CommandList>> FreedCommandListPool;
-	eastl::vector<eastl::unique_ptr<FD3D12CommandList>> AllocatedCommandListPool;
-};
-
-class FD3D12CommandListManager : public EA::StdC::Singleton<FD3D12CommandListManager>, public ID3D12ManagerInterface
-{
-public:
-
-	void Init();
-	FD3D12CommandAllocator* GetOrCreateNewCommandAllocator(const ED3D12QueueType QueueType);
-	void FreeCommandAllocator(FD3D12CommandAllocator* const InCommandAllocator);
-
-	virtual void OnStartFrame();
-	virtual void OnEndFrame();
-
-private:
-
-	eastl::array<eastl::queue<eastl::unique_ptr<FD3D12CommandAllocator>>, ED3D12QueueType::Count> FreedCommandAllocatorPool;
-	eastl::array<eastl::vector<eastl::unique_ptr<FD3D12CommandAllocator>>, ED3D12QueueType::Count> AllocatedCommandAllocatorPool;
+	eastl::queue<eastl::shared_ptr<FD3D12CommandList>> AllocatedCommandListPool;
 };

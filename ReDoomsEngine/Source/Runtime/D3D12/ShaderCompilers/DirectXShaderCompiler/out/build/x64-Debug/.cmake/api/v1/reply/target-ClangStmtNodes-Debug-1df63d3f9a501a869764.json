@@ -1,0 +1,132 @@
+{
+	"backtrace" : 3,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"add_public_tablegen_target",
+			"clang_tablegen",
+			"add_dependencies",
+			"add_custom_command",
+			"tablegen"
+		],
+		"files" : 
+		[
+			"cmake/modules/TableGen.cmake",
+			"tools/clang/CMakeLists.txt",
+			"tools/clang/include/clang/AST/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 21,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 317,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 64,
+				"parent" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 67,
+				"parent" : 2
+			},
+			{
+				"command" : 5,
+				"file" : 1,
+				"line" : 314,
+				"parent" : 1
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 26,
+				"parent" : 5
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "HCTGen::@5fa7c416598cd72250bb"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "clang-tblgen::@9d1a7e4b77846bff96c3"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "Clang tablegenning"
+	},
+	"id" : "ClangStmtNodes::@f4fca6acdbd835521d7f",
+	"name" : "ClangStmtNodes",
+	"paths" : 
+	{
+		"build" : "tools/clang/include/clang/AST",
+		"source" : "tools/clang/include/clang/AST"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1,
+				2,
+				3
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 3,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/include/clang/AST/CMakeFiles/ClangStmtNodes",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/include/clang/AST/CMakeFiles/ClangStmtNodes.rule",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/include/clang/AST/StmtNodes.inc.rule",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/include/clang/AST/StmtNodes.inc.tmp.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

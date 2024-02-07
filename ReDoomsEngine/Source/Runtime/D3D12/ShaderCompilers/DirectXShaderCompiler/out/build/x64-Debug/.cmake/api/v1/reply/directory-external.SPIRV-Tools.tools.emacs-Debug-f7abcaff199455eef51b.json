@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "external/SPIRV-Tools/tools/emacs",
+		"source" : "external/SPIRV-Tools/tools/emacs"
+	}
+}

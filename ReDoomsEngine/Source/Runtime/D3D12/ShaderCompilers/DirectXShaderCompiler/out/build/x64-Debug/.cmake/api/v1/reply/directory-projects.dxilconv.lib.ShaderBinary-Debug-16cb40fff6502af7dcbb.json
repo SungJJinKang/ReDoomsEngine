@@ -1,0 +1,61 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_library",
+			"add_dxilconv_project_library"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"projects/dxilconv/CMakeLists.txt",
+			"projects/dxilconv/lib/ShaderBinary/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 5,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 554,
+				"parent" : 2
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 3,
+			"component" : "ShaderBinary",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/ShaderBinary.lib"
+			],
+			"targetId" : "ShaderBinary::@a87f845a8c9004ffdd87",
+			"targetIndex" : 150,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "projects/dxilconv/lib/ShaderBinary",
+		"source" : "projects/dxilconv/lib/ShaderBinary"
+	}
+}

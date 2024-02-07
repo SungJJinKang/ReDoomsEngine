@@ -1,10 +1,10 @@
 #pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
-#include "D3D12ManagerInterface.h"
+#include "D3D12RendererStateCallbackInterface.h"
 
 class FD3D12Device;
-class FD3D12Adapter : public ID3D12ManagerInterface
+class FD3D12Adapter : public ID3D12RendererStateCallbackInterface
 {
 public:
 
@@ -12,8 +12,8 @@ public:
 	~FD3D12Adapter();
 
 	void Init();
-	virtual void OnStartFrame();
-	virtual void OnEndFrame();
+	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 
 	FD3D12Device* GetDevice()
 	{

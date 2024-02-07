@@ -1,9 +1,21 @@
 #include "D3D12PSO.h"
 #include "D3D12Device.h"
 #include "D3D12RootSignature.h"
-#include "ShaderCompilers/DirectXShaderCompiler/inc/dxcapi.h"
+#include "ShaderCompilers/DirectXShaderCompiler/include/dxc/dxcapi.h"
 
 static_assert(std::is_pod<FD3D12PSOInitializer::FDesc>::value);
+
+bool FD3D12PSOInitializer::IsValid() const
+{
+    return (CachedHash != 0) && (BoundShaderSet.CachedHash.Value[0] != 0) && (BoundShaderSet.CachedHash.Value[1] != 0);
+}
+
+void FD3D12PSOInitializer::Reset()
+{
+    MEM_ZERO(BoundShaderSet);
+    MEM_ZERO(Desc);
+    MEM_ZERO(CachedHash);
+}
 
 void FD3D12PSOInitializer::FinishCreating()
 {
@@ -46,6 +58,12 @@ FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     COPY_DESC_MEMBER(CachedPSO)
     COPY_DESC_MEMBER(Flags)
 
+    // error fix #1
+    // D3D12 ERROR : ID3D12Device::CreateInputLayout : Input Signature in bytecode could not be parsed.Data may be corrupt or in an unrecognizable format.[STATE_CREATION ERROR #63: CREATEINPUTLAYOUT_UNPARSEABLEINPUTSIGNATURE]
+    // D3D12 ERROR : ID3D12Device::CreateVertexShader : Vertex Shader is corrupt or in an unrecognized format.[STATE_CREATION ERROR #67: CREATEVERTEXSHADER_INVALIDSHADERBYTECODE]
+    // D3D12 ERROR : ID3D12Device::CreatePixelShader : Pixel Shader is corrupt or in an unrecognized format.[STATE_CREATION ERROR #93: CREATEPIXELSHADER_INVALIDSHADERBYTECODE]
+    // 
+    // This is caused by the compiler creating unsigned bytecode. "dxil.dll" must be put in the same folder as "dxcompiler.dll" at runtime
     VERIFYD3D12RESULT(GetD3D12Device()->CreateGraphicsPipelineState(&Desc, IID_PPV_ARGS(&PSOObject)));
 }
 
@@ -69,12 +87,12 @@ FD3D12PSO* FD3D12PSOManager::GetOrCreatePSO(const FD3D12PSOInitializer& InD3D12P
     return NewPSO;
 }
 
-void FD3D12PSOManager::OnStartFrame()
+void FD3D12PSOManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12PSOManager::OnEndFrame()
+void FD3D12PSOManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }

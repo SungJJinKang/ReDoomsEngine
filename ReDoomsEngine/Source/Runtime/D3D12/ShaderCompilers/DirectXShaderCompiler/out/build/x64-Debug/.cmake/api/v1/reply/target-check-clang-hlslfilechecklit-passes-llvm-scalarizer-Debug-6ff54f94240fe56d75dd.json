@@ -1,0 +1,159 @@
+{
+	"backtrace" : 3,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"add_lit_target",
+			"add_lit_testsuites",
+			"add_dependencies"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"tools/clang/test/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 113,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 981,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 914,
+				"parent" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 925,
+				"parent" : 2
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "FileCheck::@09bac3cf726c1488c914"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "count::@1848ee2bede5a1584fa8"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "not::@7726f5738bf8037ed68b"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "llvm-config::@afa2b000db28441ce85a"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "opt::@b47735b880bc6d502d77"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "clang-tblgen::@9d1a7e4b77846bff96c3"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "dxcompiler::@adeae0308928029729ab"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "dxc::@ce527a51a07a3a6e0767"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "dxa::@c789d1669724ed5377db"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "dxr::@1593c16c15c8f124dc1c"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "dxl::@6627fcd7b0c0245705af"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "dxopt::@76d362c0a168b93cd8c5"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "dxv::@2af867ba4406c099b923"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "ClangUnitTests::@e1f11e1ec73888e26d14"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "ExecHLSLTests::@da115bb3df41a937dabb"
+		},
+		{
+			"backtrace" : 4,
+			"id" : "dxc_batch::@ab2754cb987c318833b9"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "Clang tests/Suites"
+	},
+	"id" : "check-clang-hlslfilechecklit-passes-llvm-scalarizer::@da21c69ae702d302b086",
+	"name" : "check-clang-hlslfilechecklit-passes-llvm-scalarizer",
+	"paths" : 
+	{
+		"build" : "tools/clang/test",
+		"source" : "tools/clang/test"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 3,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/test/CMakeFiles/check-clang-hlslfilechecklit-passes-llvm-scalarizer",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/test/CMakeFiles/check-clang-hlslfilechecklit-passes-llvm-scalarizer.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\cmake_pch.cxx">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC4BC5.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC6HBC7.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexCompress.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexConvert.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexDDS.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexHDR.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexImage.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexMipmaps.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexMisc.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexNormalMaps.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexPMAlpha.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexResize.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexTGA.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexUtil.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexFlipRotate.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexWIC.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BCDirectCompute.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexCompressGPU.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexD3D11.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexD3D12.cpp">
+      <Filter>DirectXTex</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC.h">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DDS.h">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexP.h">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\filters.h">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\scoped.h">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BCDirectCompute.h">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\d3dx12.h">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTex.h">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTex.inl">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\Debug\cmake_pch.hxx">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\Release\cmake_pch.hxx">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\MinSizeRel\cmake_pch.hxx">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\RelWithDebInfo\cmake_pch.hxx">
+      <Filter>DirectXTex</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders\CompileShaders.cmd">
+      <Filter>DirectXTex</Filter>
+    </CustomBuild>
+    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\CMakeLists.txt">
+      <Filter>DirectXTex</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled\BC6HEncode_EncodeBlockCS.inc">
+      <Filter>DirectXTex</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DirectXTex">
+      <UniqueIdentifier>{2DD8F4D5-23A0-311F-B1F5-79019620B75E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

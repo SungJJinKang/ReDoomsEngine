@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_clang_library"
+		],
+		"files" : 
+		[
+			"tools/clang/CMakeLists.txt",
+			"tools/clang/lib/Parse/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 7,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 378,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/clangParse.lib"
+			],
+			"targetId" : "clangParse::@3da6354c36f009bcf2b2",
+			"targetIndex" : 816,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "tools/clang/lib/Parse",
+		"source" : "tools/clang/lib/Parse"
+	}
+}

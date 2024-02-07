@@ -1,42 +1,37 @@
 #include "D3D12Resource.h"
 
 #include "D3D12Device.h"
-#include "D3D12ConstantBufferRingBufferManager.h"
+#include "D3D12PerFrameConstantBufferManager.h"
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
-	: ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), Resource(),
+	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resource(),
 	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
 	ValidateResourceProperties();
 }
 
-FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource> InResource)
-	: ResourceCreateProperties(), Resource(InResource),
+FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource>& InResource)
+	: Fence(), ResourceCreateProperties(), bInit(false), Resource(InResource),
 	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
-	D3D12_RESOURCE_DESC ResourceDesc = Resource->GetDesc();
-
-#define COPY_DESC_MEMBER(MEMBER_NAME) Desc.MEMBER_NAME = ResourceDesc.MEMBER_NAME
-
-	COPY_DESC_MEMBER(Dimension);
-	COPY_DESC_MEMBER(Alignment);
-	COPY_DESC_MEMBER(Width);
-	COPY_DESC_MEMBER(Height);
-	COPY_DESC_MEMBER(DepthOrArraySize);
-	COPY_DESC_MEMBER(MipLevels);
-	COPY_DESC_MEMBER(Format);
-	COPY_DESC_MEMBER(SampleDesc);
-	COPY_DESC_MEMBER(Layout);
-	COPY_DESC_MEMBER(Flags);
+	Desc = CD3DX12_RESOURCE_DESC{ Resource->GetDesc() };
 
 	Resource->GetHeapProperties(&ResourceCreateProperties.HeapProperties, &ResourceCreateProperties.HeapFlags);
 
 	ValidateResourceProperties();
 }
 
+FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
+	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resource(InResource),
+	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
+{
+}
+
 void FD3D12Resource::InitResource()
 {
-	if (IsCreateD3D12ResourceOnInitResource())
+	bInit = true;
+
+	if (IsCreateD3D12ResourceOnInitResource() && !Resource)
 	{
 		CreateD3D12Resource();
 	}
@@ -44,6 +39,7 @@ void FD3D12Resource::InitResource()
 
 void FD3D12Resource::CreateD3D12Resource()
 {
+	EA_ASSERT(bInit);
 	EA_ASSERT(Resource == nullptr);
 
 	// todo : use placed resource
@@ -52,7 +48,7 @@ void FD3D12Resource::CreateD3D12Resource()
 		ResourceCreateProperties.HeapFlags,
 		&Desc,
 		ResourceCreateProperties.InitialResourceStates,
-		ResourceCreateProperties.ClearValue,
+		ResourceCreateProperties.ClearValue.has_value() ? &(ResourceCreateProperties.ClearValue.value()) : nullptr,
 		IID_PPV_ARGS(&Resource)));
 }
 
@@ -69,17 +65,20 @@ void FD3D12Resource::ValidateResourceProperties() const
 	
 	if (Desc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER)
 	{
-		EA_ASSERT(ResourceCreateProperties.ClearValue == nullptr);
+		EA_ASSERT(!(ResourceCreateProperties.ClearValue.has_value()));
 	}
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS FD3D12Resource::GPUVirtualAddress() const
 {
+	EA_ASSERT(bInit);
+
 	return GetResource()->GetGPUVirtualAddress();
 }
 
 FD3D12ConstantBufferView* FD3D12Resource::GetCBV()
 {
+	EA_ASSERT(bInit);
 	EA_ASSERT(IsBuffer());
 
 	if (DefaultCBV == nullptr)
@@ -93,6 +92,7 @@ FD3D12ConstantBufferView* FD3D12Resource::GetCBV()
 
 FD3D12ShaderResourceView* FD3D12Resource::GetSRV()
 {
+	EA_ASSERT(bInit);
 	EA_ASSERT(!(Desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE));
 
 	if (DefaultSRV == nullptr)
@@ -106,6 +106,7 @@ FD3D12ShaderResourceView* FD3D12Resource::GetSRV()
 
 FD3D12UnorderedAccessView* FD3D12Resource::GetUAV()
 {
+	EA_ASSERT(bInit);
 	EA_ASSERT(Desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
 
 	if (DefaultUAV == nullptr)
@@ -119,6 +120,7 @@ FD3D12UnorderedAccessView* FD3D12Resource::GetUAV()
 
 FD3D12RenderTargetView* FD3D12Resource::GetRTV()
 {
+	EA_ASSERT(bInit);
 	EA_ASSERT(Desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 
 	if (DefaultRTV == nullptr)
@@ -132,6 +134,7 @@ FD3D12RenderTargetView* FD3D12Resource::GetRTV()
 
 FD3D12DepthStencilView* FD3D12Resource::GetDSV()
 {
+	EA_ASSERT(bInit);
 	EA_ASSERT(Desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 
 	if (DefaultDSV == nullptr)
@@ -143,8 +146,25 @@ FD3D12DepthStencilView* FD3D12Resource::GetDSV()
 	return DefaultDSV.get();
 }
 
+FD3D12TextureResource::FD3D12TextureResource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
+	: FD3D12Resource(InResource, InResourceCreateProperties, InDesc), ResourcePoolBlock()
+{
+}
+
+FD3D12TextureResource::FD3D12TextureResource(ComPtr<ID3D12Resource>& InResource, const FD3D12ResourcePoolBlock& InResourcePoolBlock, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
+	: FD3D12Resource(InResource, InResourceCreateProperties, InDesc), ResourcePoolBlock(InResourcePoolBlock)
+{
+
+}
+
 FD3D12TextureResource::FD3D12TextureResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
-	: FD3D12Resource(InResourceCreateProperties, InDesc)
+	: FD3D12Resource(InResourceCreateProperties, InDesc), ResourcePoolBlock()
+{
+
+}
+
+FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
+	: FD3D12TextureResource(InResource, InResourceCreateProperties, InDesc)
 {
 
 }
@@ -156,6 +176,18 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(const FResourceCreateProperties
 	const D3D12_TEXTURE_LAYOUT InLayout /*= D3D12_TEXTURE_LAYOUT_UNKNOWN*/, const uint64_t InAlignment /*= 0 */)
 	: FD3D12TextureResource(InResourceCreateProperties, 
 		CD3DX12_RESOURCE_DESC::Tex2D(InFormat, InWidth, InHeight, InArraySize, InMipLevels, InSampleCount, InSampleQuality, InFlags, InLayout, InAlignment))
+{
+
+}
+
+FD3D12Texture2DResource::FD3D12Texture2DResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
+	: FD3D12TextureResource(InResourceCreateProperties, InDesc)
+{
+
+}
+
+FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResource, const FD3D12ResourcePoolBlock& InResourcePoolBlock, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
+	: FD3D12TextureResource(InResource, InResourcePoolBlock, InResourceCreateProperties, InDesc)
 {
 
 }
@@ -221,6 +253,12 @@ FD3D12BufferResource::FResourceCreateProperties FD3D12BufferResource::MakeResour
 	ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_GENERIC_READ;
 
 	return ResourceCreateProperties;
+}
+
+FD3D12VertexIndexBufferResource::FD3D12VertexIndexBufferResource(const uint64_t InSize, const bool bInDynamic /*= false*/)
+	: FD3D12BufferResource(InSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE, 0, bInDynamic, nullptr, true)
+{
+
 }
 
 void FD3D12BufferResource::InitResource()
@@ -303,7 +341,7 @@ void FD3D12ConstantBufferResource::Versioning()
 {
 	EA_ASSERT(IsDynamicBuffer()); // todo : support no-dynamic buffer
 
-	ConstantBufferBlock = FD3D12ConstantBufferRingBufferManager::GetInstance()->Allocate(GetBufferSize());
+	ConstantBufferBlock = FD3D12PerFrameConstantBufferManager::GetInstance()->Allocate(GetBufferSize());
 
 	MappedAddress = ConstantBufferBlock.MappedAddress;
 }

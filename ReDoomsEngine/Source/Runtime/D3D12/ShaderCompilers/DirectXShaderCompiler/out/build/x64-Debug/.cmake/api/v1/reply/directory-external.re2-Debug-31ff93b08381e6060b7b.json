@@ -1,0 +1,115 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"external/re2/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 190,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 198,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 209,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 217,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/re2.lib"
+			],
+			"targetId" : "re2::@9c2f79d0788ed956182d",
+			"targetIndex" : 917,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "include/re2",
+			"paths" : 
+			[
+				"external/re2/re2/filtered_re2.h",
+				"external/re2/re2/re2.h",
+				"external/re2/re2/set.h",
+				"external/re2/re2/stringpiece.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/re2",
+			"exportName" : "re2Targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "re2::@9c2f79d0788ed956182d",
+					"index" : 917
+				}
+			],
+			"paths" : 
+			[
+				"external/re2/CMakeFiles/Export/2163157bb4e691faa63e00f4fb3aeb7d/re2Targets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/re2",
+			"paths" : 
+			[
+				"out/build/x64-Debug/external/re2/re2Config.cmake",
+				"out/build/x64-Debug/external/re2/re2ConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"out/build/x64-Debug/external/re2/re2.pc"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "external/re2",
+		"source" : "external/re2"
+	}
+}

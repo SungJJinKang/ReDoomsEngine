@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "external/SPIRV-Tools/external",
+		"source" : "external/SPIRV-Tools/external"
+	}
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>Taef.Redist.Wlk</id>
+    <version>1.0.170206001-nativeTargets</version>
+    <title>TAEF Redist</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <projectUrl>https://msdn.microsoft.com/en-us/windows/hardware/drivers/taef/index</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package containing TE.exe and everything else needed to build and run TAEF tests. The Test Authoring and Execution Framework (TAEF) provides a consistent mechanism for developers and testers to write and run automation. The framework provides a single infrastructure that allows them to share tests across disciplines and teams.</description>
+    <summary>Package for building and running TAEF tests.</summary>
+    <releaseNotes />
+    <copyright>Copyright 2017 Microsoft Corporation</copyright>
+    <tags>test test-framework TAEF framework inner-loop outer-loop testing nativepackage</tags>
+  </metadata>
+</package>

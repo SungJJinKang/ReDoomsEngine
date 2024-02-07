@@ -1,0 +1,80 @@
+{
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"add_llvm_tool"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"tools/llvm-bcanalyzer/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 6,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 663,
+				"parent" : 1
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "llvm-bcanalyzer::@c40be07b8d45bb5a8a90"
+		}
+	],
+	"id" : "install-llvm-bcanalyzer::@c40be07b8d45bb5a8a90",
+	"name" : "install-llvm-bcanalyzer",
+	"paths" : 
+	{
+		"build" : "tools/llvm-bcanalyzer",
+		"source" : "tools/llvm-bcanalyzer"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 2,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/llvm-bcanalyzer/CMakeFiles/install-llvm-bcanalyzer",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/llvm-bcanalyzer/CMakeFiles/install-llvm-bcanalyzer.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

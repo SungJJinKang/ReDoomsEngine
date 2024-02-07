@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "external/SPIRV-Tools/source/fuzz",
+		"source" : "external/SPIRV-Tools/source/fuzz"
+	}
+}

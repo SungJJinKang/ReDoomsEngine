@@ -1,0 +1,45 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"tools/clang/unittests/DxrFallback/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 76,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/test_DxrFallback.exe"
+			],
+			"targetId" : "test_DxrFallback::@bd13cb54e88afc0118e8",
+			"targetIndex" : 934,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "tools/clang/unittests/DxrFallback",
+		"source" : "tools/clang/unittests/DxrFallback"
+	}
+}

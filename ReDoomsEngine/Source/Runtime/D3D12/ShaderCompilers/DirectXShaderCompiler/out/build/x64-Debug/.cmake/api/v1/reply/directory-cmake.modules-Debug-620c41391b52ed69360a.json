@@ -1,0 +1,277 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"cmake/modules/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 77,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 79,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 85,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "share/llvm/cmake",
+			"exportName" : "LLVMExports",
+			"exportTargets" : 
+			[
+				{
+					"id" : "LLVMSupport::@928d1708d80fe1f55e59",
+					"index" : 119
+				},
+				{
+					"id" : "LLVMMSSupport::@d7b4cb0d6be5a8f60e29",
+					"index" : 113
+				},
+				{
+					"id" : "LLVMTableGen::@41a560be43d74dc0a888",
+					"index" : 120
+				},
+				{
+					"id" : "llvm-tblgen::@dca47d54282c16282dfc",
+					"index" : 913
+				},
+				{
+					"id" : "LLVMCore::@fbfd63cd06ffdf52319f",
+					"index" : 98
+				},
+				{
+					"id" : "LLVMIRReader::@ac4e3735190afd111ee4",
+					"index" : 110
+				},
+				{
+					"id" : "LLVMBitReader::@b3ae57fb53631d19cf66",
+					"index" : 96
+				},
+				{
+					"id" : "LLVMBitWriter::@70aee8a8db3c4815feff",
+					"index" : 97
+				},
+				{
+					"id" : "LLVMTransformUtils::@485472be269d97170281",
+					"index" : 122
+				},
+				{
+					"id" : "LLVMInstCombine::@c211d204041b3cce8885",
+					"index" : 111
+				},
+				{
+					"id" : "LLVMScalarOpts::@b500fa7488aca5bdc0a7",
+					"index" : 118
+				},
+				{
+					"id" : "LLVMipo::@5d30e4426957e039fa79",
+					"index" : 125
+				},
+				{
+					"id" : "LLVMVectorize::@52cafa3d09b69dbbd840",
+					"index" : 123
+				},
+				{
+					"id" : "LLVMLinker::@82b49a9339256152fd37",
+					"index" : 112
+				},
+				{
+					"id" : "LLVMAnalysis::@a8ea8fd451b56fad3c5d",
+					"index" : 94
+				},
+				{
+					"id" : "LLVMipa::@b0b9b04bc2b56cf345c5",
+					"index" : 124
+				},
+				{
+					"id" : "LLVMOption::@03597dd37d3dc3b95065",
+					"index" : 114
+				},
+				{
+					"id" : "LLVMTarget::@1f06d56b7c3d624f3727",
+					"index" : 121
+				},
+				{
+					"id" : "LLVMAsmParser::@bfe21dd4a58a6f8872f3",
+					"index" : 95
+				},
+				{
+					"id" : "LLVMProfileData::@b9974079c57e2c563b37",
+					"index" : 117
+				},
+				{
+					"id" : "LLVMPasses::@e8b1c871ec859dffef08",
+					"index" : 116
+				},
+				{
+					"id" : "LLVMPassPrinters::@a553aa235f2dd19220fe",
+					"index" : 115
+				},
+				{
+					"id" : "LLVMDxcSupport::@cb21ebd8a5998708e985",
+					"index" : 101
+				},
+				{
+					"id" : "LLVMHLSL::@fbd53b97f31afe415e8e",
+					"index" : 109
+				},
+				{
+					"id" : "LLVMDXIL::@518e30bbae46f8bcb951",
+					"index" : 99
+				},
+				{
+					"id" : "LLVMDxilContainer::@44c3c63ec63123e61d9c",
+					"index" : 103
+				},
+				{
+					"id" : "LLVMDxilPdbInfo::@a43b16e9c085b1d4b871",
+					"index" : 106
+				},
+				{
+					"id" : "LLVMDxilPIXPasses::@ccc9c2c670c3c7547301",
+					"index" : 105
+				},
+				{
+					"id" : "LLVMDxilDia::@9fae9f067c7ff443dcb9",
+					"index" : 104
+				},
+				{
+					"id" : "LLVMDxilRootSignature::@88a3c75085c209ebbe6e",
+					"index" : 107
+				},
+				{
+					"id" : "LLVMDxcBindingTable::@2712436fc6d55715eefc",
+					"index" : 100
+				},
+				{
+					"id" : "LLVMDxrFallback::@9acceebf6f30d699083e",
+					"index" : 108
+				},
+				{
+					"id" : "LLVMDxilCompression::@b618cc5b6f6567571ecc",
+					"index" : 102
+				},
+				{
+					"id" : "DxilConvPasses::@0bfed0ee4d39fa1e3fc0",
+					"index" : 60
+				},
+				{
+					"id" : "DxbcConverter::@50c6ceaec5b43811e75d",
+					"index" : 53
+				},
+				{
+					"id" : "ShaderBinary::@a87f845a8c9004ffdd87",
+					"index" : 150
+				},
+				{
+					"id" : "dxilconv::@8fb22eeeb13d4912dcf1",
+					"index" : 835
+				},
+				{
+					"id" : "dxilconv-tests::@82edfa3538843953b724",
+					"index" : 836
+				},
+				{
+					"id" : "llvm-config::@afa2b000db28441ce85a",
+					"index" : 907
+				},
+				{
+					"id" : "opt::@b47735b880bc6d502d77",
+					"index" : 916
+				},
+				{
+					"id" : "llvm-as::@3f5e325e8785346a85b0",
+					"index" : 905
+				},
+				{
+					"id" : "llvm-dis::@e82ed11c4685fece42d7",
+					"index" : 909
+				},
+				{
+					"id" : "dxexp::@14ba6bb121d279515e4f",
+					"index" : 834
+				},
+				{
+					"id" : "llvm-link::@5ef286a2456f2d7c9c68",
+					"index" : 911
+				},
+				{
+					"id" : "llvm-extract::@b3d161fd63f7862d829b",
+					"index" : 910
+				},
+				{
+					"id" : "llvm-diff::@fd34261daabde5c6824b",
+					"index" : 908
+				},
+				{
+					"id" : "llvm-bcanalyzer::@c40be07b8d45bb5a8a90",
+					"index" : 906
+				},
+				{
+					"id" : "llvm-stress::@131949d764968e7ed7d6",
+					"index" : 912
+				},
+				{
+					"id" : "verify-uselistorder::@93a28c78e3d6d1ed1ef5",
+					"index" : 935
+				}
+			],
+			"paths" : 
+			[
+				"cmake/modules/CMakeFiles/Export/132b3499cd24fa5a036a97931d7c31f0/LLVMExports.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "share/llvm/cmake",
+			"paths" : 
+			[
+				"out/build/x64-Debug/cmake/modules/CMakeFiles/LLVMConfig.cmake",
+				"out/build/x64-Debug/share/llvm/cmake/LLVMConfigVersion.cmake",
+				"cmake/modules/LLVM-Config.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "share/llvm/cmake",
+			"paths" : 
+			[
+				"cmake/modules/."
+			],
+			"type" : "directory"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "cmake/modules",
+		"source" : "cmake/modules"
+	}
+}

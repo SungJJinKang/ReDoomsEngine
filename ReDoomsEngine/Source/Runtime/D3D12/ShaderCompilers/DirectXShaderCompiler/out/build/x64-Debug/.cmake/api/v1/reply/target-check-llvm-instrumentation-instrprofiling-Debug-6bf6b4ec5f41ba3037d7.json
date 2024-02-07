@@ -1,0 +1,99 @@
+{
+	"backtrace" : 3,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"add_lit_target",
+			"add_lit_testsuites",
+			"add_dependencies"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"test/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 109,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 981,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 914,
+				"parent" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 925,
+				"parent" : 2
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "llvm-test-depends::@36f028580bb02cc8272a"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "Test Subdirectories"
+	},
+	"id" : "check-llvm-instrumentation-instrprofiling::@36f028580bb02cc8272a",
+	"name" : "check-llvm-instrumentation-instrprofiling",
+	"paths" : 
+	{
+		"build" : "test",
+		"source" : "test"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 3,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/test/CMakeFiles/check-llvm-instrumentation-instrprofiling",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/test/CMakeFiles/check-llvm-instrumentation-instrprofiling.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}
