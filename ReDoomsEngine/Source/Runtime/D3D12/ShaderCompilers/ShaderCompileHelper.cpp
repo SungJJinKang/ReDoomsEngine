@@ -38,9 +38,9 @@ ComPtr<IDxcContainerReflection> FShaderCompileHelper::GetDxcContainerReflectionI
 	return Reflection;
 }
 
-ComPtr<IDxcRewriter> FShaderCompileHelper::GetDxcRewriterInstance()
+ComPtr<IDxcRewriter2> FShaderCompileHelper::GetDxcRewriterInstance()
 {
-	static ComPtr<IDxcRewriter> Rewriter;
+	static ComPtr<IDxcRewriter2> Rewriter;
 	VERIFYD3D12RESULT(DxcCreateInstance(CLSID_DxcRewriter, IID_PPV_ARGS(&Rewriter)));
 	return Rewriter;
 }
@@ -61,102 +61,59 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 	std::filesystem::path ShaderTextFilePath{ InShaderCompileArguments.ShaderTextFilePath.data() };
 	ShaderTextFilePath.make_preferred();
 
-	eastl::vector<eastl::wstring> Arguments{};
+	eastl::vector<LPCWSTR> CommonArguments{};
+
+	// hlsl version
+	CommonArguments.emplace_back(EA_WCHAR("-HV"));
+	CommonArguments.emplace_back(EA_WCHAR("2021"));
+
+	if (InShaderCompileArguments.ShaderDeclaration.ShaderCompileFlags & EShaderCompileFlag::Allow16BitTYpes)
 	{
-		// hlsl version
-		Arguments.emplace_back(EA_WCHAR("-HV"));
-		Arguments.emplace_back(EA_WCHAR("2021"));
-
-		// Unpack uniform matrices as row-major to match the CPU layout.
-		Arguments.emplace_back(DXC_ARG_PACK_MATRIX_ROW_MAJOR);
-
-		// check https://learn.microsoft.com/en-us/windows/win32/direct3d12/resource-binding-in-hlsl
-		Arguments.emplace_back(EA_WCHAR("-auto-binding-space"));
-		Arguments.emplace_back(EA_WCHAR("0"));
-
-		if (InShaderCompileArguments.ShaderDeclaration.ShaderCompileFlags & EShaderCompileFlag::Allow16BitTYpes)
-		{
-			Arguments.emplace_back(EA_WCHAR("-enable-16bit-types"));
-		}
-
-		switch (InShaderCompileArguments.OptimizationLevel)
-		{
-		case FShaderCompileArguments::EOptimizationLevel::DisableOptimization:
-			Arguments.emplace_back(DXC_ARG_SKIP_OPTIMIZATIONS);
-			break;
-		case FShaderCompileArguments::EOptimizationLevel::O0:
-			Arguments.emplace_back(DXC_ARG_OPTIMIZATION_LEVEL0);
-			break;
-		case FShaderCompileArguments::EOptimizationLevel::O1:
-			Arguments.emplace_back(DXC_ARG_OPTIMIZATION_LEVEL1);
-			break;
-		case FShaderCompileArguments::EOptimizationLevel::O2:
-			Arguments.emplace_back(DXC_ARG_OPTIMIZATION_LEVEL2);
-			break;
-		case FShaderCompileArguments::EOptimizationLevel::O3:
-			Arguments.emplace_back(DXC_ARG_OPTIMIZATION_LEVEL3);
-			break;
-		}
-
-		switch (InShaderCompileArguments.WarningLevel)
-		{
-		case FShaderCompileArguments::EWarningLevel::W0:
-			Arguments.emplace_back(EA_WCHAR("/W0"));
-			break;
-		case FShaderCompileArguments::EWarningLevel::W1:
-			Arguments.emplace_back(EA_WCHAR("/W1"));
-			break;
-		case FShaderCompileArguments::EWarningLevel::W2:
-			Arguments.emplace_back(EA_WCHAR("/W2"));
-			break;
-		case FShaderCompileArguments::EWarningLevel::W3:
-			Arguments.emplace_back(EA_WCHAR("/W3"));
-			break;
-		case FShaderCompileArguments::EWarningLevel::All:
-			Arguments.emplace_back(EA_WCHAR("/Wall"));
-			break;
-		}
-
-		if (InShaderCompileArguments.bGenerateDebugInformation)
-		{
-			Arguments.emplace_back(DXC_ARG_DEBUG);
-		}
-
-		if (InShaderCompileArguments.bWarningAsError)
-		{
-			Arguments.emplace_back(DXC_ARG_WARNINGS_ARE_ERRORS);
-		}
-
-		Arguments.emplace_back(DXC_ARG_DEBUG_NAME_FOR_SOURCE); // this is required for DXC_OUT_SHADER_HASH
-		Arguments.emplace_back(EA_WCHAR("-Zi"));
-
-		if (InShaderCompileArguments.bGenerateSymbols)
-		{
-			// ref : https://simoncoenen.com/blog/programming/graphics/DxcCompiling#custom-include-handler
-			Arguments.emplace_back(EA_WCHAR("-Qembed_debug"));
-
-			Arguments.emplace_back(EA_WCHAR("-Fd"));
-			Arguments.emplace_back(EA_WCHAR(".\\"));
-		}
-		else
-		{
-			Arguments.emplace_back(EA_WCHAR("-Qstrip_reflect"));
-		}
-
-		// Reflection will be removed later, otherwise the disassembly won't contain variables
-		//Arguments.emplace_back(EA_WCHAR("-Qstrip_reflect"));
-
-		// disable undesired warnings
-		Arguments.emplace_back(EA_WCHAR("-Wno-parentheses-equality"));
-
-		Arguments.emplace_back(EA_WCHAR("-encoding"));
-		Arguments.emplace_back(EA_WCHAR("utf8"));
-
-		// Add directory to include search path
-		Arguments.emplace_back(EA_WCHAR("-I"));
-		std::filesystem::path ParentDirectory = ShaderTextFilePath.parent_path();
-		Arguments.emplace_back(ParentDirectory.make_preferred().c_str());
+		CommonArguments.emplace_back(EA_WCHAR("-enable-16bit-types"));
 	}
+
+	switch (InShaderCompileArguments.WarningLevel)
+	{
+	case FShaderCompileArguments::EWarningLevel::W0:
+		CommonArguments.emplace_back(EA_WCHAR("/W0"));
+		break;
+	case FShaderCompileArguments::EWarningLevel::W1:
+		CommonArguments.emplace_back(EA_WCHAR("/W1"));
+		break;
+	case FShaderCompileArguments::EWarningLevel::W2:
+		CommonArguments.emplace_back(EA_WCHAR("/W2"));
+		break;
+	case FShaderCompileArguments::EWarningLevel::W3:
+		CommonArguments.emplace_back(EA_WCHAR("/W3"));
+		break;
+	case FShaderCompileArguments::EWarningLevel::All:
+		CommonArguments.emplace_back(EA_WCHAR("/Wall"));
+		break;
+	}
+
+	if (InShaderCompileArguments.bGenerateDebugInformation)
+	{
+		CommonArguments.emplace_back(DXC_ARG_DEBUG);
+	}
+
+	if (InShaderCompileArguments.bWarningAsError)
+	{
+		CommonArguments.emplace_back(DXC_ARG_WARNINGS_ARE_ERRORS);
+	}
+
+	// Reflection will be removed later, otherwise the disassembly won't contain variables
+	//CommonArguments.emplace_back(EA_WCHAR("-Qstrip_reflect"));
+
+
+	CommonArguments.emplace_back(EA_WCHAR("-encoding"));
+	CommonArguments.emplace_back(EA_WCHAR("utf8"));
+
+	// Add directory to include search path
+	std::filesystem::path ParentDirectory = ShaderTextFilePath.parent_path();
+
+	eastl::wstring ShaderTextFilePathStr = EA_WCHAR("-I");
+	ShaderTextFilePathStr += ParentDirectory.make_preferred().c_str();
+	CommonArguments.emplace_back(ShaderTextFilePathStr.data());
 
 
 	ComPtr<IDxcCompilerArgs> DxcCompilerArgs{};
@@ -170,21 +127,23 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 		Define.Value = Definition.Value.c_str();
 	}
 
-	eastl::vector<const wchar_t*> WcharArguments{};
-	for (eastl::wstring& Arg : Arguments)
-	{
-		WcharArguments.push_back(Arg.data());
-	}
-
 	FShaderCompileResult ShaderCompileResult{};
 
 	{
+		eastl::vector<LPCWSTR> RewriterArguements{ CommonArguments };
+		RewriterArguements.emplace_back(EA_WCHAR("-remove-unused-globals"));
+	
+		eastl::wstring EntryPointArgument{ EA_WCHAR("-E") };
+		EntryPointArgument += InShaderCompileArguments.ShaderDeclaration.ShaderEntryPoint;
+		RewriterArguements.emplace_back(EntryPointArgument.data());
+
 		ComPtr<IDxcOperationResult> DxcRewriteResult{};
-		VERIFYD3D12RESULT(GetDxcRewriterInstance()->RemoveUnusedGlobals(
+		VERIFYD3D12RESULT(GetDxcRewriterInstance()->RewriteWithOptions(
 			ShaderTextBlob.Get(),
-			InShaderCompileArguments.ShaderDeclaration.ShaderEntryPoint,
-			DxcDefineList.data(),
-			DxcDefineList.size(),
+			ShaderTextFilePath.filename().c_str(),
+			RewriterArguements.data(), RewriterArguements.size(),
+			DxcDefineList.data(), DxcDefineList.size(),
+			GetDxcDefualtIncludeHandler().Get(),
 			DxcRewriteResult.GetAddressOf()));
 
 		HRESULT DxcResultStatus = 0;
@@ -227,87 +186,136 @@ ANSI_TO_WCHAR(ErrorStr.c_str()));
 		}
 	}
 
-	VERIFYD3D12RESULT(GetDxcUtiles()->BuildArguments(ShaderTextFilePath.filename().c_str(),
-		InShaderCompileArguments.ShaderDeclaration.ShaderEntryPoint,
-		FShaderCompileArguments::ConvertShaderFrequencyToShaderProfile(InShaderCompileArguments.ShaderDeclaration.ShaderFrequency),
-		WcharArguments.data(),
-		WcharArguments.size(),
-		DxcDefineList.data(),
-		DxcDefineList.size(),
-		DxcCompilerArgs.GetAddressOf()));
-
-	ComPtr<IDxcResult> DxcResult{};
-
-	// Create DxcBuffer from IDxcBlob
-	DxcBuffer DxcShaderBuffer = {};
-	DxcShaderBuffer.Ptr = ShaderTextBlob->GetBufferPointer();
-	DxcShaderBuffer.Size = ShaderTextBlob->GetBufferSize();
-
-	BOOL bKnown = 0;
-	UINT32 Encoding = 0;
-	if (SUCCEEDED(ShaderTextBlob->GetEncoding(&bKnown, &Encoding)))
 	{
-		if (bKnown)
+		eastl::vector<LPCWSTR> DXCArguements{ CommonArguments };
+
+		switch (InShaderCompileArguments.OptimizationLevel)
 		{
-			DxcShaderBuffer.Encoding = Encoding;
-		}
-	}
-
-	VERIFYD3D12RESULT(GetDxcCompilerInstance()->Compile(&DxcShaderBuffer, DxcCompilerArgs->GetArguments(), DxcCompilerArgs->GetCount(), 
-		GetDxcDefualtIncludeHandler().Get(), IID_PPV_ARGS(&DxcResult)));
-		
-	HRESULT DxcResultStatus = 0;
-	VERIFYD3D12RESULT(DxcResult->GetStatus(&DxcResultStatus));
-
-
-	if (SUCCEEDED(DxcResultStatus))
-	{
-		{
-			ComPtr<IDxcBlob> ShaderHashDxcBlob{};
-			EA_ASSERT(DxcResult->HasOutput(DXC_OUT_KIND::DXC_OUT_OBJECT));
-			VERIFYD3D12RESULT(DxcResult->GetOutput(DXC_OUT_KIND::DXC_OUT_OBJECT, IID_PPV_ARGS(&ShaderHashDxcBlob), nullptr));
-
-			ShaderCompileResult.ShaderBlobData = ShaderHashDxcBlob;
+		case FShaderCompileArguments::EOptimizationLevel::DisableOptimization:
+			DXCArguements.emplace_back(DXC_ARG_SKIP_OPTIMIZATIONS);
+			break;
+		case FShaderCompileArguments::EOptimizationLevel::O0:
+			DXCArguements.emplace_back(DXC_ARG_OPTIMIZATION_LEVEL0);
+			break;
+		case FShaderCompileArguments::EOptimizationLevel::O1:
+			DXCArguements.emplace_back(DXC_ARG_OPTIMIZATION_LEVEL1);
+			break;
+		case FShaderCompileArguments::EOptimizationLevel::O2:
+			DXCArguements.emplace_back(DXC_ARG_OPTIMIZATION_LEVEL2);
+			break;
+		case FShaderCompileArguments::EOptimizationLevel::O3:
+			DXCArguements.emplace_back(DXC_ARG_OPTIMIZATION_LEVEL3);
+			break;
 		}
 
+		// Unpack uniform matrices as row-major to match the CPU layout.
+		DXCArguements.emplace_back(DXC_ARG_PACK_MATRIX_ROW_MAJOR);
+
+		DXCArguements.emplace_back(DXC_ARG_DEBUG_NAME_FOR_SOURCE); // this is required for DXC_OUT_SHADER_HASH
+
+		// disable undesired warnings
+		DXCArguements.emplace_back(EA_WCHAR("-Wno-parentheses-equality"));
+
+		if (InShaderCompileArguments.bGenerateSymbols)
 		{
-			EA_ASSERT(DxcResult->HasOutput(DXC_OUT_KIND::DXC_OUT_SHADER_HASH));
+			// ref : https://simoncoenen.com/blog/programming/graphics/DxcCompiling#custom-include-handler
+			DXCArguements.emplace_back(EA_WCHAR("-Qembed_debug"));
 
-			ComPtr<IDxcBlob> ShaderHashDxBlob{};
-			VERIFYD3D12RESULT(DxcResult->GetOutput(DXC_OUT_KIND::DXC_OUT_SHADER_HASH, IID_PPV_ARGS(&ShaderHashDxBlob), nullptr));
-			DxcShaderHash* DxcShaderHashBuffer = (DxcShaderHash*)ShaderHashDxBlob->GetBufferPointer();
-
-			EA::StdC::Memcpy(ShaderCompileResult.ShaderHash.Value, DxcShaderHashBuffer->HashDigest, sizeof(ShaderCompileResult.ShaderHash.Value[0]));
-			EA::StdC::Memcpy(ShaderCompileResult.ShaderHash.Value + 1, DxcShaderHashBuffer->HashDigest + sizeof(ShaderCompileResult.ShaderHash.Value[0]), sizeof(ShaderCompileResult.ShaderHash.Value[0]));
+			DXCArguements.emplace_back(EA_WCHAR("-Fd"));
+			DXCArguements.emplace_back(EA_WCHAR(".\\"));
+		}
+		else
+		{
+			DXCArguements.emplace_back(EA_WCHAR("-Qstrip_reflect"));
 		}
 
+		DXCArguements.emplace_back(EA_WCHAR("-Zi"));
+
+		// check https://learn.microsoft.com/en-us/windows/win32/direct3d12/resource-binding-in-hlsl
+		DXCArguements.emplace_back(EA_WCHAR("-auto-binding-space"));
+		DXCArguements.emplace_back(EA_WCHAR("0"));
+
+		VERIFYD3D12RESULT(GetDxcUtiles()->BuildArguments(ShaderTextFilePath.filename().c_str(),
+			InShaderCompileArguments.ShaderDeclaration.ShaderEntryPoint,
+			FShaderCompileArguments::ConvertShaderFrequencyToShaderProfile(InShaderCompileArguments.ShaderDeclaration.ShaderFrequency),
+			DXCArguements.data(),
+			DXCArguements.size(),
+			DxcDefineList.data(),
+			DxcDefineList.size(),
+			DxcCompilerArgs.GetAddressOf()));
+
+		ComPtr<IDxcResult> DxcResult{};
+
+		// Create DxcBuffer from IDxcBlob
+		DxcBuffer DxcShaderBuffer = {};
+		DxcShaderBuffer.Ptr = ShaderTextBlob->GetBufferPointer();
+		DxcShaderBuffer.Size = ShaderTextBlob->GetBufferSize();
+
+		BOOL bKnown = 0;
+		UINT32 Encoding = 0;
+		if (SUCCEEDED(ShaderTextBlob->GetEncoding(&bKnown, &Encoding)))
 		{
-			EA_ASSERT(DxcResult->HasOutput(DXC_OUT_KIND::DXC_OUT_REFLECTION));
-			ComPtr<IDxcBlob> ReflectionDataBlob{};
-			VERIFYD3D12RESULT(DxcResult->GetOutput(DXC_OUT_KIND::DXC_OUT_REFLECTION, IID_PPV_ARGS(&ReflectionDataBlob), nullptr));
-
-			DxcBuffer ReflectionDataBlobDxcBuffer = {};
-			ReflectionDataBlobDxcBuffer.Ptr = ReflectionDataBlob->GetBufferPointer();
-			ReflectionDataBlobDxcBuffer.Size = ReflectionDataBlob->GetBufferSize();
-			
-			VERIFYD3D12RESULT(GetDxcUtiles()->CreateReflection(&ReflectionDataBlobDxcBuffer, IID_PPV_ARGS(&ShaderCompileResult.DxcContainerReflection)));
-
-			// refer : https://rtarun9.github.io/blogs/shader_reflection/
-			ShaderCompileResult.DxcContainerReflection->GetDesc(&ShaderCompileResult.ShaderDesc);
-
+			if (bKnown)
+			{
+				DxcShaderBuffer.Encoding = Encoding;
+			}
 		}
 
-		ShaderCompileResult.bIsValid = true;
-	}
-	else
-	{
-		ComPtr<IDxcBlobEncoding> ErrorBuffer{};
+		VERIFYD3D12RESULT(GetDxcCompilerInstance()->Compile(&DxcShaderBuffer, DxcCompilerArgs->GetArguments(), DxcCompilerArgs->GetCount(),
+			GetDxcDefualtIncludeHandler().Get(), IID_PPV_ARGS(&DxcResult)));
 
-		EA_ASSERT(DxcResult->HasOutput(DXC_OUT_KIND::DXC_OUT_ERRORS));
-		VERIFYD3D12RESULT(DxcResult->GetErrorBuffer(ErrorBuffer.GetAddressOf()));
+		HRESULT DxcResultStatus = 0;
+		VERIFYD3D12RESULT(DxcResult->GetStatus(&DxcResultStatus));
 
-		eastl::string8 ErrorStr{ reinterpret_cast<const char8_t*>(ErrorBuffer->GetBufferPointer()), ErrorBuffer->GetBufferSize()};
-		RD_LOG(ELogVerbosity::Fatal, EA_WCHAR("\
+
+		if (SUCCEEDED(DxcResultStatus))
+		{
+			{
+				ComPtr<IDxcBlob> ShaderHashDxcBlob{};
+				EA_ASSERT(DxcResult->HasOutput(DXC_OUT_KIND::DXC_OUT_OBJECT));
+				VERIFYD3D12RESULT(DxcResult->GetOutput(DXC_OUT_KIND::DXC_OUT_OBJECT, IID_PPV_ARGS(&ShaderHashDxcBlob), nullptr));
+
+				ShaderCompileResult.ShaderBlobData = ShaderHashDxcBlob;
+			}
+
+			{
+				EA_ASSERT(DxcResult->HasOutput(DXC_OUT_KIND::DXC_OUT_SHADER_HASH));
+
+				ComPtr<IDxcBlob> ShaderHashDxBlob{};
+				VERIFYD3D12RESULT(DxcResult->GetOutput(DXC_OUT_KIND::DXC_OUT_SHADER_HASH, IID_PPV_ARGS(&ShaderHashDxBlob), nullptr));
+				DxcShaderHash* DxcShaderHashBuffer = (DxcShaderHash*)ShaderHashDxBlob->GetBufferPointer();
+
+				EA::StdC::Memcpy(ShaderCompileResult.ShaderHash.Value, DxcShaderHashBuffer->HashDigest, sizeof(ShaderCompileResult.ShaderHash.Value[0]));
+				EA::StdC::Memcpy(ShaderCompileResult.ShaderHash.Value + 1, DxcShaderHashBuffer->HashDigest + sizeof(ShaderCompileResult.ShaderHash.Value[0]), sizeof(ShaderCompileResult.ShaderHash.Value[0]));
+			}
+
+			{
+				EA_ASSERT(DxcResult->HasOutput(DXC_OUT_KIND::DXC_OUT_REFLECTION));
+				ComPtr<IDxcBlob> ReflectionDataBlob{};
+				VERIFYD3D12RESULT(DxcResult->GetOutput(DXC_OUT_KIND::DXC_OUT_REFLECTION, IID_PPV_ARGS(&ReflectionDataBlob), nullptr));
+
+				DxcBuffer ReflectionDataBlobDxcBuffer = {};
+				ReflectionDataBlobDxcBuffer.Ptr = ReflectionDataBlob->GetBufferPointer();
+				ReflectionDataBlobDxcBuffer.Size = ReflectionDataBlob->GetBufferSize();
+
+				VERIFYD3D12RESULT(GetDxcUtiles()->CreateReflection(&ReflectionDataBlobDxcBuffer, IID_PPV_ARGS(&ShaderCompileResult.DxcContainerReflection)));
+
+				// refer : https://rtarun9.github.io/blogs/shader_reflection/
+				ShaderCompileResult.DxcContainerReflection->GetDesc(&ShaderCompileResult.ShaderDesc);
+
+			}
+
+			ShaderCompileResult.bIsValid = true;
+		}
+		else
+		{
+			ComPtr<IDxcBlobEncoding> ErrorBuffer{};
+
+			EA_ASSERT(DxcResult->HasOutput(DXC_OUT_KIND::DXC_OUT_ERRORS));
+			VERIFYD3D12RESULT(DxcResult->GetErrorBuffer(ErrorBuffer.GetAddressOf()));
+
+			eastl::string8 ErrorStr{ reinterpret_cast<const char8_t*>(ErrorBuffer->GetBufferPointer()), ErrorBuffer->GetBufferSize() };
+			RD_LOG(ELogVerbosity::Fatal, EA_WCHAR("\
 ------------------------------------\n \
 - Shader Compile Fail -\n \
 ShaderName : %s\n \
@@ -315,13 +323,14 @@ ShaderPath : %s\n \
 ShaderFrequency : %s\n \
 Reason :\n\n \
 %s\n \
-------------------------------------\n"), 
+------------------------------------\n"),
 			InShaderCompileArguments.ShaderDeclaration.ShaderName,
 			InShaderCompileArguments.ShaderDeclaration.ShaderTextFileRelativePath,
 			GetShaderFrequencyString(InShaderCompileArguments.ShaderDeclaration.ShaderFrequency),
 			ANSI_TO_WCHAR(ErrorStr.c_str()));
 
-		ShaderCompileResult.bIsValid = false;
+			ShaderCompileResult.bIsValid = false;
+		}
 	}
 
 	return ShaderCompileResult;
