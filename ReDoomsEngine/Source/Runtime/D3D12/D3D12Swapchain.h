@@ -3,12 +3,12 @@
 #include "D3D12Include.h"
 
 #include "D3D12Resource/D3D12Resource.h"
-#include "D3D12ManagerInterface.h"
+#include "D3D12RendererStateCallbackInterface.h"
 
 class FD3D12CommandQueue;
 class FD3D12Window;
 class FD3D12RenderTargetResource;
-class FD3D12Swapchain : public ID3D12ManagerInterface
+class FD3D12Swapchain : public ID3D12RendererStateCallbackInterface
 {
 public:
 

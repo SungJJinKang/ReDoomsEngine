@@ -5,6 +5,7 @@
 #include <dxgi1_6.h>
 #include <dxgidebug.h>
 
+#include "D3D12Defines.h"
 #include "D3D12Assert.h"
 #include "D3D12Enums.h"
 #include "D3D12Macros.h"

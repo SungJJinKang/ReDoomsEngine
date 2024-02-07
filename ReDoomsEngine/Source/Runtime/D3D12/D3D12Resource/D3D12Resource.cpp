@@ -76,19 +76,19 @@ D3D12_GPU_VIRTUAL_ADDRESS FD3D12Resource::GPUVirtualAddress() const
 	return GetResource()->GetGPUVirtualAddress();
 }
 
-FD3D12ConstantBufferView* FD3D12Resource::GetCBV()
-{
-	EA_ASSERT(bInit);
-	EA_ASSERT(IsBuffer());
-
-	if (DefaultCBV == nullptr)
-	{
-		DefaultCBV = eastl::make_shared<FD3D12ConstantBufferView>(this);
-		DefaultCBV->UpdateDescriptor();
-	}
-
-	return DefaultCBV.get();
-}
+// FD3D12ConstantBufferView* FD3D12Resource::GetCBV()
+// {
+// 	EA_ASSERT(bInit);
+// 	EA_ASSERT(IsBuffer());
+// 
+// 	if (DefaultCBV == nullptr)
+// 	{
+// 		DefaultCBV = eastl::make_shared<FD3D12ConstantBufferView>(this);
+// 		DefaultCBV->UpdateDescriptor();
+// 	}
+// 
+// 	return DefaultCBV.get();
+// }
 
 FD3D12ShaderResourceView* FD3D12Resource::GetSRV()
 {

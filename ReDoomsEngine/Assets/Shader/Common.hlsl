@@ -1,0 +1,8 @@
+
+// Allow only below samplers.
+SamplerState StaticPointWrapSampler;
+SamplerState StaticPointClampSampler;
+SamplerState StaticLinearWrapSampler;
+SamplerState StaticLinearClampSampler;
+SamplerState StaticAnisotropicWrapSampler;
+SamplerState StaticAnisotropicClampSampler;

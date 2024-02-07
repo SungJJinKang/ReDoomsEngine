@@ -8,11 +8,13 @@
 // PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 //
 //*********************************************************
+#include "../Common.hlsl"
 
 struct PSInput
 {
     float4 position : SV_POSITION;
     float4 color : COLOR;
+    float2 uv : TEXCOORD;
 };
 
 cbuffer VertexOffset
@@ -25,7 +27,7 @@ float4 ColorOffset1;
 float4 ColorOffset2;
 float4 ColorOffset3;
 
-PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
+PSInput VSMain(float4 position : POSITION, float4 color : COLOR, float4 uv : TEXCOORD)
 {
     PSInput result;
 
@@ -35,16 +37,14 @@ PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
     {
         result.color += ColorOffset1 + ColorOffset2;
     }
+    result.uv = uv;
 
     return result;
 }
 
-Texture2D<float4> Texture;
+Texture2D<float4> TestTexture;
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-    //float4 Sample = Texture.Load(input.position);
-    //return input.color + ColorOffset1 + ColorOffset2 + Sample;
-
-    return input.color + ColorOffset1 + ColorOffset2 + ColorOffset3;
+    return input.color + ColorOffset1 + ColorOffset2 + ColorOffset3 + TestTexture.Sample(StaticPointWrapSampler, input.uv);
 }

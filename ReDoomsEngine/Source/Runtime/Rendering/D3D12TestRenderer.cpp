@@ -25,6 +25,7 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset3)
 		)
+		ADD_SHADER_SRV_VARIABLE(TestTexture)
 	)
 );
 
@@ -32,18 +33,18 @@ void D3D12TestRenderer::Init()
 {
 	FRenderer::Init();
 
+	float m_aspectRatio = 1.0f;
 	struct Vertex
 	{
 		XMFLOAT3 position;
 		XMFLOAT4 color;
+		XMFLOAT2 uv;
 	};
-
-	float m_aspectRatio = 1.0f;
 	Vertex TriangleVertices[] =
 	{
-		{ { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+		{ { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.0f } },
+		{ { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
+		{ { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
 	};
 	const size_t VerticeSize = sizeof(TriangleVertices);
 	VerticeStride = sizeof(Vertex);
@@ -60,6 +61,14 @@ void D3D12TestRenderer::OnStartFrame()
 {
 	FRenderer::OnStartFrame();
 
+	if (!TestTexture)
+	{
+		TestTexture = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
+			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT);
+
+		TestTexture1 = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
+			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT);
+	}
 }
 
 bool D3D12TestRenderer::Draw()
@@ -79,7 +88,8 @@ bool D3D12TestRenderer::Draw()
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 
 	FD3D12PSOInitializer PSOInitializer{};
@@ -105,14 +115,15 @@ bool D3D12TestRenderer::Draw()
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->SetPipelineState(PSO->PSOObject.Get());
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->SetGraphicsRootSignature(BoundShaderSet.GetRootSignature()->RootSignature.Get());
 
-	TestVSInstance->Parameter.VertexOffset.MemberVariables.Offset = XMVECTOR{ 0.2f };
-	TestVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.AddOffset = true;
-	TestVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset1 = XMVECTOR{ 10.0f };
-	TestVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset2 = XMVECTOR{ 11.0f };
+	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.2f };
+	TestVSInstance->Parameter.GlobalConstantBuffer->AddOffset = true;
+	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 10.0f };
+	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 11.0f };
 
-	TestPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset1 = XMVECTOR{ 12.0f };
-	TestPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset2 = XMVECTOR{ 13.0f };
-	TestPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ColorOffset3 = XMVECTOR{ 14.0f };
+	TestPSInstance->Parameter.TestTexture = TestTexture->GetSRV();
+	TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 12.0f };
+	TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 13.0f };
+	TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset3 = XMVECTOR{ 14.0f };
 	
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
 	TestPSInstance->ApplyShaderParameter(CurrentFrameCommandContext, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
@@ -138,22 +149,12 @@ bool D3D12TestRenderer::Draw()
 
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView = VertexBuffer->GetVertexBufferView(VerticeStride);
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, 1, &VertexBufferView);
+	CurrentFrameCommandContext.StateCache.Flush(CurrentFrameCommandContext);
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->DrawInstanced(3, 1, 0, 0);
 
 	// Indicate that the back buffer will now be used to present.
 	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget.GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ResourceBarrier(1, &ResourceBarrierB);
-
-	if (!TestTexture)
-	{
-		TestTexture = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
-			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT);
-
-		TestTexture1 = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
-			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT);
-
-		FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext)->WaitOnLastSignal();
-	}
 
 	return true;
 }
