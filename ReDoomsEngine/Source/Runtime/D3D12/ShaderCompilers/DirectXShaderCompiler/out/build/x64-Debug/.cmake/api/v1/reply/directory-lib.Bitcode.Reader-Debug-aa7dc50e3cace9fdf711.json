@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_library"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"lib/Bitcode/Reader/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 3,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 554,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "LLVMBitReader",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/LLVMBitReader.lib"
+			],
+			"targetId" : "LLVMBitReader::@b3ae57fb53631d19cf66",
+			"targetIndex" : 96,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "lib/Bitcode/Reader",
+		"source" : "lib/Bitcode/Reader"
+	}
+}

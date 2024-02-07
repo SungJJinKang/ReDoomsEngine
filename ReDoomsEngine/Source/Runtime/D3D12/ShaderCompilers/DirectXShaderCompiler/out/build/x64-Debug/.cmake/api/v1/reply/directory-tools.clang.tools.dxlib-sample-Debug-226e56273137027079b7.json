@@ -1,0 +1,66 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_clang_library"
+		],
+		"files" : 
+		[
+			"tools/clang/CMakeLists.txt",
+			"tools/clang/tools/dxlib-sample/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 25,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 378,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/dxlib_sample.lib"
+			],
+			"targetId" : "dxlib_sample::@7a443502aabdcc50095d",
+			"targetIndex" : 838,
+			"targetIsImportLibrary" : true,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/dxlib_sample.dll"
+			],
+			"targetId" : "dxlib_sample::@7a443502aabdcc50095d",
+			"targetIndex" : 838,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "tools/clang/tools/dxlib-sample",
+		"source" : "tools/clang/tools/dxlib-sample"
+	}
+}

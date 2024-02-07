@@ -1,0 +1,230 @@
+{
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"add_dependencies",
+			"add_unittest",
+			"add_clang_unittest"
+		],
+		"files" : 
+		[
+			"tools/clang/unittests/CMakeLists.txt",
+			"cmake/modules/AddLLVM.cmake",
+			"tools/clang/unittests/Lex/CMakeLists.txt",
+			"tools/clang/unittests/Basic/CMakeLists.txt",
+			"tools/clang/unittests/Rewrite/CMakeLists.txt",
+			"tools/clang/unittests/CodeGen/CMakeLists.txt",
+			"tools/clang/unittests/HLSL/CMakeLists.txt",
+			"tools/clang/unittests/HLSLExec/CMakeLists.txt",
+			"tools/clang/unittests/SPIRV/CMakeLists.txt",
+			"unittests/DxcSupport/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1,
+				"parent" : 0
+			},
+			{
+				"file" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 5,
+				"parent" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 3
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 804,
+				"parent" : 4
+			},
+			{
+				"file" : 3
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 5,
+				"parent" : 6
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 7
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 804,
+				"parent" : 8
+			},
+			{
+				"file" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 4,
+				"line" : 5,
+				"parent" : 10
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 11
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 804,
+				"parent" : 12
+			},
+			{
+				"file" : 5
+			},
+			{
+				"command" : 3,
+				"file" : 5,
+				"line" : 6,
+				"parent" : 14
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 15
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 804,
+				"parent" : 16
+			},
+			{
+				"file" : 6
+			},
+			{
+				"command" : 1,
+				"file" : 6,
+				"line" : 52,
+				"parent" : 18
+			},
+			{
+				"file" : 7
+			},
+			{
+				"command" : 1,
+				"file" : 7,
+				"line" : 12,
+				"parent" : 20
+			},
+			{
+				"file" : 8
+			},
+			{
+				"command" : 3,
+				"file" : 8,
+				"line" : 9,
+				"parent" : 22
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 23
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 804,
+				"parent" : 24
+			},
+			{
+				"file" : 9
+			},
+			{
+				"command" : 3,
+				"file" : 9,
+				"line" : 6,
+				"parent" : 26
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 27
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 804,
+				"parent" : 28
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "LexTests::@a91d55578a6d1522b021"
+		},
+		{
+			"backtrace" : 9,
+			"id" : "BasicTests::@a8638dbb0d5096ceeba0"
+		},
+		{
+			"backtrace" : 13,
+			"id" : "RewriteTests::@ce784e2d87fd041080f4"
+		},
+		{
+			"backtrace" : 17,
+			"id" : "ClangCodeGenTests::@413af35d1b59a882d1c5"
+		},
+		{
+			"backtrace" : 19,
+			"id" : "ClangHLSLTests::@e06aab10041e2fa82bb2"
+		},
+		{
+			"backtrace" : 21,
+			"id" : "ExecHLSLTests::@da115bb3df41a937dabb"
+		},
+		{
+			"backtrace" : 25,
+			"id" : "ClangSPIRVTests::@fb9d78856917e60bf529"
+		},
+		{
+			"backtrace" : 29,
+			"id" : "DxcSupportTests::@f390a2d5e0440ea39ef4"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "Clang tests"
+	},
+	"id" : "ClangUnitTests::@e1f11e1ec73888e26d14",
+	"name" : "ClangUnitTests",
+	"paths" : 
+	{
+		"build" : "tools/clang/unittests",
+		"source" : "tools/clang/unittests"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

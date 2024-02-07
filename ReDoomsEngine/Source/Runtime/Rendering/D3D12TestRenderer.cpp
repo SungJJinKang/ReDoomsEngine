@@ -68,8 +68,6 @@ bool D3D12TestRenderer::Draw()
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
-	return true;
-
 	//Test Code
 	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 	ShaderList[EShaderFrequency::Vertex] = &TestVS;

@@ -1,0 +1,61 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"external/effcee/effcee/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 11,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "include/effcee",
+			"paths" : 
+			[
+				"external/effcee/effcee/effcee.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/effcee.lib"
+			],
+			"targetId" : "effcee::@22a4d8b8cac33119124b",
+			"targetIndex" : 843,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "external/effcee/effcee",
+		"source" : "external/effcee/effcee"
+	}
+}

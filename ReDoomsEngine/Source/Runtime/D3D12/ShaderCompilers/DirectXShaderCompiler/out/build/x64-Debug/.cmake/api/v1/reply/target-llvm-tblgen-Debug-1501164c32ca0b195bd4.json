@@ -1,0 +1,811 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "bin/llvm-tblgen.exe"
+		},
+		{
+			"path" : "bin/llvm-tblgen.pdb"
+		}
+	],
+	"backtrace" : 4,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"add_llvm_executable",
+			"add_llvm_utility",
+			"add_tablegen",
+			"install",
+			"add_link_options",
+			"target_link_libraries",
+			"explicit_llvm_config",
+			"llvm_config",
+			"add_dependencies",
+			"set_windows_version_resource_properties",
+			"add_compile_options",
+			"add_definitions",
+			"add_llvm_definitions",
+			"include",
+			"llvm_update_compile_flags",
+			"include_directories",
+			"set_property"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"cmake/modules/TableGen.cmake",
+			"utils/TableGen/CMakeLists.txt",
+			"CMakeLists.txt",
+			"cmake/modules/LLVM-Config.cmake",
+			"cmake/modules/AddLLVMDefinitions.cmake",
+			"cmake/modules/HandleLLVMOptions.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 9,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 76,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 691,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 608,
+				"parent" : 3
+			},
+			{
+				"command" : 4,
+				"file" : 1,
+				"line" : 120,
+				"parent" : 1
+			},
+			{
+				"file" : 3
+			},
+			{
+				"command" : 5,
+				"file" : 3,
+				"line" : 109,
+				"parent" : 6
+			},
+			{
+				"command" : 5,
+				"file" : 3,
+				"line" : 115,
+				"parent" : 6
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 630,
+				"parent" : 3
+			},
+			{
+				"command" : 7,
+				"file" : 4,
+				"line" : 34,
+				"parent" : 9
+			},
+			{
+				"command" : 6,
+				"file" : 4,
+				"line" : 49,
+				"parent" : 10
+			},
+			{
+				"command" : 10,
+				"file" : 0,
+				"line" : 612,
+				"parent" : 3
+			},
+			{
+				"command" : 9,
+				"file" : 0,
+				"line" : 314,
+				"parent" : 12
+			},
+			{
+				"command" : 11,
+				"file" : 3,
+				"line" : 114,
+				"parent" : 6
+			},
+			{
+				"command" : 12,
+				"file" : 3,
+				"line" : 140,
+				"parent" : 6
+			},
+			{
+				"command" : 12,
+				"file" : 3,
+				"line" : 656,
+				"parent" : 6
+			},
+			{
+				"command" : 12,
+				"file" : 3,
+				"line" : 101,
+				"parent" : 6
+			},
+			{
+				"command" : 14,
+				"file" : 3,
+				"line" : 442,
+				"parent" : 6
+			},
+			{
+				"file" : 6,
+				"parent" : 18
+			},
+			{
+				"command" : 13,
+				"file" : 6,
+				"line" : 279,
+				"parent" : 19
+			},
+			{
+				"command" : 12,
+				"file" : 5,
+				"line" : 12,
+				"parent" : 20
+			},
+			{
+				"command" : 15,
+				"file" : 0,
+				"line" : 615,
+				"parent" : 3
+			},
+			{
+				"command" : 12,
+				"file" : 0,
+				"line" : 50,
+				"parent" : 22
+			},
+			{
+				"command" : 13,
+				"file" : 6,
+				"line" : 548,
+				"parent" : 19
+			},
+			{
+				"command" : 12,
+				"file" : 5,
+				"line" : 12,
+				"parent" : 24
+			},
+			{
+				"command" : 13,
+				"file" : 6,
+				"line" : 549,
+				"parent" : 19
+			},
+			{
+				"command" : 12,
+				"file" : 5,
+				"line" : 12,
+				"parent" : 26
+			},
+			{
+				"command" : 13,
+				"file" : 6,
+				"line" : 550,
+				"parent" : 19
+			},
+			{
+				"command" : 12,
+				"file" : 5,
+				"line" : 12,
+				"parent" : 28
+			},
+			{
+				"command" : 16,
+				"file" : 3,
+				"line" : 613,
+				"parent" : 6
+			},
+			{
+				"command" : 16,
+				"file" : 3,
+				"line" : 617,
+				"parent" : 6
+			},
+			{
+				"command" : 16,
+				"file" : 3,
+				"line" : 619,
+				"parent" : 6
+			},
+			{
+				"command" : 17,
+				"file" : 0,
+				"line" : 318,
+				"parent" : 12
+			},
+			{
+				"command" : 17,
+				"file" : 0,
+				"line" : 315,
+				"parent" : 12
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "/DWIN32 /D_WINDOWS   -wd4146 -wd4180 -wd4244 -wd4258 -wd4267 -wd4291 -wd4345 -wd4351 -wd4355 -wd4456 -wd4457 -wd4458 -wd4459 -wd4503 -wd4624 -wd4722 -wd4800 -wd4100 -wd4127 -wd4512 -wd4505 -wd4610 -wd4510 -wd4702 -wd4245 -wd4706 -wd4310 -wd4701 -wd4703 -wd4389 -wd4611 -wd4805 -wd4204 -wd4324 -we4238 /W4 /Zc:sizedDealloc- /Zi /Ob0 /Od /RTC1 /WX -MDd"
+				},
+				{
+					"fragment" : "/EHsc"
+				},
+				{
+					"backtrace" : 14,
+					"fragment" : "/guard:cf"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 15,
+					"define" : "ENABLE_SPIRV_CODEGEN"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "MSFT_SUPPORTS_CHILD_PROCESSES"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "SUPPORT_QUERY_GIT_COMMIT_INFO"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_CRT_NONSTDC_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_CRT_NONSTDC_NO_WARNINGS"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_CRT_SECURE_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_CRT_SECURE_NO_WARNINGS"
+				},
+				{
+					"backtrace" : 23,
+					"define" : "_ITERATOR_DEBUG_LEVEL=0"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_SCL_SECURE_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_SCL_SECURE_NO_WARNINGS"
+				},
+				{
+					"backtrace" : 25,
+					"define" : "__STDC_CONSTANT_MACROS"
+				},
+				{
+					"backtrace" : 27,
+					"define" : "__STDC_FORMAT_MACROS"
+				},
+				{
+					"backtrace" : 29,
+					"define" : "__STDC_LIMIT_MACROS"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/utils/TableGen"
+				},
+				{
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/TableGen"
+				},
+				{
+					"backtrace" : 30,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
+				},
+				{
+					"backtrace" : 31,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
+				},
+				{
+					"backtrace" : 31,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
+				},
+				{
+					"backtrace" : 32,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27
+			]
+		},
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-DWIN32 -D_DEBUG"
+				},
+				{
+					"fragment" : "/nologo"
+				},
+				{
+					"backtrace" : 33,
+					"fragment" : "/I F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/utils/version"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 15,
+					"define" : "ENABLE_SPIRV_CODEGEN"
+				},
+				{
+					"backtrace" : 34,
+					"define" : "INCLUDE_HLSL_VERSION_FILE=1"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "MSFT_SUPPORTS_CHILD_PROCESSES"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "SUPPORT_QUERY_GIT_COMMIT_INFO"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_CRT_NONSTDC_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_CRT_NONSTDC_NO_WARNINGS"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_CRT_SECURE_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_CRT_SECURE_NO_WARNINGS"
+				},
+				{
+					"backtrace" : 23,
+					"define" : "_ITERATOR_DEBUG_LEVEL=0"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_SCL_SECURE_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "_SCL_SECURE_NO_WARNINGS"
+				},
+				{
+					"backtrace" : 25,
+					"define" : "__STDC_CONSTANT_MACROS"
+				},
+				{
+					"backtrace" : 27,
+					"define" : "__STDC_FORMAT_MACROS"
+				},
+				{
+					"backtrace" : 29,
+					"define" : "__STDC_LIMIT_MACROS"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/utils/TableGen"
+				},
+				{
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/TableGen"
+				},
+				{
+					"backtrace" : 30,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
+				},
+				{
+					"backtrace" : 31,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
+				},
+				{
+					"backtrace" : 31,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
+				},
+				{
+					"backtrace" : 32,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
+				}
+			],
+			"language" : "RC",
+			"sourceIndexes" : 
+			[
+				28
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 11,
+			"id" : "LLVMSupport::@928d1708d80fe1f55e59"
+		},
+		{
+			"backtrace" : 11,
+			"id" : "LLVMMSSupport::@d7b4cb0d6be5a8f60e29"
+		},
+		{
+			"backtrace" : 11,
+			"id" : "LLVMTableGen::@41a560be43d74dc0a888"
+		},
+		{
+			"backtrace" : 13,
+			"id" : "hlsl_version_autogen::@7a784c7205b6e04fb7b9"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "Utils"
+	},
+	"id" : "llvm-tblgen::@dca47d54282c16282dfc",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 5,
+				"path" : "bin"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/install/x64-Debug"
+		}
+	},
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "/DWIN32 /D_WINDOWS   -wd4146 -wd4180 -wd4244 -wd4258 -wd4267 -wd4291 -wd4345 -wd4351 -wd4355 -wd4456 -wd4457 -wd4458 -wd4459 -wd4503 -wd4624 -wd4722 -wd4800 -wd4100 -wd4127 -wd4512 -wd4505 -wd4610 -wd4510 -wd4702 -wd4245 -wd4706 -wd4310 -wd4701 -wd4703 -wd4389 -wd4611 -wd4805 -wd4204 -wd4324 -we4238 /W4 /Zc:sizedDealloc- /Zi /Ob0 /Od /RTC1 /WX -MDd",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "/machine:x64 /STACK:10000000 /debug /INCREMENTAL /subsystem:console",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "/DEBUGTYPE:CV,FIXUP,PDATA",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 7,
+				"fragment" : "/INCREMENTAL:NO",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 8,
+				"fragment" : "/guard:cf",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 11,
+				"fragment" : "lib\\LLVMSupport.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 11,
+				"fragment" : "lib\\LLVMMSSupport.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 11,
+				"fragment" : "lib\\LLVMTableGen.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 11,
+				"fragment" : "lib\\LLVMSupport.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 11,
+				"fragment" : "lib\\LLVMMSSupport.lib",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "llvm-tblgen",
+	"nameOnDisk" : "llvm-tblgen.exe",
+	"paths" : 
+	{
+		"build" : "utils/TableGen",
+		"source" : "utils/TableGen"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27
+			]
+		},
+		{
+			"name" : "Resource Files",
+			"sourceIndexes" : 
+			[
+				28
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/AsmMatcherEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/AsmWriterEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/AsmWriterInst.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/CallingConvEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/CodeEmitterGen.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/CodeGenDAGPatterns.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/CodeGenInstruction.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/CodeGenMapTable.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/CodeGenRegisters.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/CodeGenSchedule.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/CodeGenTarget.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/DAGISelEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/DAGISelMatcherEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/DAGISelMatcherGen.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/DAGISelMatcherOpt.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/DAGISelMatcher.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/DFAPacketizerEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/DisassemblerEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/FastISelEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/FixedLenDecoderEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/InstrInfoEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/IntrinsicEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/OptParserEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/PseudoLoweringEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/RegisterInfoEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/SubtargetEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/TableGen.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "utils/TableGen/CTagsEmitter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 1,
+			"path" : "resources/windows_version_resource.rc",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "EXECUTABLE"
+}

@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_library"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"lib/DxilPdbInfo/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 2,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 554,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "LLVMDxilPdbInfo",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/LLVMDxilPdbInfo.lib"
+			],
+			"targetId" : "LLVMDxilPdbInfo::@a43b16e9c085b1d4b871",
+			"targetIndex" : 106,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "lib/DxilPdbInfo",
+		"source" : "lib/DxilPdbInfo"
+	}
+}

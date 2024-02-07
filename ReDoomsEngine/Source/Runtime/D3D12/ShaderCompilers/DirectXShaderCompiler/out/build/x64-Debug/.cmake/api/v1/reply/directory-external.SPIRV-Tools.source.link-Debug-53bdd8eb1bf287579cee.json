@@ -1,0 +1,85 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"external/SPIRV-Tools/source/link/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 34,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 38,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 42,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/SPIRV-Tools-link.lib"
+			],
+			"targetId" : "SPIRV-Tools-link::@22bb1f78f2e1495d61fe",
+			"targetIndex" : 144,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "SPIRV-Tools-link/cmake",
+			"exportName" : "SPIRV-Tools-linkTargets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "SPIRV-Tools-link::@22bb1f78f2e1495d61fe",
+					"index" : 144
+				}
+			],
+			"paths" : 
+			[
+				"external/SPIRV-Tools/source/link/CMakeFiles/Export/b04d2803212fee1d97d2a066125bad40/SPIRV-Tools-linkTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "SPIRV-Tools-link/cmake",
+			"paths" : 
+			[
+				"out/build/x64-Debug/SPIRV-Tools-linkConfig.cmake"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "external/SPIRV-Tools/source/link",
+		"source" : "external/SPIRV-Tools/source/link"
+	}
+}

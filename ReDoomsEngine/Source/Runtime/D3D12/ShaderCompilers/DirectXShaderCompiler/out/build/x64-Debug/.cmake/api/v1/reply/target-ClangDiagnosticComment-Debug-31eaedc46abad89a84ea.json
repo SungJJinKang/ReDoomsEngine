@@ -1,0 +1,139 @@
+{
+	"backtrace" : 4,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"add_public_tablegen_target",
+			"clang_tablegen",
+			"clang_diag_gen",
+			"add_dependencies",
+			"add_custom_command",
+			"tablegen"
+		],
+		"files" : 
+		[
+			"cmake/modules/TableGen.cmake",
+			"tools/clang/CMakeLists.txt",
+			"tools/clang/include/clang/Basic/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 10,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 2,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 317,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 64,
+				"parent" : 3
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 67,
+				"parent" : 3
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 314,
+				"parent" : 2
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 26,
+				"parent" : 6
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "HCTGen::@5fa7c416598cd72250bb"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "clang-tblgen::@9d1a7e4b77846bff96c3"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "Clang tablegenning"
+	},
+	"id" : "ClangDiagnosticComment::@384e7ab759dd3ad49a7b",
+	"name" : "ClangDiagnosticComment",
+	"paths" : 
+	{
+		"build" : "tools/clang/include/clang/Basic",
+		"source" : "tools/clang/include/clang/Basic"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1,
+				2,
+				3
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 4,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/include/clang/Basic/CMakeFiles/ClangDiagnosticComment",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/include/clang/Basic/CMakeFiles/ClangDiagnosticComment.rule",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/include/clang/Basic/DiagnosticCommentKinds.inc.rule",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/include/clang/Basic/DiagnosticCommentKinds.inc.tmp.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}
