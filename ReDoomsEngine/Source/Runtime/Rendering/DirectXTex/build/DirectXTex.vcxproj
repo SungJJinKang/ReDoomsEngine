@@ -12,9 +12,17 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{55B20886-842C-3FDC-91F8-D427C6B8AC90}</ProjectGuid>
+    <ProjectGuid>{E4ECE6E6-7EED-36C8-9087-5A737DC1CBA7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -32,6 +40,16 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -41,18 +59,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\bin\CMake\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\bin\CMake\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DirectXTex.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DirectXTex</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\bin\CMake\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\bin\CMake\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DirectXTex.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DirectXTex</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\bin\CMake\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">DirectXTex.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">DirectXTex</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\bin\CMake\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">DirectXTex.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">DirectXTex</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /ZH:SHA_256 /Zc:__cplusplus /Zc:lambda /Zc:checkGwOdr /Zc:templateScope /Zc:twoPhase-</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -66,8 +92,8 @@
       <OpenMPSupport>true</OpenMPSupport>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
       <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -81,10 +107,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -97,7 +123,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /ZH:SHA_256 /Zc:__cplusplus /Zc:lambda /Zc:checkGwOdr /Zc:templateScope /Zc:twoPhase-</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
@@ -111,8 +137,8 @@
       <OpenMPSupport>true</OpenMPSupport>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderFile>F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
       <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -128,10 +154,103 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /ZH:SHA_256 /Zc:__cplusplus /Zc:lambda /Zc:checkGwOdr /Zc:templateScope /Zc:twoPhase-</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <DisableSpecificWarnings>5105</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <GuardEHContMetadata>true</GuardEHContMetadata>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/MinSizeRel/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <SDLCheck>true</SDLCheck>
+      <SupportJustMyCode>false</SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /ZH:SHA_256 /Zc:__cplusplus /Zc:lambda /Zc:checkGwOdr /Zc:templateScope /Zc:twoPhase-</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>5105</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <GuardEHContMetadata>true</GuardEHContMetadata>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <OpenMPSupport>true</OpenMPSupport>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/RelWithDebInfo/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <SDLCheck>true</SDLCheck>
+      <SupportJustMyCode>false</SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -143,11 +262,14 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\CMakeLists.txt">
-      <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/CMakeLists.txt</Message>
+    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders\CompileShaders.cmd">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating HLSL shaders...</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build --check-stamp-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/generate.stamp
+cd F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders
+if %errorlevel% neq 0 goto :cmEnd
+F:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E env CompileShadersOutput="F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/Shaders/Compiled" CompileShaders.cmd &gt; F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/Shaders/Compiled/compileshaders.log
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -155,12 +277,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.28\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakePackageConfigHelpers.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CTest.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CTestTargets.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CTestUseLaunchers.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\DartConfiguration.tcl.in;C:\Program Files\CMake\share\cmake-3.28\Modules\FindOpenMP.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\GNUInstallDirs.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\WriteBasicConfigVersionFile.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.28.1\CMakeCXXCompiler.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.28.1\CMakeRCCompiler.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.28.1\CMakeSystem.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex-config.cmake.in;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex.pc.in;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\JoinPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders\BC6HEncode.hlsl;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders\BC7Encode.hlsl;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled\BC6HEncode_EncodeBlockCS.inc</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating HLSL shaders...</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex -BC:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build --check-stamp-file C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/generate.stamp
+cd F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders
+if %errorlevel% neq 0 goto :cmEnd
+F:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E env CompileShadersOutput="F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/Shaders/Compiled" CompileShaders.cmd &gt; F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/Shaders/Compiled/compileshaders.log
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -168,146 +294,266 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.28\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakePackageConfigHelpers.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CTest.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CTestTargets.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CTestUseLaunchers.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\DartConfiguration.tcl.in;C:\Program Files\CMake\share\cmake-3.28\Modules\FindOpenMP.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\GNUInstallDirs.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\WriteBasicConfigVersionFile.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.28.1\CMakeCXXCompiler.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.28.1\CMakeRCCompiler.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.28.1\CMakeSystem.cmake;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex-config.cmake.in;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex.pc.in;C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\JoinPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders\BC6HEncode.hlsl;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders\BC7Encode.hlsl;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled\BC6HEncode_EncodeBlockCS.inc</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Generating HLSL shaders...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+cd F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders
+if %errorlevel% neq 0 goto :cmEnd
+F:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E env CompileShadersOutput="F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/Shaders/Compiled" CompileShaders.cmd &gt; F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/Shaders/Compiled/compileshaders.log
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders\BC6HEncode.hlsl;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders\BC7Encode.hlsl;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled\BC6HEncode_EncodeBlockCS.inc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Generating HLSL shaders...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+cd F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders
+if %errorlevel% neq 0 goto :cmEnd
+F:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E env CompileShadersOutput="F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/Shaders/Compiled" CompileShaders.cmd &gt; F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/Shaders/Compiled/compileshaders.log
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders\BC6HEncode.hlsl;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\Shaders\BC7Encode.hlsl;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled\BC6HEncode_EncodeBlockCS.inc</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\cmake_pch.cxx">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClInclude Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC.h" />
-    <ClInclude Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DDS.h" />
-    <ClInclude Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexP.h" />
-    <ClInclude Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\filters.h" />
-    <ClInclude Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\scoped.h" />
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC4BC5.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC6HBC7.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexCompress.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexConvert.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexDDS.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexHDR.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexImage.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexMipmaps.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexMisc.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexNormalMaps.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexPMAlpha.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexResize.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexTGA.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexUtil.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexFlipRotate.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexWIC.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexD3D12.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClInclude Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\d3dx12.h" />
-    <ClInclude Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTex.h" />
-    <ClInclude Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTex.inl" />
-    <ClInclude Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\Debug\cmake_pch.hxx" />
-    <ClInclude Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\Release\cmake_pch.hxx" />
+    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex -BF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build --check-stamp-file F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakePackageConfigHelpers.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTest.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTestTargets.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTestUseLaunchers.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.24\Modules\DartConfiguration.tcl.in;C:\Program Files\CMake\share\cmake-3.24\Modules\FindOpenMP.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\GNUInstallDirs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\WriteBasicConfigVersionFile.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeCXXCompiler.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeRCCompiler.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeSystem.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex-config.cmake.in;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex.pc.in;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\JoinPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex -BF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build --check-stamp-file F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakePackageConfigHelpers.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTest.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTestTargets.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTestUseLaunchers.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.24\Modules\DartConfiguration.tcl.in;C:\Program Files\CMake\share\cmake-3.24\Modules\FindOpenMP.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\GNUInstallDirs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\WriteBasicConfigVersionFile.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeCXXCompiler.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeRCCompiler.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeSystem.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex-config.cmake.in;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex.pc.in;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\JoinPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex -BF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build --check-stamp-file F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakePackageConfigHelpers.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTest.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTestTargets.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTestUseLaunchers.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.24\Modules\DartConfiguration.tcl.in;C:\Program Files\CMake\share\cmake-3.24\Modules\FindOpenMP.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\GNUInstallDirs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\WriteBasicConfigVersionFile.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeCXXCompiler.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeRCCompiler.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeSystem.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex-config.cmake.in;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex.pc.in;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\JoinPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex -BF:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build --check-stamp-file F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakePackageConfigHelpers.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTest.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTestTargets.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CTestUseLaunchers.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.24\Modules\DartConfiguration.tcl.in;C:\Program Files\CMake\share\cmake-3.24\Modules\FindOpenMP.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\GNUInstallDirs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\WriteBasicConfigVersionFile.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeCXXCompiler.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeRCCompiler.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\3.24.2\CMakeSystem.cmake;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex-config.cmake.in;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\DirectXTex.pc.in;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\JoinPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\ZERO_CHECK.vcxproj">
-      <Project>{500A334A-2ADF-31DA-9964-E5FE1FC9CF62}</Project>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\cmake_pch.cxx">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/MinSizeRel/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.dir/RelWithDebInfo/cmake_pch.pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC.h" />
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DDS.h" />
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexP.h" />
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\filters.h" />
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\scoped.h" />
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC4BC5.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BC6HBC7.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexCompress.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexConvert.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexDDS.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexHDR.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexImage.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexMipmaps.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexMisc.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexNormalMaps.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexPMAlpha.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexResize.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexTGA.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexUtil.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexFlipRotate.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexWIC.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BCDirectCompute.h" />
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\BCDirectCompute.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexCompressGPU.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexD3D11.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTexD3D12.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/DirectXTex.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\d3dx12.h" />
+    <None Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\Shaders\Compiled\BC6HEncode_EncodeBlockCS.inc">
+    </None>
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTex.h" />
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\DirectXTex\DirectXTex.inl" />
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\Debug\cmake_pch.hxx" />
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\Release\cmake_pch.hxx" />
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\MinSizeRel\cmake_pch.hxx" />
+    <ClInclude Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\DirectXTex.dir\RelWithDebInfo\cmake_pch.hxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\ZERO_CHECK.vcxproj">
+      <Project>{28675B0D-37AF-3EDD-8018-ECAA4FAB664D}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

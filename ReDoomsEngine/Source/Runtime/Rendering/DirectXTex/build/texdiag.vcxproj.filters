@@ -1,26 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\Texdiag\texdiag.cpp">
+    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\Texdiag\texdiag.cpp">
       <Filter>texdiag</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\CMakeLists.txt">
+    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\CMakeLists.txt">
       <Filter>DirectXTex</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\Texdiag\texdiag.rc">
+    <ResourceCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\Texdiag\texdiag.rc">
       <Filter>texdiag</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="DirectXTex">
-      <UniqueIdentifier>{C544881B-E852-368C-91B5-416AB0DC0E2D}</UniqueIdentifier>
+      <UniqueIdentifier>{2DD8F4D5-23A0-311F-B1F5-79019620B75E}</UniqueIdentifier>
     </Filter>
     <Filter Include="texdiag">
-      <UniqueIdentifier>{24BEE643-7749-31C7-A010-AC30C12EDE41}</UniqueIdentifier>
+      <UniqueIdentifier>{DD431B43-2DD4-3EB9-AA5F-B7DB7631E02A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
