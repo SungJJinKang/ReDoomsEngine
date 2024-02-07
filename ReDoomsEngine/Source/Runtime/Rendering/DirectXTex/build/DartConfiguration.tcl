@@ -4,14 +4,14 @@
 
 
 # Configuration directories and files
-SourceDirectory: C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex
-BuildDirectory: C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build
+SourceDirectory: F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex
+BuildDirectory: F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: DESKTOP-UA8H2MR
+Site: hour30000-PC15
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Win32-MSBuild
@@ -27,7 +27,7 @@ SubmitInactivityTimeout:
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "C:/Program Files/CMake/bin/cmake.exe" "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex"
+ConfigureCommand: "C:/Program Files/CMake/bin/cmake.exe" "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex"
 MakeCommand: "C:\Program Files\CMake\bin\cmake.exe" --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
@@ -63,8 +63,8 @@ UpdateOptions:
 UpdateType: 
 
 # Compiler info
-Compiler: C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.36.32532/bin/Hostx64/x64/cl.exe
-CompilerVersion: 19.36.32543.0
+Compiler: C:/Program Files/Microsoft Visual Studio/2022/Professional/VC/Tools/MSVC/14.38.33130/bin/Hostx64/x64/cl.exe
+CompilerVersion: 19.38.33134.0
 
 # Dynamic analysis (MemCheck)
 PurifyCommand: 

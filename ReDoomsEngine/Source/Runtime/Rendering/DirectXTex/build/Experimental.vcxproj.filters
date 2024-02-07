@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\372fea99089fb749ee0d36780680975f\Experimental.rule">
+    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\0a9978d6340dad7fb063e89821ec61f2\Experimental.rule">
       <Filter>DirectXTex</Filter>
     </CustomBuild>
-    <CustomBuild Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\CMakeLists.txt">
+    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\CMakeLists.txt">
       <Filter>DirectXTex</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\Experimental">
+    <None Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\Rendering\DirectXTex\build\CMakeFiles\Experimental">
       <Filter>DirectXTex</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="DirectXTex">
-      <UniqueIdentifier>{C544881B-E852-368C-91B5-416AB0DC0E2D}</UniqueIdentifier>
+      <UniqueIdentifier>{2DD8F4D5-23A0-311F-B1F5-79019620B75E}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

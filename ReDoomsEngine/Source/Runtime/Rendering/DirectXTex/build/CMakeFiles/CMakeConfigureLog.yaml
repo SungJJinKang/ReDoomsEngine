@@ -60,7 +60,7 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
       
       The CXX compiler identification is MSVC, found in:
-        C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/3.28.1/CompilerIdCXX/CompilerIdCXX.exe
+        $(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/3.28.1/CompilerIdCXX/CompilerIdCXX.exe
       
   -
     kind: "try_compile-v1"
@@ -71,8 +71,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-801bbq"
-      binary: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-801bbq"
+      source: "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-801bbq"
+      binary: "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-801bbq"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
@@ -81,7 +81,7 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-801bbq'
+        Change Dir: '$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-801bbq'
         
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_d7e55.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         msbuild 버전 17.8.3+195e7f5a3(.NET Framework용)
@@ -102,7 +102,7 @@ events:
           Copyright (C) Microsoft Corporation.  All rights reserved.
           cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_d7e55.dir\\Debug\\\\" /Fd"cmTC_d7e55.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.28\\Modules\\CMakeCXXCompilerABI.cpp"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-801bbq\\Debug\\cmTC_d7e55.exe" /INCREMENTAL /ILK:"cmTC_d7e55.dir\\Debug\\cmTC_d7e55.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-801bbq/Debug/cmTC_d7e55.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-801bbq/Debug/cmTC_d7e55.lib" /MACHINE:X64  /machine:x64 cmTC_d7e55.dir\\Debug\\CMakeCXXCompilerABI.obj
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-801bbq\\Debug\\cmTC_d7e55.exe" /INCREMENTAL /ILK:"cmTC_d7e55.dir\\Debug\\cmTC_d7e55.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-801bbq/Debug/cmTC_d7e55.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-801bbq/Debug/cmTC_d7e55.lib" /MACHINE:X64  /machine:x64 cmTC_d7e55.dir\\Debug\\CMakeCXXCompilerABI.obj
           cmTC_d7e55.vcxproj -> C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-801bbq\\Debug\\cmTC_d7e55.exe
         FinalizeBuildStatus:
           "cmTC_d7e55.dir\\Debug\\cmTC_d7e55.tlog\\unsuccessfulbuild" 파일을 삭제하고 있습니다.
@@ -124,8 +124,8 @@ events:
       - "CMakeLists.txt:216 (find_package)"
     description: "Detecting CXX OpenMP compiler info"
     directories:
-      source: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-yu42wr"
-      binary: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-yu42wr"
+      source: "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-yu42wr"
+      binary: "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-yu42wr"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
@@ -134,7 +134,7 @@ events:
       variable: "OpenMP_COMPILE_RESULT_CXX_openmp"
       cached: true
       stdout: |
-        Change Dir: 'C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-yu42wr'
+        Change Dir: '$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-yu42wr'
         
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_bc023.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         msbuild 버전 17.8.3+195e7f5a3(.NET Framework용)
@@ -155,7 +155,7 @@ events:
           Copyright (C) Microsoft Corporation.  All rights reserved.
           cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /openmp /std:c++17 /Fo"cmTC_bc023.dir\\Debug\\\\" /Fd"cmTC_bc023.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-yu42wr\\OpenMPTryFlag.cpp"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-yu42wr\\Debug\\cmTC_bc023.exe" /INCREMENTAL /ILK:"cmTC_bc023.dir\\Debug\\cmTC_bc023.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-yu42wr/Debug/cmTC_bc023.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-yu42wr/Debug/cmTC_bc023.lib" /MACHINE:X64  /machine:x64 cmTC_bc023.dir\\Debug\\OpenMPTryFlag.obj
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-yu42wr\\Debug\\cmTC_bc023.exe" /INCREMENTAL /ILK:"cmTC_bc023.dir\\Debug\\cmTC_bc023.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-yu42wr/Debug/cmTC_bc023.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-yu42wr/Debug/cmTC_bc023.lib" /MACHINE:X64  /machine:x64 cmTC_bc023.dir\\Debug\\OpenMPTryFlag.obj
           cmTC_bc023.vcxproj -> C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-yu42wr\\Debug\\cmTC_bc023.exe
         FinalizeBuildStatus:
           "cmTC_bc023.dir\\Debug\\cmTC_bc023.tlog\\unsuccessfulbuild" 파일을 삭제하고 있습니다.
@@ -177,8 +177,8 @@ events:
       - "CMakeLists.txt:216 (find_package)"
     description: "Detecting CXX OpenMP version"
     directories:
-      source: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-0cu27v"
-      binary: "C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-0cu27v"
+      source: "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-0cu27v"
+      binary: "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-0cu27v"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
@@ -187,7 +187,7 @@ events:
       variable: "OpenMP_SPECTEST_CXX_"
       cached: true
       stdout: |
-        Change Dir: 'C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-0cu27v'
+        Change Dir: '$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-0cu27v'
         
         Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_c0358.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         msbuild 버전 17.8.3+195e7f5a3(.NET Framework용)
@@ -208,7 +208,7 @@ events:
           Copyright (C) Microsoft Corporation.  All rights reserved.
           cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /openmp /std:c++17 /Fo"cmTC_c0358.dir\\Debug\\\\" /Fd"cmTC_c0358.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-0cu27v\\OpenMPCheckVersion.cpp"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-0cu27v\\Debug\\cmTC_c0358.exe" /INCREMENTAL /ILK:"cmTC_c0358.dir\\Debug\\cmTC_c0358.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-0cu27v/Debug/cmTC_c0358.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-0cu27v/Debug/cmTC_c0358.lib" /MACHINE:X64  /machine:x64 cmTC_c0358.dir\\Debug\\OpenMPCheckVersion.obj
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-0cu27v\\Debug\\cmTC_c0358.exe" /INCREMENTAL /ILK:"cmTC_c0358.dir\\Debug\\cmTC_c0358.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-0cu27v/Debug/cmTC_c0358.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/CMakeScratch/TryCompile-0cu27v/Debug/cmTC_c0358.lib" /MACHINE:X64  /machine:x64 cmTC_c0358.dir\\Debug\\OpenMPCheckVersion.obj
           cmTC_c0358.vcxproj -> C:\\ReDoomsEngine\\ReDoomsEngine\\Source\\Runtime\\Rendering\\DirectXTex\\build\\CMakeFiles\\CMakeScratch\\TryCompile-0cu27v\\Debug\\cmTC_c0358.exe
         FinalizeBuildStatus:
           "cmTC_c0358.dir\\Debug\\cmTC_c0358.tlog\\unsuccessfulbuild" 파일을 삭제하고 있습니다.
