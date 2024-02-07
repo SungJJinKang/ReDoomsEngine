@@ -47,12 +47,12 @@ void FD3D12Window::Init()
     ShowWindow(WindowHandle, FWindowsApplication::NumCmdShow);
 }
 
-void FD3D12Window::OnStartFrame()
+void FD3D12Window::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12Window::OnEndFrame()
+void FD3D12Window::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }

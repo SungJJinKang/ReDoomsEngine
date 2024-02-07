@@ -26,13 +26,16 @@ public:
 	eastl::array<eastl::shared_ptr<FD3D12CommandAllocator>, static_cast<uint32_t>(ECommandAllocatotrType::Num)> CommandAllocatorList;
 	FD3D12Fence FrameWorkEndFence;
 
-	eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> SrvUavOnlineDescriptorHeapContainer{ eastl::make_shared<FD3D12OnlineDescriptorHeapContainer>(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) };
-
-	void Init();
+	void Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> InOnlineDescriptorHeap);
 	void ClearFrameResource();
 
-	virtual void OnStartFrame();
-	virtual void OnEndFrame();
+	virtual void OnPreStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
+
+private:
+
+	bool bInit = false;
 };
 
 enum class ERendererState
@@ -64,12 +67,12 @@ public:
 	FFrameResourceContainer& GetLastFrameContainer();
 	FFrameResourceContainer& GetCurrentFrameContainer();
 
-	FD3D12Manager D3D12Manager;
-
 	inline ERendererState GetCurrentRendererState() const
 	{
 		return CurrentRendererState;
 	}
+
+	FD3D12Manager D3D12Manager;
 
 protected:
 
@@ -83,4 +86,3 @@ protected:
 private :
 	ERendererState CurrentRendererState = ERendererState::Initializing;
 };
-

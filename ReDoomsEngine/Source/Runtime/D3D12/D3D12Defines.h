@@ -10,4 +10,4 @@
 */
 #define MAX_SRVS		32
 #define MAX_UAVS		16
-#define MAX_ROOT_CBV	16
+#define MAX_ROOT_CBV	16 // if increase this, Bit count of "CBVRegisterMask" variable should be changed properly

@@ -47,13 +47,6 @@ inline bool operator!=(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
 	return lhs.CachedHash != rhs.CachedHash;
 }
 
-//
-template<typename Type>
-uint32_t GetShaderVariableSize()
-{
-	return sizeof(Type);
-}
-
 struct FD3D12ConstantBufferReflectionData
 {
 	struct FD3D12VariableOfConstantBufferReflectionData
@@ -67,7 +60,7 @@ struct FD3D12ConstantBufferReflectionData
 	eastl::string Name;
 	D3D12_SHADER_INPUT_BIND_DESC ResourceBindingDesc;
 	D3D12_SHADER_BUFFER_DESC Desc;
-	eastl::vector<FD3D12VariableOfConstantBufferReflectionData> VariableList; // variables declared in cbuffer or global variables
+	eastl::hash_map<eastl::string, FD3D12VariableOfConstantBufferReflectionData> VariableList; // variables declared in cbuffer or global variables
 };
 
 // Member variables never be touched after PopulateShaderReflectionData because shader parameters reference the variables by reference
@@ -193,7 +186,7 @@ public:
 	}
 
 	void AddShaderParamter(FShaderParameterTemplate* const InShaderParameter);
-	void ApplyShaderParameters(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature);
+	void ApplyShaderParameters(FD3D12CommandContext& InCommandContext);
 
 protected:
 
@@ -237,7 +230,6 @@ public:
 		return VariableName;
 	}
 
-	virtual uint64_t GetSize() const = 0;
 	virtual bool IsConstantBuffer() const
 	{
 		return false;
@@ -258,8 +250,7 @@ public:
 	virtual bool HasReflectionData() const = 0;
 
 	virtual void InitD3DResource();
-	void ApplyResource(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature);
-	virtual FD3D12Resource* GetD3D12Resource() { return nullptr; };
+	void ApplyResource(FD3D12CommandContext& InCommandContext, const FD3D12RootSignature* const InRootSignature);
 
 protected:
 
@@ -320,7 +311,6 @@ public:
 	{
 		return true;
 	}
-	virtual uint64_t GetSize() const { return 0; }
  
 	FD3D12ShaderResourceView* GetTargetSRV() const
 	{
@@ -357,6 +347,7 @@ public:
 	{
 	}
 
+	virtual void InitD3DResource();
 	void AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize, 
 		const char* const InVariableName, const std::type_info& InTypeId);
 
@@ -364,9 +355,7 @@ public:
 	{
 		return true;
 	}
-
 	virtual uint64_t GetSize() const = 0;
-
 
 	inline bool IsGlobalConstantBuffer() const
 	{
@@ -389,6 +378,7 @@ public:
 	{
 		return GetReflectionData() != nullptr;
 	}
+	void FlushShadowData(uint8* const InShadowDataAddress);
 
 protected:
 
@@ -417,16 +407,11 @@ class TShaderParameter : public FShaderParameterTemplate
 	{
 		return typeid(VariableType);
 	}
-
-	virtual uint64_t GetSize() const
-	{
-		return GetShaderVariableSize<VariableType>();
-	}
 };
 
 class FShaderParameterConstantBufferMemberVariableTemplate
 {
-
+public:
 };
 
 template<typename VariableType>
@@ -482,7 +467,7 @@ public:
 		return ShaderParameterContainerTemplate;
 	}
 
-	void ApplyShaderParameter(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature);
+	void ApplyShaderParameter(FD3D12CommandContext& InCommandContext);
 
 protected:
 
@@ -561,7 +546,6 @@ private:
 		} MemberVariables; \
 		virtual uint64_t GetSize() const { return sizeof(FMemberVariableContainer); } \
 		virtual bool IsTemplateVariable() const { return (TemplateVariable == this);} \
-		virtual FD3D12Resource* GetD3D12Resource() { return ConstantBufferResource.get(); } \
 		virtual FD3D12ConstantBufferResource* GetConstantBufferResource()  { return ConstantBufferResource.get(); } \
 		FMemberVariableContainer* operator->(){ return &MemberVariables; } \
 	}  
@@ -630,8 +614,8 @@ class FD3D12ShaderManager : public EA::StdC::Singleton<FD3D12ShaderManager>, pub
 public:
 
 	void Init();
-	virtual void OnStartFrame();
-	virtual void OnEndFrame();
+	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 
 	bool CompileAndAddNewShader(FD3D12ShaderTemplate& Shader, const FShaderCompileArguments& InShaderCompileArguments);
 	void CompileAllPendingShader();

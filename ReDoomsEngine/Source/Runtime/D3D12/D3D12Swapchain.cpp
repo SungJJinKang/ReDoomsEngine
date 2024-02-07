@@ -59,12 +59,12 @@ void FD3D12Swapchain::Init()
     FD3D12Manager::GetInstance()->GetDXGIFactory()->MakeWindowAssociation(Window->GetWindowHandle(), DXGI_MWA_NO_WINDOW_CHANGES);
 }
 
-void FD3D12Swapchain::OnStartFrame()
+void FD3D12Swapchain::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12Swapchain::OnEndFrame()
+void FD3D12Swapchain::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }

@@ -52,8 +52,8 @@ public:
 
 	void Init();
 	eastl::shared_ptr<FD3D12RootSignature> GetOrCreateRootSignature(const FBoundShaderSet& InBoundShaderSet);
-	virtual void OnStartFrame();
-	virtual void OnEndFrame();
+	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 
 
 private:

@@ -5,6 +5,18 @@
 
 static_assert(std::is_pod<FD3D12PSOInitializer::FDesc>::value);
 
+bool FD3D12PSOInitializer::IsValid() const
+{
+    return (CachedHash != 0) && (BoundShaderSet.CachedHash.Value[0] != 0) && (BoundShaderSet.CachedHash.Value[1] != 0);
+}
+
+void FD3D12PSOInitializer::Reset()
+{
+    MEM_ZERO(BoundShaderSet);
+    MEM_ZERO(Desc);
+    MEM_ZERO(CachedHash);
+}
+
 void FD3D12PSOInitializer::FinishCreating()
 {
     EA_ASSERT(CachedHash == 0);
@@ -75,12 +87,12 @@ FD3D12PSO* FD3D12PSOManager::GetOrCreatePSO(const FD3D12PSOInitializer& InD3D12P
     return NewPSO;
 }
 
-void FD3D12PSOManager::OnStartFrame()
+void FD3D12PSOManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12PSOManager::OnEndFrame()
+void FD3D12PSOManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }

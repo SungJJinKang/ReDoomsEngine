@@ -92,6 +92,7 @@ public:
 
 protected:
 
+	bool bInit;
 	D3D12_DESCRIPTOR_HEAP_TYPE HeapType;
 	uint32_t NumDescriptor;
 
@@ -159,16 +160,13 @@ public:
 
 	FD3D12DescriptorHeapManager();
 	void Init();
-	virtual void OnStartFrame();
-	virtual void OnEndFrame();
+	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 
-
-	FD3D12OfflineDescriptorHeapContainer* GetOfflineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType);
-	FD3D12DescriptorHeapBlock AllocateOfflineHeapDescriptorHeapBlock(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType, const uint32 InDescriptorCount);
-
-private:
-
+	FD3D12OnlineDescriptorHeapContainer CbvSrvUavOnlineDescriptorHeapContainer;
 	FD3D12OfflineDescriptorHeapContainer RTVDescriptorHeapContainer;
 	FD3D12OfflineDescriptorHeapContainer DSVDescriptorHeapContainer;
-	FD3D12OfflineDescriptorHeapContainer SrvUavOfflineDescriptorHeapContainer;
+	FD3D12OfflineDescriptorHeapContainer CbvSrvUavOfflineDescriptorHeapContainer;
+
+private:
 };

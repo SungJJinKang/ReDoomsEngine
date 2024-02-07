@@ -31,6 +31,8 @@ struct FD3D12PSOInitializer
 
 	uint64 CachedHash;
 
+    bool IsValid() const;
+    void Reset();
     void FinishCreating();
 };
 
@@ -74,8 +76,8 @@ public:
 
     FD3D12PSO* GetOrCreatePSO(const FD3D12PSOInitializer& InD3D12PSOInitializer);
 
-    virtual void OnStartFrame();
-    virtual void OnEndFrame();
+    virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+    virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 
 private:
 

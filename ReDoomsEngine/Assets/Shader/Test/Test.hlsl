@@ -17,14 +17,16 @@ struct PSInput
     float2 uv : TEXCOORD;
 };
 
+
+float4 ColorOffset2;
+bool AddOffset;
+float4 ColorOffset1;
+
 cbuffer VertexOffset
 {       
     float4 Offset;
 }
 
-bool AddOffset;
-float4 ColorOffset1;
-float4 ColorOffset2;
 float4 ColorOffset3;
 
 PSInput VSMain(float4 position : POSITION, float4 color : COLOR, float4 uv : TEXCOORD)
