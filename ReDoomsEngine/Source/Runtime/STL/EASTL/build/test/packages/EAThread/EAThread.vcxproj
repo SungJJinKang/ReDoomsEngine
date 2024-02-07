@@ -83,7 +83,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <Optimization>Disabled</Optimization>
@@ -116,7 +116,7 @@
       <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
@@ -151,7 +151,7 @@
       <AdditionalIncludeDirectories>F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EAThread\include;F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <Optimization>MinSpace</Optimization>
@@ -187,7 +187,7 @@
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>

@@ -127,6 +127,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SupportJustMyCode>false</SupportJustMyCode>
       <CompileAs>Default</CompileAs>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(ProjectDir)\..\..\bin\mimalloc-redirect.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -191,6 +192,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <CompileAs>Default</CompileAs>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

@@ -120,6 +120,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <SupportJustMyCode>false</SupportJustMyCode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <PostBuildEvent>
       <Command>
@@ -180,6 +181,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
