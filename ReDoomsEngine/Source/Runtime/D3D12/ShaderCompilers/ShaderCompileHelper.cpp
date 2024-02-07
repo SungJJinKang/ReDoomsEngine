@@ -149,12 +149,6 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 		// disable undesired warnings
 		Arguments.emplace_back(EA_WCHAR("-Wno-parentheses-equality"));
 
-		// @lh-todo: This fixes a loop unrolling issue that showed up in DOFGatherKernel with cs_6_6 with the latest DXC revision
-		Arguments.emplace_back(EA_WCHAR("-disable-lifetime-markers"));
-
-// 		Arguments.emplace_back(EA_WCHAR("-dxr"));
-// 		Arguments.emplace_back(EA_WCHAR("-remove-unused-globals"));
-
 		Arguments.emplace_back(EA_WCHAR("-encoding"));
 		Arguments.emplace_back(EA_WCHAR("utf8"));
 
