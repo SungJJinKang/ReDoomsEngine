@@ -129,9 +129,6 @@
     <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\Utils\cityhash\src\city-test.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Runtime\D3D12\D3D12CommandList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
