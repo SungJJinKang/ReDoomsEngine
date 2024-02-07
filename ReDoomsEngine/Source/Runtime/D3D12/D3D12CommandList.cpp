@@ -76,8 +76,8 @@ eastl::shared_ptr<FD3D12CommandList> FD3D12CommandAllocator::GetOrCreateNewComma
 	{
 		CommandList = eastl::make_shared<FD3D12CommandList>(this);
 		CommandList->InitCommandList();
-		AllocatedCommandListPool.push(CommandList);
 	}
+	AllocatedCommandListPool.push(CommandList);
 
 	return CommandList;
 }
