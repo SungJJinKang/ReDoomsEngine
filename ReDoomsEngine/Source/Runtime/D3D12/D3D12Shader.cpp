@@ -118,9 +118,10 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 					{
 						TestedMemberVariableMap.try_emplace(MemberVariablePair.first).first->second.ShaderParameterMemberVariable = &MemberVariablePair.second;
 					}
-					for (const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& MemberVariable : ReflectionData.VariableList)
+					for (const auto& MemberVariablePair : ReflectionData.VariableList)
 					{
-						TestedMemberVariableMap.try_emplace(MemberVariable.Name.data()).first->second.ReflectionData = &MemberVariable;
+						EA_ASSERT(MemberVariablePair.first == MemberVariablePair.second.Name);
+						TestedMemberVariableMap.try_emplace(MemberVariablePair.first.data()).first->second.ReflectionData = &MemberVariablePair.second;
 					}
 
 					for (auto& ConstantBufferMemberVariableTest : TestedMemberVariableMap)
@@ -301,7 +302,7 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 					ConstantBuffer.ResourceBindingDesc = ResourceBindingDesc;
 					ConstantBuffer.Desc = ConstantBufferDesc;
 
-					ConstantBuffer.VariableList.resize(ConstantBufferDesc.Variables);
+					ConstantBuffer.VariableList.reserve(ConstantBufferDesc.Variables);
 					for (uint32_t IndexOfVariableInConstantBuffer = 0; IndexOfVariableInConstantBuffer < ConstantBufferDesc.Variables; ++IndexOfVariableInConstantBuffer)
 					{
 						ID3D12ShaderReflectionVariable* const VariableInConstantBuffer = ShaderReflectionConstantBuffer->GetVariableByIndex(IndexOfVariableInConstantBuffer);
@@ -315,7 +316,9 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 						MEM_ZERO(TypeDesc);
 						TypeReflectionData->GetDesc(&TypeDesc);
 
-						FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBuffer = ConstantBuffer.VariableList[IndexOfVariableInConstantBuffer];
+						FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBuffer =
+							ConstantBuffer.VariableList.emplace(ShaderParameterDesc.Name, FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData{}).first->second;
+
 						VariableOfConstantBuffer.Name = ShaderParameterDesc.Name;
 						ShaderParameterDesc.Name = VariableOfConstantBuffer.Name.c_str();
 
@@ -370,6 +373,8 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 				default:
 					EA_ASSERT(false); // @todo support other types
 			}
+
+			EA_ASSERT_MSG(ResourceBindingDesc.BindCount == 1, "Currently multiple bindcount isn't supported yet");
 		}
 	}
 
@@ -389,12 +394,12 @@ void FD3D12ShaderManager::Init()
 
 }
 
-void FD3D12ShaderManager::OnStartFrame()
+void FD3D12ShaderManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12ShaderManager::OnEndFrame()
+void FD3D12ShaderManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
@@ -456,9 +461,9 @@ void FD3D12ShaderManager::AddCompilePendingShader(FD3D12ShaderTemplate& CompileP
 	GetCompilePendingShaderList().push_back(&CompilePendingShader);
 }
 
-void FD3D12ShaderInstance::ApplyShaderParameter(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature)
+void FD3D12ShaderInstance::ApplyShaderParameter(FD3D12CommandContext& InCommandContext)
 {
-	ShaderParameterContainerTemplate->ApplyShaderParameters(InCommandContext, InRootSignature);
+	ShaderParameterContainerTemplate->ApplyShaderParameters(InCommandContext);
 }
 
 void FShaderParameterContainerTemplate::Init()
@@ -485,12 +490,16 @@ void FShaderParameterContainerTemplate::AddShaderParamter(FShaderParameterTempla
 	ShaderParameterList.emplace_back(InShaderParameter);
 }
 
-void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature)
+void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandContext& InCommandContext)
 {
 	EA_ASSERT(IsShaderInstance());
 
-	eastl::vector<FD3D12StateCache::FViewBindPointInfo> SRVBindPointInfoList{};
-	eastl::vector<FD3D12StateCache::FConstantBufferBindPointInfo> ConstantBufferBindPointInfoList{};
+	eastl::array<FShaderParameterShaderResourceView*, MAX_SRVS> SRVBindPointInfoList;
+	MEM_ZERO(SRVBindPointInfoList);
+	eastl::array<FShaderParameterShaderResourceView*, MAX_UAVS> UAVBindPointInfoList;
+	MEM_ZERO(UAVBindPointInfoList);
+	eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV> ConstantBufferBindPointInfoList;
+	MEM_ZERO(ConstantBufferBindPointInfoList);
 
 	for (FShaderParameterTemplate* ShaderParamter : ShaderParameterList)
 	{
@@ -498,24 +507,25 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 		{
 			FShaderParameterConstantBuffer* ShaderParameterConstantBuffer = dynamic_cast<FShaderParameterConstantBuffer*>(ShaderParamter);
 			EA_ASSERT(ShaderParameterConstantBuffer);
-			FD3D12StateCache::FConstantBufferBindPointInfo BindPoint;
-			BindPoint.ConstantBufferResource = ShaderParameterConstantBuffer->GetConstantBufferResource();
-			BindPoint.ReflectionData = ShaderParameterConstantBuffer->GetConstantBufferReflectionData();
-			ConstantBufferBindPointInfoList.emplace_back(BindPoint);
+			ConstantBufferBindPointInfoList[ShaderParameterConstantBuffer->GetConstantBufferReflectionData()->ResourceBindingDesc.BindPoint] = ShaderParameterConstantBuffer;
 		}
 		else if (ShaderParamter->IsSRV())
 		{
 			FShaderParameterShaderResourceView* ShaderParameterSRV = dynamic_cast<FShaderParameterShaderResourceView*>(ShaderParamter);
 			EA_ASSERT(ShaderParameterSRV);
-			FD3D12StateCache::FViewBindPointInfo BindPoint;
-			BindPoint.ResourceView = ShaderParameterSRV->GetTargetSRV();
-			BindPoint.InputBindDesc = ShaderParameterSRV->GetReflectionData();
-			SRVBindPointInfoList.emplace_back(BindPoint);
+			SRVBindPointInfoList[ShaderParameterSRV->GetReflectionData().BindPoint] = ShaderParameterSRV;
+		}
+		else if (ShaderParamter->IsUAV())
+		{
+			EA_ASSERT_MSG(false, "Currently, it isn't supported yet");
+// 			FShaderParameterShaderResourceView* ShaderParameterSRV = dynamic_cast<FShaderParameterShaderResourceView*>(ShaderParamter);
+// 			EA_ASSERT(ShaderParameterSRV);
+// 			UAVBindPointInfoList[ShaderParameterSRV->GetReflectionData().BindPoint] = ShaderParameterSRV;
 		}
 	}
 
-	InCommandContext.StateCache.SetSRVs(InCommandContext, GetD3D12ShaderTemplate()->GetShaderFrequency(), InRootSignature, SRVBindPointInfoList);
-	InCommandContext.StateCache.SetConstantBuffer(InCommandContext, GetD3D12ShaderTemplate()->GetShaderFrequency(), InRootSignature, ConstantBufferBindPointInfoList);
+	InCommandContext.StateCache.SetSRVs(GetD3D12ShaderTemplate()->GetShaderFrequency(), SRVBindPointInfoList);
+	InCommandContext.StateCache.SetConstantBuffer(GetD3D12ShaderTemplate()->GetShaderFrequency(), ConstantBufferBindPointInfoList);
 
 }
 
@@ -527,26 +537,48 @@ void FShaderParameterTemplate::Init()
 
 void FShaderParameterTemplate::InitD3DResource()
 {
-	GetD3D12Resource()->InitResource();
 }
 
-void FShaderParameterTemplate::ApplyResource(FD3D12CommandContext& const InCommandContext, const FD3D12RootSignature* const InRootSignature)
+void FShaderParameterTemplate::ApplyResource(FD3D12CommandContext& InCommandContext, const FD3D12RootSignature* const InRootSignature)
 {
 	// @todo : apply resource
 
 }
 
-void FShaderParameterConstantBuffer::AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize, 
+void FShaderParameterConstantBuffer::InitD3DResource()
+{
+	FShaderParameterTemplate::InitD3DResource();
+	
+	GetConstantBufferResource()->InitResource();
+}
+
+void FShaderParameterConstantBuffer::AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize,
 	const char* const InVariableName, const std::type_info& VariableTypeInfo)
 {
 	EA_ASSERT(MemberVariableMap.find(InVariableName) == MemberVariableMap.end());
 
 	FMemberVariableContainer MemberVariableContainer;
 	MemberVariableContainer.VariableName = InVariableName;
+	MemberVariableContainer.VariableSize = InVariableSize;
 	MemberVariableContainer.ShaderParameterConstantBufferMemberVariableTemplate = InShaderParameterConstantBufferMemberVariable;
 	MemberVariableContainer.VariableTypeInfo = &VariableTypeInfo;
 
 	MemberVariableMap.emplace(InVariableName, MemberVariableContainer);
+}
+
+void FShaderParameterConstantBuffer::FlushShadowData(uint8* const InShadowDataAddress)
+{
+	// @todo : need to find a better way.
+	// Hope all member variables are copied to mapped address of constant buffer at a time
+	for (auto& MemberVariablePair : MemberVariableMap)
+	{
+		const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBufferReflectionData = 
+			ReflectionData->VariableList.find(MemberVariablePair.first)->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
+
+		uint8* const TargetAddress = InShadowDataAddress + VariableOfConstantBufferReflectionData.Desc.StartOffset;
+		EA_ASSERT(MemberVariablePair.second.VariableSize == VariableOfConstantBufferReflectionData.Desc.Size);
+		EA::StdC::Memcpy(TargetAddress, MemberVariablePair.second.ShaderParameterConstantBufferMemberVariableTemplate, MemberVariablePair.second.VariableSize);
+	}
 }
 
 void FShaderParameterConstantBuffer::SetReflectionDataFromShaderReflectionData()

@@ -114,12 +114,13 @@ void FD3D12DescriptorHeap::FreeDescriptorHeapBlock(const FD3D12DescriptorHeapBlo
 }
 
 FD3D12DescriptorHeapContainer::FD3D12DescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType, const uint32_t InNumDescriptor)
-    : HeapType(InHeapType), NumDescriptor(InNumDescriptor)
+    : bInit(false), HeapType(InHeapType), NumDescriptor(InNumDescriptor)
 {
 }
 
 void FD3D12DescriptorHeapContainer::Init()
 {
+    bInit = true;
 }
 
 FD3D12OnlineDescriptorHeapContainer::FD3D12OnlineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
@@ -138,23 +139,33 @@ void FD3D12OnlineDescriptorHeapContainer::Init()
 
 FD3D12DescriptorHeapBlock FD3D12OnlineDescriptorHeapContainer::ReserveDescriptorHeapBlock(const uint32_t InDescriptorCount)
 {
+    EA_ASSERT(bInit);
     // EA_ASSERT(InDescriptorCount > 0); // InDescriptorCount can be zero
+
+    if (CurrentAllocatedBlockCount + InDescriptorCount > NumDescriptor)
+    {
+        // ring buffer
+        // @todo : need to check if current block is being used by gpu? Online Heap is big enough
+        CurrentAllocatedBlockCount = 0;
+    }
 
     FD3D12DescriptorHeapBlock NewHeapBlock{ OnlineHeap, CurrentAllocatedBlockCount, InDescriptorCount, OnlineHeap->GetDescriptorSize()};
 
     CurrentAllocatedBlockCount += InDescriptorCount;
-    EA_ASSERT_MSG(CurrentAllocatedBlockCount < NumDescriptor, "Exhaust online heap space");
+    EA_ASSERT_MSG(CurrentAllocatedBlockCount <= NumDescriptor, "Exhaust online heap space");
 
     return NewHeapBlock;
 }
 
 void FD3D12OnlineDescriptorHeapContainer::Reset()
 {
+	EA_ASSERT(bInit);
     CurrentAllocatedBlockCount = 0;
 }
 
 eastl::shared_ptr<FD3D12DescriptorHeap> FD3D12OnlineDescriptorHeapContainer::GetOnlineHeap() const
 {
+	EA_ASSERT(bInit);
 	return OnlineHeap;
 }
 
@@ -170,6 +181,8 @@ void FD3D12OfflineDescriptorHeapContainer::Init()
 
 FD3D12DescriptorHeapBlock FD3D12OfflineDescriptorHeapContainer::AllocateDescriptorHeapBlock(const uint32 InDescriptorCount)
 {
+	EA_ASSERT(bInit);
+	EA_ASSERT(InDescriptorCount > 0);
     FD3D12DescriptorHeapBlock NewHeapBlock{};
 
     bool bSuccess = false;
@@ -194,11 +207,13 @@ FD3D12DescriptorHeapBlock FD3D12OfflineDescriptorHeapContainer::AllocateDescript
 
 void FD3D12OfflineDescriptorHeapContainer::FreeDescriptorHeapBlock(const FD3D12DescriptorHeapBlock& InFreedHeapBlock)
 {
+	EA_ASSERT(bInit);
     InFreedHeapBlock.ParentDescriptorHeap.lock()->FreeDescriptorHeapBlock(InFreedHeapBlock);
 }
 
 FD3D12DescriptorHeap* FD3D12OfflineDescriptorHeapContainer::AllocateNewHeap()
 {
+	EA_ASSERT(bInit);
     FD3D12DescriptorHeap* Heap = nullptr;
 
     if (FreeDescriptorHeapList.size() > 0)
@@ -217,65 +232,34 @@ FD3D12DescriptorHeap* FD3D12OfflineDescriptorHeapContainer::AllocateNewHeap()
 
 void FD3D12OfflineDescriptorHeapContainer::FreeNewHeap(FD3D12DescriptorHeap* const InHeap)
 {
+	EA_ASSERT(bInit);
     InHeap->MakeFreed();
     FreeDescriptorHeapList.emplace_back(InHeap);
 }
 
 FD3D12DescriptorHeapManager::FD3D12DescriptorHeapManager()
     :
+    CbvSrvUavOnlineDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV),
     RTVDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_RTV),
     DSVDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_DSV),
-    SrvUavOfflineDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
+    CbvSrvUavOfflineDescriptorHeapContainer(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
 {
 }
 
 void FD3D12DescriptorHeapManager::Init()
 {
+    CbvSrvUavOnlineDescriptorHeapContainer.Init();
     RTVDescriptorHeapContainer.Init();
     DSVDescriptorHeapContainer.Init();
-    SrvUavOfflineDescriptorHeapContainer.Init();
+    CbvSrvUavOfflineDescriptorHeapContainer.Init();
 }
 
-void FD3D12DescriptorHeapManager::OnStartFrame()
+void FD3D12DescriptorHeapManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12DescriptorHeapManager::OnEndFrame()
+void FD3D12DescriptorHeapManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
-}
-
-FD3D12OfflineDescriptorHeapContainer* FD3D12DescriptorHeapManager::GetOfflineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
-{
-    switch (InHeapType)
-    {
-    case D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_RTV:
-    {
-        return &RTVDescriptorHeapContainer;
-    }
-    case D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_DSV:
-    {
-        return &DSVDescriptorHeapContainer;
-    }
-        case D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV:
-        {
-            return &SrvUavOfflineDescriptorHeapContainer;
-        }
-        case D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER:
-        {
-            EA_ASSERT_MSG(false, "Only static sampler is supported");
-            return nullptr;
-        }
-        default:
-        {
-            EA_ASSERT(false);
-            return nullptr;
-        }
-    }
-}
-
-FD3D12DescriptorHeapBlock FD3D12DescriptorHeapManager::AllocateOfflineHeapDescriptorHeapBlock(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType, const uint32 InDescriptorCount)
-{
-    return GetOfflineDescriptorHeapContainer(InHeapType)->AllocateDescriptorHeapBlock(InDescriptorCount);
 }

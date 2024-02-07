@@ -102,11 +102,11 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::Allocate(FD3
 	return D3D12TextureResource;
 }
 
-void FD3D12ResourceAllocator::OnStartFrame()
+void FD3D12ResourceAllocator::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 }
 
-void FD3D12ResourceAllocator::OnEndFrame()
+void FD3D12ResourceAllocator::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 }
 

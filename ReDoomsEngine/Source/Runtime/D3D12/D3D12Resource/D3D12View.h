@@ -42,6 +42,7 @@ public:
 		}
 	}
 
+	virtual bool IsCBV() const { return false; }
 	virtual bool IsSRV() const { return false; }
 	virtual bool IsUAV() const { return false; }
 	virtual bool IsRTV() const { return false; }
@@ -51,7 +52,7 @@ protected:
 
 	FD3D12DescriptorHeapBlock OfflineDescriptorHeapBlock;
 
-	FD3D12Resource* Resource;
+	FD3D12Resource* const Resource;
 };
 
 template <typename DescType>
@@ -88,6 +89,7 @@ public:
 	FD3D12ShaderResourceView(FD3D12Resource* const InResource, const D3D12_SHADER_RESOURCE_VIEW_DESC& InDesc);
 
 	virtual void UpdateDescriptor();
+	static FD3D12ShaderResourceView* NullSRV();
 
 	virtual bool IsSRV() const { return true; }
 
@@ -96,22 +98,27 @@ protected:
 
 private:
 
+
 };
 
-// class FD3D12ConstantBufferView : public TD3D12View<D3D12_CONSTANT_BUFFER_VIEW_DESC>
-// {
-// public:
-// 
-// 	FD3D12ConstantBufferView(FD3D12Resource* const InResource);
-// 
-// 	virtual void UpdateDescriptor();
-// 
-// protected:
-// 
-// 
-// private:
-// 
-// };
+ class FD3D12ConstantBufferView : public TD3D12View<D3D12_CONSTANT_BUFFER_VIEW_DESC>
+ {
+ public:
+ 
+	 FD3D12ConstantBufferView(FD3D12Resource* const InResource);
+	 FD3D12ConstantBufferView(FD3D12Resource* const InResource, const D3D12_CONSTANT_BUFFER_VIEW_DESC& InDesc);
+ 
+ 	virtual void UpdateDescriptor();
+	static FD3D12ConstantBufferView* NullCBV();
+
+	virtual bool IsCBV() const { return true; }
+
+ protected:
+ 
+ 
+ private:
+ 
+ };
 
 
 class FD3D12UnorderedAccessView : public TD3D12View<D3D12_UNORDERED_ACCESS_VIEW_DESC>
@@ -122,6 +129,7 @@ public:
 	FD3D12UnorderedAccessView(FD3D12Resource* const InResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& InDesc);
 
 	virtual void UpdateDescriptor();
+	static FD3D12UnorderedAccessView* NullUAV();
 
 	virtual bool IsUAV() const { return true; }
 
@@ -140,6 +148,7 @@ public:
 	FD3D12RenderTargetView(FD3D12Resource* const InResource, const D3D12_RENDER_TARGET_VIEW_DESC& InDesc);
 
 	virtual void UpdateDescriptor();
+	static FD3D12RenderTargetView* NullRTV();
 
 	virtual bool IsRTV() const { return true; }
 protected:
@@ -156,6 +165,7 @@ public:
 	FD3D12DepthStencilView(FD3D12Resource* const InResource, const D3D12_DEPTH_STENCIL_VIEW_DESC& InDesc);
 
 	virtual void UpdateDescriptor();
+	static FD3D12DepthStencilView* NullDSV();
 
 	virtual bool IsDSV() const { return true; }
 

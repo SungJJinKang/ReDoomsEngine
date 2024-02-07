@@ -25,8 +25,8 @@ public:
 		CD3DX12_RESOURCE_DESC InD3DResourceDesc);
 
 
-	virtual void OnStartFrame();
-	virtual void OnEndFrame();
+	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 
 	FD3D12ResourceUploadBatcher ResourceUploadBatcher{};
 

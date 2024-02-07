@@ -22,8 +22,8 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset3)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
 		)
 		ADD_SHADER_SRV_VARIABLE(TestTexture)
 	)
@@ -106,16 +106,13 @@ bool D3D12TestRenderer::Draw()
 	PSOInitializer.Desc.SampleDesc.Count = 1;
 	PSOInitializer.FinishCreating();
 
-	FD3D12PSO* const PSO = FD3D12PSOManager::GetInstance()->GetOrCreatePSO(PSOInitializer);
-
 	auto TestVSInstance = FTestVS::MakeShaderInstance();
 	auto TestPSInstance = FTestPS::MakeShaderInstance();
 
 	// Set necessary state.
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->SetPipelineState(PSO->PSOObject.Get());
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->SetGraphicsRootSignature(BoundShaderSet.GetRootSignature()->RootSignature.Get());
+	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
-	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.2f };
+	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.4f };
 	TestVSInstance->Parameter.GlobalConstantBuffer->AddOffset = true;
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 10.0f };
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 11.0f };
@@ -125,8 +122,8 @@ bool D3D12TestRenderer::Draw()
 	TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 13.0f };
 	TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset3 = XMVECTOR{ 14.0f };
 	
-	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
-	TestPSInstance->ApplyShaderParameter(CurrentFrameCommandContext, PSO->PSOInitializer.BoundShaderSet.GetRootSignature());
+	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
+	TestPSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
 	CD3DX12_VIEWPORT Viewport{ 0.0f, 0.0f, static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
 	CD3DX12_RECT Rect{ 0, 0, static_cast<LONG>(SwapChain->GetWidth()), static_cast<LONG>(SwapChain->GetHeight()) };
@@ -149,8 +146,14 @@ bool D3D12TestRenderer::Draw()
 
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView = VertexBuffer->GetVertexBufferView(VerticeStride);
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, 1, &VertexBufferView);
-	CurrentFrameCommandContext.StateCache.Flush(CurrentFrameCommandContext);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->DrawInstanced(3, 1, 0, 0);
+
+	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
+	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
+
+	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f };
+	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
+
+	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
 
 	// Indicate that the back buffer will now be used to present.
 	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget.GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);

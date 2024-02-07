@@ -2,8 +2,11 @@
 
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 
-void FFrameResourceContainer::Init()
+void FFrameResourceContainer::Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> InOnlineDescriptorHeap)
 {
+	EA_ASSERT(!bInit);
+	bInit = true;
+
 	FrameWorkEndFence.Init();
 
 	for (uint32_t CommandAllocatorIndex = 0; CommandAllocatorIndex < CommandAllocatorList.size(); ++CommandAllocatorIndex)
@@ -11,17 +14,17 @@ void FFrameResourceContainer::Init()
 		CommandAllocatorList[CommandAllocatorIndex] = eastl::make_shared<FD3D12CommandAllocator>(ED3D12QueueType::Direct);
 		CommandAllocatorList[CommandAllocatorIndex]->Init();
 	}
-
-	SrvUavOnlineDescriptorHeapContainer->Init();
 }
 
 void FFrameResourceContainer::ClearFrameResource()
 {
-	SrvUavOnlineDescriptorHeapContainer->Reset();
+	EA_ASSERT(bInit);
 }
 
-void FFrameResourceContainer::OnStartFrame()
+void FFrameResourceContainer::OnPreStartFrame(FD3D12CommandContext& InCommandContext)
 {
+	EA_ASSERT(bInit);
+
 	if (GCurrentFrameIndex >= GNumBackBufferCount)
 	{
 		FrameWorkEndFence.WaitOnLastSignal();
@@ -29,9 +32,14 @@ void FFrameResourceContainer::OnStartFrame()
 	}
 }
 
-void FFrameResourceContainer::OnEndFrame()
+void FFrameResourceContainer::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
+	EA_ASSERT(bInit);
+}
 
+void FFrameResourceContainer::OnEndFrame(FD3D12CommandContext& InCommandContext)
+{
+	EA_ASSERT(bInit);
 }
 
 void FRenderer::Init()
@@ -42,9 +50,11 @@ void FRenderer::Init()
 
 	D3D12Manager.Init(this);
 
+	eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> OnlineDescriptorHeap = eastl::make_shared<FD3D12OnlineDescriptorHeapContainer>(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	OnlineDescriptorHeap->Init();
 	for (FFrameResourceContainer& FrameContainer : FrameContainerList)
 	{
-		FrameContainer.Init();
+		FrameContainer.Init(OnlineDescriptorHeap);
 	}
 
 	CurrentRendererState = ERendererState::FinishInitialzing;
@@ -59,18 +69,14 @@ void FRenderer::OnPreStartFrame()
 	++GCurrentFrameIndex;
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameContainer();
-	CurrentFrameContainer.OnStartFrame();
-
-	CurrentFrameCommandContext.StateCache.Reset();
+	CurrentFrameCommandContext.StateCache.ResetForNewCommandlist();
 	CurrentFrameCommandContext.FrameResourceCounter = &CurrentFrameContainer;
 	CurrentFrameCommandContext.GraphicsCommandAllocator = CurrentFrameContainer.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatotrType::Graphics)];
 	CurrentFrameCommandContext.GraphicsCommandList = CurrentFrameCommandContext.GraphicsCommandAllocator->GetOrCreateNewCommandList();
 
-	// @todo replace per frame online heap with heap independent from frame?
-	// Changing set descriptor heap flushes gpu pipeline.
-	CurrentFrameCommandContext.StateCache.SetDescriptorHeaps(CurrentFrameCommandContext, { CurrentFrameContainer.SrvUavOnlineDescriptorHeapContainer->GetOnlineHeap() });
+	CurrentFrameContainer.OnPreStartFrame(CurrentFrameCommandContext);
 
-	D3D12Manager.OnPreStartFrame();
+	D3D12Manager.OnPreStartFrame(CurrentFrameCommandContext);
 }
 
 void FRenderer::OnStartFrame()
@@ -79,7 +85,9 @@ void FRenderer::OnStartFrame()
 
 	CurrentRendererState = ERendererState::OnStartFrame;
 
-	D3D12Manager.OnStartFrame();
+	GetCurrentFrameContainer().OnStartFrame(CurrentFrameCommandContext);
+
+	D3D12Manager.OnStartFrame(CurrentFrameCommandContext);
 }
 
 bool FRenderer::Draw()
@@ -99,7 +107,9 @@ void FRenderer::OnPostEndFrame()
 
 	CurrentRendererState = ERendererState::OnPostEndFrame;
 
-	D3D12Manager.OnPostEndFrame();
+	GetCurrentFrameContainer().OnPostEndFrame(CurrentFrameCommandContext);
+
+	D3D12Manager.OnPostEndFrame(CurrentFrameCommandContext);
 }
 
 void FRenderer::OnEndFrame()
@@ -108,7 +118,9 @@ void FRenderer::OnEndFrame()
 
 	CurrentRendererState = ERendererState::OnEndFrame;
 
-	D3D12Manager.OnEndFrame();
+	GetCurrentFrameContainer().OnEndFrame(CurrentFrameCommandContext);
+
+	D3D12Manager.OnEndFrame(CurrentFrameCommandContext);
 
 	FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);
 

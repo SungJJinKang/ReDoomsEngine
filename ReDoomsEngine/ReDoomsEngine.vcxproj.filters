@@ -168,6 +168,9 @@
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12PerFrameConstantBufferManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12RendererStateCallbackInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">

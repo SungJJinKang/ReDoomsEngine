@@ -88,12 +88,12 @@ void FD3D12Adapter::Init()
     }
 }
 
-void FD3D12Adapter::OnStartFrame()
+void FD3D12Adapter::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12Adapter::OnEndFrame()
+void FD3D12Adapter::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }

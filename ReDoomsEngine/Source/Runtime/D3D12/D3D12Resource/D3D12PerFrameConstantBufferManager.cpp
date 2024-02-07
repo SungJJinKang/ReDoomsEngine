@@ -43,7 +43,7 @@ FD3D12ConstantBufferBlock FD3D12PerFrameConstantBufferManager::Allocate(const ui
 	return Block;
 }
 
-void FD3D12PerFrameConstantBufferManager::OnPreStartFrame()
+void FD3D12PerFrameConstantBufferManager::OnPreStartFrame(FD3D12CommandContext& InCommandContext)
 {
 	if (GCurrentFrameIndex >= GNumBackBufferCount)
 	{
@@ -52,12 +52,12 @@ void FD3D12PerFrameConstantBufferManager::OnPreStartFrame()
 	}
 }
 
-void FD3D12PerFrameConstantBufferManager::OnStartFrame()
+void FD3D12PerFrameConstantBufferManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12PerFrameConstantBufferManager::OnEndFrame()
+void FD3D12PerFrameConstantBufferManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }

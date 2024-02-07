@@ -11,8 +11,8 @@ public:
 	FD3D12Window(const long InWidth, const long InHeight, const wchar_t* const InWindowTitle, FRenderer* const InRenderer);
 	void Init();
 
-	virtual void OnStartFrame();
-	virtual void OnEndFrame();
+	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	inline HWND GetWindowHandle() const

@@ -63,7 +63,7 @@ public:
 	virtual bool IsBuffer() const = 0;
 	virtual bool IsTexture() const = 0;
 
-/*	FD3D12ConstantBufferView* GetCBV();*/
+	FD3D12ConstantBufferView* GetCBV();
 	FD3D12ShaderResourceView* GetSRV();
 	FD3D12UnorderedAccessView* GetUAV();
 	FD3D12RenderTargetView* GetRTV();
@@ -87,7 +87,7 @@ private:
 
 	ComPtr<ID3D12Resource> Resource;
 
-/*	eastl::shared_ptr<FD3D12ConstantBufferView> DefaultCBV;*/
+	eastl::shared_ptr<FD3D12ConstantBufferView> DefaultCBV;
 	eastl::shared_ptr<FD3D12ShaderResourceView> DefaultSRV;
 	eastl::shared_ptr<FD3D12UnorderedAccessView> DefaultUAV;
 	eastl::shared_ptr<FD3D12RenderTargetView> DefaultRTV;

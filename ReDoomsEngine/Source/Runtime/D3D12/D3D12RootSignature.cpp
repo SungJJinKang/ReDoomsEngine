@@ -385,9 +385,11 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 
 					if (ReflectionData.ConstantBufferCount > MAX_ROOT_CBVS)
 					{
-						RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, ReflectionData.ConstantBufferCount - MAX_ROOT_CBVS, MAX_ROOT_CBVS, RootSignature.BindingSpace, CBVDescriptorRangeFlags);
-						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
-						RootSignature.RootParameterCount++;
+						EA_ASSERT(false);
+
+// 						RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, ReflectionData.ConstantBufferCount - MAX_ROOT_CBVS, MAX_ROOT_CBVS, RootSignature.BindingSpace, CBVDescriptorRangeFlags);
+// 						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
+// 						RootSignature.RootParameterCount++;
 					}
 
 					if (ReflectionData.SamplerCount > 0)
@@ -486,16 +488,17 @@ eastl::shared_ptr<FD3D12RootSignature> FD3D12RootSignatureManager::GetOrCreateRo
 		FD3D12RootSignature CreatedD3D12RootSinature = FD3D12RootSignature::CreateRootSignature(InBoundShaderSet);
 		RootSignature = RootSignatureMap.emplace(InBoundShaderSet.CachedHash, eastl::make_shared<FD3D12RootSignature>(CreatedD3D12RootSinature)).first->second;
 	}
+	EA_ASSERT(RootSignature);
 	
 	return RootSignature;
 }
 
-void FD3D12RootSignatureManager::OnStartFrame()
+void FD3D12RootSignatureManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12RootSignatureManager::OnEndFrame()
+void FD3D12RootSignatureManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
