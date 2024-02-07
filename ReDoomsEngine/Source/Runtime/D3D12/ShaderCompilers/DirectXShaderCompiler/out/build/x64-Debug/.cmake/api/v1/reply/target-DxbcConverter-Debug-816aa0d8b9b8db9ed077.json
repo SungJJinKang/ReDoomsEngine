@@ -1,0 +1,441 @@
+{
+	"archive" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "/machine:x64",
+				"role" : "flags"
+			}
+		]
+	},
+	"artifacts" : 
+	[
+		{
+			"path" : "lib/DxbcConverter.lib"
+		}
+	],
+	"backtrace" : 4,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"llvm_add_library",
+			"add_llvm_library",
+			"add_dxilconv_project_library",
+			"install",
+			"add_dependencies",
+			"target_link_libraries",
+			"add_compile_options",
+			"add_definitions",
+			"add_llvm_definitions",
+			"include",
+			"llvm_update_compile_flags",
+			"include_directories",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"projects/dxilconv/CMakeLists.txt",
+			"projects/dxilconv/lib/DxbcConverter/CMakeLists.txt",
+			"CMakeLists.txt",
+			"cmake/modules/AddLLVMDefinitions.cmake",
+			"cmake/modules/HandleLLVMOptions.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 5,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 530,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 417,
+				"parent" : 3
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 554,
+				"parent" : 2
+			},
+			{
+				"command" : 5,
+				"file" : 2,
+				"line" : 15,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 512,
+				"parent" : 3
+			},
+			{
+				"command" : 6,
+				"file" : 2,
+				"line" : 10,
+				"parent" : 0
+			},
+			{
+				"file" : 3
+			},
+			{
+				"command" : 7,
+				"file" : 3,
+				"line" : 114,
+				"parent" : 9
+			},
+			{
+				"command" : 8,
+				"file" : 3,
+				"line" : 140,
+				"parent" : 9
+			},
+			{
+				"command" : 8,
+				"file" : 3,
+				"line" : 656,
+				"parent" : 9
+			},
+			{
+				"command" : 8,
+				"file" : 3,
+				"line" : 101,
+				"parent" : 9
+			},
+			{
+				"command" : 10,
+				"file" : 3,
+				"line" : 442,
+				"parent" : 9
+			},
+			{
+				"file" : 5,
+				"parent" : 14
+			},
+			{
+				"command" : 9,
+				"file" : 5,
+				"line" : 279,
+				"parent" : 15
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 12,
+				"parent" : 16
+			},
+			{
+				"command" : 11,
+				"file" : 0,
+				"line" : 426,
+				"parent" : 3
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 50,
+				"parent" : 18
+			},
+			{
+				"command" : 9,
+				"file" : 5,
+				"line" : 548,
+				"parent" : 15
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 12,
+				"parent" : 20
+			},
+			{
+				"command" : 9,
+				"file" : 5,
+				"line" : 549,
+				"parent" : 15
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 12,
+				"parent" : 22
+			},
+			{
+				"command" : 9,
+				"file" : 5,
+				"line" : 550,
+				"parent" : 15
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 12,
+				"parent" : 24
+			},
+			{
+				"command" : 12,
+				"file" : 3,
+				"line" : 613,
+				"parent" : 9
+			},
+			{
+				"command" : 12,
+				"file" : 3,
+				"line" : 617,
+				"parent" : 9
+			},
+			{
+				"command" : 12,
+				"file" : 3,
+				"line" : 619,
+				"parent" : 9
+			},
+			{
+				"command" : 12,
+				"file" : 3,
+				"line" : 677,
+				"parent" : 9
+			},
+			{
+				"command" : 13,
+				"file" : 2,
+				"line" : 17,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "/DWIN32 /D_WINDOWS   -wd4146 -wd4180 -wd4244 -wd4258 -wd4267 -wd4291 -wd4345 -wd4351 -wd4355 -wd4456 -wd4457 -wd4458 -wd4459 -wd4503 -wd4624 -wd4722 -wd4800 -wd4100 -wd4127 -wd4512 -wd4505 -wd4610 -wd4510 -wd4702 -wd4245 -wd4706 -wd4310 -wd4701 -wd4703 -wd4389 -wd4611 -wd4805 -wd4204 -wd4324 -we4238 /W4 /Zc:sizedDealloc- /Zi /Ob0 /Od /RTC1 /WX -MDd"
+				},
+				{
+					"fragment" : "/EHsc"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "/guard:cf"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 11,
+					"define" : "ENABLE_SPIRV_CODEGEN"
+				},
+				{
+					"backtrace" : 12,
+					"define" : "MSFT_SUPPORTS_CHILD_PROCESSES"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "SUPPORT_QUERY_GIT_COMMIT_INFO"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "_CRT_NONSTDC_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "_CRT_NONSTDC_NO_WARNINGS"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "_CRT_SECURE_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "_CRT_SECURE_NO_WARNINGS"
+				},
+				{
+					"backtrace" : 19,
+					"define" : "_ITERATOR_DEBUG_LEVEL=0"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "_SCL_SECURE_NO_DEPRECATE"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "_SCL_SECURE_NO_WARNINGS"
+				},
+				{
+					"backtrace" : 21,
+					"define" : "__STDC_CONSTANT_MACROS"
+				},
+				{
+					"backtrace" : 23,
+					"define" : "__STDC_FORMAT_MACROS"
+				},
+				{
+					"backtrace" : 25,
+					"define" : "__STDC_LIMIT_MACROS"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/lib/DxbcConverter"
+				},
+				{
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/lib/DxbcConverter"
+				},
+				{
+					"backtrace" : 26,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
+				},
+				{
+					"backtrace" : 27,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
+				},
+				{
+					"backtrace" : 27,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
+				},
+				{
+					"backtrace" : 28,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
+				},
+				{
+					"backtrace" : 29,
+					"path" : "/directx"
+				},
+				{
+					"backtrace" : 29,
+					"path" : "/wsl/stubs"
+				},
+				{
+					"backtrace" : 30,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/include"
+				},
+				{
+					"backtrace" : 30,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/include"
+				},
+				{
+					"backtrace" : 30,
+					"path" : "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/um"
+				},
+				{
+					"backtrace" : 30,
+					"path" : "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/shared"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/include"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 6,
+			"id" : "intrinsics_gen::@6eda0283a7d1115d7bbd"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "HCTGen::@5fa7c416598cd72250bb"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "DxcRuntimeEtw::@48e9ee2830f8934ea8da"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "DxilConvPasses::@0bfed0ee4d39fa1e3fc0"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "ShaderBinary::@a87f845a8c9004ffdd87"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "Dxilconv libraries"
+	},
+	"id" : "DxbcConverter::@50c6ceaec5b43811e75d",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 5,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/install/x64-Debug"
+		}
+	},
+	"name" : "DxbcConverter",
+	"nameOnDisk" : "DxbcConverter.lib",
+	"paths" : 
+	{
+		"build" : "projects/dxilconv/lib/DxbcConverter",
+		"source" : "projects/dxilconv/lib/DxbcConverter"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "projects/dxilconv/lib/DxbcConverter/DxbcConverter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "projects/dxilconv/lib/DxbcConverter/DxbcUtil.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

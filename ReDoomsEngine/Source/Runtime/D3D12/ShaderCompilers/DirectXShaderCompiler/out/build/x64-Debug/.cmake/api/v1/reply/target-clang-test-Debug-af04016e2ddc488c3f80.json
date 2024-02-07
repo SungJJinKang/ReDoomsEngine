@@ -1,0 +1,53 @@
+{
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"add_dependencies"
+		],
+		"files" : 
+		[
+			"tools/clang/test/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 99,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 100,
+				"parent" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "check-clang::@da21c69ae702d302b086"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "Clang tests"
+	},
+	"id" : "clang-test::@da21c69ae702d302b086",
+	"name" : "clang-test",
+	"paths" : 
+	{
+		"build" : "tools/clang/test",
+		"source" : "tools/clang/test"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

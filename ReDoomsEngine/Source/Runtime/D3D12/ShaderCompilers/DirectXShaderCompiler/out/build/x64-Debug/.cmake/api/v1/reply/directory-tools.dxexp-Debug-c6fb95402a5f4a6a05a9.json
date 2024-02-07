@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_tool"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"tools/dxexp/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 3,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 657,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "dxexp",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/dxexp.exe"
+			],
+			"targetId" : "dxexp::@14ba6bb121d279515e4f",
+			"targetIndex" : 834,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "tools/dxexp",
+		"source" : "tools/dxexp"
+	}
+}

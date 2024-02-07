@@ -1,0 +1,380 @@
+{
+	"backtrace" : 3,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"include",
+			"add_dependencies",
+			"add_hlsl_hctgen"
+		],
+		"files" : 
+		[
+			"cmake/modules/HCT.cmake",
+			"include/dxc/CMakeLists.txt",
+			"CMakeLists.txt",
+			"include/dxc/DXIL/CMakeLists.txt",
+			"include/dxc/DxilContainer/CMakeLists.txt",
+			"include/dxc/HLSL/CMakeLists.txt",
+			"include/dxc/Support/CMakeLists.txt",
+			"lib/DXIL/CMakeLists.txt",
+			"lib/HLSL/CMakeLists.txt",
+			"lib/DxilPIXPasses/CMakeLists.txt",
+			"tools/clang/lib/Sema/CMakeLists.txt",
+			"tools/clang/tools/dxcompiler/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 1,
+				"parent" : 0
+			},
+			{
+				"file" : 0,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 3,
+				"parent" : 2
+			},
+			{
+				"file" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 757,
+				"parent" : 4
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 5
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 3,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 7
+			},
+			{
+				"file" : 3
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 9,
+				"parent" : 9
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 10
+			},
+			{
+				"file" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 4,
+				"line" : 1,
+				"parent" : 12
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 13
+			},
+			{
+				"file" : 5
+			},
+			{
+				"command" : 3,
+				"file" : 5,
+				"line" : 1,
+				"parent" : 15
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 16
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 3,
+				"parent" : 9
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 18
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 1,
+				"parent" : 9
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 20
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 5,
+				"parent" : 9
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 22
+			},
+			{
+				"command" : 3,
+				"file" : 3,
+				"line" : 7,
+				"parent" : 9
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 24
+			},
+			{
+				"file" : 6
+			},
+			{
+				"command" : 3,
+				"file" : 6,
+				"line" : 5,
+				"parent" : 26
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 27
+			},
+			{
+				"file" : 7
+			},
+			{
+				"command" : 3,
+				"file" : 7,
+				"line" : 6,
+				"parent" : 29
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 30
+			},
+			{
+				"file" : 8
+			},
+			{
+				"command" : 3,
+				"file" : 8,
+				"line" : 5,
+				"parent" : 32
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 33
+			},
+			{
+				"command" : 3,
+				"file" : 8,
+				"line" : 4,
+				"parent" : 32
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 35
+			},
+			{
+				"command" : 3,
+				"file" : 7,
+				"line" : 5,
+				"parent" : 29
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 37
+			},
+			{
+				"command" : 3,
+				"file" : 7,
+				"line" : 7,
+				"parent" : 29
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 39
+			},
+			{
+				"file" : 9
+			},
+			{
+				"command" : 3,
+				"file" : 9,
+				"line" : 5,
+				"parent" : 41
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 42
+			},
+			{
+				"file" : 10
+			},
+			{
+				"command" : 3,
+				"file" : 10,
+				"line" : 7,
+				"parent" : 44
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 45
+			},
+			{
+				"file" : 11
+			},
+			{
+				"command" : 3,
+				"file" : 11,
+				"line" : 5,
+				"parent" : 47
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 103,
+				"parent" : 48
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 6,
+			"id" : "DxilDocs::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "HLSLIntrinsicOp::@5fa7c416598cd72250bb"
+		},
+		{
+			"backtrace" : 11,
+			"id" : "DxilShaderModelInc::@dc963b192bf6d417a2da"
+		},
+		{
+			"backtrace" : 14,
+			"id" : "RDAT_LibraryTypes::@053d6ea4d086f812c5ba"
+		},
+		{
+			"backtrace" : 17,
+			"id" : "DxilValidationInc::@e9e0b603820ed18cebf2"
+		},
+		{
+			"backtrace" : 19,
+			"id" : "DxilInstructions::@dc963b192bf6d417a2da"
+		},
+		{
+			"backtrace" : 21,
+			"id" : "DxilConstants::@dc963b192bf6d417a2da"
+		},
+		{
+			"backtrace" : 23,
+			"id" : "DxilSigPoint::@dc963b192bf6d417a2da"
+		},
+		{
+			"backtrace" : 25,
+			"id" : "DxilCounters::@dc963b192bf6d417a2da"
+		},
+		{
+			"backtrace" : 28,
+			"id" : "HLSLOptions::@3cc4d6774efc8aa8fa9f"
+		},
+		{
+			"backtrace" : 31,
+			"id" : "DxilShaderModel::@518e30bbae46f8bcb951"
+		},
+		{
+			"backtrace" : 34,
+			"id" : "DxilValidation::@fbd53b97f31afe415e8e"
+		},
+		{
+			"backtrace" : 36,
+			"id" : "DxcOptimizer::@fbd53b97f31afe415e8e"
+		},
+		{
+			"backtrace" : 38,
+			"id" : "DxilOperations::@518e30bbae46f8bcb951"
+		},
+		{
+			"backtrace" : 40,
+			"id" : "DxilMetadata::@518e30bbae46f8bcb951"
+		},
+		{
+			"backtrace" : 43,
+			"id" : "DxilPIXPasses::@ccc9c2c670c3c7547301"
+		},
+		{
+			"backtrace" : 46,
+			"id" : "DxilIntrinsicTables::@b78f6d003921181e7054"
+		},
+		{
+			"backtrace" : 49,
+			"id" : "DxcDisassembler::@adeae0308928029729ab"
+		}
+	],
+	"id" : "HCTGen::@5fa7c416598cd72250bb",
+	"name" : "HCTGen",
+	"paths" : 
+	{
+		"build" : "include/dxc",
+		"source" : "include/dxc"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

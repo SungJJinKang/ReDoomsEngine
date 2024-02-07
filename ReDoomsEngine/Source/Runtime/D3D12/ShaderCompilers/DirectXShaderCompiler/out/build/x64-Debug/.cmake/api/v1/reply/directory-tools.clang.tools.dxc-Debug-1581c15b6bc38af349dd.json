@@ -1,0 +1,45 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"tools/clang/tools/dxc/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 53,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "dxc",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/dxc.exe"
+			],
+			"targetId" : "dxc::@ce527a51a07a3a6e0767",
+			"targetIndex" : 829,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "tools/clang/tools/dxc",
+		"source" : "tools/clang/tools/dxc"
+	}
+}

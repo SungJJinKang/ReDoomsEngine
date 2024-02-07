@@ -108,7 +108,7 @@
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\Engine\AssetManager.cpp">
+    <ClCompile Include="Source\Runtime\IO\AssetManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.cpp">
@@ -127,9 +127,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Utils\cityhash\src\city-test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Runtime\D3D12\D3D12CommandList.cpp">
@@ -153,10 +150,25 @@
     <ClCompile Include="Source\Runtime\Rendering\D3D12TestRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBufferManager.cpp">
+    <ClCompile Include="Source\Runtime\D3D12\D3D12GlobalVariables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12GlobalVariables.cpp">
+    <ClCompile Include="Source\Runtime\Rendering\TextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12PerFrameConstantBufferManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12RendererStateCallbackInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1058,7 +1070,7 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12Enums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\Engine\AssetManager.h">
+    <ClInclude Include="Source\Runtime\IO\AssetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.h">
@@ -1196,7 +1208,7 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12RendererInclude.h">
+    <ClInclude Include="Source\Runtime\Rendering\RendererCommonInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.h">
@@ -1214,16 +1226,34 @@
     <ClInclude Include="Source\Runtime\Rendering\D3D12TestRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBufferManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Runtime\D3D12\D3D12Macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\D3D12\D3D12GlobalVariables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12ManagerInterface.h">
+    <ClInclude Include="Source\Runtime\D3D12\D3D12RendererStateCallbackInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Rendering\TextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12PerFrameConstantBufferManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\HLSLTypeHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1249,5 +1279,8 @@
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl">
       <Filter>Header Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\seafloor.dds" />
   </ItemGroup>
 </Project>

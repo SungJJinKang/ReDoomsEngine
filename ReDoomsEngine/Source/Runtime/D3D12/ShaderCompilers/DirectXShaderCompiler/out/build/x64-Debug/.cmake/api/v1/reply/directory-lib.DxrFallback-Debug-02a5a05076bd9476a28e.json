@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_library"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"lib/DxrFallback/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 554,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "LLVMDxrFallback",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/LLVMDxrFallback.lib"
+			],
+			"targetId" : "LLVMDxrFallback::@9acceebf6f30d699083e",
+			"targetIndex" : 108,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "lib/DxrFallback",
+		"source" : "lib/DxrFallback"
+	}
+}

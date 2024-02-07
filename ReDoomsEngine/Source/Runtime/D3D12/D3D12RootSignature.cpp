@@ -196,6 +196,126 @@ static void AnalyizeRootSignature(ROOT_SIGNATURE_DESC_TYPE& Desc, FD3D12RootSign
 	}
 }
 
+static bool MakeStaticSamplerDescFromByName(LPCSTR Name, D3D12_STATIC_SAMPLER_DESC& OutSamplerDesc)
+{
+	if (EA::StdC::Strcmp(Name, "StaticPointWrapSampler") == 0)
+	{
+		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
+			D3D12_FILTER_MIN_MAG_MIP_POINT,
+			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressU
+			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressV
+			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressW
+			0, // MipLODBias
+			D3D12_MAX_MAXANISOTROPY,
+			D3D12_COMPARISON_FUNC_NEVER,
+			D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+			0, // MinLOD
+			FLT_MAX, // MaxLOD
+			0, // ShaderRegister
+			0, // RegisterSpace
+			D3D12_SHADER_VISIBILITY_ALL,
+		};
+		return true;
+	}
+	else if (EA::StdC::Strcmp(Name, "StaticPointClampSampler") == 0)
+	{
+		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
+			D3D12_FILTER_MIN_MAG_MIP_POINT,
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressU
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressV
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressW
+			0, // MipLODBias
+			D3D12_MAX_MAXANISOTROPY,
+			D3D12_COMPARISON_FUNC_NEVER,
+			D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+			0, // MinLOD
+			FLT_MAX, // MaxLOD
+			0, // ShaderRegister
+			0, // RegisterSpace
+			D3D12_SHADER_VISIBILITY_ALL,
+		};
+		return true;
+	}
+	else if (EA::StdC::Strcmp(Name, "StaticLinearWrapSampler") == 0)
+	{
+		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
+			D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressU
+			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressV
+			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressW
+			0, // MipLODBias
+			D3D12_MAX_MAXANISOTROPY,
+			D3D12_COMPARISON_FUNC_NEVER,
+			D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+			0, // MinLOD
+			FLT_MAX, // MaxLOD
+			0, // ShaderRegister
+			0, // RegisterSpace
+			D3D12_SHADER_VISIBILITY_ALL,
+		};
+		return true;
+	}
+	else if (EA::StdC::Strcmp(Name, "StaticLinearClampSampler") == 0)
+	{
+		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
+			D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressU
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressV
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressW
+			0, // MipLODBias
+			D3D12_MAX_MAXANISOTROPY,
+			D3D12_COMPARISON_FUNC_NEVER,
+			D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+			0, // MinLOD
+			FLT_MAX, // MaxLOD
+			0, // ShaderRegister
+			0, // RegisterSpace
+			D3D12_SHADER_VISIBILITY_ALL,
+		};
+		return true;
+	}
+	else if (EA::StdC::Strcmp(Name, "StaticAnisotropicWrapSampler") == 0)
+	{
+		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
+			D3D12_FILTER_ANISOTROPIC,
+			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressU
+			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressV
+			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressW
+			0, // MipLODBias
+			D3D12_MAX_MAXANISOTROPY,
+			D3D12_COMPARISON_FUNC_NEVER,
+			D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+			0, // MinLOD
+			FLT_MAX, // MaxLOD
+			0, // ShaderRegister
+			0, // RegisterSpace
+			D3D12_SHADER_VISIBILITY_ALL,
+		};
+		return true;
+	}
+	else if (EA::StdC::Strcmp(Name, "StaticAnisotropicClampSampler") == 0)
+	{
+		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
+			D3D12_FILTER_ANISOTROPIC,
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressU
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressV
+			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressW
+			0, // MipLODBias
+			D3D12_MAX_MAXANISOTROPY,
+			D3D12_COMPARISON_FUNC_NEVER,
+			D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+			0, // MinLOD
+			FLT_MAX, // MaxLOD
+			0, // ShaderRegister
+			0, // RegisterSpace
+			D3D12_SHADER_VISIBILITY_ALL,
+		};
+		return true;
+	}
+
+	return false;
+}
+
 FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderSet& InBoundShaderSet)
 {
 	FD3D12RootSignature RootSignature;
@@ -234,6 +354,9 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 
 	const D3D12_ROOT_DESCRIPTOR_FLAGS CBVRootDescriptorFlags = D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC;	// We always set the data in an upload heap before calling Set*RootConstantBufferView.
 
+
+	eastl::vector<D3D12_STATIC_SAMPLER_DESC> StaticSamplerDescList{};
+
 	for (uint32_t RootParameterTypeIndex = 0; RootParameterTypeIndex < ARRAY_LENGTH(RootParameterTypePriorityOrder); RootParameterTypeIndex++)
 	{
 		const D3D12_ROOT_PARAMETER_TYPE& RootParameterType = RootParameterTypePriorityOrder[RootParameterTypeIndex];
@@ -262,16 +385,28 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 
 					if (ReflectionData.ConstantBufferCount > MAX_ROOT_CBVS)
 					{
-						RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, ReflectionData.ConstantBufferCount - MAX_ROOT_CBVS, MAX_ROOT_CBVS, RootSignature.BindingSpace, CBVDescriptorRangeFlags);
-						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
-						RootSignature.RootParameterCount++;
+						EA_ASSERT(false);
+
+// 						RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, ReflectionData.ConstantBufferCount - MAX_ROOT_CBVS, MAX_ROOT_CBVS, RootSignature.BindingSpace, CBVDescriptorRangeFlags);
+// 						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
+// 						RootSignature.RootParameterCount++;
 					}
 
 					if (ReflectionData.SamplerCount > 0)
 					{
-						RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, ReflectionData.SamplerCount, 0u, RootSignature.BindingSpace, SamplerDescriptorRangeFlags);
-						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
-						RootSignature.RootParameterCount++;
+// 						RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, ReflectionData.SamplerCount, 0u, RootSignature.BindingSpace, SamplerDescriptorRangeFlags);
+// 						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
+// 						RootSignature.RootParameterCount++;
+
+						for (const D3D12_SHADER_INPUT_BIND_DESC& InputBindDesc : ReflectionData.SamplerResourceBindingDescList)
+						{
+							D3D12_STATIC_SAMPLER_DESC StaticSamplerDesc{};
+							const bool bFound = MakeStaticSamplerDescFromByName(InputBindDesc.Name, StaticSamplerDesc);
+							EA_ASSERT_FORMATTED(bFound, ("Unsupported Sampler(\"%s\")", InputBindDesc.Name));
+							StaticSamplerDesc.ShaderRegister = InputBindDesc.BindPoint;
+							StaticSamplerDescList.emplace_back(StaticSamplerDesc);
+						}
+						
 					}
 
 					if (ReflectionData.UnorderedAccessCount > 0)
@@ -302,7 +437,7 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 		}
 	}
 
-	RootSignature.RootDesc.Init_1_1(RootSignature.RootParameterCount, RootSignature.TableSlots, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	RootSignature.RootDesc.Init_1_1(RootSignature.RootParameterCount, RootSignature.TableSlots, StaticSamplerDescList.size(), StaticSamplerDescList.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	D3D12_FEATURE_DATA_ROOT_SIGNATURE FeatureData = {};
 
@@ -353,16 +488,17 @@ eastl::shared_ptr<FD3D12RootSignature> FD3D12RootSignatureManager::GetOrCreateRo
 		FD3D12RootSignature CreatedD3D12RootSinature = FD3D12RootSignature::CreateRootSignature(InBoundShaderSet);
 		RootSignature = RootSignatureMap.emplace(InBoundShaderSet.CachedHash, eastl::make_shared<FD3D12RootSignature>(CreatedD3D12RootSinature)).first->second;
 	}
+	EA_ASSERT(RootSignature);
 	
 	return RootSignature;
 }
 
-void FD3D12RootSignatureManager::OnStartFrame()
+void FD3D12RootSignatureManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }
 
-void FD3D12RootSignatureManager::OnEndFrame()
+void FD3D12RootSignatureManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
 }

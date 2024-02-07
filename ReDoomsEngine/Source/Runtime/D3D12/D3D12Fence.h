@@ -10,7 +10,7 @@ class FD3D12Fence
 {
 public:
 
-	FD3D12Fence();
+	FD3D12Fence(const bool bInit = false);
 	void Init();
 	void CreateD3DFence();
 	void CreateD3DFence(const eastl::wstring& InDebugName);

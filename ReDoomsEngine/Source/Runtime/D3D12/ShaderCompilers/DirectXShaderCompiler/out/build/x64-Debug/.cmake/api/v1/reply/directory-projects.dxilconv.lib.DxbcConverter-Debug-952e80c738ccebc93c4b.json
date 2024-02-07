@@ -1,0 +1,61 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_library",
+			"add_dxilconv_project_library"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"projects/dxilconv/CMakeLists.txt",
+			"projects/dxilconv/lib/DxbcConverter/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 5,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 554,
+				"parent" : 2
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 3,
+			"component" : "DxbcConverter",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/DxbcConverter.lib"
+			],
+			"targetId" : "DxbcConverter::@50c6ceaec5b43811e75d",
+			"targetIndex" : 53,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "projects/dxilconv/lib/DxbcConverter",
+		"source" : "projects/dxilconv/lib/DxbcConverter"
+	}
+}

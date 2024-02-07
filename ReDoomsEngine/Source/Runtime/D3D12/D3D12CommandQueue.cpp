@@ -1,5 +1,6 @@
 #include "D3D12CommandQueue.h"
 #include "D3D12Device.h"
+#include "D3D12CommandList.h"
 
 D3D12_COMMAND_LIST_TYPE GetD3D12CommandListType(ED3D12QueueType QueueType)
 {
@@ -52,3 +53,20 @@ void FD3D12CommandQueue::WaitForCompletion()
 	Fence.Signal(this, true);
 }
 
+void FD3D12CommandQueue::ExecuteCommandLists(eastl::vector<eastl::shared_ptr<FD3D12CommandList>>& CommandLists)
+{
+	eastl::vector<ID3D12CommandList*> D3D12CommandLists{};
+
+	for (eastl::shared_ptr<FD3D12CommandList>& CommandList : CommandLists)
+	{
+		CommandList->FinishRecordingCommandList(this);
+		D3D12CommandLists.emplace_back(CommandList->GetD3DCommandList());
+	}
+
+	GetD3DCommandQueue()->ExecuteCommandLists(D3D12CommandLists.size(), D3D12CommandLists.data());
+
+	for (eastl::shared_ptr<FD3D12CommandList>& CommandList : CommandLists)
+	{
+		CommandList->ResetRecordingCommandList(nullptr);
+	}
+}

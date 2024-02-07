@@ -2,16 +2,21 @@
 #include "new"
 #include "EABase/eabase.h"
 #include "EAStdC/EAMemory.h"
+#include "TextHelper.h"
 #include <type_traits>
 
-void* operator new     (size_t size, const char* name, int flags, unsigned debugFlags, const char* file, int line);
-void* operator new[](size_t size, const char* name, int flags, unsigned debugFlags, const char* file, int line);
-void* operator new     (size_t size, size_t alignment, size_t alignmentOffset, const char* name, int flags, unsigned debugFlags, const char* file, int line);
-void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char* name, int flags, unsigned debugFlags, const char* file, int line);
 
-void  operator delete  (void* p, const char* name, int flags, unsigned debugFlags, const char* file, int line);
-void  operator delete[](void* p, const char* name, int flags, unsigned debugFlags, const char* file, int line);
-void  operator delete  (void* p, size_t alignment, size_t alignmentOffset, const char* name, int flags, unsigned debugFlags, const char* file, int line);
-void  operator delete[](void* p, size_t alignment, size_t alignmentOffset, const char* name, int flags, unsigned debugFlags, const char* file, int line);
+struct FScopedMemoryTrace
+{
+	// use address of literal string as key
+	FScopedMemoryTrace(const char* const InTraceName);
+	~FScopedMemoryTrace();
+
+	const char* const TraceName;
+};
+
+void InitMemoryCore();
+
+#define SCOPED_MEMORY_TRACE(TRACE_NAME) FScopedMemoryTrace RD_CONCAT(ScopedMemoryTrace, RD_UNIQUE_NAME(TRACE_NAME)){#TRACE_NAME};
 
 #define MEM_ZERO(VARIABLE) static_assert(!std::is_pointer<decltype (VARIABLE)>::value); EA::StdC::Memset8(&VARIABLE, 0, sizeof(VARIABLE))

@@ -1,0 +1,123 @@
+{
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 750,
+				"parent" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "FileCheck::@09bac3cf726c1488c914"
+		},
+		{
+			"id" : "count::@1848ee2bede5a1584fa8"
+		},
+		{
+			"id" : "not::@7726f5738bf8037ed68b"
+		},
+		{
+			"id" : "dxilconv-tests::@82edfa3538843953b724"
+		},
+		{
+			"id" : "llvm-config::@afa2b000db28441ce85a"
+		},
+		{
+			"id" : "opt::@b47735b880bc6d502d77"
+		},
+		{
+			"id" : "clang-tblgen::@9d1a7e4b77846bff96c3"
+		},
+		{
+			"id" : "dxcompiler::@adeae0308928029729ab"
+		},
+		{
+			"id" : "dxc::@ce527a51a07a3a6e0767"
+		},
+		{
+			"id" : "dxa::@c789d1669724ed5377db"
+		},
+		{
+			"id" : "dxr::@1593c16c15c8f124dc1c"
+		},
+		{
+			"id" : "dxl::@6627fcd7b0c0245705af"
+		},
+		{
+			"id" : "dxopt::@76d362c0a168b93cd8c5"
+		},
+		{
+			"id" : "dxv::@2af867ba4406c099b923"
+		},
+		{
+			"id" : "ClangUnitTests::@e1f11e1ec73888e26d14"
+		},
+		{
+			"id" : "ExecHLSLTests::@da115bb3df41a937dabb"
+		},
+		{
+			"id" : "dxc_batch::@ab2754cb987c318833b9"
+		},
+		{
+			"id" : "llvm-test-depends::@36f028580bb02cc8272a"
+		}
+	],
+	"id" : "test-depends::@6890427a1f51a3e7e1df",
+	"name" : "test-depends",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/CMakeFiles/test-depends",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/CMakeFiles/test-depends.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_library"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"lib/Option/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 1,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 554,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "LLVMOption",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/LLVMOption.lib"
+			],
+			"targetId" : "LLVMOption::@03597dd37d3dc3b95065",
+			"targetIndex" : 114,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "lib/Option",
+		"source" : "lib/Option"
+	}
+}

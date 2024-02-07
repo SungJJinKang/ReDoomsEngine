@@ -1,0 +1,70 @@
+{
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target"
+		],
+		"files" : 
+		[
+			"tools/clang/lib/Basic/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 110,
+				"parent" : 0
+			}
+		]
+	},
+	"folder" : 
+	{
+		"name" : "Utils"
+	},
+	"id" : "GIT_COMMIT_INFO_ALWAYS_REBUILD::@af584f149e490d75c24c",
+	"name" : "GIT_COMMIT_INFO_ALWAYS_REBUILD",
+	"paths" : 
+	{
+		"build" : "tools/clang/lib/Basic",
+		"source" : "tools/clang/lib/Basic"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/lib/Basic/CMakeFiles/GIT_COMMIT_INFO_ALWAYS_REBUILD",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "out/build/x64-Debug/tools/clang/lib/Basic/CMakeFiles/GIT_COMMIT_INFO_ALWAYS_REBUILD.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

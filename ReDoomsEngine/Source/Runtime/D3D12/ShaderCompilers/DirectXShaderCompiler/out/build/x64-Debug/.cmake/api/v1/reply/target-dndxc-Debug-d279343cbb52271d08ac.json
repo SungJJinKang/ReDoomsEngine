@@ -1,0 +1,39 @@
+{
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"include_external_msproject"
+		],
+		"files" : 
+		[
+			"tools/clang/tools/dotnetc/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 17,
+				"parent" : 0
+			}
+		]
+	},
+	"folder" : 
+	{
+		"name" : "Clang executables"
+	},
+	"id" : "dndxc::@24e46e77249c878ddeae",
+	"name" : "dndxc",
+	"paths" : 
+	{
+		"build" : "tools/clang/tools/dotnetc",
+		"source" : "tools/clang/tools/dotnetc"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

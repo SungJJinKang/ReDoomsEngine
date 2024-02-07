@@ -9,16 +9,16 @@
 #include "D3D12PSO.h"
 #include "D3D12RootSignature.h"
 #include "D3D12CommandList.h"
-#include "D3D12Resource/D3D12ConstantBufferRingBufferManager.h"
-
+#include "D3D12Resource/D3D12PerFrameConstantBufferManager.h"
+#include "D3D12Resource/D3D12ResourceAllocator.h"
 
 FD3D12Manager::FD3D12Manager() = default;
 FD3D12Manager::~FD3D12Manager() = default;
 
-void FD3D12Manager::Init()
+void FD3D12Manager::Init(FRenderer* const InRenderer)
 {
     {
-        D3D12Window = eastl::make_unique<FD3D12Window>(GWindowWidth, GWindowHeight, EA_WCHAR("ReDoomsEngine"));
+        D3D12Window = eastl::make_unique<FD3D12Window>(GWindowWidth, GWindowHeight, EA_WCHAR("ReDoomsEngine"), InRenderer);
         D3D12Window->Init();
         TickedManagerList.emplace_back(D3D12Window.get());
     }
@@ -29,7 +29,7 @@ void FD3D12Manager::Init()
 #if RD_DEBUG
         // Enable the debug layer (requires the Graphics Tools "optional feature").
         // NOTE: Enabling the debug layer after device creation will invalidate the active device.
-        if (true)
+        if (RD_DEBUG)
         {
             ComPtr<ID3D12Debug> DebugController;
             if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&DebugController))))
@@ -51,12 +51,6 @@ void FD3D12Manager::Init()
         TickedManagerList.emplace_back(ChoosenAdapter.get());
     }
 
-    {
-        D3D12CommandListManager = eastl::make_unique<FD3D12CommandListManager>();
-        D3D12CommandListManager->Init();
-        TickedManagerList.emplace_back(D3D12CommandListManager.get());
-    }
-    
     {
         Swapchain = eastl::make_unique<FD3D12Swapchain> (GetChoosenAdapter()->GetDevice()->GetCommandQueue(ED3D12QueueType::Direct),
             D3D12Window.get(), GNumBackBufferCount, GWindowWidth, GWindowHeight, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT);
@@ -88,40 +82,46 @@ void FD3D12Manager::Init()
     }
 
     {
-        D3D12ConstantBufferRingBufferManager = eastl::make_unique<FD3D12ConstantBufferRingBufferManager>();
-        D3D12ConstantBufferRingBufferManager->Init();
-        TickedManagerList.emplace_back(D3D12ConstantBufferRingBufferManager.get());
+        D3D12PerFrameConstantBufferManager = eastl::make_unique<FD3D12PerFrameConstantBufferManager>();
+        D3D12PerFrameConstantBufferManager->Init();
+        TickedManagerList.emplace_back(D3D12PerFrameConstantBufferManager.get());
+    }
+
+    {
+        D3D12ResourceAllocator = eastl::make_unique<FD3D12ResourceAllocator>();
+        D3D12ResourceAllocator->Init();
+        TickedManagerList.emplace_back(D3D12ResourceAllocator.get());
     }
 }
 
-void FD3D12Manager::OnPreStartFrame()
+void FD3D12Manager::OnPreStartFrame(FD3D12CommandContext& InCommandContext)
 {
-    for (ID3D12ManagerInterface* Manager : TickedManagerList)
+    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
     {
-        Manager->OnPreStartFrame();
+        Manager->OnPreStartFrame(InCommandContext);
     }
 }
 
-void FD3D12Manager::OnStartFrame()
+void FD3D12Manager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
-    for (ID3D12ManagerInterface* Manager : TickedManagerList)
+    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
     {
-        Manager->OnStartFrame();
+        Manager->OnStartFrame(InCommandContext);
     }
 }
 
-void FD3D12Manager::OnEndFrame()
+void FD3D12Manager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
-    for (ID3D12ManagerInterface* Manager : TickedManagerList)
+    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
     {
-        Manager->OnEndFrame();
+        Manager->OnEndFrame(InCommandContext);
     }
 }
 
-void FD3D12Manager::OnPostEndFrame()
+void FD3D12Manager::OnPostEndFrame(FD3D12CommandContext& InCommandContext)
 {
-    for (ID3D12ManagerInterface* Manager : TickedManagerList)
+    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
     {
-        Manager->OnPostEndFrame();
+        Manager->OnPostEndFrame(InCommandContext);
     }
 }

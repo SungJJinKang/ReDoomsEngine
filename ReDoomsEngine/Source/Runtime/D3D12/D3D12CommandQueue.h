@@ -17,6 +17,7 @@ D3D12_COMMAND_LIST_TYPE GetD3D12CommandListType(ED3D12QueueType QueueType);
 const wchar_t* GetD3D12QueueTypeString(ED3D12QueueType QueueType);
 
 class FD3D12Device;
+class FD3D12CommandList;
 class FD3D12CommandQueue
 {
 public:
@@ -29,6 +30,8 @@ public:
 		EA_ASSERT(D3DCommandQueue.Get());
 		return D3DCommandQueue.Get();
 	}
+
+	void ExecuteCommandLists(eastl::vector<eastl::shared_ptr<FD3D12CommandList>>& CommandLists);
 
 private:
 

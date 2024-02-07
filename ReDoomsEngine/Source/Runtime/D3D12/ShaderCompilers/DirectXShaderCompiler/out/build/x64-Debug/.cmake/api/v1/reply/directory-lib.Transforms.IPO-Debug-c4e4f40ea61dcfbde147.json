@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_library"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"lib/Transforms/IPO/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 2,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 554,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "LLVMipo",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/LLVMipo.lib"
+			],
+			"targetId" : "LLVMipo::@5d30e4426957e039fa79",
+			"targetIndex" : 125,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "lib/Transforms/IPO",
+		"source" : "lib/Transforms/IPO"
+	}
+}

@@ -3,19 +3,19 @@
 #include "D3D12Include.h"
 
 #include "D3D12Resource/D3D12Resource.h"
-#include "D3D12ManagerInterface.h"
+#include "D3D12RendererStateCallbackInterface.h"
 
 class FD3D12CommandQueue;
 class FD3D12Window;
 class FD3D12RenderTargetResource;
-class FD3D12Swapchain : public ID3D12ManagerInterface
+class FD3D12Swapchain : public ID3D12RendererStateCallbackInterface
 {
 public:
 
 	FD3D12Swapchain(FD3D12CommandQueue* const InCommandQueue, FD3D12Window* const InWindow, const uint32_t InNumBuffer, const uint32_t InWidth, const uint32_t InHeight, const DXGI_FORMAT InFormat);
 	void Init();
-	virtual void OnStartFrame();
-	virtual void OnEndFrame();
+	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 	IDXGISwapChain3* GetD3DSwapchain() const
 	{
 		return D3DSwapchain.Get();

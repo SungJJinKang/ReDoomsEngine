@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "projects/dxilconv/tools/dxbc2dxil",
+		"source" : "projects/dxilconv/tools/dxbc2dxil"
+	}
+}

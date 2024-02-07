@@ -4,9 +4,13 @@
 #include "D3D12Fence.h"
 #include "D3D12CommandQueue.h"
 
-FD3D12Fence::FD3D12Fence()
+FD3D12Fence::FD3D12Fence(const bool bInit)
 	: D3DFence(), LastSignaledValue(0), bInterruptAwaited(false)
 {
+	if (bInit)
+	{
+		Init();
+	}
 }
 
 void FD3D12Fence::Init()
@@ -62,10 +66,18 @@ void FD3D12Fence::WaitOnLastSignal()
 
 bool FD3D12Fence::IsCompleteSignal(const uint64_t SignaledValue)
 {
+	EA_ASSERT(SignaledValue > 0);
 	return !(GetD3DFence()->GetCompletedValue() < (SignaledValue));
 }
 
 bool FD3D12Fence::IsCompleteLastSignal()
 {
-	return IsCompleteSignal(LastSignaledValue);
+	if (LastSignaledValue > 0)
+	{
+		return IsCompleteSignal(LastSignaledValue);
+	}
+	else
+	{
+		return true;
+	}
 }

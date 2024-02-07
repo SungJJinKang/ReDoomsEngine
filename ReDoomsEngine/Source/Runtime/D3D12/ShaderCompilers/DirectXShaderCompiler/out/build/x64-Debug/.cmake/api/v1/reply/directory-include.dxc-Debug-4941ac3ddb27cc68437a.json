@@ -1,0 +1,46 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"include/dxc/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 38,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "dxc-headers",
+			"destination" : "include/dxc",
+			"paths" : 
+			[
+				"out/build/x64-Debug/include/dxc/config.h",
+				"include/dxc/dxcapi.h",
+				"include/dxc/dxcerrors.h",
+				"include/dxc/dxcisense.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "include/dxc",
+		"source" : "include/dxc"
+	}
+}

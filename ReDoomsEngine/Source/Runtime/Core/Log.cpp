@@ -27,12 +27,9 @@ void redooms::log::LogInternal(const ELogVerbosity LogVerbosity, const wchar_t* 
 		va_list Args;
 		va_start(Args, Format);
 
-		
-		wchar_t StringBuffer[LOG_STRING_BUFFER_LENGTH];
-		const int LogLength = EA::StdC::Vsnprintf(StringBuffer, LOG_STRING_BUFFER_LENGTH, Format, Args);
-		EA_ASSERT(LogLength < LOG_STRING_BUFFER_LENGTH);
-		EA::StdC::Snprintf(StringBuffer + LogLength, LOG_STRING_BUFFER_LENGTH - LogLength, EA_WCHAR(" (LogVerbosity : %s)\n"), LogVerbosityToString(LogVerbosity));
-		OutputDebugString(StringBuffer);
+		EA::StdC::Vprintf(Format, Args);
+		EA::StdC::Printf(EA_WCHAR("\n"));
+
 		va_end(Args);
 	}
 

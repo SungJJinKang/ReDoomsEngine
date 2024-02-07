@@ -1,0 +1,638 @@
+{
+	"archive" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "/machine:x64",
+				"role" : "flags"
+			}
+		]
+	},
+	"artifacts" : 
+	[
+		{
+			"path" : "lib/dxclib.lib"
+		}
+	],
+	"backtrace" : 3,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"llvm_add_library",
+			"add_clang_library",
+			"install",
+			"target_link_libraries",
+			"add_dependencies",
+			"add_compile_options",
+			"target_compile_definitions",
+			"add_definitions",
+			"llvm_update_compile_flags",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"tools/clang/CMakeLists.txt",
+			"tools/clang/tools/dxclib/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 19,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 372,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 417,
+				"parent" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 378,
+				"parent" : 1
+			},
+			{
+				"command" : 4,
+				"file" : 2,
+				"line" : 25,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 512,
+				"parent" : 2
+			},
+			{
+				"command" : 5,
+				"file" : 2,
+				"line" : 35,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 2,
+				"line" : 24,
+				"parent" : 0
+			},
+			{
+				"file" : 3
+			},
+			{
+				"command" : 6,
+				"file" : 3,
+				"line" : 114,
+				"parent" : 9
+			},
+			{
+				"command" : 7,
+				"file" : 2,
+				"line" : 32,
+				"parent" : 0
+			},
+			{
+				"command" : 9,
+				"file" : 0,
+				"line" : 426,
+				"parent" : 2
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 50,
+				"parent" : 12
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 10,
+				"file" : 1,
+				"line" : 402,
+				"parent" : 14
+			},
+			{
+				"command" : 10,
+				"file" : 3,
+				"line" : 613,
+				"parent" : 9
+			},
+			{
+				"command" : 10,
+				"file" : 3,
+				"line" : 617,
+				"parent" : 9
+			},
+			{
+				"command" : 10,
+				"file" : 3,
+				"line" : 619,
+				"parent" : 9
+			},
+			{
+				"command" : 10,
+				"file" : 3,
+				"line" : 677,
+				"parent" : 9
+			},
+			{
+				"command" : 10,
+				"file" : 2,
+				"line" : 29,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "/DWIN32 /D_WINDOWS   -wd4146 -wd4180 -wd4244 -wd4258 -wd4267 -wd4291 -wd4345 -wd4351 -wd4355 -wd4456 -wd4457 -wd4458 -wd4459 -wd4503 -wd4624 -wd4722 -wd4800 -wd4100 -wd4127 -wd4512 -wd4505 -wd4610 -wd4510 -wd4702 -wd4245 -wd4706 -wd4310 -wd4701 -wd4703 -wd4389 -wd4611 -wd4805 -wd4204 -wd4324 -we4238 /W4 /Zc:sizedDealloc- /Zi /Ob0 /Od /RTC1 /WX -MDd"
+				},
+				{
+					"fragment" : "/EHsc"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "/guard:cf"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"define" : "ENABLE_SPIRV_CODEGEN"
+				},
+				{
+					"define" : "MSFT_SUPPORTS_CHILD_PROCESSES"
+				},
+				{
+					"define" : "SUPPORT_QUERY_GIT_COMMIT_INFO"
+				},
+				{
+					"backtrace" : 11,
+					"define" : "VERSION_STRING_SUFFIX=\" for Windows\""
+				},
+				{
+					"define" : "_CRT_NONSTDC_NO_DEPRECATE"
+				},
+				{
+					"define" : "_CRT_NONSTDC_NO_WARNINGS"
+				},
+				{
+					"define" : "_CRT_SECURE_NO_DEPRECATE"
+				},
+				{
+					"define" : "_CRT_SECURE_NO_WARNINGS"
+				},
+				{
+					"define" : "_GNU_SOURCE"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "_ITERATOR_DEBUG_LEVEL=0"
+				},
+				{
+					"define" : "_SCL_SECURE_NO_DEPRECATE"
+				},
+				{
+					"define" : "_SCL_SECURE_NO_WARNINGS"
+				},
+				{
+					"define" : "__STDC_CONSTANT_MACROS"
+				},
+				{
+					"define" : "__STDC_FORMAT_MACROS"
+				},
+				{
+					"define" : "__STDC_LIMIT_MACROS"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/tools/clang/tools/dxclib"
+				},
+				{
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/tools/clang/tools/dxclib"
+				},
+				{
+					"backtrace" : 15,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/tools/clang/include"
+				},
+				{
+					"backtrace" : 15,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/tools/clang/include"
+				},
+				{
+					"backtrace" : 16,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
+				},
+				{
+					"backtrace" : 17,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
+				},
+				{
+					"backtrace" : 17,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
+				},
+				{
+					"backtrace" : 18,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
+				},
+				{
+					"backtrace" : 19,
+					"path" : "/directx"
+				},
+				{
+					"backtrace" : 19,
+					"path" : "/wsl/stubs"
+				},
+				{
+					"backtrace" : 20,
+					"path" : "C:/Program Files/Microsoft Visual Studio/2022/Professional/DIA SDK/include"
+				},
+				{
+					"backtrace" : 8,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Tools/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Headers/include"
+				},
+				{
+					"backtrace" : 5,
+					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/utils/version"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "LLVMSupport::@928d1708d80fe1f55e59"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMMSSupport::@d7b4cb0d6be5a8f60e29"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "HCTGen::@5fa7c416598cd72250bb"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "TablegenHLSLOptions::@3cc4d6774efc8aa8fa9f"
+		},
+		{
+			"backtrace" : 8,
+			"id" : "SPIRV-Tools-static::@1ff997bb6f27c61d214b"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "SPIRV-Tools-opt::@b20417be42203b59e848"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMCore::@fbfd63cd06ffdf52319f"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMIRReader::@ac4e3735190afd111ee4"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMBitReader::@b3ae57fb53631d19cf66"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMBitWriter::@70aee8a8db3c4815feff"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMTransformUtils::@485472be269d97170281"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMInstCombine::@c211d204041b3cce8885"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMScalarOpts::@b500fa7488aca5bdc0a7"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMLinker::@82b49a9339256152fd37"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMVectorize::@52cafa3d09b69dbbd840"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMipo::@5d30e4426957e039fa79"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMAnalysis::@a8ea8fd451b56fad3c5d"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMipa::@b0b9b04bc2b56cf345c5"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMOption::@03597dd37d3dc3b95065"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMTarget::@1f06d56b7c3d624f3727"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMAsmParser::@bfe21dd4a58a6f8872f3"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMProfileData::@b9974079c57e2c563b37"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMDxcSupport::@cb21ebd8a5998708e985"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMHLSL::@fbd53b97f31afe415e8e"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMDXIL::@518e30bbae46f8bcb951"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMDxilContainer::@44c3c63ec63123e61d9c"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMDxcBindingTable::@2712436fc6d55715eefc"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LLVMDxilRootSignature::@88a3c75085c209ebbe6e"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangCommentHTMLTags::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangCommentCommandInfo::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangCommentCommandList::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticAST::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrClasses::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangCommentNodes::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangCommentHTMLTagsProperties::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrDump::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrVisitor::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrImpl::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangStmtNodes::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDeclNodes::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangCommentHTMLNamedCharacterReferences::@f4fca6acdbd835521d7f"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticAnalysis::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrList::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticSerialization::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrHasAttributeImpl::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrParserStringSwitches::@5cf04ee5b17dff0d3a38"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticFrontend::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticComment::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticGroups::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticCommon::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticSema::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticParse::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticIndexName::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticLex::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangDiagnosticDriver::@384e7ab759dd3ad49a7b"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrTemplateInstantiate::@352f190b7085a88b26a9"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrParsedAttrList::@352f190b7085a88b26a9"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrParsedAttrKinds::@352f190b7085a88b26a9"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrSpellingListIndex::@352f190b7085a88b26a9"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrPCHWrite::@9318d68cf7f6a213be76"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrParsedAttrImpl::@352f190b7085a88b26a9"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "ClangAttrPCHRead::@9318d68cf7f6a213be76"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangBasic::@af584f149e490d75c24c"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangAST::@572b5cd4cfc688839176"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangLex::@d3c561e3b3e9c375248d"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangParse::@3da6354c36f009bcf2b2"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangSema::@b78f6d003921181e7054"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangEdit::@ad90dd66c332f8450f8c"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangCodeGen::@b53206f97688f9d71411"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangAnalysis::@efd5146c6323474be9b8"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangFrontend::@ae9a5840ad140bf270f8"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangDriver::@7a0ba538446439a30277"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "clangSPIRV::@680e5d7cf55722821b84"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "dxcompiler::@adeae0308928029729ab"
+		}
+	],
+	"folder" : 
+	{
+		"name" : "Clang libraries"
+	},
+	"id" : "dxclib::@8860f565188b864680c8",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 4,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/install/x64-Debug"
+		}
+	},
+	"name" : "dxclib",
+	"nameOnDisk" : "dxclib.lib",
+	"paths" : 
+	{
+		"build" : "tools/clang/tools/dxclib",
+		"source" : "tools/clang/tools/dxclib"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "tools/clang/tools/dxclib/dxc.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}
