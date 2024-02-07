@@ -1,0 +1,86 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_library",
+			"add_dxilconv_project_library",
+			"add_dxilconv_project_test_library"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"projects/dxilconv/CMakeLists.txt",
+			"projects/dxilconv/unittests/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 7,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 17,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 5,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 554,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 31,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 4,
+			"component" : "dxilconv-tests",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"bin/dxilconv-tests.dll"
+			],
+			"targetId" : "dxilconv-tests::@82edfa3538843953b724",
+			"targetIndex" : 836,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/dxilconv-tests.dll"
+			],
+			"targetId" : "dxilconv-tests::@82edfa3538843953b724",
+			"targetIndex" : 836,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "projects/dxilconv/unittests",
+		"source" : "projects/dxilconv/unittests"
+	}
+}

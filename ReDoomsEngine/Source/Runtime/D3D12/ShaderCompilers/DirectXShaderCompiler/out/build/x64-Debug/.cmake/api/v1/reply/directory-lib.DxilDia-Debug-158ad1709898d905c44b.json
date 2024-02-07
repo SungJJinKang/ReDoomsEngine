@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_library"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"lib/DxilDia/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 8,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 554,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "LLVMDxilDia",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/LLVMDxilDia.lib"
+			],
+			"targetId" : "LLVMDxilDia::@9fae9f067c7ff443dcb9",
+			"targetIndex" : 104,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "lib/DxilDia",
+		"source" : "lib/DxilDia"
+	}
+}

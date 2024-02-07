@@ -1,0 +1,53 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"add_llvm_tool"
+		],
+		"files" : 
+		[
+			"cmake/modules/AddLLVM.cmake",
+			"tools/llvm-dis/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 9,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 657,
+				"parent" : 1
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "llvm-dis",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/llvm-dis.exe"
+			],
+			"targetId" : "llvm-dis::@e82ed11c4685fece42d7",
+			"targetIndex" : 909,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "tools/llvm-dis",
+		"source" : "tools/llvm-dis"
+	}
+}

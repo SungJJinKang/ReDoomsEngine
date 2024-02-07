@@ -1,0 +1,35 @@
+{
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target"
+		],
+		"files" : 
+		[
+			"include/dxc/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 36,
+				"parent" : 0
+			}
+		]
+	},
+	"id" : "dxc-headers::@5fa7c416598cd72250bb",
+	"name" : "dxc-headers",
+	"paths" : 
+	{
+		"build" : "include/dxc",
+		"source" : "include/dxc"
+	},
+	"sources" : [],
+	"type" : "UTILITY"
+}

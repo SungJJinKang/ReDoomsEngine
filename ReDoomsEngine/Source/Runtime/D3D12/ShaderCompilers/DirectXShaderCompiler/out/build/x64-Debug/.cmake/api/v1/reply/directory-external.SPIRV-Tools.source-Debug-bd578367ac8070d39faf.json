@@ -1,0 +1,114 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"external/SPIRV-Tools/source/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 428,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 432,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 441,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/SPIRV-Tools.lib"
+			],
+			"targetId" : "SPIRV-Tools-static::@1ff997bb6f27c61d214b",
+			"targetIndex" : 149,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/SPIRV-Tools-shared.lib"
+			],
+			"targetId" : "SPIRV-Tools-shared::@1ff997bb6f27c61d214b",
+			"targetIndex" : 148,
+			"targetIsImportLibrary" : true,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/SPIRV-Tools-shared.dll"
+			],
+			"targetId" : "SPIRV-Tools-shared::@1ff997bb6f27c61d214b",
+			"targetIndex" : 148,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "SPIRV-Tools/cmake",
+			"exportName" : "SPIRV-ToolsTargets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "SPIRV-Tools-static::@1ff997bb6f27c61d214b",
+					"index" : 149
+				},
+				{
+					"id" : "SPIRV-Tools-shared::@1ff997bb6f27c61d214b",
+					"index" : 148
+				}
+			],
+			"paths" : 
+			[
+				"external/SPIRV-Tools/source/CMakeFiles/Export/7c927e37733d95dcbdcc190c05ffd3eb/SPIRV-ToolsTarget.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "SPIRV-Tools/cmake",
+			"paths" : 
+			[
+				"out/build/x64-Debug/SPIRV-ToolsConfig.cmake"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "external/SPIRV-Tools/source",
+		"source" : "external/SPIRV-Tools/source"
+	}
+}

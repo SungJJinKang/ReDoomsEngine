@@ -46,6 +46,12 @@ FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     COPY_DESC_MEMBER(CachedPSO)
     COPY_DESC_MEMBER(Flags)
 
+    // error fix #1
+    // D3D12 ERROR : ID3D12Device::CreateInputLayout : Input Signature in bytecode could not be parsed.Data may be corrupt or in an unrecognizable format.[STATE_CREATION ERROR #63: CREATEINPUTLAYOUT_UNPARSEABLEINPUTSIGNATURE]
+    // D3D12 ERROR : ID3D12Device::CreateVertexShader : Vertex Shader is corrupt or in an unrecognized format.[STATE_CREATION ERROR #67: CREATEVERTEXSHADER_INVALIDSHADERBYTECODE]
+    // D3D12 ERROR : ID3D12Device::CreatePixelShader : Pixel Shader is corrupt or in an unrecognized format.[STATE_CREATION ERROR #93: CREATEPIXELSHADER_INVALIDSHADERBYTECODE]
+    // 
+    // This is caused by the compiler creating unsigned bytecode. "dxil.dll" must be put in the same folder as "dxcompiler.dll" at runtime
     VERIFYD3D12RESULT(GetD3D12Device()->CreateGraphicsPipelineState(&Desc, IID_PPV_ARGS(&PSOObject)));
 }
 
