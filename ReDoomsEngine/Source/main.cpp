@@ -4,17 +4,31 @@
 #include "WindowsApplication.h"
 #include "D3D12Window.h"
 #include "D3D12TestRenderer.h"
+#include <windows.h>
 
-int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, char*, int32_t nCmdShow)
+int main(int argc, char** argv)
 {
+	{
+		InitMemoryCore();
+	}
+
 	HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	if (FAILED(hr))
 	{
 		return 1;
 	}
 
-	FWindowsApplication::HInstance = hInstance;
-	FWindowsApplication::NumCmdShow = nCmdShow;
+	{
+		char ConsoleTitle[500];  // to hold ConsoleTitle
+
+		// get ConsoleTitle of console window
+		GetConsoleTitleA(ConsoleTitle, 500);
+
+		// get HWND of console, based on its ConsoleTitle
+		HWND hwndConsole = FindWindowA(NULL, ConsoleTitle);
+		FWindowsApplication::HInstance = (HINSTANCE)GetWindowLongPtr(hwndConsole, GWLP_HINSTANCE);
+		FWindowsApplication::NumCmdShow = SW_SHOW;
+	}
 
 	FCommandline::InitCommandLine();
 
@@ -32,6 +46,6 @@ int32_t WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, char*, int32_t nCmdShow)
 		}
 	}
 	TestRenderer.Destroy();
-	
+
 	return 0;
 }

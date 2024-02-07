@@ -100,9 +100,9 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc-override.lib;mimalloc.lib;mimalloc-redirect.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mimalloc-override.lib;dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc.lib;mimalloc-redirect.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Debug;;$(SolutionDir)Source\Runtime\STL\mimalloc\bin</AdditionalLibraryDirectories>
       <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
@@ -130,11 +130,11 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc-override.lib;mimalloc.lib;mimalloc-redirect.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mimalloc-override.lib;dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc.lib;mimalloc-redirect.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release;;$(SolutionDir)Source\Runtime\STL\mimalloc\bin</AdditionalLibraryDirectories>
       <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
@@ -160,9 +160,9 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc-override.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mimalloc-override.lib;dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Debug;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Debug;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\build\bin\CMake\Debug;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
@@ -190,11 +190,11 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc-override.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mimalloc-override.lib;dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Release;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\build\bin\CMake\Release;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
@@ -256,7 +256,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\STL\EASTL\source\string.cpp" />
     <ClCompile Include="Source\Runtime\STL\EASTL\source\thread_support.cpp" />
     <ClCompile Include="Source\Runtime\Core\WindowsApplication.cpp" />
-    <ClCompile Include="Source\Runtime\Utils\cityhash\src\city-test.cc" />
     <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc" />
     <ClCompile Include="Source\Runtime\Rendering\TextureLoader.cpp" />
   </ItemGroup>
