@@ -1229,7 +1229,7 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12GlobalVariables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12ManagerInterface.h">
+    <ClInclude Include="Source\Runtime\D3D12\D3D12RendererStateCallbackInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Rendering\TextureLoader.h">
@@ -1248,6 +1248,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\HLSLTypeHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

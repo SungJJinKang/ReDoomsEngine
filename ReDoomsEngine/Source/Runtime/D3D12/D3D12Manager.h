@@ -1,7 +1,7 @@
 #pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
-#include "D3D12ManagerInterface.h"
+#include "D3D12RendererStateCallbackInterface.h"
 
 class FD3D12Window;
 class FD3D12Adapter;
@@ -10,12 +10,11 @@ class FD3D12DescriptorHeapManager;
 class FD3D12ShaderManager;
 class FD3D12PSOManager;
 class FD3D12RootSignatureManager;
-class FD3D12CommandListManager;
 class FD3D12PerFrameConstantBufferManager;
 class FD3D12ResourceAllocator;
 class FRenderer;
 
-class FD3D12Manager : public EA::StdC::Singleton<FD3D12Manager>, public ID3D12ManagerInterface
+class FD3D12Manager : public EA::StdC::Singleton<FD3D12Manager>, public ID3D12RendererStateCallbackInterface
 {
 public:
 
@@ -57,10 +56,9 @@ private:
 	eastl::unique_ptr<FD3D12ShaderManager> D3D12ShaderManager;
 	eastl::unique_ptr<FD3D12PSOManager> D3D12PSOManager;
 	eastl::unique_ptr<FD3D12RootSignatureManager> D3D12RootSignatureManager;
-	eastl::unique_ptr<FD3D12CommandListManager> D3D12CommandListManager;
 	eastl::unique_ptr<FD3D12PerFrameConstantBufferManager> D3D12PerFrameConstantBufferManager;
 	eastl::unique_ptr<FD3D12ResourceAllocator> D3D12ResourceAllocator;
 
-	eastl::vector<ID3D12ManagerInterface*> TickedManagerList;
+	eastl::vector<ID3D12RendererStateCallbackInterface*> TickedManagerList;
 };
 

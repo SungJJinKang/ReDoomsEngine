@@ -20,7 +20,6 @@ void FD3D12CommandList::InitCommandList()
 	// to record yet. The main loop expects it to be closed, so close it now.
 	CommandList->Close();
 	ResetRecordingCommandList(nullptr);
-	OwnerCommandAllocator->FreeCommandList(shared_from_this());
 }
 
 ED3D12QueueType FD3D12CommandList::GetQueueType() const
@@ -42,9 +41,15 @@ void FD3D12CommandList::FinishRecordingCommandList(FD3D12CommandQueue* const InC
 }
 
 FD3D12CommandAllocator::FD3D12CommandAllocator(const ED3D12QueueType InQueueType)
-	: QueueType(InQueueType), CommandAllocator(), FreedCommandListPool(), AllocatedCommandListPool()
+	: QueueType(InQueueType), CommandAllocator(), AllocatedCommandListPool()
 {
 
+}
+
+void FD3D12CommandAllocator::Init()
+{
+	InitCommandAllocator();
+	bInit = true;
 }
 
 void FD3D12CommandAllocator::InitCommandAllocator()
@@ -54,102 +59,42 @@ void FD3D12CommandAllocator::InitCommandAllocator()
 
 eastl::shared_ptr<FD3D12CommandList> FD3D12CommandAllocator::GetOrCreateNewCommandList()
 {
+	EA_ASSERT(bInit);
+
 	eastl::shared_ptr<FD3D12CommandList> CommandList{};
 
-	for (size_t FreedCommandListIndex = 0; FreedCommandListIndex < FreedCommandListPool.size(); ++FreedCommandListIndex)
+	if (AllocatedCommandListPool.size() > 0)
 	{
-		if (FreedCommandListPool[FreedCommandListIndex]->Fence.IsCompleteLastSignal())
+		if (AllocatedCommandListPool.front()->Fence.IsCompleteLastSignal())
 		{
-			CommandList = FreedCommandListPool[FreedCommandListIndex];
-			FreedCommandListPool.erase(FreedCommandListPool.begin() + FreedCommandListIndex);
-			break;
+			CommandList = AllocatedCommandListPool.front();
+			AllocatedCommandListPool.pop();
 		}
 	}
 
 	if(!CommandList)
 	{
-		CommandList = AllocatedCommandListPool.emplace_back(eastl::make_shared<FD3D12CommandList>(this));
+		CommandList = eastl::make_shared<FD3D12CommandList>(this);
 		CommandList->InitCommandList();
+		AllocatedCommandListPool.push(CommandList);
 	}
 
 	return CommandList;
 }
 
-void FD3D12CommandAllocator::FreeCommandList(eastl::shared_ptr<FD3D12CommandList> InCommandList)
-{
-	EA_ASSERT(eastl::find(FreedCommandListPool.begin(), FreedCommandListPool.end(), InCommandList) == FreedCommandListPool.end());
-	FreedCommandListPool.emplace_back(InCommandList);
-}
-
 void FD3D12CommandAllocator::ResetCommandAllocator(const bool bWaitForCompletationOfCommandLists)
 {
+	EA_ASSERT(bInit);
+
 	// 	Apps call Reset to re-use the memory that is associated with a command allocator.
 	// 	From this call to Reset, the runtime and driver determine that the graphics processing unit(GPU) is no longer executing any command lists that have recorded commands with the command allocator.
 	// 	Unlike ID3D12GraphicsCommandList::Reset, it is not recommended that you call Reset on the command allocator while a command list is still being executed.
 
  	if (bWaitForCompletationOfCommandLists)
  	{
- 		for (eastl::shared_ptr<FD3D12CommandList>& CommandList : AllocatedCommandListPool)
- 		{
- 			CommandList->Fence.WaitOnLastSignal();
- 		}
+		AllocatedCommandListPool.back()->Fence.WaitOnLastSignal();
  	}
 
 	VERIFYD3D12RESULT(CommandAllocator->Reset());
-
-}
-
-void FD3D12CommandListManager::Init()
-{
-
-}
-
-FD3D12CommandAllocator* FD3D12CommandListManager::GetOrCreateNewCommandAllocator(const ED3D12QueueType QueueType)
-{
-	FD3D12CommandAllocator* CommandAllocator = nullptr;
-
-	if (FreedCommandAllocatorPool[QueueType].size() > 0)
-	{
-		eastl::unique_ptr<FD3D12CommandAllocator> FreedCommandAllocator = eastl::move(FreedCommandAllocatorPool[QueueType].front());
-		FreedCommandAllocatorPool[QueueType].pop();
-
-		CommandAllocator = AllocatedCommandAllocatorPool[QueueType].emplace_back(eastl::move(FreedCommandAllocator)).get();
-	}
-	else
-	{
-		CommandAllocator = AllocatedCommandAllocatorPool[QueueType].emplace_back(eastl::make_unique<FD3D12CommandAllocator>(QueueType)).get();
-		CommandAllocator->InitCommandAllocator();
-	}
-
-	return CommandAllocator;
-}
-
-void FD3D12CommandListManager::FreeCommandAllocator(FD3D12CommandAllocator* const InCommandAllocator)
-{
-	bool bSuccess = false;
-
-	eastl::vector<eastl::unique_ptr<FD3D12CommandAllocator>>& CommandAllocatorList = AllocatedCommandAllocatorPool[InCommandAllocator->GetQueueType()];
-
-	for (size_t Index = 0 ; Index < CommandAllocatorList.size() ; ++Index)
-	{
-		if (CommandAllocatorList[Index].get() == InCommandAllocator)
-		{
-			FreedCommandAllocatorPool[InCommandAllocator->GetQueueType()].emplace(eastl::move(CommandAllocatorList[Index]));
-			CommandAllocatorList.erase(CommandAllocatorList.begin() + Index);
-			bSuccess = true;
-			break;
-		}
-	}
-
-	EA_ASSERT(bSuccess);
-}
-
-void FD3D12CommandListManager::OnStartFrame()
-{
-
-}
-
-void FD3D12CommandListManager::OnEndFrame()
-{
 
 }

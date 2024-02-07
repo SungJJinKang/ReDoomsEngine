@@ -4,19 +4,35 @@
 #include "D3D12Window.h"
 #include "RendererCommonInclude.h"
 #include "D3D12Fence.h"
+#include "D3D12Descriptor.h"
+#include "D3D12RendererStateCallbackInterface.h"
 
 class FD3D12CommandAllocator;
+
+enum class ECommandAllocatotrType : uint32_t
+{
+	Graphics,
+	ResourceUploadBatcher,
+
+	Num
+};
 
 /// <summary>
 /// Contains datas about a frame
 /// </summary>
-struct FFrameResourceContainer
+class FFrameResourceContainer : public ID3D12RendererStateCallbackInterface
 {
-	FD3D12CommandAllocator* GraphicsCommandAllocator;
-	eastl::shared_ptr<FD3D12CommandList> GraphicsCommandList; // currently support only graphcis command list
+public:
+	eastl::array<eastl::shared_ptr<FD3D12CommandAllocator>, static_cast<uint32_t>(ECommandAllocatotrType::Num)> CommandAllocatorList;
 	FD3D12Fence FrameWorkEndFence;
 
+	eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> SrvUavOnlineDescriptorHeapContainer{ eastl::make_shared<FD3D12OnlineDescriptorHeapContainer>(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) };
+
 	void Init();
+	void ClearFrameResource();
+
+	virtual void OnStartFrame();
+	virtual void OnEndFrame();
 };
 
 enum class ERendererState

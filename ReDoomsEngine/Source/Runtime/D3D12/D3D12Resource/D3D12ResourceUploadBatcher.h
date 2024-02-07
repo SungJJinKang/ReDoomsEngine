@@ -25,7 +25,7 @@ struct FD3D12ResourceUpload
 	eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersAfterUpload;
 };
 
-enum ED3D12UploadBufferSizeType
+enum class ED3D12UploadBufferSizeType : uint32_t
 {
 	Small,
 	Medium,
@@ -45,7 +45,7 @@ class FD3D12ResourceUploadBatcher
 public:
 
 	void AddPendingResourceUpload(FD3D12ResourceUpload&& InResourceUpload);
-	eastl::shared_ptr<FD3D12Fence> Flush(FD3D12CommandContext& InCommandContext);
+	eastl::shared_ptr<FD3D12Fence> Flush();
 
 private:
 
@@ -53,7 +53,7 @@ private:
 	static ED3D12UploadBufferSizeType ConvertSizeToUploadBufferSizeType(const uint64_t InSize);
 	static uint64_t ConvertUploadBufferSizeTypeToSize(const ED3D12UploadBufferSizeType InUploadBufferSizeType);
 
-	eastl::array<eastl::queue<eastl::unique_ptr<FD3D12UploadBufferContainer>>, ED3D12UploadBufferSizeType::Num> UploadBufferQueue;
+	eastl::array<eastl::queue<eastl::unique_ptr<FD3D12UploadBufferContainer>>, static_cast<uint32_t>(ED3D12UploadBufferSizeType::Num)> UploadBufferQueue;
 	eastl::vector<FD3D12ResourceUpload> PendingResourceUploadList;
 };
 

@@ -1,10 +1,10 @@
 #pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
-#include "D3D12ManagerInterface.h"
+#include "D3D12RendererStateCallbackInterface.h"
 
 class FRenderer;
-class FD3D12Window : public EA::StdC::Singleton<FD3D12Window>, public ID3D12ManagerInterface
+class FD3D12Window : public EA::StdC::Singleton<FD3D12Window>, public ID3D12RendererStateCallbackInterface
 {
 public:
 

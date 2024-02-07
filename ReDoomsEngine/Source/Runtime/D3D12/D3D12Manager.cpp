@@ -52,12 +52,6 @@ void FD3D12Manager::Init(FRenderer* const InRenderer)
     }
 
     {
-        D3D12CommandListManager = eastl::make_unique<FD3D12CommandListManager>();
-        D3D12CommandListManager->Init();
-        TickedManagerList.emplace_back(D3D12CommandListManager.get());
-    }
-    
-    {
         Swapchain = eastl::make_unique<FD3D12Swapchain> (GetChoosenAdapter()->GetDevice()->GetCommandQueue(ED3D12QueueType::Direct),
             D3D12Window.get(), GNumBackBufferCount, GWindowWidth, GWindowHeight, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT);
         Swapchain->Init();
@@ -102,7 +96,7 @@ void FD3D12Manager::Init(FRenderer* const InRenderer)
 
 void FD3D12Manager::OnPreStartFrame()
 {
-    for (ID3D12ManagerInterface* Manager : TickedManagerList)
+    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
     {
         Manager->OnPreStartFrame();
     }
@@ -110,7 +104,7 @@ void FD3D12Manager::OnPreStartFrame()
 
 void FD3D12Manager::OnStartFrame()
 {
-    for (ID3D12ManagerInterface* Manager : TickedManagerList)
+    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
     {
         Manager->OnStartFrame();
     }
@@ -118,7 +112,7 @@ void FD3D12Manager::OnStartFrame()
 
 void FD3D12Manager::OnEndFrame()
 {
-    for (ID3D12ManagerInterface* Manager : TickedManagerList)
+    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
     {
         Manager->OnEndFrame();
     }
@@ -126,7 +120,7 @@ void FD3D12Manager::OnEndFrame()
 
 void FD3D12Manager::OnPostEndFrame()
 {
-    for (ID3D12ManagerInterface* Manager : TickedManagerList)
+    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
     {
         Manager->OnPostEndFrame();
     }

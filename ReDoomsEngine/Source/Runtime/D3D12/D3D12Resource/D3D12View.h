@@ -8,24 +8,29 @@ class FD3D12Resource;
 class FD3D12RenderTargetResource;
 class FD3D12DepthStencilTargetResource;
 
-template <typename DescType>
 class FD3D12View
 {
 public:
-	
+
 	FD3D12View(FD3D12Resource* const InResource)
-		: OfflineDescriptorHeapBlock(), Resource(InResource), Desc()
+		: OfflineDescriptorHeapBlock(), Resource(InResource)
 	{
 
 	}
-	FD3D12View(FD3D12Resource* const InResource, const DescType& InDesc)
-		: OfflineDescriptorHeapBlock(), Resource(InResource), Desc(InDesc)
-	{
 
-	}
 	virtual ~FD3D12View()
 	{
 		FreeDescriptorHeapBlock();
+	}
+
+	inline FD3D12Resource* GetUnderlyingResource() const
+	{
+		return Resource;
+	}
+
+	inline FD3D12DescriptorHeapBlock GetDescriptorHeapBlock() const
+	{
+		return OfflineDescriptorHeapBlock;
 	}
 
 	virtual void UpdateDescriptor() = 0;
@@ -37,9 +42,32 @@ public:
 		}
 	}
 
-	inline FD3D12Resource* GetUnderlyingResource() const
+	virtual bool IsSRV() const { return false; }
+	virtual bool IsUAV() const { return false; }
+	virtual bool IsRTV() const { return false; }
+	virtual bool IsDSV() const { return false; }
+
+protected:
+
+	FD3D12DescriptorHeapBlock OfflineDescriptorHeapBlock;
+
+	FD3D12Resource* Resource;
+};
+
+template <typename DescType>
+class TD3D12View : public FD3D12View
+{
+public:
+	
+	TD3D12View(FD3D12Resource* const InResource)
+		: FD3D12View(InResource), Desc()
 	{
-		return Resource;
+
+	}
+	TD3D12View(FD3D12Resource* const InResource, const DescType& InDesc)
+		: FD3D12View(InResource), Desc(InDesc)
+	{
+
 	}
 
 	inline eastl::optional<DescType> GetDesc() const
@@ -47,20 +75,12 @@ public:
 		return Desc;
 	}
 
-	inline FD3D12DescriptorHeapBlock GetDescriptorHeapBlock() const
-	{
-		return OfflineDescriptorHeapBlock;
-	}
-
 protected:
 
-	FD3D12DescriptorHeapBlock OfflineDescriptorHeapBlock;
-
-	FD3D12Resource* Resource;
 	eastl::optional<DescType> Desc;
 };
 
-class FD3D12ShaderResourceView : public FD3D12View<D3D12_SHADER_RESOURCE_VIEW_DESC>
+class FD3D12ShaderResourceView : public TD3D12View<D3D12_SHADER_RESOURCE_VIEW_DESC>
 {
 public:
 
@@ -69,20 +89,7 @@ public:
 
 	virtual void UpdateDescriptor();
 
-protected:
-
-
-private:
-
-};
-
-class FD3D12ConstantBufferView : public FD3D12View<D3D12_CONSTANT_BUFFER_VIEW_DESC>
-{
-public:
-
-	FD3D12ConstantBufferView(FD3D12Resource* const InResource);
-
-	virtual void UpdateDescriptor();
+	virtual bool IsSRV() const { return true; }
 
 protected:
 
@@ -91,8 +98,23 @@ private:
 
 };
 
+// class FD3D12ConstantBufferView : public TD3D12View<D3D12_CONSTANT_BUFFER_VIEW_DESC>
+// {
+// public:
+// 
+// 	FD3D12ConstantBufferView(FD3D12Resource* const InResource);
+// 
+// 	virtual void UpdateDescriptor();
+// 
+// protected:
+// 
+// 
+// private:
+// 
+// };
 
-class FD3D12UnorderedAccessView : public FD3D12View<D3D12_UNORDERED_ACCESS_VIEW_DESC>
+
+class FD3D12UnorderedAccessView : public TD3D12View<D3D12_UNORDERED_ACCESS_VIEW_DESC>
 {
 public:
 
@@ -101,6 +123,8 @@ public:
 
 	virtual void UpdateDescriptor();
 
+	virtual bool IsUAV() const { return true; }
+
 protected:
 
 
@@ -108,7 +132,7 @@ private:
 
 };
 
-class FD3D12RenderTargetView : public FD3D12View<D3D12_RENDER_TARGET_VIEW_DESC>
+class FD3D12RenderTargetView : public TD3D12View<D3D12_RENDER_TARGET_VIEW_DESC>
 {
 public:
 
@@ -117,13 +141,14 @@ public:
 
 	virtual void UpdateDescriptor();
 
+	virtual bool IsRTV() const { return true; }
 protected:
 
 private:
 
 };
 
-class FD3D12DepthStencilView : public FD3D12View<D3D12_DEPTH_STENCIL_VIEW_DESC>
+class FD3D12DepthStencilView : public TD3D12View<D3D12_DEPTH_STENCIL_VIEW_DESC>
 {
 public:
 
@@ -131,6 +156,8 @@ public:
 	FD3D12DepthStencilView(FD3D12Resource* const InResource, const D3D12_DEPTH_STENCIL_VIEW_DESC& InDesc);
 
 	virtual void UpdateDescriptor();
+
+	virtual bool IsDSV() const { return true; }
 
 protected:
 

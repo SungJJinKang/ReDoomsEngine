@@ -1,11 +1,37 @@
 #include "Renderer.h"
 
+#include "D3D12Resource/D3D12ResourceAllocator.h"
+
 void FFrameResourceContainer::Init()
 {
 	FrameWorkEndFence.Init();
 
-	GraphicsCommandAllocator = FD3D12CommandListManager::GetInstance()->GetOrCreateNewCommandAllocator(ED3D12QueueType::Direct);
-	GraphicsCommandList = GraphicsCommandAllocator->GetOrCreateNewCommandList();
+	for (uint32_t CommandAllocatorIndex = 0; CommandAllocatorIndex < CommandAllocatorList.size(); ++CommandAllocatorIndex)
+	{
+		CommandAllocatorList[CommandAllocatorIndex] = eastl::make_shared<FD3D12CommandAllocator>(ED3D12QueueType::Direct);
+		CommandAllocatorList[CommandAllocatorIndex]->Init();
+	}
+
+	SrvUavOnlineDescriptorHeapContainer->Init();
+}
+
+void FFrameResourceContainer::ClearFrameResource()
+{
+	SrvUavOnlineDescriptorHeapContainer->Reset();
+}
+
+void FFrameResourceContainer::OnStartFrame()
+{
+	if (GCurrentFrameIndex >= GNumBackBufferCount)
+	{
+		FrameWorkEndFence.WaitOnLastSignal();
+		ClearFrameResource();
+	}
+}
+
+void FFrameResourceContainer::OnEndFrame()
+{
+
 }
 
 void FRenderer::Init()
@@ -30,13 +56,19 @@ void FRenderer::OnPreStartFrame()
 
 	CurrentRendererState = ERendererState::OnPreStartFrame;
 
-	if (GCurrentFrameIndex >= GNumBackBufferCount)
-	{
-		FFrameResourceContainer& FrameContainer = FrameContainerList[(GCurrentFrameIndex - GNumBackBufferCount) % GNumBackBufferCount];
-		FrameContainer.FrameWorkEndFence.WaitOnLastSignal();
-	}
-
 	++GCurrentFrameIndex;
+
+	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameContainer();
+	CurrentFrameContainer.OnStartFrame();
+
+	CurrentFrameCommandContext.StateCache.Reset();
+	CurrentFrameCommandContext.FrameResourceCounter = &CurrentFrameContainer;
+	CurrentFrameCommandContext.GraphicsCommandAllocator = CurrentFrameContainer.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatotrType::Graphics)];
+	CurrentFrameCommandContext.GraphicsCommandList = CurrentFrameCommandContext.GraphicsCommandAllocator->GetOrCreateNewCommandList();
+
+	// @todo replace per frame online heap with heap independent from frame?
+	// Changing set descriptor heap flushes gpu pipeline.
+	CurrentFrameCommandContext.StateCache.SetDescriptorHeaps(CurrentFrameCommandContext, { CurrentFrameContainer.SrvUavOnlineDescriptorHeapContainer->GetOnlineHeap() });
 
 	D3D12Manager.OnPreStartFrame();
 }
@@ -48,14 +80,6 @@ void FRenderer::OnStartFrame()
 	CurrentRendererState = ERendererState::OnStartFrame;
 
 	D3D12Manager.OnStartFrame();
-
-	// @todo : Block if gpu work of "GCurrentFrameIndex - GNumBackBufferCount" Frame doesn't finish yet
-
-	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameContainer();
-
-	CurrentFrameCommandContext.StateCache.Reset();
-	CurrentFrameCommandContext.GraphicsCommandAllocator = CurrentFrameContainer.GraphicsCommandAllocator;
-	CurrentFrameCommandContext.GraphicsCommandList = CurrentFrameContainer.GraphicsCommandList;
 }
 
 bool FRenderer::Draw()
@@ -63,6 +87,8 @@ bool FRenderer::Draw()
 	SCOPED_MEMORY_TRACE(Renderer_Draw)
 
 	CurrentRendererState = ERendererState::Draw;
+
+	eastl::shared_ptr<FD3D12Fence> ResourceUploadFence = FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush();
 
 	return true;
 }
