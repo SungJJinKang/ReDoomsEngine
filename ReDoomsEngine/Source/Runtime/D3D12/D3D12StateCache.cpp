@@ -29,21 +29,35 @@ void FD3D12StateCache::SetRootSignature(FD3D12RootSignature* const InRootSignatu
 	{
 		CachedRootSignature = InRootSignature;
 		bIsRootSignatureDirty = true;
+
+		DirtyFlagsOfSRVs.set();
+		DirtyFlagsOfUAVs.set();
+		bIsRootCBVDirty = true;
 	}
 }
 
-void FD3D12StateCache::SetSRVs(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterShaderResourceView*, MAX_SRVS>& BindPointInfos)
+void FD3D12StateCache::SetSRVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_SRVS>& BindPointInfos)
 {
-	// @todo : check if it is dirty
-	CachedSRVBindPointInfosOfFrequencies[InShaderFrequency] = BindPointInfos;
-	bIsSRVDirty = true;
+	bool bEqual = true;
+	for (uint32_t SRVIndex = 0; SRVIndex < MAX_SRVS; ++SRVIndex)
+	{
+		if (CachedSRVs[InShaderFrequency][SRVIndex] != BindPointInfos[SRVIndex])
+		{
+			bEqual = false;
+			break;
+		}
+	}
+	if (!bEqual)
+	{
+		DirtyFlagsOfSRVs[InShaderFrequency] = true;
+		CachedSRVs[InShaderFrequency] = BindPointInfos;
+	}
 }
 
-void FD3D12StateCache::SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterShaderResourceView*, MAX_UAVS>& BindPointInfos)
+void FD3D12StateCache::SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>& BindPointInfos)
 {
 	// @todo : check if it is dirty
-	CachedUAVBindPointInfosOfFrequencies[InShaderFrequency] = BindPointInfos;
-	bIsUAVDirty = true;
+	CachedUAVs[InShaderFrequency] = BindPointInfos;
 }
 
 void FD3D12StateCache::SetConstantBuffer(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>& BindPointInfos)
@@ -83,18 +97,16 @@ void FD3D12StateCache::ApplySRVs(FD3D12CommandList& InCommandList, const FD3D12D
 		uint32 FirstSlotIndex = OutUsedBlockCount;
 		const UINT SlotsNeeded = CachedRootSignature->Stage[FrequencyIndex].MaxSRVCount;
 
-		if (SlotsNeeded > 0)
+		if (SlotsNeeded > 0 && DirtyFlagsOfSRVs[FrequencyIndex])
 		{
 			D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor = BaseHeapBlcok.CPUDescriptorHandle().Offset(FirstSlotIndex);
 			eastl::array<D3D12_CPU_DESCRIPTOR_HANDLE, MAX_SRVS> SrcDescriptors;
 
 			for (uint32_t SlotIndex = 0; SlotIndex < SlotsNeeded; ++SlotIndex)
 			{
-				FShaderParameterShaderResourceView* ShaderParameterShaderResourceView = CachedSRVBindPointInfosOfFrequencies[FrequencyIndex][SlotIndex];
-				if (ShaderParameterShaderResourceView && ShaderParameterShaderResourceView->GetTargetSRV())
+				FD3D12ShaderResourceView* SRV = CachedSRVs[FrequencyIndex][SlotIndex];
+				if (SRV)
 				{
-					EA_ASSERT(SlotIndex == ShaderParameterShaderResourceView->GetReflectionData().BindPoint);
-					FD3D12ShaderResourceView* const SRV = dynamic_cast<FD3D12ShaderResourceView*>(ShaderParameterShaderResourceView->GetTargetSRV());
 					SrcDescriptors[SlotIndex] = SRV->GetDescriptorHeapBlock().CPUDescriptorHandle();
 				}
 				else
@@ -109,16 +121,14 @@ void FD3D12StateCache::ApplySRVs(FD3D12CommandList& InCommandList, const FD3D12D
 			InCommandList.GetD3DCommandList()->SetGraphicsRootDescriptorTable(CachedRootSignature->SRVBindSlot[FrequencyIndex], BindDescriptor);
 
 			OutUsedBlockCount += SlotsNeeded;
+			DirtyFlagsOfSRVs[FrequencyIndex] = false;
 		}
  	}
-	bIsSRVDirty = false;
 }
 
 void FD3D12StateCache::ApplyUAVs(FD3D12CommandList& InCommandList, const FD3D12DescriptorHeapBlock& BaseHeapBlcok, uint32_t& OutUsedBlockCount)
 {
 
-
-	bIsUAVDirty = false;
 }
 
 void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
@@ -162,7 +172,7 @@ void FD3D12StateCache::Flush(FD3D12CommandList& InCommandList)
 {
 	FD3D12DescriptorHeapBlock BaseHeapBlcok;
 
-	if (bIsSRVDirty || bIsUAVDirty)
+	if (DirtyFlagsOfSRVs.any() || DirtyFlagsOfUAVs.any())
 	{
 		uint32_t RequiredSRVSlotCount = 0;
 		uint32_t RequiredUAVSlotCount = 0;
@@ -194,11 +204,11 @@ void FD3D12StateCache::Flush(FD3D12CommandList& InCommandList)
 	{
 		ApplyDescriptorHeap(InCommandList);
 	}
-	if (bIsSRVDirty)
+	if (DirtyFlagsOfSRVs.any())
 	{
 		ApplySRVs(InCommandList, BaseHeapBlcok, OutUsedBlockCount);
 	}
-	if (bIsUAVDirty)
+	if (DirtyFlagsOfUAVs.any())
 	{
 		ApplyUAVs(InCommandList, BaseHeapBlcok, OutUsedBlockCount);
 	}
@@ -216,34 +226,12 @@ void FD3D12StateCache::ResetForNewCommandlist()
 	bIsPSODirty = true;
 	bIsRootSignatureDirty = true;
 	bNeedToSetDescriptorHeaps = true;
-	bIsSRVDirty = true;
-	bIsUAVDirty = true;
-// 	bIsRTVDirty = true;
-// 	bIsDSVDirty = true;
 	bIsRootCBVDirty = true;
 
-	for (auto& CachedSRVBindPointInfos : CachedSRVBindPointInfosOfFrequencies)
-	{
-		MEM_ZERO(CachedSRVBindPointInfos);
-	}
-
-	for (auto& CachedUAVBindPointInfos : CachedUAVBindPointInfosOfFrequencies)
-	{
-		MEM_ZERO(CachedUAVBindPointInfos);
-	}
-
-// 	for (auto& CachedRTVBindPointInfos : CachedRTVBindPointInfosOfFrequencies)
-// 	{
-// 		CachedRTVBindPointInfos.clear();
-// 	}
-// 
-// 	for (auto& CachedDSVBindPointInfos : CachedDSVBindPointInfosOfFrequencies)
-// 	{
-// 		CachedDSVBindPointInfos.clear();
-// 	}
-
-	for (auto& CachedConstantBufferBindPointInfos : CachedConstantBufferBindPointInfosOfFrequencies)
-	{
-		MEM_ZERO(CachedConstantBufferBindPointInfos);
-	}
+	DirtyFlagsOfSRVs.set();
+	DirtyFlagsOfUAVs.set();
+	DirtyFlagsConstantBufferBindPointInfosOfFrequencies.set();
+	MEM_ZERO(CachedSRVs);
+	MEM_ZERO(CachedUAVs);
+	MEM_ZERO(CachedConstantBufferBindPointInfosOfFrequencies);
 }

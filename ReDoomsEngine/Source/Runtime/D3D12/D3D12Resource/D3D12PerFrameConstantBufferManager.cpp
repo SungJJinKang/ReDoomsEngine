@@ -47,7 +47,7 @@ void FD3D12PerFrameConstantBufferManager::OnPreStartFrame(FD3D12CommandContext& 
 {
 	if (GCurrentFrameIndex >= GNumBackBufferCount)
 	{
-		FD3D12PerFrameConstantBuffer& RingBuffer = ConstantBufferRingBufferList[(GCurrentFrameIndex - GNumBackBufferCount) % GNumBackBufferCount];
+		FD3D12PerFrameConstantBuffer& RingBuffer = ConstantBufferRingBufferList[GCurrentFrameIndex % GNumBackBufferCount];
 		RingBuffer.Reset();
 	}
 }

@@ -64,9 +64,4 @@ void FD3D12CommandQueue::ExecuteCommandLists(eastl::vector<eastl::shared_ptr<FD3
 	}
 
 	GetD3DCommandQueue()->ExecuteCommandLists(D3D12CommandLists.size(), D3D12CommandLists.data());
-
-	for (eastl::shared_ptr<FD3D12CommandList>& CommandList : CommandLists)
-	{
-		CommandList->ResetRecordingCommandList(nullptr);
-	}
 }

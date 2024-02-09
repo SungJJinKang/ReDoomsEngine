@@ -16,30 +16,14 @@ void FFrameResourceContainer::Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapC
 	}
 }
 
-void FFrameResourceContainer::ClearFrameResource()
-{
-	EA_ASSERT(bInit);
-}
-
-void FFrameResourceContainer::OnPreStartFrame(FD3D12CommandContext& InCommandContext)
+void FFrameResourceContainer::ResetForNewFrame()
 {
 	EA_ASSERT(bInit);
 
-	if (GCurrentFrameIndex >= GNumBackBufferCount)
+	for (eastl::shared_ptr<FD3D12CommandAllocator>& CommandAllocator : CommandAllocatorList)
 	{
-		FrameWorkEndFence.WaitOnLastSignal();
-		ClearFrameResource();
+		CommandAllocator->ResetCommandAllocator();
 	}
-}
-
-void FFrameResourceContainer::OnStartFrame(FD3D12CommandContext& InCommandContext)
-{
-	EA_ASSERT(bInit);
-}
-
-void FFrameResourceContainer::OnEndFrame(FD3D12CommandContext& InCommandContext)
-{
-	EA_ASSERT(bInit);
 }
 
 void FRenderer::Init()
@@ -69,12 +53,14 @@ void FRenderer::OnPreStartFrame()
 	++GCurrentFrameIndex;
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameContainer();
+	CurrentFrameContainer.FrameWorkEndFence.WaitOnLastSignal();
+
+	CurrentFrameContainer.ResetForNewFrame();
 	CurrentFrameCommandContext.StateCache.ResetForNewCommandlist();
 	CurrentFrameCommandContext.FrameResourceCounter = &CurrentFrameContainer;
 	CurrentFrameCommandContext.GraphicsCommandAllocator = CurrentFrameContainer.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatotrType::Graphics)];
 	CurrentFrameCommandContext.GraphicsCommandList = CurrentFrameCommandContext.GraphicsCommandAllocator->GetOrCreateNewCommandList();
 
-	CurrentFrameContainer.OnPreStartFrame(CurrentFrameCommandContext);
 
 	D3D12Manager.OnPreStartFrame(CurrentFrameCommandContext);
 }
@@ -84,8 +70,6 @@ void FRenderer::OnStartFrame()
 	SCOPED_MEMORY_TRACE(Renderer_OnStartFrame)
 
 	CurrentRendererState = ERendererState::OnStartFrame;
-
-	GetCurrentFrameContainer().OnStartFrame(CurrentFrameCommandContext);
 
 	D3D12Manager.OnStartFrame(CurrentFrameCommandContext);
 }
@@ -107,8 +91,6 @@ void FRenderer::OnPostEndFrame()
 
 	CurrentRendererState = ERendererState::OnPostEndFrame;
 
-	GetCurrentFrameContainer().OnPostEndFrame(CurrentFrameCommandContext);
-
 	D3D12Manager.OnPostEndFrame(CurrentFrameCommandContext);
 }
 
@@ -117,8 +99,6 @@ void FRenderer::OnEndFrame()
 	SCOPED_MEMORY_TRACE(Renderer_OnEndFrame)
 
 	CurrentRendererState = ERendererState::OnEndFrame;
-
-	GetCurrentFrameContainer().OnEndFrame(CurrentFrameCommandContext);
 
 	D3D12Manager.OnEndFrame(CurrentFrameCommandContext);
 
