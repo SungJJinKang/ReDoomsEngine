@@ -222,28 +222,7 @@ void FD3D12StateCache::ResetForNewCommandlist()
 // 	bIsDSVDirty = true;
 	bIsRootCBVDirty = true;
 
-	for (auto& CachedSRVBindPointInfos : CachedSRVBindPointInfosOfFrequencies)
-	{
-		MEM_ZERO(CachedSRVBindPointInfos);
-	}
-
-	for (auto& CachedUAVBindPointInfos : CachedUAVBindPointInfosOfFrequencies)
-	{
-		MEM_ZERO(CachedUAVBindPointInfos);
-	}
-
-// 	for (auto& CachedRTVBindPointInfos : CachedRTVBindPointInfosOfFrequencies)
-// 	{
-// 		CachedRTVBindPointInfos.clear();
-// 	}
-// 
-// 	for (auto& CachedDSVBindPointInfos : CachedDSVBindPointInfosOfFrequencies)
-// 	{
-// 		CachedDSVBindPointInfos.clear();
-// 	}
-
-	for (auto& CachedConstantBufferBindPointInfos : CachedConstantBufferBindPointInfosOfFrequencies)
-	{
-		MEM_ZERO(CachedConstantBufferBindPointInfos);
-	}
+	MEM_ZERO(CachedSRVBindPointInfosOfFrequencies);
+	MEM_ZERO(CachedUAVBindPointInfosOfFrequencies);
+	MEM_ZERO(CachedConstantBufferBindPointInfosOfFrequencies);
 }

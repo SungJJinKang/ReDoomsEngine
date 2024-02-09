@@ -75,6 +75,12 @@ bool D3D12TestRenderer::Draw()
 {
 	FRenderer::Draw();
 
+	Offset += 0.001f;
+	if (Offset > 1.0f)
+	{
+		Offset = -1.0f;
+	}
+
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
 	//Test Code
@@ -112,7 +118,7 @@ bool D3D12TestRenderer::Draw()
 	// Set necessary state.
 	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
-	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.4f };
+	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.4f + Offset };
 	TestVSInstance->Parameter.GlobalConstantBuffer->AddOffset = true;
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 10.0f };
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 11.0f };
@@ -150,7 +156,7 @@ bool D3D12TestRenderer::Draw()
 	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
 	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
-	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f };
+	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f + Offset };
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
 	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
