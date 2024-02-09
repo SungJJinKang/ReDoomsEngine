@@ -203,13 +203,13 @@ class FShaderParameterTemplate
 public:
 
 	FShaderParameterTemplate()
-		: ShaderParameterContainerTemplate(nullptr), VariableName()
+		: ShaderParameterContainerTemplate(nullptr), VariableName(), bInit(false)
 	{
 
 	}
 
 	FShaderParameterTemplate(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName)
-		: ShaderParameterContainerTemplate(InShaderParameter), VariableName(InVariableName)
+		: ShaderParameterContainerTemplate(InShaderParameter), VariableName(InVariableName), bInit(false)
 	{
 		InShaderParameter->AddShaderParamter(this);
 
@@ -249,11 +249,11 @@ public:
 	virtual bool IsTemplateVariable() const = 0;
 	virtual bool HasReflectionData() const = 0;
 
-	virtual void InitD3DResource();
 	void ApplyResource(FD3D12CommandContext& InCommandContext, const FD3D12RootSignature* const InRootSignature);
 
 protected:
 
+	bool bInit;
 	FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate;
 	const char* const VariableName;
 
@@ -276,7 +276,6 @@ public:
 	{
 	}
 
-	virtual void InitD3DResource(){}
 	const D3D12_SHADER_INPUT_BIND_DESC& GetReflectionData() const
 	{
 		return *ReflectionData;
@@ -347,7 +346,7 @@ public:
 	{
 	}
 
-	virtual void InitD3DResource();
+	virtual void Init();
 	void AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize, 
 		const char* const InVariableName, const std::type_info& InTypeId);
 
@@ -355,6 +354,7 @@ public:
 	{
 		return true;
 	}
+	virtual uint8_t* GetData() = 0;
 	virtual uint64_t GetSize() const = 0;
 
 	inline bool IsGlobalConstantBuffer() const
@@ -514,7 +514,7 @@ private:
 	class FConstantBufferType##ConstantBufferTypeName : public FShaderParameterConstantBuffer { \
 		public: \
 		FConstantBufferType##ConstantBufferTypeName() \
-		: FShaderParameterConstantBuffer(), SetConstructingVariable(this), ConstantBufferResource(), MemberVariables() \
+		: FShaderParameterConstantBuffer(), SetConstructingVariable(this), ConstantBufferResource() \
 		{ \
 			EA_ASSERT(TemplateVariable == nullptr); \
 			TemplateVariable = this; \
@@ -544,6 +544,7 @@ private:
 		{ \
 			__VA_ARGS__ \
 		} MemberVariables; \
+		virtual uint8_t* GetData() { return reinterpret_cast<uint8_t*>(&MemberVariables); } \
 		virtual uint64_t GetSize() const { return sizeof(FMemberVariableContainer); } \
 		virtual bool IsTemplateVariable() const { return (TemplateVariable == this);} \
 		virtual FD3D12ConstantBufferResource* GetConstantBufferResource()  { return ConstantBufferResource.get(); } \

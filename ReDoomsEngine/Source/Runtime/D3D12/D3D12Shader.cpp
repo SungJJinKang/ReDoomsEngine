@@ -472,17 +472,6 @@ void FShaderParameterContainerTemplate::Init()
 	{
 		ShaderParameter->Init();
 	}
-	
-	if (IsShaderInstance())
-	{
-		for (FShaderParameterTemplate* ShaderParameter : ShaderParameterList)
-		{
-			ShaderParameter->InitD3DResource();
-		}
-	}
-	else
-	{
-	}
 }
 
 void FShaderParameterContainerTemplate::AddShaderParamter(FShaderParameterTemplate* const InShaderParameter)
@@ -494,9 +483,9 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 {
 	EA_ASSERT(IsShaderInstance());
 
-	eastl::array<FShaderParameterShaderResourceView*, MAX_SRVS> SRVBindPointInfoList;
+	eastl::array<FD3D12ShaderResourceView*, MAX_SRVS> SRVBindPointInfoList;
 	MEM_ZERO(SRVBindPointInfoList);
-	eastl::array<FShaderParameterShaderResourceView*, MAX_UAVS> UAVBindPointInfoList;
+	eastl::array<FD3D12ShaderResourceView*, MAX_UAVS> UAVBindPointInfoList;
 	MEM_ZERO(UAVBindPointInfoList);
 	eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV> ConstantBufferBindPointInfoList;
 	MEM_ZERO(ConstantBufferBindPointInfoList);
@@ -513,7 +502,7 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 		{
 			FShaderParameterShaderResourceView* ShaderParameterSRV = dynamic_cast<FShaderParameterShaderResourceView*>(ShaderParamter);
 			EA_ASSERT(ShaderParameterSRV);
-			SRVBindPointInfoList[ShaderParameterSRV->GetReflectionData().BindPoint] = ShaderParameterSRV;
+			SRVBindPointInfoList[ShaderParameterSRV->GetReflectionData().BindPoint] = ShaderParameterSRV->GetTargetSRV();
 		}
 		else if (ShaderParamter->IsUAV())
 		{
@@ -525,18 +514,18 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 	}
 
 	InCommandContext.StateCache.SetSRVs(GetD3D12ShaderTemplate()->GetShaderFrequency(), SRVBindPointInfoList);
+	InCommandContext.StateCache.SetUAVs(GetD3D12ShaderTemplate()->GetShaderFrequency(), UAVBindPointInfoList);
 	InCommandContext.StateCache.SetConstantBuffer(GetD3D12ShaderTemplate()->GetShaderFrequency(), ConstantBufferBindPointInfoList);
 
 }
 
 void FShaderParameterTemplate::Init()
 {
+	EA_ASSERT(!bInit);
+	bInit = true;
+
 	SetReflectionDataFromShaderReflectionData();
 	EA_ASSERT(HasReflectionData());
-}
-
-void FShaderParameterTemplate::InitD3DResource()
-{
 }
 
 void FShaderParameterTemplate::ApplyResource(FD3D12CommandContext& InCommandContext, const FD3D12RootSignature* const InRootSignature)
@@ -545,11 +534,15 @@ void FShaderParameterTemplate::ApplyResource(FD3D12CommandContext& InCommandCont
 
 }
 
-void FShaderParameterConstantBuffer::InitD3DResource()
+void FShaderParameterConstantBuffer::Init()
 {
-	FShaderParameterTemplate::InitD3DResource();
+	FShaderParameterTemplate::Init();
 	
-	GetConstantBufferResource()->InitResource();
+	if (!IsTemplateVariable())
+	{
+		EA::StdC::Memset8(GetData(), 0, GetSize());
+		GetConstantBufferResource()->InitResource();
+	}
 }
 
 void FShaderParameterConstantBuffer::AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize,
