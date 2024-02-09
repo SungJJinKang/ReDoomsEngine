@@ -483,9 +483,9 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 {
 	EA_ASSERT(IsShaderInstance());
 
-	eastl::array<FShaderParameterShaderResourceView*, MAX_SRVS> SRVBindPointInfoList;
+	eastl::array<FD3D12ShaderResourceView*, MAX_SRVS> SRVBindPointInfoList;
 	MEM_ZERO(SRVBindPointInfoList);
-	eastl::array<FShaderParameterShaderResourceView*, MAX_UAVS> UAVBindPointInfoList;
+	eastl::array<FD3D12ShaderResourceView*, MAX_UAVS> UAVBindPointInfoList;
 	MEM_ZERO(UAVBindPointInfoList);
 	eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV> ConstantBufferBindPointInfoList;
 	MEM_ZERO(ConstantBufferBindPointInfoList);
@@ -502,7 +502,7 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 		{
 			FShaderParameterShaderResourceView* ShaderParameterSRV = dynamic_cast<FShaderParameterShaderResourceView*>(ShaderParamter);
 			EA_ASSERT(ShaderParameterSRV);
-			SRVBindPointInfoList[ShaderParameterSRV->GetReflectionData().BindPoint] = ShaderParameterSRV;
+			SRVBindPointInfoList[ShaderParameterSRV->GetReflectionData().BindPoint] = ShaderParameterSRV->GetTargetSRV();
 		}
 		else if (ShaderParamter->IsUAV())
 		{
@@ -514,6 +514,7 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 	}
 
 	InCommandContext.StateCache.SetSRVs(GetD3D12ShaderTemplate()->GetShaderFrequency(), SRVBindPointInfoList);
+	InCommandContext.StateCache.SetUAVs(GetD3D12ShaderTemplate()->GetShaderFrequency(), UAVBindPointInfoList);
 	InCommandContext.StateCache.SetConstantBuffer(GetD3D12ShaderTemplate()->GetShaderFrequency(), ConstantBufferBindPointInfoList);
 
 }

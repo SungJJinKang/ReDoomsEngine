@@ -6,14 +6,15 @@ class FD3D12CommandList;
 class FD3D12View;
 class FD3D12DescriptorHeap;
 class FD3D12RootSignature;
+class FD3D12ShaderResourceView;
 
 class FD3D12StateCache
 {
 public:
 
 	void SetPSO(const FD3D12PSOInitializer& InPSOInitializer);
-	void SetSRVs(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterShaderResourceView*, MAX_SRVS>& BindPointInfos);
-	void SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterShaderResourceView*, MAX_UAVS>& BindPointInfos);
+	void SetSRVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_SRVS>& BindPointInfos);
+	void SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>& BindPointInfos);
 	void SetConstantBuffer(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>& BindPointInfos);
 	void Flush(FD3D12CommandList& InCommandList);
 	void ResetForNewCommandlist();
@@ -35,11 +36,11 @@ private:
 	bool bIsRootSignatureDirty = true;
 	FD3D12RootSignature* CachedRootSignature = nullptr;
 
-	bool bIsSRVDirty = true;
-	eastl::array<eastl::array<FShaderParameterShaderResourceView*, MAX_SRVS>, EShaderFrequency::NumShaderFrequency> CachedSRVBindPointInfosOfFrequencies;
+	eastl::bitset<EShaderFrequency::NumShaderFrequency> DirtyFlagsOfSRVs;
+	eastl::array<eastl::array<FD3D12ShaderResourceView*, MAX_SRVS>, EShaderFrequency::NumShaderFrequency> CachedSRVs;
 
-	bool bIsUAVDirty = true;
-	eastl::array<eastl::array<FShaderParameterShaderResourceView*, MAX_UAVS>, EShaderFrequency::NumShaderFrequency> CachedUAVBindPointInfosOfFrequencies;
+	eastl::bitset<EShaderFrequency::NumShaderFrequency> DirtyFlagsOfUAVs;
+	eastl::array<eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>, EShaderFrequency::NumShaderFrequency> CachedUAVs;
 
 // 	bool bIsRTVDirty = true;
 // 	eastl::array<eastl::array<FViewBindPointInfo, MAX_SRVS>, EShaderFrequency::NumShaderFrequency> CachedRTVBindPointInfosOfFrequencies;
@@ -49,6 +50,7 @@ private:
 
 	// Constant buffer is bind only by root constant buffer view
 	bool bIsRootCBVDirty = true;
+	eastl::array<eastl::bitset<MAX_ROOT_CBV>, EShaderFrequency::NumShaderFrequency> DirtyFlagsOfRootCBVs;
 	eastl::array<eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>, EShaderFrequency::NumShaderFrequency> CachedConstantBufferBindPointInfosOfFrequencies;
 
 	bool bNeedToSetDescriptorHeaps = true;
