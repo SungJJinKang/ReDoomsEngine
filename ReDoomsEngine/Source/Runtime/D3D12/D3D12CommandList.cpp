@@ -19,7 +19,6 @@ void FD3D12CommandList::InitCommandList()
 	// Command lists are created in the recording state, but there is nothing
 	// to record yet. The main loop expects it to be closed, so close it now.
 	CommandList->Close();
-	ResetRecordingCommandList(nullptr);
 }
 
 ED3D12QueueType FD3D12CommandList::GetQueueType() const
@@ -78,6 +77,7 @@ eastl::shared_ptr<FD3D12CommandList> FD3D12CommandAllocator::GetOrCreateNewComma
 		CommandList->InitCommandList();
 	}
 	AllocatedCommandListPool.push(CommandList);
+	CommandList->ResetRecordingCommandList(nullptr);
 
 	return CommandList;
 }
@@ -90,7 +90,7 @@ void FD3D12CommandAllocator::ResetCommandAllocator(const bool bWaitForCompletati
 	// 	From this call to Reset, the runtime and driver determine that the graphics processing unit(GPU) is no longer executing any command lists that have recorded commands with the command allocator.
 	// 	Unlike ID3D12GraphicsCommandList::Reset, it is not recommended that you call Reset on the command allocator while a command list is still being executed.
 
- 	if (bWaitForCompletationOfCommandLists)
+ 	if (bWaitForCompletationOfCommandLists && (AllocatedCommandListPool.size() > 0))
  	{
 		AllocatedCommandListPool.back()->Fence.WaitOnLastSignal();
  	}
