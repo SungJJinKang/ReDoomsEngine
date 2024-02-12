@@ -23,6 +23,8 @@ static uint32_t GetNumDescriptorsForOfflineHeap(const D3D12_DESCRIPTOR_HEAP_TYPE
 // This should be tweaked for each title as heaps require VRAM. The default value of 512k takes up ~16MB
 static uint32_t GOnlineDescriptorHeapSize = 500 * 1000;
 
+static uint32_t GCbvSrvUavOnlineDescriptorHeapPermanentDescriptorCount = 30;
+
 FD3D12DescriptorHeapBlock::FD3D12DescriptorHeapBlock(eastl::weak_ptr<FD3D12DescriptorHeap> InParentDescriptorHeap, const uint32_t InBaseSlot, const uint32_t InDescriptorSlotCount, const uint32_t InDescriptorSize)
     : ParentDescriptorHeap(InParentDescriptorHeap), BaseSlot(InBaseSlot), DescriptorSlotCount(InDescriptorSlotCount), DescriptorSize(InDescriptorSize)
 {
@@ -124,7 +126,7 @@ void FD3D12DescriptorHeapContainer::Init()
 }
 
 FD3D12OnlineDescriptorHeapContainer::FD3D12OnlineDescriptorHeapContainer(const D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
-    : FD3D12DescriptorHeapContainer(InHeapType, GOnlineDescriptorHeapSize), OnlineHeap(), CurrentAllocatedBlockCount(0)
+    : FD3D12DescriptorHeapContainer(InHeapType, GOnlineDescriptorHeapSize), OnlineHeap(), CurrentAllocatedTransientBlockCount(GCbvSrvUavOnlineDescriptorHeapPermanentDescriptorCount), CurrentAllocatedPermanentBlockCount(0)
 {
 }
 
@@ -137,30 +139,42 @@ void FD3D12OnlineDescriptorHeapContainer::Init()
     OnlineHeap->Init();
 }
 
-FD3D12DescriptorHeapBlock FD3D12OnlineDescriptorHeapContainer::ReserveDescriptorHeapBlock(const uint32_t InDescriptorCount)
+FD3D12DescriptorHeapBlock FD3D12OnlineDescriptorHeapContainer::ReserveTransientDescriptorHeapBlock(const uint32_t InDescriptorCount)
 {
     EA_ASSERT(bInit);
     // EA_ASSERT(InDescriptorCount > 0); // InDescriptorCount can be zero
 
-    if (CurrentAllocatedBlockCount + InDescriptorCount > NumDescriptor)
+    if (CurrentAllocatedTransientBlockCount + InDescriptorCount > NumDescriptor)
     {
         // ring buffer
         // @todo : need to check if current block is being used by gpu? Online Heap is big enough
-        CurrentAllocatedBlockCount = 0;
+        CurrentAllocatedTransientBlockCount = GCbvSrvUavOnlineDescriptorHeapPermanentDescriptorCount;
     }
 
-    FD3D12DescriptorHeapBlock NewHeapBlock{ OnlineHeap, CurrentAllocatedBlockCount, InDescriptorCount, OnlineHeap->GetDescriptorSize()};
+    FD3D12DescriptorHeapBlock NewHeapBlock{ OnlineHeap, CurrentAllocatedTransientBlockCount, InDescriptorCount, OnlineHeap->GetDescriptorSize()};
 
-    CurrentAllocatedBlockCount += InDescriptorCount;
-    EA_ASSERT_MSG(CurrentAllocatedBlockCount <= NumDescriptor, "Exhaust online heap space");
+    CurrentAllocatedTransientBlockCount += InDescriptorCount;
+    EA_ASSERT_MSG(CurrentAllocatedTransientBlockCount <= NumDescriptor, "Exhaust online heap space");
 
     return NewHeapBlock;
+}
+
+FD3D12DescriptorHeapBlock FD3D12OnlineDescriptorHeapContainer::AllocatePermanentDescriptorHeapBlock(const uint32_t InDescriptorCount)
+{
+	EA_ASSERT(bInit);
+	
+	FD3D12DescriptorHeapBlock NewHeapBlock{ OnlineHeap, CurrentAllocatedPermanentBlockCount, InDescriptorCount, OnlineHeap->GetDescriptorSize() };
+
+    CurrentAllocatedPermanentBlockCount += InDescriptorCount;
+	EA_ASSERT_MSG(CurrentAllocatedPermanentBlockCount <= GCbvSrvUavOnlineDescriptorHeapPermanentDescriptorCount, "Exhaust online heap space");
+
+	return NewHeapBlock;
 }
 
 void FD3D12OnlineDescriptorHeapContainer::Reset()
 {
 	EA_ASSERT(bInit);
-    CurrentAllocatedBlockCount = 0;
+    CurrentAllocatedTransientBlockCount = GCbvSrvUavOnlineDescriptorHeapPermanentDescriptorCount;
 }
 
 eastl::shared_ptr<FD3D12DescriptorHeap> FD3D12OnlineDescriptorHeapContainer::GetOnlineHeap() const

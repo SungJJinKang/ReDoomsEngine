@@ -25,8 +25,10 @@ public:
 	void Init(FRenderer* const InRenderer);
 	virtual void OnPreStartFrame(FD3D12CommandContext& InCommandContext);
 	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnPreEndFrame(FD3D12CommandContext& InCommandContext);
 	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 	virtual void OnPostEndFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnDestory(FD3D12CommandContext& InCommandContext);
 
 
 	IDXGIFactory4* GetDXGIFactory() const

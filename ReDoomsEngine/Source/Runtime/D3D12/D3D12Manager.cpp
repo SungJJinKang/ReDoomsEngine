@@ -110,6 +110,14 @@ void FD3D12Manager::OnStartFrame(FD3D12CommandContext& InCommandContext)
     }
 }
 
+void FD3D12Manager::OnPreEndFrame(FD3D12CommandContext& InCommandContext)
+{
+	for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
+	{
+		Manager->OnPreEndFrame(InCommandContext);
+	}
+}
+
 void FD3D12Manager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
     for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
@@ -124,4 +132,12 @@ void FD3D12Manager::OnPostEndFrame(FD3D12CommandContext& InCommandContext)
     {
         Manager->OnPostEndFrame(InCommandContext);
     }
+}
+
+void FD3D12Manager::OnDestory(FD3D12CommandContext& InCommandContext)
+{
+	for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
+	{
+		Manager->OnDestory(InCommandContext);
+	}
 }

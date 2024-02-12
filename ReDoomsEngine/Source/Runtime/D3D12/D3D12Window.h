@@ -1,5 +1,8 @@
 #pragma once
 #include "CommonInclude.h"
+
+#include "EASTL/functional.h"
+
 #include "D3D12Include.h"
 #include "D3D12RendererStateCallbackInterface.h"
 

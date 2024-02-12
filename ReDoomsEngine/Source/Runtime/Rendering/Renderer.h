@@ -41,6 +41,7 @@ enum class ERendererState
 	OnPreStartFrame,
 	OnStartFrame,
 	Draw,
+	OnPreEndFrame,
 	OnEndFrame,
 	OnPostEndFrame,
 	Destroying
@@ -56,6 +57,7 @@ public:
 	virtual void OnPreStartFrame();
 	virtual void OnStartFrame();
 	virtual bool Draw();
+	virtual void OnPreEndFrame();
 	virtual void OnEndFrame();
 	virtual void OnPostEndFrame();
 	virtual void Destroy();

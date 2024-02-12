@@ -171,6 +171,30 @@
     <ClCompile Include="Source\Runtime\D3D12\D3D12RendererStateCallbackInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Editor\imgui\imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\imgui\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\imgui\imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\imgui\imgui_tables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\imgui\imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\imgui\backends\imgui_impl_dx12.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\imgui\backends\imgui_impl_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Editor\imguiHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
@@ -1256,9 +1280,37 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12Defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Editor\imgui\imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\imgui\imgui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\imgui\imgui_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\imgui\imstb_rectpack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\imgui\imstb_textedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\imgui\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\imgui\backends\imgui_impl_dx12.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\imgui\backends\imgui_impl_win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Editor\imguiHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
+    <Natvis Include="Source\Editor\imgui\misc\debuggers\imgui.natvis" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.inl">
@@ -1279,6 +1331,7 @@
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="Source\Editor\imgui\misc\debuggers\imgui.natstepfilter" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\seafloor.dds" />

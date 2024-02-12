@@ -187,7 +187,7 @@ void FD3D12StateCache::Flush(FD3D12CommandList& InCommandList)
 
 		uint32_t ReservedDescriptorCount = RequiredSRVSlotCount + RequiredUAVSlotCount;
 
-		BaseHeapBlcok = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOnlineDescriptorHeapContainer.ReserveDescriptorHeapBlock(ReservedDescriptorCount);
+		BaseHeapBlcok = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOnlineDescriptorHeapContainer.ReserveTransientDescriptorHeapBlock(ReservedDescriptorCount);
 	}
 
 	uint32_t OutUsedBlockCount = 0;
