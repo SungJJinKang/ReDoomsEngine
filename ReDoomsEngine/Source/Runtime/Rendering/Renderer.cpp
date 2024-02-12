@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
 #include "D3D12Resource/D3D12ResourceAllocator.h"
-#include "Editor/imguiHelper.h"
+#include "Editor/ImguiHelper.h"
 
 void FFrameResourceContainer::Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> InOnlineDescriptorHeap)
 {
@@ -29,6 +29,7 @@ void FFrameResourceContainer::ResetForNewFrame()
 
 void FRenderer::Init()
 {
+	SCOPED_CPU_TIMER(Renderer_Init)
 	SCOPED_MEMORY_TRACE(Renderer_Init)
 
 	CurrentRendererState = ERendererState::Initializing;
@@ -42,13 +43,14 @@ void FRenderer::Init()
 		FrameContainer.Init(OnlineDescriptorHeap);
 	}
 
-	FimguiHelper::Init();
+	FImguiHelperSingleton::GetInstance()->Init();
 
 	CurrentRendererState = ERendererState::FinishInitialzing;
 }
 
 void FRenderer::OnPreStartFrame()
 {
+	SCOPED_CPU_TIMER(Renderer_OnPreStartFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnPreStartFrame)
 
 	CurrentRendererState = ERendererState::OnPreStartFrame;
@@ -69,16 +71,18 @@ void FRenderer::OnPreStartFrame()
 
 void FRenderer::OnStartFrame()
 {
+	SCOPED_CPU_TIMER(Renderer_OnStartFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnStartFrame)
 
 	CurrentRendererState = ERendererState::OnStartFrame;
 
 	D3D12Manager.OnStartFrame(CurrentFrameCommandContext);
-	FimguiHelper::NewFrame();
+	FImguiHelperSingleton::GetInstance()->NewFrame();
 }
 
 bool FRenderer::Draw()
 {
+	SCOPED_CPU_TIMER(Renderer_Draw)
 	SCOPED_MEMORY_TRACE(Renderer_Draw)
 
 	CurrentRendererState = ERendererState::Draw;
@@ -90,6 +94,7 @@ bool FRenderer::Draw()
 
 void FRenderer::OnPreEndFrame()
 {
+	SCOPED_CPU_TIMER(Renderer_OnPreEndFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnPreEndFrame)
 
 	CurrentRendererState = ERendererState::OnPreEndFrame;
@@ -99,6 +104,7 @@ void FRenderer::OnPreEndFrame()
 
 void FRenderer::OnPostEndFrame()
 {
+	SCOPED_CPU_TIMER(Renderer_OnPostEndFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnPostEndFrame)
 
 	CurrentRendererState = ERendererState::OnPostEndFrame;
@@ -108,13 +114,14 @@ void FRenderer::OnPostEndFrame()
 
 void FRenderer::OnEndFrame()
 {
+	SCOPED_CPU_TIMER(Renderer_OnEndFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnEndFrame)
 
 	CurrentRendererState = ERendererState::OnEndFrame;
 
 	D3D12Manager.OnEndFrame(CurrentFrameCommandContext);
 
-	FimguiHelper::EndDraw(CurrentFrameCommandContext);
+	FImguiHelperSingleton::GetInstance()->EndDraw(CurrentFrameCommandContext);
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
@@ -137,11 +144,12 @@ void FRenderer::OnEndFrame()
 
 void FRenderer::Destroy()
 {
+	SCOPED_CPU_TIMER(Renderer_Destroy)
 	SCOPED_MEMORY_TRACE(Renderer_Destroy)
 
 	CurrentRendererState = ERendererState::Destroying;
 
-	FimguiHelper::OnDestory();
+	FImguiHelperSingleton::GetInstance()->OnDestory();
 
 	D3D12Manager.OnDestory(CurrentFrameCommandContext);
 

@@ -4,21 +4,22 @@
 #include "D3D12RendererStateCallbackInterface.h"
 #include "D3D12Descriptor.h"
 
-class FimguiHelper
+class FImguiHelper
 {
 public:
 
-	static void Init();
+	void Init();
 	
-	static void NewFrame();
-	static void EndDraw(FD3D12CommandContext& InCommandContext);
-	static void OnDestory();
+	void NewFrame();
+	void EndDraw(FD3D12CommandContext& InCommandContext);
+	void OnDestory();
 
-	static eastl::vector<eastl::function<void()>> imguiDrawEventList;
+	eastl::vector<eastl::function<void()>> ImguiDrawEventList;
 
 private:
 
-	static FD3D12DescriptorHeapBlock SRVDescriptorHeapBlock;
+	FD3D12DescriptorHeapBlock SRVDescriptorHeapBlock;
 
 };
 
+class FImguiHelperSingleton : public EA::StdC::SingletonAdapter<FImguiHelper, TRUE> { };

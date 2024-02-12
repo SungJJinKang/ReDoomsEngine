@@ -207,7 +207,8 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Editor\imguiHelper.cpp" />
+    <ClCompile Include="Source\Runtime\Core\Profiling.cpp" />
+    <ClCompile Include="Source\Editor\ImguiHelper.cpp" />
     <ClCompile Include="Source\Editor\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="Source\Editor\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\Editor\imgui\imgui.cpp" />
@@ -269,7 +270,8 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Rendering\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Editor\imguiHelper.h" />
+    <ClInclude Include="Source\Runtime\Core\Profiling.h" />
+    <ClInclude Include="Source\Editor\ImguiHelper.h" />
     <ClInclude Include="Source\Editor\imgui\backends\imgui_impl_dx12.h" />
     <ClInclude Include="Source\Editor\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Source\Editor\imgui\imconfig.h" />

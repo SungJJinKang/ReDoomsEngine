@@ -38,6 +38,8 @@ int main(int argc, char** argv)
 	bool bQuit = false;
 	while (!bQuit)
 	{
+		SCOPED_CPU_TIMER(Tick)
+
 		// Poll and handle messages (inputs, window resize, etc.)
 		// See the WndProc() function below for our to dispatch events to the Win32 backend.
 		MSG msg;

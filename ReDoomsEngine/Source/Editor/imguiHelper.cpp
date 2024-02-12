@@ -13,10 +13,7 @@
 #include "D3D12CommandList.h"
 #include "D3D12Window.h"
 
-eastl::vector<eastl::function<void()>> FimguiHelper::imguiDrawEventList{};
-FD3D12DescriptorHeapBlock FimguiHelper::SRVDescriptorHeapBlock{};
-
-void FimguiHelper::Init()
+void FImguiHelper::Init()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -34,20 +31,20 @@ void FimguiHelper::Init()
 		SRVDescriptorHeapBlock.GPUDescriptorHandle());
 }
 
-void FimguiHelper::NewFrame()
+void FImguiHelper::NewFrame()
 {
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	ImGui::ShowDemoWindow(); // Show demo window! :)
 
-	for (eastl::function<void()>& imguiDrawEvent : imguiDrawEventList)
+	for (eastl::function<void()>& imguiDrawEvent : ImguiDrawEventList)
 	{
 		imguiDrawEvent();
 	}
 }
 
-void FimguiHelper::EndDraw(FD3D12CommandContext& InCommandContext)
+void FImguiHelper::EndDraw(FD3D12CommandContext& InCommandContext)
 {
 	// Rendering
 	// (Your code clears your framebuffer, renders your other stuff etc.)
@@ -56,7 +53,7 @@ void FimguiHelper::EndDraw(FD3D12CommandContext& InCommandContext)
 	// (Your code calls ExecuteCommandLists, swapchain's Present(), etc.)
 }
 
-void FimguiHelper::OnDestory()
+void FImguiHelper::OnDestory()
 {
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
