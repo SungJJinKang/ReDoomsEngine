@@ -166,7 +166,7 @@ FD3D12DescriptorHeapBlock FD3D12OnlineDescriptorHeapContainer::AllocatePermanent
 	FD3D12DescriptorHeapBlock NewHeapBlock{ OnlineHeap, CurrentAllocatedPermanentBlockCount, InDescriptorCount, OnlineHeap->GetDescriptorSize() };
 
     CurrentAllocatedPermanentBlockCount += InDescriptorCount;
-	EA_ASSERT_MSG(CurrentAllocatedPermanentBlockCount <= GCbvSrvUavOnlineDescriptorHeapPermanentDescriptorCount, "Exhaust online heap space");
+	EA_ASSERT_MSG(CurrentAllocatedPermanentBlockCount <= GCbvSrvUavOnlineDescriptorHeapPermanentDescriptorCount, "Exhaust online heap permanent space");
 
 	return NewHeapBlock;
 }

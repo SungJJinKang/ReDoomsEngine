@@ -192,7 +192,10 @@
     <ClCompile Include="Source\Editor\imgui\backends\imgui_impl_win32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Editor\imguiHelper.cpp">
+    <ClCompile Include="Source\Editor\ImguiHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Core\Profiling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1304,7 +1307,10 @@
     <ClInclude Include="Source\Editor\imgui\backends\imgui_impl_win32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Editor\imguiHelper.h">
+    <ClInclude Include="Source\Editor\ImguiHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Core\Profiling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
