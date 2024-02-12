@@ -230,7 +230,6 @@ void FD3D12StateCache::ResetForNewCommandlist()
 
 	DirtyFlagsOfSRVs.set();
 	DirtyFlagsOfUAVs.set();
-	DirtyFlagsConstantBufferBindPointInfosOfFrequencies.set();
 	MEM_ZERO(CachedSRVs);
 	MEM_ZERO(CachedUAVs);
 	MEM_ZERO(CachedConstantBufferBindPointInfosOfFrequencies);
