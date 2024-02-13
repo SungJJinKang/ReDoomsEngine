@@ -18,7 +18,7 @@ void FD3D12CommandList::InitCommandList()
 
 	// Command lists are created in the recording state, but there is nothing
 	// to record yet. The main loop expects it to be closed, so close it now.
-	CommandList->Close();
+	FinishRecordingCommandList();
 }
 
 ED3D12QueueType FD3D12CommandList::GetQueueType() const
@@ -34,7 +34,7 @@ void FD3D12CommandList::ResetRecordingCommandList(FD3D12PSO* const InInitialPSO)
 	VERIFYD3D12RESULT(CommandList->Reset(OwnerCommandAllocator->GetD3DCommandAllocator(), InInitialPSO ? InInitialPSO->PSOObject.Get() : nullptr));
 }
 
-void FD3D12CommandList::FinishRecordingCommandList(FD3D12CommandQueue* const InCommandQueue)
+void FD3D12CommandList::FinishRecordingCommandList()
 {
 	VERIFYD3D12RESULT(CommandList->Close());
 }

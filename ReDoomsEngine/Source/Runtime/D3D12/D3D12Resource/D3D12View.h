@@ -18,10 +18,7 @@ public:
 
 	}
 
-	virtual ~FD3D12View()
-	{
-		FreeDescriptorHeapBlock();
-	}
+	virtual ~FD3D12View();
 
 	inline FD3D12Resource* GetUnderlyingResource() const
 	{
@@ -40,6 +37,7 @@ public:
 		{
 			OfflineDescriptorHeap->FreeDescriptorHeapBlock(OfflineDescriptorHeapBlock);
 		}
+		OfflineDescriptorHeapBlock.Clear();
 	}
 
 	virtual bool IsCBV() const { return false; }

@@ -30,7 +30,7 @@ public:
 	{
 		return true;
 	}
-	virtual void ClearResource();
+	virtual void ReleaseResource();
 	void ValidateResourceProperties() const;
 
 	inline const CD3DX12_HEAP_PROPERTIES& GetHeapProperties() const
@@ -164,7 +164,7 @@ public:
 
 	virtual void InitResource();
 	virtual void CreateD3D12Resource();
-	virtual void ClearResource();
+	virtual void ReleaseResource();
 
 	inline bool IsDynamicBuffer() const 
 	{

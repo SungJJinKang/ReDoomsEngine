@@ -52,8 +52,9 @@ void FD3D12Resource::CreateD3D12Resource()
 		IID_PPV_ARGS(&Resource)));
 }
 
-void FD3D12Resource::ClearResource()
+void FD3D12Resource::ReleaseResource()
 {
+	Resource.Reset();
 }
 
 void FD3D12Resource::ValidateResourceProperties() const
@@ -276,9 +277,9 @@ void FD3D12BufferResource::CreateD3D12Resource()
 	}
 }
 
-void FD3D12BufferResource::ClearResource()
+void FD3D12BufferResource::ReleaseResource()
 {
-	FD3D12Resource::ClearResource();
+	FD3D12Resource::ReleaseResource();
 
 	// Doesn't need unmap mapped resource. It's unmapped implcitly when destory resource
 	//if (MappedAddress)

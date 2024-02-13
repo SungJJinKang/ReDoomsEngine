@@ -69,14 +69,13 @@ LRESULT FD3D12Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 	switch (message)
 	{
 	case WM_SIZE:
-// 		if (g_pd3dDevice != nullptr && wParam != SIZE_MINIMIZED)
-// 		{
-// 			WaitForLastSubmittedFrame();
-// 			CleanupRenderTarget();
-// 			HRESULT result = g_pSwapChain->ResizeBuffers(0, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam), DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT);
-// 			assert(SUCCEEDED(result) && "Failed to resize swapchain.");
-// 			CreateRenderTarget();
-// 		}
+        // https://github.com/ocornut/imgui/issues/6764#issuecomment-1698835216
+        // I was going to suggest that nowadays I wouldn't recommend performing the swap chain resize directly inside the WM_SIZE handler, 
+        // because that tends to stress GPU drivers unnecessarily as the resizing operation is modal/blocking anyway, so the result is not seen immediately.
+		if (GetD3D12Device() && wParam != SIZE_MINIMIZED)
+		{
+            FD3D12Manager::GetInstance()->GetSwapchain()->QueueResize((UINT)LOWORD(lParam), (UINT)HIWORD(lParam));
+		}
 		return 0;
 	case WM_SYSCOMMAND:
 		if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu

@@ -38,6 +38,8 @@ int main(int argc, char** argv)
 	bool bQuit = false;
 	while (!bQuit)
 	{
+		++GCurrentFrameIndex;
+
 		SCOPED_CPU_TIMER(Tick)
 
 		// Poll and handle messages (inputs, window resize, etc.)

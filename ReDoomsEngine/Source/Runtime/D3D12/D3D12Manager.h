@@ -23,11 +23,11 @@ public:
 	FD3D12Manager& operator=(FD3D12Manager&&);
 	~FD3D12Manager();
 	void Init(FRenderer* const InRenderer);
-	virtual void OnPreStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnPreStartFrame();
 	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
 	virtual void OnPreEndFrame(FD3D12CommandContext& InCommandContext);
 	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
-	virtual void OnPostEndFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnPostEndFrame();
 	virtual void OnDestory(FD3D12CommandContext& InCommandContext);
 
 
