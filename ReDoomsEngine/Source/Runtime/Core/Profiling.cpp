@@ -69,6 +69,11 @@ FCPUTimer::FCPUTimer(const char* const InTimerName) :
 
 FCPUTimer::~FCPUTimer()
 {
+	UpdateElapsedTicks();
+}
+
+void FCPUTimer::UpdateElapsedTicks()
+{
 	LARGE_INTEGER CurrentTime;
 	QueryPerformanceCounter(&CurrentTime);
 
@@ -79,8 +84,11 @@ FCPUTimer::~FCPUTimer()
 	TimeDelta /= QPCFrequency.QuadPart;
 
 	ElapsedTicks = TimeDelta;
+	ElapsedSeconds = TicksToSeconds(ElapsedTicks);
 
 	FProfilingManager::UpdateCPUTimer(this);
+
+	QPCLastTime = CurrentTime.QuadPart;
 }
 
 void FProfilingManager::NewFrame()

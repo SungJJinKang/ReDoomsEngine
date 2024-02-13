@@ -36,9 +36,15 @@ int main(int argc, char** argv)
 	TestRenderer.Init();
 
 	bool bQuit = false;
+
+	FCPUTimer TickTimer{"FrameTime"};
+
 	while (!bQuit)
 	{
 		++GCurrentFrameIndex;
+
+		TickTimer.UpdateElapsedTicks();
+		GTimeDelta = TickTimer.GetElapsedSeconds();
 
 		SCOPED_CPU_TIMER(Tick)
 

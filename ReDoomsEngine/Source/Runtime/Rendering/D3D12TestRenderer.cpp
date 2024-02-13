@@ -75,7 +75,7 @@ bool D3D12TestRenderer::Draw()
 {
 	FRenderer::Draw();
 
-	Offset += 0.001f;
+	Offset += GTimeDelta;
 	if (Offset > 1.0f)
 	{
 		Offset = -1.0f;

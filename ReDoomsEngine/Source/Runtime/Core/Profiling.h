@@ -23,11 +23,13 @@ public:
 	FCPUTimer(const char* const InTimerName);
 	~FCPUTimer();
 
+	void UpdateElapsedTicks();
+
 	inline const char* const GetTimerName() const {	return TimerName; }
 
 	// Get elapsed time since the previous Update call.
 	inline unsigned long long GetElapsedTicks() const { return ElapsedTicks; }
-	inline double GetElapsedSeconds() const { return TicksToSeconds(ElapsedTicks); }
+	inline double GetElapsedSeconds() const { return ElapsedSeconds; }
 
 	// Integer format represents time using 10,000,000 ticks per second.
 	static const unsigned long long TicksPerSecond = 10000000;
@@ -41,6 +43,7 @@ private:
 	long long QPCLastTime;
 
 	// Derived timing data uses a canonical tick format.
+	double ElapsedSeconds;
 	unsigned long long ElapsedTicks;
 };
 
