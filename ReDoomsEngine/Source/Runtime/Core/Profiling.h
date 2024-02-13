@@ -8,11 +8,12 @@ struct FCPUTimer;
 class FProfilingManager
 {
 public:
+	static void NewFrame();
 	static void UpdateCPUTimer(const FCPUTimer* const InTimer);
-	static const eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/>& GetCPUTimerElapsedSecondsMap();
+	static const eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/>& GetCPUTimerElapsedSecondsMap(const uint64_t InFrameIndex);
 
 private:
-	static eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/> CPUTimerElapsedSecondsMap;
+	static eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/> CPUTimerElapsedSecondsMap[2];
 };
 
 struct FCPUTimer
