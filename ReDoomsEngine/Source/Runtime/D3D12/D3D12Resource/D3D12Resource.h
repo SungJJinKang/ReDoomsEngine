@@ -177,7 +177,7 @@ public:
 	}
 
 	/// <summary>
-	/// Mapped address is write-combined type so it's recommended to copy data using memcpy style copy
+	/// Mapped address is write-combined type so it's recommended to copy data using memcpy style copy and not to read it
 	/// </summary>
 	/// <returns></returns>
 	virtual uint8_t* GetMappedAddress() const;
@@ -186,6 +186,11 @@ public:
 
 	uint8_t* GetShadowDataAddress();
 	void FlushShadowData();
+
+	inline bool IsShadowDataDirty() const
+	{
+		return bIsShadowDataDirty;
+	}
 
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint32_t InStrideInBytes) const;
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint64_t InBaseOffsetInBytes, const uint32_t InSizeInBytes, const uint32_t InStrideInBytes) const;
@@ -201,6 +206,7 @@ protected:
 	bool bShadowDataCreatedFromThisInstance;
 	uint8_t* ShadowDataAddress;
 
+	bool bIsShadowDataDirty;
 	eastl::vector<uint8_t> ShadowData;
 };
 
@@ -262,6 +268,7 @@ public:
 	{
 		return false;
 	}
+	void MakeDirty();
 	void Versioning();
 
 	virtual bool IsConstantBuffer() const

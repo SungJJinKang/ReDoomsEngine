@@ -157,9 +157,11 @@ bool D3D12TestRenderer::Draw()
 	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
 	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f + Offset };
+	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
 	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
+	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
 	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);

@@ -197,7 +197,7 @@ FD3D12BufferResource::FD3D12BufferResource(
 	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress, const bool bNeverCreateShadowData)
 	: 
 	FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
-	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress)
+	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress), bIsShadowDataDirty(true)
 {
 	if (!ShadowDataAddress && !bNeverCreateShadowData)
 	{
@@ -338,6 +338,11 @@ void FD3D12ConstantBufferResource::InitResource()
 	FD3D12BufferResource::InitResource();
 }
 
+void FD3D12ConstantBufferResource::MakeDirty()
+{
+	bIsShadowDataDirty = true;
+}
+
 void FD3D12ConstantBufferResource::Versioning()
 {
 	EA_ASSERT(IsDynamicBuffer()); // todo : support no-dynamic buffer
@@ -345,6 +350,8 @@ void FD3D12ConstantBufferResource::Versioning()
 	ConstantBufferBlock = FD3D12PerFrameConstantBufferManager::GetInstance()->Allocate(GetBufferSize());
 
 	MappedAddress = ConstantBufferBlock.MappedAddress;
+
+	bIsShadowDataDirty = false;
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS FD3D12ConstantBufferResource::GPUVirtualAddress() const

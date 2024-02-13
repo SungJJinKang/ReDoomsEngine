@@ -149,8 +149,11 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 				{
 					FD3D12ConstantBufferResource* const ConstantBufferResource = ShaderParameterConstantBuffer->GetConstantBufferResource();
 					EA_ASSERT(ConstantBufferResource);
-					ConstantBufferResource->Versioning();
-					ShaderParameterConstantBuffer->FlushShadowData(ConstantBufferResource->GetMappedAddress());
+					if (ConstantBufferResource->IsShadowDataDirty())
+					{
+						ConstantBufferResource->Versioning();
+						ShaderParameterConstantBuffer->FlushShadowData(ConstantBufferResource->GetMappedAddress());
+					}
 
 					const D3D12_GPU_VIRTUAL_ADDRESS GPUVirtualAddress = ConstantBufferResource->GPUVirtualAddress();
 					EA_ASSERT(IsAligned(GPUVirtualAddress, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
