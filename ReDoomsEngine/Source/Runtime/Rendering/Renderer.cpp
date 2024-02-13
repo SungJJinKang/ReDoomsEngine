@@ -44,8 +44,6 @@ void FRenderer::Init()
 	}
 
 	FImguiHelperSingleton::GetInstance()->Init();
-
-	CurrentRendererState = ERendererState::FinishInitialzing;
 }
 
 void FRenderer::OnPreStartFrame()
@@ -66,7 +64,11 @@ void FRenderer::OnStartFrame()
 	CurrentRendererState = ERendererState::OnStartFrame;
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
-	CurrentFrameContainer.FrameWorkEndFence.WaitOnLastSignal();
+	CurrentFrameContainer.FrameWorkEndFence.CPUWaitOnLastSignal();
+	for (eastl::shared_ptr<FD3D12Fence>& TransientFrameWorkEndFence : CurrentFrameContainer.TransientFrameWorkEndFenceList)
+	{
+		TransientFrameWorkEndFence->CPUWaitOnLastSignal();
+	}
 
 	CurrentFrameContainer.ResetForNewFrame();
 	CurrentFrameCommandContext.StateCache.ResetForNewCommandlist();
@@ -86,6 +88,11 @@ bool FRenderer::Draw()
 	CurrentRendererState = ERendererState::Draw;
 
 	eastl::shared_ptr<FD3D12Fence> ResourceUploadFence = FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext);
+	if (ResourceUploadFence)
+	{
+		FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
+		CurrentFrameContainer.TransientFrameWorkEndFenceList.emplace_back(ResourceUploadFence);
+	}
 
 	return true;
 }
@@ -100,9 +107,6 @@ void FRenderer::OnPreEndFrame()
 	D3D12Manager.OnPreEndFrame(CurrentFrameCommandContext);
 
 	FImguiHelperSingleton::GetInstance()->EndDraw(CurrentFrameCommandContext);
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE NullRTV = FD3D12RenderTargetView::NullRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->OMSetRenderTargets(1, &NullRTV, FALSE, nullptr);
 }
 
 void FRenderer::OnPostEndFrame()
@@ -155,7 +159,7 @@ void FRenderer::Destroy()
 
 	D3D12Manager.OnDestory(CurrentFrameCommandContext);
 
-	GetCurrentFrameResourceContainer().FrameWorkEndFence.WaitOnLastSignal();
+	GetCurrentFrameResourceContainer().FrameWorkEndFence.CPUWaitOnLastSignal();
 }
 
 FFrameResourceContainer& FRenderer::GetPreviousFrameResourceContainer()

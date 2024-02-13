@@ -12,7 +12,7 @@ void FD3D12ResourceUploadBatcher::AddPendingResourceUpload(FD3D12ResourceUpload&
 	PendingResourceUploadList.emplace_back(eastl::move(InResourceUpload));
 }
 
-eastl::shared_ptr<FD3D12Fence> FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
+eastl::shared_ptr<FD3D12Fence> FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext, const bool bAddGPUSideWait)
 {
 	eastl::shared_ptr<FD3D12Fence> UploadBatcherFence{};
 	if (PendingResourceUploadList.size() > 0)
@@ -53,6 +53,10 @@ eastl::shared_ptr<FD3D12Fence> FD3D12ResourceUploadBatcher::Flush(FD3D12CommandC
 		TargetCommandQueue->ExecuteCommandLists(CommandLists);
 
 		UploadBatcherFence->Signal(TargetCommandQueue);
+		if (bAddGPUSideWait)
+		{
+			UploadBatcherFence->GPUWaitOnLastSignal(TargetCommandQueue);
+		}
 
 		PendingResourceUploadList.clear();
 	}
