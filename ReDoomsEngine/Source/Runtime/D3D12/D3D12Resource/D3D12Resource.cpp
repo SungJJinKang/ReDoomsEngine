@@ -84,7 +84,7 @@ FD3D12ConstantBufferView* FD3D12Resource::GetCBV()
 
 	if (DefaultCBV == nullptr)
 	{
-		DefaultCBV = eastl::make_shared<FD3D12ConstantBufferView>(this);
+		DefaultCBV = eastl::make_shared<FD3D12ConstantBufferView>(weak_from_this());
 		DefaultCBV->UpdateDescriptor();
 	}
 
@@ -98,7 +98,7 @@ FD3D12ShaderResourceView* FD3D12Resource::GetSRV()
 
 	if (DefaultSRV == nullptr)
 	{
-		DefaultSRV = eastl::make_shared<FD3D12ShaderResourceView>(this);
+		DefaultSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this());
 		DefaultSRV->UpdateDescriptor();
 	}
 
@@ -112,7 +112,7 @@ FD3D12UnorderedAccessView* FD3D12Resource::GetUAV()
 
 	if (DefaultUAV == nullptr)
 	{
-		DefaultUAV = eastl::make_shared<FD3D12UnorderedAccessView>(this);
+		DefaultUAV = eastl::make_shared<FD3D12UnorderedAccessView>(weak_from_this());
 		DefaultUAV->UpdateDescriptor();
 	}
 
@@ -126,7 +126,7 @@ FD3D12RenderTargetView* FD3D12Resource::GetRTV()
 
 	if (DefaultRTV == nullptr)
 	{
-		DefaultRTV = eastl::make_shared<FD3D12RenderTargetView>(this);
+		DefaultRTV = eastl::make_shared<FD3D12RenderTargetView>(weak_from_this());
 		DefaultRTV->UpdateDescriptor();
 	}
 
@@ -140,7 +140,7 @@ FD3D12DepthStencilView* FD3D12Resource::GetDSV()
 
 	if (DefaultDSV == nullptr)
 	{
-		DefaultDSV = eastl::make_shared<FD3D12DepthStencilView>(this);
+		DefaultDSV = eastl::make_shared<FD3D12DepthStencilView>(weak_from_this());
 		DefaultDSV->UpdateDescriptor();
 	}
 

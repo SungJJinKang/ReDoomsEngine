@@ -26,7 +26,7 @@ public:
 	}
 	void Present(const int32_t SyncInterval);
 	void UpdateCurrentBackbufferIndex();
-	FD3D12RenderTargetResource& GetRenderTarget(const size_t Index) 
+	eastl::shared_ptr<FD3D12RenderTargetResource>& GetRenderTarget(const size_t Index)
 	{
 		return RenderTargets[Index];
 	}
@@ -54,7 +54,7 @@ private:
 
 	ComPtr<IDXGISwapChain3> D3DSwapchain;
 
-	eastl::vector<FD3D12RenderTargetResource> RenderTargets;
+	eastl::vector<eastl::shared_ptr<FD3D12RenderTargetResource>> RenderTargets;
 
 	FD3D12CommandQueue* CommandQueue;
 	FD3D12Window* Window;

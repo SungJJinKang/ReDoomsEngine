@@ -8,13 +8,19 @@ FD3D12View::~FD3D12View()
 	FreeDescriptorHeapBlock();
 }
 
-FD3D12ShaderResourceView::FD3D12ShaderResourceView(FD3D12Resource* const InResource)
+FD3D12ShaderResourceView::FD3D12ShaderResourceView(eastl::weak_ptr<FD3D12Resource> InResource)
 	: TD3D12View(InResource)
 {
 }
 
-FD3D12ShaderResourceView::FD3D12ShaderResourceView(FD3D12Resource* const InResource, const D3D12_SHADER_RESOURCE_VIEW_DESC& InDesc)
+FD3D12ShaderResourceView::FD3D12ShaderResourceView(eastl::weak_ptr<FD3D12Resource> InResource, const D3D12_SHADER_RESOURCE_VIEW_DESC& InDesc)
 	: TD3D12View(InResource, InDesc)
+{
+
+}
+
+FD3D12ShaderResourceView::FD3D12ShaderResourceView(const D3D12_SHADER_RESOURCE_VIEW_DESC& InDesc)
+	: TD3D12View(InDesc)
 {
 
 }
@@ -22,7 +28,9 @@ FD3D12ShaderResourceView::FD3D12ShaderResourceView(FD3D12Resource* const InResou
 void FD3D12ShaderResourceView::UpdateDescriptor()
 {
 	OfflineDescriptorHeapBlock = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOfflineDescriptorHeapContainer.AllocateDescriptorHeapBlock(1);
-	GetD3D12Device()->CreateShaderResourceView(Resource->GetResource(), Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
+	
+	eastl::shared_ptr<FD3D12Resource> LockedResource = Resource.lock();
+	GetD3D12Device()->CreateShaderResourceView(LockedResource->GetResource(), Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
 }
 
 FD3D12ShaderResourceView* FD3D12ShaderResourceView::NullSRV()
@@ -38,19 +46,25 @@ FD3D12ShaderResourceView* FD3D12ShaderResourceView::NullSRV()
 		NullSRVDesc.Texture2D.MostDetailedMip = 0;
 		NullSRVDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-		DefaultSRV = eastl::make_unique<FD3D12ShaderResourceView>(nullptr, NullSRVDesc);
+		DefaultSRV = eastl::make_unique<FD3D12ShaderResourceView>(NullSRVDesc);
 		DefaultSRV->UpdateDescriptor();
 	}
 	return DefaultSRV.get();
 }
 
- FD3D12ConstantBufferView::FD3D12ConstantBufferView(FD3D12Resource* const InResource)
+ FD3D12ConstantBufferView::FD3D12ConstantBufferView(eastl::weak_ptr<FD3D12Resource> InResource)
  	: TD3D12View(InResource)
  {
  }
 
- FD3D12ConstantBufferView::FD3D12ConstantBufferView(FD3D12Resource* const InResource, const D3D12_CONSTANT_BUFFER_VIEW_DESC& InDesc)
+ FD3D12ConstantBufferView::FD3D12ConstantBufferView(eastl::weak_ptr<FD3D12Resource> InResource, const D3D12_CONSTANT_BUFFER_VIEW_DESC& InDesc)
 	 : TD3D12View(InResource, InDesc)
+ {
+
+ }
+
+ FD3D12ConstantBufferView::FD3D12ConstantBufferView(const D3D12_CONSTANT_BUFFER_VIEW_DESC& InDesc)
+	 : TD3D12View(InDesc)
  {
 
  }
@@ -61,7 +75,7 @@ FD3D12ShaderResourceView* FD3D12ShaderResourceView::NullSRV()
 	 if (DefaultCBV == nullptr)
 	 {
 		 D3D12_CONSTANT_BUFFER_VIEW_DESC NullCBVDesc{};
-		 DefaultCBV = eastl::make_unique<FD3D12ConstantBufferView>(nullptr, NullCBVDesc);
+		 DefaultCBV = eastl::make_unique<FD3D12ConstantBufferView>(NullCBVDesc);
 		 DefaultCBV->UpdateDescriptor();
 	 }
 	 return DefaultCBV.get();
@@ -72,20 +86,27 @@ FD3D12ShaderResourceView* FD3D12ShaderResourceView::NullSRV()
 	OfflineDescriptorHeapBlock = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOfflineDescriptorHeapContainer.AllocateDescriptorHeapBlock(1);
  
 	D3D12_CONSTANT_BUFFER_VIEW_DESC CBVDesc = {};
-	CBVDesc.BufferLocation = Resource->GPUVirtualAddress();
-	CBVDesc.SizeInBytes = Align(Resource->GetDesc().Width, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT); // Constant buffers must be 256 byte aligned, which is different than the alignment requirement for a resource heap
+	eastl::shared_ptr<FD3D12Resource> LockedResource = Resource.lock();
+	CBVDesc.BufferLocation = LockedResource->GPUVirtualAddress();
+	CBVDesc.SizeInBytes = Align(LockedResource->GetDesc().Width, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT); // Constant buffers must be 256 byte aligned, which is different than the alignment requirement for a resource heap
  
 	GetD3D12Device()->CreateConstantBufferView(&CBVDesc, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
  }
 
-FD3D12UnorderedAccessView::FD3D12UnorderedAccessView(FD3D12Resource* const InResource)
+FD3D12UnorderedAccessView::FD3D12UnorderedAccessView(eastl::weak_ptr<FD3D12Resource> InResource)
 	: TD3D12View(InResource)
 {
 
 }
 
-FD3D12UnorderedAccessView::FD3D12UnorderedAccessView(FD3D12Resource* const InResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& InDesc)
+FD3D12UnorderedAccessView::FD3D12UnorderedAccessView(eastl::weak_ptr<FD3D12Resource> InResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& InDesc)
 	: TD3D12View(InResource, InDesc)
+{
+
+}
+
+FD3D12UnorderedAccessView::FD3D12UnorderedAccessView(const D3D12_UNORDERED_ACCESS_VIEW_DESC& InDesc)
+	: TD3D12View(InDesc)
 {
 
 }
@@ -95,7 +116,8 @@ void FD3D12UnorderedAccessView::UpdateDescriptor()
 	OfflineDescriptorHeapBlock = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOfflineDescriptorHeapContainer.AllocateDescriptorHeapBlock(1);
 
 	// @todo : support counter resource
-	GetD3D12Device()->CreateUnorderedAccessView(Resource ? Resource->GetResource() : nullptr, nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
+	eastl::shared_ptr<FD3D12Resource> LockedResource = Resource.lock();
+	GetD3D12Device()->CreateUnorderedAccessView(LockedResource ? LockedResource->GetResource() : nullptr, nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
 }
 
 FD3D12UnorderedAccessView* FD3D12UnorderedAccessView::NullUAV()
@@ -108,27 +130,34 @@ FD3D12UnorderedAccessView* FD3D12UnorderedAccessView::NullUAV()
 		NullUAVDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
 		NullUAVDesc.Texture2D.MipSlice = 0;
 
-		DefaultUAV = eastl::make_unique<FD3D12UnorderedAccessView>(nullptr, NullUAVDesc);
+		DefaultUAV = eastl::make_unique<FD3D12UnorderedAccessView>(NullUAVDesc);
 		DefaultUAV->UpdateDescriptor();
 	}
 	return DefaultUAV.get();
 }
 
-FD3D12RenderTargetView::FD3D12RenderTargetView(FD3D12Resource* const InResource)
+FD3D12RenderTargetView::FD3D12RenderTargetView(eastl::weak_ptr<FD3D12Resource> InResource)
 	: TD3D12View(InResource)
 {
 
 }
 
-FD3D12RenderTargetView::FD3D12RenderTargetView(FD3D12Resource* const InResource, const D3D12_RENDER_TARGET_VIEW_DESC& InDesc)
+FD3D12RenderTargetView::FD3D12RenderTargetView(eastl::weak_ptr<FD3D12Resource> InResource, const D3D12_RENDER_TARGET_VIEW_DESC& InDesc)
 	: TD3D12View(InResource, InDesc)
 {
+}
+
+FD3D12RenderTargetView::FD3D12RenderTargetView(const D3D12_RENDER_TARGET_VIEW_DESC& InDesc)
+	: TD3D12View(InDesc)
+{
+
 }
 
 void FD3D12RenderTargetView::UpdateDescriptor()
 {
 	OfflineDescriptorHeapBlock = FD3D12DescriptorHeapManager::GetInstance()->RTVDescriptorHeapContainer.AllocateDescriptorHeapBlock(1);
-	GetD3D12Device()->CreateRenderTargetView(Resource ? Resource->GetResource() : nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
+	eastl::shared_ptr<FD3D12Resource> LockedResource = Resource.lock();
+	GetD3D12Device()->CreateRenderTargetView(LockedResource ? LockedResource->GetResource() : nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
 }
 
 FD3D12RenderTargetView* FD3D12RenderTargetView::NullRTV()
@@ -141,20 +170,26 @@ FD3D12RenderTargetView* FD3D12RenderTargetView::NullRTV()
 		NullRTVDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 		NullRTVDesc.Texture2D.MipSlice = 0;
 
-		DefaultRTV = eastl::make_unique<FD3D12RenderTargetView>(nullptr, NullRTVDesc);
+		DefaultRTV = eastl::make_unique<FD3D12RenderTargetView>(NullRTVDesc);
 		DefaultRTV->UpdateDescriptor();
 	}
 	return DefaultRTV.get();
 }
 
-FD3D12DepthStencilView::FD3D12DepthStencilView(FD3D12Resource* const InResource)
+FD3D12DepthStencilView::FD3D12DepthStencilView(eastl::weak_ptr<FD3D12Resource> InResource)
 	: TD3D12View(InResource)
 {
 
 }
 
-FD3D12DepthStencilView::FD3D12DepthStencilView(FD3D12Resource* const InResource, const D3D12_DEPTH_STENCIL_VIEW_DESC& InDesc)
+FD3D12DepthStencilView::FD3D12DepthStencilView(eastl::weak_ptr<FD3D12Resource> InResource, const D3D12_DEPTH_STENCIL_VIEW_DESC& InDesc)
 	: TD3D12View(InResource, InDesc)
+{
+
+}
+
+FD3D12DepthStencilView::FD3D12DepthStencilView(const D3D12_DEPTH_STENCIL_VIEW_DESC& InDesc)
+	: TD3D12View(InDesc)
 {
 
 }
@@ -162,7 +197,8 @@ FD3D12DepthStencilView::FD3D12DepthStencilView(FD3D12Resource* const InResource,
 void FD3D12DepthStencilView::UpdateDescriptor()
 {
 	OfflineDescriptorHeapBlock = FD3D12DescriptorHeapManager::GetInstance()->DSVDescriptorHeapContainer.AllocateDescriptorHeapBlock(1);
-	GetD3D12Device()->CreateDepthStencilView(Resource ? Resource->GetResource() : nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
+	eastl::shared_ptr<FD3D12Resource> LockedResource = Resource.lock();
+	GetD3D12Device()->CreateDepthStencilView(LockedResource ? LockedResource->GetResource() : nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
 }
 
 FD3D12DepthStencilView* FD3D12DepthStencilView::NullDSV()
@@ -175,7 +211,7 @@ FD3D12DepthStencilView* FD3D12DepthStencilView::NullDSV()
 		NullDSVDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 		NullDSVDesc.Texture2D.MipSlice = 0;
 
-		DefaultDSV = eastl::make_unique<FD3D12DepthStencilView>(nullptr, NullDSVDesc);
+		DefaultDSV = eastl::make_unique<FD3D12DepthStencilView>(NullDSVDesc);
 		DefaultDSV->UpdateDescriptor();
 	}
 	return DefaultDSV.get();
