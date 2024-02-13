@@ -34,7 +34,7 @@ static struct FRegisterProfilerImguiCallback
 
 				if (ImGui::TreeNode("CPU Timer"))
 				{
-					for (auto& CPUTimerElapsedSecondPair : FProfilingManager::GetCPUTimerElapsedSecondsMap())
+					for (auto& CPUTimerElapsedSecondPair : FProfilingManager::GetCPUTimerElapsedSecondsMap(GCurrentFrameIndex - 1))
 					{
 						ImGui::Text("%s : %f(s)", CPUTimerElapsedSecondPair.first, CPUTimerElapsedSecondPair.second);
 					}
@@ -50,12 +50,13 @@ static struct FRegisterProfilerImguiCallback
 				// End of ShowDemoWindow()
 				ImGui::PopItemWidth();
 				ImGui::End();
-			}}
-		);
+			}
+			FProfilingManager::NewFrame();
+		});
 	}
 } RegisterProfilerImguiCallback{};
 
-eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/> FProfilingManager::CPUTimerElapsedSecondsMap{};
+eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/> FProfilingManager::CPUTimerElapsedSecondsMap[2]{};
 
 FCPUTimer::FCPUTimer(const char* const InTimerName) :
 	TimerName(InTimerName),
@@ -82,12 +83,17 @@ FCPUTimer::~FCPUTimer()
 	FProfilingManager::UpdateCPUTimer(this);
 }
 
-void FProfilingManager::UpdateCPUTimer(const FCPUTimer* const InTimer)
+void FProfilingManager::NewFrame()
 {
-	CPUTimerElapsedSecondsMap[InTimer->GetTimerName()] = InTimer->GetElapsedSeconds();
+	CPUTimerElapsedSecondsMap[GCurrentFrameIndex % 2].clear(false);
 }
 
-const eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/>& FProfilingManager::GetCPUTimerElapsedSecondsMap()
+void FProfilingManager::UpdateCPUTimer(const FCPUTimer* const InTimer)
 {
-	return CPUTimerElapsedSecondsMap;
+	CPUTimerElapsedSecondsMap[GCurrentFrameIndex % 2][InTimer->GetTimerName()] += InTimer->GetElapsedSeconds();
+}
+
+const eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/>& FProfilingManager::GetCPUTimerElapsedSecondsMap(const uint64_t InFrameIndex)
+{
+	return CPUTimerElapsedSecondsMap[InFrameIndex % 2];
 }
