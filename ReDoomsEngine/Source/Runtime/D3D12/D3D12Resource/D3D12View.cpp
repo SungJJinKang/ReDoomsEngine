@@ -3,6 +3,11 @@
 #include "D3D12Resource.h"
 #include "D3D12Descriptor.h"
 
+FD3D12View::~FD3D12View()
+{
+	FreeDescriptorHeapBlock();
+}
+
 FD3D12ShaderResourceView::FD3D12ShaderResourceView(FD3D12Resource* const InResource)
 	: TD3D12View(InResource)
 {
@@ -90,7 +95,7 @@ void FD3D12UnorderedAccessView::UpdateDescriptor()
 	OfflineDescriptorHeapBlock = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOfflineDescriptorHeapContainer.AllocateDescriptorHeapBlock(1);
 
 	// @todo : support counter resource
-	GetD3D12Device()->CreateUnorderedAccessView(Resource->GetResource(), nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
+	GetD3D12Device()->CreateUnorderedAccessView(Resource ? Resource->GetResource() : nullptr, nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
 }
 
 FD3D12UnorderedAccessView* FD3D12UnorderedAccessView::NullUAV()
@@ -123,7 +128,7 @@ FD3D12RenderTargetView::FD3D12RenderTargetView(FD3D12Resource* const InResource,
 void FD3D12RenderTargetView::UpdateDescriptor()
 {
 	OfflineDescriptorHeapBlock = FD3D12DescriptorHeapManager::GetInstance()->RTVDescriptorHeapContainer.AllocateDescriptorHeapBlock(1);
-	GetD3D12Device()->CreateRenderTargetView(Resource->GetResource(), Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
+	GetD3D12Device()->CreateRenderTargetView(Resource ? Resource->GetResource() : nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
 }
 
 FD3D12RenderTargetView* FD3D12RenderTargetView::NullRTV()
@@ -157,7 +162,7 @@ FD3D12DepthStencilView::FD3D12DepthStencilView(FD3D12Resource* const InResource,
 void FD3D12DepthStencilView::UpdateDescriptor()
 {
 	OfflineDescriptorHeapBlock = FD3D12DescriptorHeapManager::GetInstance()->DSVDescriptorHeapContainer.AllocateDescriptorHeapBlock(1);
-	GetD3D12Device()->CreateDepthStencilView(Resource->GetResource(), Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
+	GetD3D12Device()->CreateDepthStencilView(Resource ? Resource->GetResource() : nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
 }
 
 FD3D12DepthStencilView* FD3D12DepthStencilView::NullDSV()

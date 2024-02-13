@@ -45,7 +45,7 @@ class FD3D12ResourceUploadBatcher
 public:
 
 	void AddPendingResourceUpload(FD3D12ResourceUpload&& InResourceUpload);
-	eastl::shared_ptr<FD3D12Fence> Flush();
+	eastl::shared_ptr<FD3D12Fence> Flush(FD3D12CommandContext& InCommandContext);
 
 private:
 

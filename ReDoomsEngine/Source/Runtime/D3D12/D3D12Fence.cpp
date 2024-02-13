@@ -67,7 +67,7 @@ void FD3D12Fence::WaitOnLastSignal()
 bool FD3D12Fence::IsCompleteSignal(const uint64_t SignaledValue)
 {
 	EA_ASSERT(SignaledValue > 0);
-	return !(GetD3DFence()->GetCompletedValue() < (SignaledValue));
+	return GetD3DFence()->GetCompletedValue() >= (SignaledValue);
 }
 
 bool FD3D12Fence::IsCompleteLastSignal()
