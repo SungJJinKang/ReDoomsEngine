@@ -5,7 +5,7 @@
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resource(),
-	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
+	DefaultCBV(), DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
 	ValidateResourceProperties();
 }
