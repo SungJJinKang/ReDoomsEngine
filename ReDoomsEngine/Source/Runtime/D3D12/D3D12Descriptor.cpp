@@ -91,6 +91,7 @@ bool FD3D12DescriptorHeap::AllocateFreeDescriptorHeapBlock(FD3D12DescriptorHeapB
         if (FreeHeapBlock.DescriptorSlotCount >= InDescriptorCount)
         {
             bOutDescriptorHeapBlock = FreeHeapBlock;
+            bOutDescriptorHeapBlock.DescriptorSlotCount = InDescriptorCount;
 
             if (FreeHeapBlock.DescriptorSlotCount > InDescriptorCount)
             {
