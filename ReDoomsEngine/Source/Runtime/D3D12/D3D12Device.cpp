@@ -4,7 +4,14 @@
 
 ID3D12Device* GetD3D12Device()
 {
-    return FD3D12Device::GetInstance()->GetD3D12Device();
+    if (FD3D12Device* const D3D12Device = FD3D12Device::GetInstance())
+    {
+        return D3D12Device->GetD3D12Device();
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 FD3D12Device::FD3D12Device(FD3D12Adapter* const InAdapter)
@@ -36,4 +43,13 @@ void FD3D12Device::Init()
         D3D12RootSignatureCaps.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
     }
     RootSignatureVersion = D3D12RootSignatureCaps.HighestVersion;
+
+    ComPtr<ID3D12InfoQueue> InfoQueue{};
+    GetD3D12Device()->QueryInterface(IID_PPV_ARGS(&InfoQueue));
+
+    #if RD_DEBUG
+    InfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+    InfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+    InfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+    #endif
 }

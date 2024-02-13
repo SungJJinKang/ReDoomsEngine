@@ -12,20 +12,23 @@ class FD3D12View
 {
 public:
 
-	FD3D12View(FD3D12Resource* const InResource)
+	FD3D12View(eastl::weak_ptr<FD3D12Resource> InResource)
 		: OfflineDescriptorHeapBlock(), Resource(InResource)
 	{
 
 	}
-
-	virtual ~FD3D12View()
+	FD3D12View()
+		: OfflineDescriptorHeapBlock(), Resource()
 	{
-		FreeDescriptorHeapBlock();
+
 	}
+
+	virtual ~FD3D12View();
 
 	inline FD3D12Resource* GetUnderlyingResource() const
 	{
-		return Resource;
+		eastl::shared_ptr<FD3D12Resource> LockedResource = Resource.lock();
+		return LockedResource ? LockedResource.get() : nullptr;
 	}
 
 	inline FD3D12DescriptorHeapBlock GetDescriptorHeapBlock() const
@@ -40,6 +43,7 @@ public:
 		{
 			OfflineDescriptorHeap->FreeDescriptorHeapBlock(OfflineDescriptorHeapBlock);
 		}
+		OfflineDescriptorHeapBlock.Clear();
 	}
 
 	virtual bool IsCBV() const { return false; }
@@ -52,7 +56,7 @@ protected:
 
 	FD3D12DescriptorHeapBlock OfflineDescriptorHeapBlock;
 
-	FD3D12Resource* const Resource;
+	eastl::weak_ptr<FD3D12Resource> Resource;
 };
 
 template <typename DescType>
@@ -60,13 +64,18 @@ class TD3D12View : public FD3D12View
 {
 public:
 	
-	TD3D12View(FD3D12Resource* const InResource)
+	TD3D12View(eastl::weak_ptr<FD3D12Resource> InResource)
 		: FD3D12View(InResource), Desc()
 	{
 
 	}
-	TD3D12View(FD3D12Resource* const InResource, const DescType& InDesc)
+	TD3D12View(eastl::weak_ptr<FD3D12Resource> InResource, const DescType& InDesc)
 		: FD3D12View(InResource), Desc(InDesc)
+	{
+
+	}
+	TD3D12View(const DescType& InDesc)
+		: FD3D12View(), Desc(InDesc)
 	{
 
 	}
@@ -85,8 +94,9 @@ class FD3D12ShaderResourceView : public TD3D12View<D3D12_SHADER_RESOURCE_VIEW_DE
 {
 public:
 
-	FD3D12ShaderResourceView(FD3D12Resource* const InResource);
-	FD3D12ShaderResourceView(FD3D12Resource* const InResource, const D3D12_SHADER_RESOURCE_VIEW_DESC& InDesc);
+	FD3D12ShaderResourceView(eastl::weak_ptr<FD3D12Resource> InResource);
+	FD3D12ShaderResourceView(eastl::weak_ptr<FD3D12Resource> InResource, const D3D12_SHADER_RESOURCE_VIEW_DESC& InDesc);
+	FD3D12ShaderResourceView(const D3D12_SHADER_RESOURCE_VIEW_DESC& InDesc);
 
 	virtual void UpdateDescriptor();
 	static FD3D12ShaderResourceView* NullSRV();
@@ -105,8 +115,9 @@ private:
  {
  public:
  
-	 FD3D12ConstantBufferView(FD3D12Resource* const InResource);
-	 FD3D12ConstantBufferView(FD3D12Resource* const InResource, const D3D12_CONSTANT_BUFFER_VIEW_DESC& InDesc);
+	 FD3D12ConstantBufferView(eastl::weak_ptr<FD3D12Resource> InResource);
+	 FD3D12ConstantBufferView(eastl::weak_ptr<FD3D12Resource> InResource, const D3D12_CONSTANT_BUFFER_VIEW_DESC& InDesc);
+	 FD3D12ConstantBufferView(const D3D12_CONSTANT_BUFFER_VIEW_DESC& InDesc);
  
  	virtual void UpdateDescriptor();
 	static FD3D12ConstantBufferView* NullCBV();
@@ -125,8 +136,9 @@ class FD3D12UnorderedAccessView : public TD3D12View<D3D12_UNORDERED_ACCESS_VIEW_
 {
 public:
 
-	FD3D12UnorderedAccessView(FD3D12Resource* const InResource);
-	FD3D12UnorderedAccessView(FD3D12Resource* const InResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& InDesc);
+	FD3D12UnorderedAccessView(eastl::weak_ptr<FD3D12Resource> InResource);
+	FD3D12UnorderedAccessView(eastl::weak_ptr<FD3D12Resource> InResource, const D3D12_UNORDERED_ACCESS_VIEW_DESC& InDesc);
+	FD3D12UnorderedAccessView(const D3D12_UNORDERED_ACCESS_VIEW_DESC& InDesc);
 
 	virtual void UpdateDescriptor();
 	static FD3D12UnorderedAccessView* NullUAV();
@@ -144,8 +156,9 @@ class FD3D12RenderTargetView : public TD3D12View<D3D12_RENDER_TARGET_VIEW_DESC>
 {
 public:
 
-	FD3D12RenderTargetView(FD3D12Resource* const InResource);
-	FD3D12RenderTargetView(FD3D12Resource* const InResource, const D3D12_RENDER_TARGET_VIEW_DESC& InDesc);
+	FD3D12RenderTargetView(eastl::weak_ptr<FD3D12Resource> InResource);
+	FD3D12RenderTargetView(eastl::weak_ptr<FD3D12Resource> InResource, const D3D12_RENDER_TARGET_VIEW_DESC& InDesc);
+	FD3D12RenderTargetView(const D3D12_RENDER_TARGET_VIEW_DESC& InDesc);
 
 	virtual void UpdateDescriptor();
 	static FD3D12RenderTargetView* NullRTV();
@@ -161,8 +174,9 @@ class FD3D12DepthStencilView : public TD3D12View<D3D12_DEPTH_STENCIL_VIEW_DESC>
 {
 public:
 
-	FD3D12DepthStencilView(FD3D12Resource* const InResource);
-	FD3D12DepthStencilView(FD3D12Resource* const InResource, const D3D12_DEPTH_STENCIL_VIEW_DESC& InDesc);
+	FD3D12DepthStencilView(eastl::weak_ptr<FD3D12Resource> InResource);
+	FD3D12DepthStencilView(eastl::weak_ptr<FD3D12Resource> InResource, const D3D12_DEPTH_STENCIL_VIEW_DESC& InDesc);
+	FD3D12DepthStencilView(const D3D12_DEPTH_STENCIL_VIEW_DESC& InDesc);
 
 	virtual void UpdateDescriptor();
 	static FD3D12DepthStencilView* NullDSV();

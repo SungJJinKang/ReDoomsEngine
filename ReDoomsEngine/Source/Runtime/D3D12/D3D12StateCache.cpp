@@ -149,8 +149,11 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 				{
 					FD3D12ConstantBufferResource* const ConstantBufferResource = ShaderParameterConstantBuffer->GetConstantBufferResource();
 					EA_ASSERT(ConstantBufferResource);
-					ConstantBufferResource->Versioning();
-					ShaderParameterConstantBuffer->FlushShadowData(ConstantBufferResource->GetMappedAddress());
+					if (ConstantBufferResource->IsShadowDataDirty())
+					{
+						ConstantBufferResource->Versioning();
+						ShaderParameterConstantBuffer->FlushShadowData(ConstantBufferResource->GetMappedAddress());
+					}
 
 					const D3D12_GPU_VIRTUAL_ADDRESS GPUVirtualAddress = ConstantBufferResource->GPUVirtualAddress();
 					EA_ASSERT(IsAligned(GPUVirtualAddress, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
@@ -187,7 +190,7 @@ void FD3D12StateCache::Flush(FD3D12CommandList& InCommandList)
 
 		uint32_t ReservedDescriptorCount = RequiredSRVSlotCount + RequiredUAVSlotCount;
 
-		BaseHeapBlcok = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOnlineDescriptorHeapContainer.ReserveDescriptorHeapBlock(ReservedDescriptorCount);
+		BaseHeapBlcok = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOnlineDescriptorHeapContainer.ReserveTransientDescriptorHeapBlock(ReservedDescriptorCount);
 	}
 
 	uint32_t OutUsedBlockCount = 0;
@@ -230,7 +233,6 @@ void FD3D12StateCache::ResetForNewCommandlist()
 
 	DirtyFlagsOfSRVs.set();
 	DirtyFlagsOfUAVs.set();
-	DirtyFlagsConstantBufferBindPointInfosOfFrequencies.set();
 	MEM_ZERO(CachedSRVs);
 	MEM_ZERO(CachedUAVs);
 	MEM_ZERO(CachedConstantBufferBindPointInfosOfFrequencies);

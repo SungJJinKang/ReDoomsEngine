@@ -5,7 +5,7 @@
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resource(),
-	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
+	DefaultCBV(), DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
 	ValidateResourceProperties();
 }
@@ -52,8 +52,9 @@ void FD3D12Resource::CreateD3D12Resource()
 		IID_PPV_ARGS(&Resource)));
 }
 
-void FD3D12Resource::ClearResource()
+void FD3D12Resource::ReleaseResource()
 {
+	Resource.Reset();
 }
 
 void FD3D12Resource::ValidateResourceProperties() const
@@ -83,7 +84,7 @@ FD3D12ConstantBufferView* FD3D12Resource::GetCBV()
 
 	if (DefaultCBV == nullptr)
 	{
-		DefaultCBV = eastl::make_shared<FD3D12ConstantBufferView>(this);
+		DefaultCBV = eastl::make_shared<FD3D12ConstantBufferView>(weak_from_this());
 		DefaultCBV->UpdateDescriptor();
 	}
 
@@ -97,7 +98,7 @@ FD3D12ShaderResourceView* FD3D12Resource::GetSRV()
 
 	if (DefaultSRV == nullptr)
 	{
-		DefaultSRV = eastl::make_shared<FD3D12ShaderResourceView>(this);
+		DefaultSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this());
 		DefaultSRV->UpdateDescriptor();
 	}
 
@@ -111,7 +112,7 @@ FD3D12UnorderedAccessView* FD3D12Resource::GetUAV()
 
 	if (DefaultUAV == nullptr)
 	{
-		DefaultUAV = eastl::make_shared<FD3D12UnorderedAccessView>(this);
+		DefaultUAV = eastl::make_shared<FD3D12UnorderedAccessView>(weak_from_this());
 		DefaultUAV->UpdateDescriptor();
 	}
 
@@ -125,7 +126,7 @@ FD3D12RenderTargetView* FD3D12Resource::GetRTV()
 
 	if (DefaultRTV == nullptr)
 	{
-		DefaultRTV = eastl::make_shared<FD3D12RenderTargetView>(this);
+		DefaultRTV = eastl::make_shared<FD3D12RenderTargetView>(weak_from_this());
 		DefaultRTV->UpdateDescriptor();
 	}
 
@@ -139,7 +140,7 @@ FD3D12DepthStencilView* FD3D12Resource::GetDSV()
 
 	if (DefaultDSV == nullptr)
 	{
-		DefaultDSV = eastl::make_shared<FD3D12DepthStencilView>(this);
+		DefaultDSV = eastl::make_shared<FD3D12DepthStencilView>(weak_from_this());
 		DefaultDSV->UpdateDescriptor();
 	}
 
@@ -196,7 +197,7 @@ FD3D12BufferResource::FD3D12BufferResource(
 	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress, const bool bNeverCreateShadowData)
 	: 
 	FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
-	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress)
+	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress), bIsShadowDataDirty(true)
 {
 	if (!ShadowDataAddress && !bNeverCreateShadowData)
 	{
@@ -276,9 +277,9 @@ void FD3D12BufferResource::CreateD3D12Resource()
 	}
 }
 
-void FD3D12BufferResource::ClearResource()
+void FD3D12BufferResource::ReleaseResource()
 {
-	FD3D12Resource::ClearResource();
+	FD3D12Resource::ReleaseResource();
 
 	// Doesn't need unmap mapped resource. It's unmapped implcitly when destory resource
 	//if (MappedAddress)
@@ -337,6 +338,11 @@ void FD3D12ConstantBufferResource::InitResource()
 	FD3D12BufferResource::InitResource();
 }
 
+void FD3D12ConstantBufferResource::MakeDirty()
+{
+	bIsShadowDataDirty = true;
+}
+
 void FD3D12ConstantBufferResource::Versioning()
 {
 	EA_ASSERT(IsDynamicBuffer()); // todo : support no-dynamic buffer
@@ -344,6 +350,8 @@ void FD3D12ConstantBufferResource::Versioning()
 	ConstantBufferBlock = FD3D12PerFrameConstantBufferManager::GetInstance()->Allocate(GetBufferSize());
 
 	MappedAddress = ConstantBufferBlock.MappedAddress;
+
+	bIsShadowDataDirty = false;
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS FD3D12ConstantBufferResource::GPUVirtualAddress() const

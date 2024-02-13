@@ -56,3 +56,4 @@ ReDoomsEngine/Source/Runtime/STL/mimalloc/build/mimalloc-static.dir/Debug/mimall
 *.log
 
 *.pdb
+ReDoomsEngine/imgui.ini

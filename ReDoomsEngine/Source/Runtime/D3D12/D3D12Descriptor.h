@@ -116,7 +116,8 @@ public:
 		return true;
 	}
 
-	FD3D12DescriptorHeapBlock ReserveDescriptorHeapBlock(const uint32_t InDescriptorCount);
+	FD3D12DescriptorHeapBlock ReserveTransientDescriptorHeapBlock(const uint32_t InDescriptorCount);
+	FD3D12DescriptorHeapBlock AllocatePermanentDescriptorHeapBlock(const uint32_t InDescriptorCount);
 	void Reset();
 
 	eastl::shared_ptr<FD3D12DescriptorHeap> GetOnlineHeap() const;
@@ -124,7 +125,8 @@ public:
 private:
 
 	eastl::shared_ptr<FD3D12DescriptorHeap> OnlineHeap;
-	uint32_t CurrentAllocatedBlockCount;
+	uint32_t CurrentAllocatedTransientBlockCount;
+	uint32_t CurrentAllocatedPermanentBlockCount;
 
 };
 

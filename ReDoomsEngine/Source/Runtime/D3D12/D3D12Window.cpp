@@ -2,6 +2,9 @@
 #include "WindowsApplication.h"
 #include "Renderer.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+
 FD3D12Window::FD3D12Window(const long InWidth, const long InHeight, const wchar_t* const InWindowTitle, FRenderer* const InRenderer)
     :
     TargetRenderer(InRenderer),
@@ -59,44 +62,29 @@ void FD3D12Window::OnEndFrame(FD3D12CommandContext& InCommandContext)
 
 LRESULT FD3D12Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    FRenderer* Renderer = reinterpret_cast<FRenderer*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
 
-    switch (message)
-    {
-    case WM_CREATE:
-    {
-        // Save the DXSample* passed in to CreateWindow.
-        LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
-    }
-    return 0;
-
-    case WM_KEYDOWN:
-        
-        return 0;
-
-    case WM_KEYUP:
-        
-        return 0;
-
-    case WM_PAINT:
-        if (Renderer && (Renderer->GetCurrentRendererState() != ERendererState::Initializing))
-        {
-            Renderer->OnPreStartFrame();
-            Renderer->OnStartFrame();
-            //bExit = !(Renderer->Draw());
-            Renderer->Draw();
-            Renderer->OnEndFrame();
-            Renderer->OnPostEndFrame();
-        }
-        return 0;
-
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        return 0;
-    }
-
-    // Handle any messages the switch statement didn't.
-    return DefWindowProc(hWnd, message, wParam, lParam);
+	switch (message)
+	{
+	case WM_SIZE:
+        // https://github.com/ocornut/imgui/issues/6764#issuecomment-1698835216
+        // I was going to suggest that nowadays I wouldn't recommend performing the swap chain resize directly inside the WM_SIZE handler, 
+        // because that tends to stress GPU drivers unnecessarily as the resizing operation is modal/blocking anyway, so the result is not seen immediately.
+		if (GetD3D12Device() && wParam != SIZE_MINIMIZED)
+		{
+            FD3D12Manager::GetInstance()->GetSwapchain()->QueueResize((UINT)LOWORD(lParam), (UINT)HIWORD(lParam));
+		}
+		return 0;
+	case WM_SYSCOMMAND:
+		if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
+			return 0;
+		break;
+	case WM_DESTROY:
+		::PostQuitMessage(0);
+		return 0;
+	}
+	return ::DefWindowProcW(hWnd, message, wParam, lParam);
 }
 

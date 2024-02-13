@@ -142,8 +142,6 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 					{
 						EA_ASSERT(ConstantBufferMemberVariableTest.second.bTested == true);
 					}
-
-					EA_ASSERT(ReflectionData.Desc.Size == ConstantBuffer.GetSize());
 				};
 
 			if (ConstantBuffer->IsGlobalConstantBuffer())
@@ -540,8 +538,18 @@ void FShaderParameterConstantBuffer::Init()
 	
 	if (!IsTemplateVariable())
 	{
-		EA::StdC::Memset8(GetData(), 0, GetSize());
-		GetConstantBufferResource()->InitResource();
+		const uint32_t ConstantBufferSize = GetReflectionData()->Desc.Size;
+		ShadowData.resize(ConstantBufferSize);
+		ConstantBufferResource = eastl::make_unique<FD3D12ConstantBufferResource>(ConstantBufferSize, true, ShadowData.data(), false);
+		ConstantBufferResource->InitResource();
+
+		for (auto& MemberVariablePair : MemberVariableMap)
+		{
+			const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBufferReflectionData =
+				ReflectionData->VariableList.find(MemberVariablePair.first)->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
+
+			MemberVariablePair.second.ShaderParameterConstantBufferMemberVariableTemplate->SetOffset(VariableOfConstantBufferReflectionData.Desc.StartOffset);
+		}
 	}
 }
 
@@ -559,19 +567,24 @@ void FShaderParameterConstantBuffer::AddMemberVariable(FShaderParameterConstantB
 	MemberVariableMap.emplace(InVariableName, MemberVariableContainer);
 }
 
+uint8_t* FShaderParameterConstantBuffer::GetShadowData()
+{
+	return reinterpret_cast<uint8_t*>(ShadowData.data());
+}
+
+FD3D12ConstantBufferResource* FShaderParameterConstantBuffer::GetConstantBufferResource()
+{
+	return ConstantBufferResource.get();
+}
+
 void FShaderParameterConstantBuffer::FlushShadowData(uint8* const InShadowDataAddress)
 {
-	// @todo : need to find a better way.
-	// Hope all member variables are copied to mapped address of constant buffer at a time
-	for (auto& MemberVariablePair : MemberVariableMap)
-	{
-		const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBufferReflectionData = 
-			ReflectionData->VariableList.find(MemberVariablePair.first)->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
+	ConstantBufferResource->FlushShadowData();
+}
 
-		uint8* const TargetAddress = InShadowDataAddress + VariableOfConstantBufferReflectionData.Desc.StartOffset;
-		EA_ASSERT(MemberVariablePair.second.VariableSize == VariableOfConstantBufferReflectionData.Desc.Size);
-		EA::StdC::Memcpy(TargetAddress, MemberVariablePair.second.ShaderParameterConstantBufferMemberVariableTemplate, MemberVariablePair.second.VariableSize);
-	}
+void FShaderParameterConstantBuffer::MakeDirty()
+{
+	ConstantBufferResource->MakeDirty();
 }
 
 void FShaderParameterConstantBuffer::SetReflectionDataFromShaderReflectionData()

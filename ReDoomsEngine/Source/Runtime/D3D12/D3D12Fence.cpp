@@ -45,18 +45,18 @@ uint64_t FD3D12Fence::Signal(FD3D12CommandQueue* const InCommandQueue, const boo
 
 	if (bWaitInstantly)
 	{
-		WaitOnSignal(SignaledValue);
+		CPUWaitOnSignal(SignaledValue);
 	}
 
 	return SignaledValue;
 }
 
-void FD3D12Fence::WaitOnSignal(const uint64_t SignaledValue)
+void FD3D12Fence::CPUWaitOnSignal(const uint64_t SignaledValue)
 {
 	do {} while (!IsCompleteSignal(SignaledValue));
 }
 
-void FD3D12Fence::WaitOnLastSignal()
+void FD3D12Fence::CPUWaitOnLastSignal()
 {
 	if (LastSignaledValue > 0)
 	{
@@ -64,10 +64,20 @@ void FD3D12Fence::WaitOnLastSignal()
 	}
 }
 
+void FD3D12Fence::GPUWaitOnSignal(FD3D12CommandQueue* const InCommandQueue, const uint64_t SignaledValue)
+{
+	InCommandQueue->GetD3DCommandQueue()->Wait(GetD3DFence(), SignaledValue);
+}
+
+void FD3D12Fence::GPUWaitOnLastSignal(FD3D12CommandQueue* const InCommandQueue)
+{
+	InCommandQueue->GetD3DCommandQueue()->Wait(GetD3DFence(), LastSignaledValue);
+}
+
 bool FD3D12Fence::IsCompleteSignal(const uint64_t SignaledValue)
 {
 	EA_ASSERT(SignaledValue > 0);
-	return !(GetD3DFence()->GetCompletedValue() < (SignaledValue));
+	return GetD3DFence()->GetCompletedValue() >= (SignaledValue);
 }
 
 bool FD3D12Fence::IsCompleteLastSignal()

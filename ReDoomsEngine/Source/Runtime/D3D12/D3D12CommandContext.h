@@ -6,12 +6,12 @@ class FD3D12CommandQueue;
 class FD3D12CommandAllocator;
 class FD3D12CommandList;
 class FD3D12StateCache;
-struct FFrameResourceContainer;
+class FFrameResourceContainer;
 struct FD3D12CommandContext
 {
 	FD3D12StateCache StateCache;
 	FFrameResourceContainer* FrameResourceCounter = nullptr;
-	eastl::shared_ptr<FD3D12CommandAllocator> GraphicsCommandAllocator;
+	eastl::array<eastl::shared_ptr<FD3D12CommandAllocator>, static_cast<uint32_t>(ECommandAllocatotrType::Num)> CommandAllocatorList;
 	eastl::shared_ptr<FD3D12CommandList> GraphicsCommandList;
 
 	void DrawInstanced(

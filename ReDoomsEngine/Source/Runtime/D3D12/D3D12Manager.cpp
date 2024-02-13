@@ -94,11 +94,11 @@ void FD3D12Manager::Init(FRenderer* const InRenderer)
     }
 }
 
-void FD3D12Manager::OnPreStartFrame(FD3D12CommandContext& InCommandContext)
+void FD3D12Manager::OnPreStartFrame()
 {
     for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
     {
-        Manager->OnPreStartFrame(InCommandContext);
+        Manager->OnPreStartFrame();
     }
 }
 
@@ -110,6 +110,14 @@ void FD3D12Manager::OnStartFrame(FD3D12CommandContext& InCommandContext)
     }
 }
 
+void FD3D12Manager::OnPreEndFrame(FD3D12CommandContext& InCommandContext)
+{
+	for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
+	{
+		Manager->OnPreEndFrame(InCommandContext);
+	}
+}
+
 void FD3D12Manager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
     for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
@@ -118,10 +126,18 @@ void FD3D12Manager::OnEndFrame(FD3D12CommandContext& InCommandContext)
     }
 }
 
-void FD3D12Manager::OnPostEndFrame(FD3D12CommandContext& InCommandContext)
+void FD3D12Manager::OnPostEndFrame()
 {
     for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
     {
-        Manager->OnPostEndFrame(InCommandContext);
+        Manager->OnPostEndFrame();
     }
+}
+
+void FD3D12Manager::OnDestory(FD3D12CommandContext& InCommandContext)
+{
+	for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
+	{
+		Manager->OnDestory(InCommandContext);
+	}
 }
