@@ -16,7 +16,6 @@ using Microsoft::WRL::ComPtr;
 #include "EABase/eabase.h"
 #include "EAAssert/eaassert.h"
 #include "EABase/earesult.h"
-#include "EAStdC/EASingleton.h"
 #include "EAStdC/EASprintf.h"
 #include "EAStdC/EAString.h"
 #include "EAStdC/EATextUtil.h"
@@ -33,6 +32,7 @@ using Microsoft::WRL::ComPtr;
 #include "EASTL/bitvector.h"
 #include "EASTL/queue.h"
 #include "eathread/eathread_futex.h"
+#include "EAStdC/EASingleton.h"
 
 // Math
 #include "DirectXMath.h"
@@ -45,3 +45,4 @@ using namespace DirectX;
 #include "Log.h"
 #include "TextHelper.h"
 #include "Utils.h"
+#include "Profiling.h"

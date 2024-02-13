@@ -75,7 +75,7 @@ bool D3D12TestRenderer::Draw()
 {
 	FRenderer::Draw();
 
-	Offset += 0.001f;
+	Offset += GTimeDelta;
 	if (Offset > 1.0f)
 	{
 		Offset = -1.0f;
@@ -137,12 +137,12 @@ bool D3D12TestRenderer::Draw()
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
 
 	// Indicate that the back buffer will be used as a render target.
-	FD3D12RenderTargetResource& TargetRenderTarget = SwapChain->GetRenderTarget(SwapChain->GetCurrentBackbufferIndex());
+	eastl::shared_ptr<FD3D12RenderTargetResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
 
-	CD3DX12_RESOURCE_BARRIER ResourceBarrierA = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget.GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	CD3DX12_RESOURCE_BARRIER ResourceBarrierA = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ResourceBarrier(1, &ResourceBarrierA);
 
-	CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = TargetRenderTarget.GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
+	CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = TargetRenderTarget->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->OMSetRenderTargets(1, &RTVCPUHandle, FALSE, nullptr);
 
 	// Record commands.
@@ -157,23 +157,16 @@ bool D3D12TestRenderer::Draw()
 	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
 	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f + Offset };
+	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
 	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
+	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
 	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
-
-	// Indicate that the back buffer will now be used to present.
-	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget.GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ResourceBarrier(1, &ResourceBarrierB);
 
 	return true;
-}
-
-void D3D12TestRenderer::OnEndFrame()
-{
-	FRenderer::OnEndFrame();
 }
 
 void D3D12TestRenderer::Destroy()

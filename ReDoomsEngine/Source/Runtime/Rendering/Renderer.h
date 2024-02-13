@@ -9,14 +9,6 @@
 
 class FD3D12CommandAllocator;
 
-enum class ECommandAllocatotrType : uint32_t
-{
-	Graphics,
-	ResourceUploadBatcher,
-
-	Num
-};
-
 /// <summary>
 /// Contains datas about a frame
 /// </summary>
@@ -25,6 +17,7 @@ class FFrameResourceContainer
 public:
 	eastl::array<eastl::shared_ptr<FD3D12CommandAllocator>, static_cast<uint32_t>(ECommandAllocatotrType::Num)> CommandAllocatorList;
 	FD3D12Fence FrameWorkEndFence;
+	eastl::vector<eastl::shared_ptr<FD3D12Fence>> TransientFrameWorkEndFenceList;
 
 	void Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> InOnlineDescriptorHeap);
 	void ResetForNewFrame();
@@ -34,16 +27,17 @@ private:
 	bool bInit = false;
 };
 
-enum class ERendererState
+enum ERendererState
 {
 	Initializing,
-	FinishInitialzing,
 	OnPreStartFrame,
 	OnStartFrame,
 	Draw,
+	OnPreEndFrame,
 	OnEndFrame,
 	OnPostEndFrame,
-	Destroying
+	Destroying,
+	FrameResourceAccessible = OnStartFrame | Draw | OnPreEndFrame | OnEndFrame
 };
 
 class FRenderer : public EA::StdC::Singleton<FRenderer>
@@ -56,12 +50,14 @@ public:
 	virtual void OnPreStartFrame();
 	virtual void OnStartFrame();
 	virtual bool Draw();
-	virtual void OnEndFrame();
+	virtual void OnPreEndFrame();
+	void OnEndFrame();
 	virtual void OnPostEndFrame();
 	virtual void Destroy();
 
-	FFrameResourceContainer& GetLastFrameContainer();
-	FFrameResourceContainer& GetCurrentFrameContainer();
+	FFrameResourceContainer& GetPreviousFrameResourceContainer();
+	FFrameResourceContainer& GetCurrentFrameResourceContainer();
+	eastl::array<FFrameResourceContainer, GNumBackBufferCount>& GetFrameContainerList();
 
 	inline ERendererState GetCurrentRendererState() const
 	{

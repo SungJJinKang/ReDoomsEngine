@@ -9,7 +9,6 @@ public:
 	virtual void Init();
 	virtual void OnStartFrame();
 	virtual bool Draw();
-	virtual void OnEndFrame();
 	virtual void Destroy();
 
 private:

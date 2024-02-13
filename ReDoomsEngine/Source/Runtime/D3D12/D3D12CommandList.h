@@ -23,7 +23,7 @@ public:
 	}
 
 	void ResetRecordingCommandList(FD3D12PSO* const InInitialPSO);
-	void FinishRecordingCommandList(FD3D12CommandQueue* const InCommandQueue);
+	void FinishRecordingCommandList();
 
 	FD3D12Fence Fence;
 

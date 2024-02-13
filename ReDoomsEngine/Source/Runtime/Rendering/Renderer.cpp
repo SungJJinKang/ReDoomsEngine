@@ -1,6 +1,7 @@
 #include "Renderer.h"
 
 #include "D3D12Resource/D3D12ResourceAllocator.h"
+#include "Editor/ImguiHelper.h"
 
 void FFrameResourceContainer::Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> InOnlineDescriptorHeap)
 {
@@ -28,6 +29,7 @@ void FFrameResourceContainer::ResetForNewFrame()
 
 void FRenderer::Init()
 {
+	SCOPED_CPU_TIMER(Renderer_Init)
 	SCOPED_MEMORY_TRACE(Renderer_Init)
 
 	CurrentRendererState = ERendererState::Initializing;
@@ -41,94 +43,141 @@ void FRenderer::Init()
 		FrameContainer.Init(OnlineDescriptorHeap);
 	}
 
-	CurrentRendererState = ERendererState::FinishInitialzing;
+	FImguiHelperSingleton::GetInstance()->Init();
 }
 
 void FRenderer::OnPreStartFrame()
 {
+	SCOPED_CPU_TIMER(Renderer_OnPreStartFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnPreStartFrame)
 
 	CurrentRendererState = ERendererState::OnPreStartFrame;
 
-	++GCurrentFrameIndex;
-
-	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameContainer();
-	CurrentFrameContainer.FrameWorkEndFence.WaitOnLastSignal();
-
-	CurrentFrameContainer.ResetForNewFrame();
-	CurrentFrameCommandContext.StateCache.ResetForNewCommandlist();
-	CurrentFrameCommandContext.FrameResourceCounter = &CurrentFrameContainer;
-	CurrentFrameCommandContext.GraphicsCommandAllocator = CurrentFrameContainer.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatotrType::Graphics)];
-	CurrentFrameCommandContext.GraphicsCommandList = CurrentFrameCommandContext.GraphicsCommandAllocator->GetOrCreateNewCommandList();
-
-
-	D3D12Manager.OnPreStartFrame(CurrentFrameCommandContext);
+	D3D12Manager.OnPreStartFrame();
 }
 
 void FRenderer::OnStartFrame()
 {
+	SCOPED_CPU_TIMER(Renderer_OnStartFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnStartFrame)
 
 	CurrentRendererState = ERendererState::OnStartFrame;
 
+	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
+	CurrentFrameContainer.FrameWorkEndFence.CPUWaitOnLastSignal();
+	for (eastl::shared_ptr<FD3D12Fence>& TransientFrameWorkEndFence : CurrentFrameContainer.TransientFrameWorkEndFenceList)
+	{
+		TransientFrameWorkEndFence->CPUWaitOnLastSignal();
+	}
+
+	CurrentFrameContainer.ResetForNewFrame();
+	CurrentFrameCommandContext.StateCache.ResetForNewCommandlist();
+	CurrentFrameCommandContext.FrameResourceCounter = &CurrentFrameContainer;
+	CurrentFrameCommandContext.CommandAllocatorList = CurrentFrameContainer.CommandAllocatorList;
+	CurrentFrameCommandContext.GraphicsCommandList = CurrentFrameContainer.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatotrType::Graphics)]->GetOrCreateNewCommandList();
+
 	D3D12Manager.OnStartFrame(CurrentFrameCommandContext);
+	FImguiHelperSingleton::GetInstance()->NewFrame();
 }
 
 bool FRenderer::Draw()
 {
+	SCOPED_CPU_TIMER(Renderer_Draw)
 	SCOPED_MEMORY_TRACE(Renderer_Draw)
 
 	CurrentRendererState = ERendererState::Draw;
 
-	eastl::shared_ptr<FD3D12Fence> ResourceUploadFence = FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush();
+	eastl::shared_ptr<FD3D12Fence> ResourceUploadFence = FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext);
+	if (ResourceUploadFence)
+	{
+		FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
+		CurrentFrameContainer.TransientFrameWorkEndFenceList.emplace_back(ResourceUploadFence);
+	}
 
 	return true;
 }
 
+void FRenderer::OnPreEndFrame()
+{
+	SCOPED_CPU_TIMER(Renderer_OnPreEndFrame)
+	SCOPED_MEMORY_TRACE(Renderer_OnPreEndFrame)
+
+	CurrentRendererState = ERendererState::OnPreEndFrame;
+
+	D3D12Manager.OnPreEndFrame(CurrentFrameCommandContext);
+
+	FImguiHelperSingleton::GetInstance()->EndDraw(CurrentFrameCommandContext);
+}
+
 void FRenderer::OnPostEndFrame()
 {
+	SCOPED_CPU_TIMER(Renderer_OnPostEndFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnPostEndFrame)
 
 	CurrentRendererState = ERendererState::OnPostEndFrame;
 
-	D3D12Manager.OnPostEndFrame(CurrentFrameCommandContext);
+	D3D12Manager.OnPostEndFrame();
 }
 
 void FRenderer::OnEndFrame()
 {
+	SCOPED_CPU_TIMER(Renderer_OnEndFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnEndFrame)
 
 	CurrentRendererState = ERendererState::OnEndFrame;
 
 	D3D12Manager.OnEndFrame(CurrentFrameCommandContext);
 
+	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+	// Indicate that the back buffer will be used as a render target.
+	eastl::shared_ptr<FD3D12RenderTargetResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+
+	// Indicate that the back buffer will now be used to present.
+	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ResourceBarrier(1, &ResourceBarrierB);
+
 	FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);
 
 	eastl::vector<eastl::shared_ptr<FD3D12CommandList>> CommandLists = { CurrentFrameCommandContext.GraphicsCommandList };
 	TargetCommandQueue->ExecuteCommandLists(CommandLists);
 
-	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
-	SwapChain->Present(1);
+	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
+	SwapChain->Present(0);
 	SwapChain->UpdateCurrentBackbufferIndex();
 
-	GetCurrentFrameContainer().FrameWorkEndFence.Signal(TargetCommandQueue, false);
+	CurrentFrameContainer.FrameWorkEndFence.Signal(TargetCommandQueue, false);
 }
 
 void FRenderer::Destroy()
 {
+	SCOPED_CPU_TIMER(Renderer_Destroy)
 	SCOPED_MEMORY_TRACE(Renderer_Destroy)
 
 	CurrentRendererState = ERendererState::Destroying;
 
-	GetCurrentFrameContainer().FrameWorkEndFence.WaitOnLastSignal();
+	FImguiHelperSingleton::GetInstance()->OnDestory();
+
+	D3D12Manager.OnDestory(CurrentFrameCommandContext);
+
+	GetCurrentFrameResourceContainer().FrameWorkEndFence.CPUWaitOnLastSignal();
 }
 
-FFrameResourceContainer& FRenderer::GetLastFrameContainer()
+FFrameResourceContainer& FRenderer::GetPreviousFrameResourceContainer()
 {
-	return FrameContainerList[(GCurrentFrameIndex - 1) % GNumBackBufferCount];
+	EA_ASSERT(CurrentRendererState | ERendererState::FrameResourceAccessible);
+
+	const uint64_t CurrentBackbufferIndex = GCurrentBackbufferIndex;
+	return FrameContainerList[(CurrentBackbufferIndex == 0) ? (GNumBackBufferCount - 1) : (CurrentBackbufferIndex - 1)];
 }
 
-FFrameResourceContainer& FRenderer::GetCurrentFrameContainer()
+FFrameResourceContainer& FRenderer::GetCurrentFrameResourceContainer()
 {
-	return FrameContainerList[GCurrentFrameIndex % GNumBackBufferCount];
+	EA_ASSERT(CurrentRendererState | ERendererState::FrameResourceAccessible);
+	
+	return FrameContainerList[GCurrentBackbufferIndex];
+}
+
+eastl::array<FFrameResourceContainer, GNumBackBufferCount>& FRenderer::GetFrameContainerList()
+{
+	return FrameContainerList;
 }

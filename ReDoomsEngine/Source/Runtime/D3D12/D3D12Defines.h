@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // Large root signature may be bad for performance
 /*

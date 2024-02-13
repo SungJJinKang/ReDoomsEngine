@@ -59,3 +59,11 @@ inline D3D12_SHADER_VISIBILITY ShaderFrequencyToD3D12ShaderVisibility(const ESha
 }
 
 const wchar_t* GetShaderFrequencyString(const EShaderFrequency ShaderFrequency);
+
+enum class ECommandAllocatotrType : uint32_t
+{
+	Graphics,
+	ResourceUploadBatcher,
+
+	Num
+};

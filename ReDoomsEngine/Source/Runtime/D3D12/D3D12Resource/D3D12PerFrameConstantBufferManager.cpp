@@ -22,7 +22,7 @@ FD3D12ConstantBufferBlock FD3D12PerFrameConstantBufferManager::Allocate(const ui
 {
 	FD3D12ConstantBufferBlock Block;
 
-	FD3D12PerFrameConstantBuffer& RingBuffer = ConstantBufferRingBufferList[GCurrentFrameIndex % GNumBackBufferCount];
+	FD3D12PerFrameConstantBuffer& RingBuffer = ConstantBufferRingBufferList[GCurrentBackbufferIndex];
 	EA_ASSERT(IsAligned(RingBuffer.CurrentOffset, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
 	
 	const uint64_t AlignedSize = Align(InSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
@@ -43,18 +43,14 @@ FD3D12ConstantBufferBlock FD3D12PerFrameConstantBufferManager::Allocate(const ui
 	return Block;
 }
 
-void FD3D12PerFrameConstantBufferManager::OnPreStartFrame(FD3D12CommandContext& InCommandContext)
+void FD3D12PerFrameConstantBufferManager::OnPreStartFrame()
 {
-	if (GCurrentFrameIndex >= GNumBackBufferCount)
-	{
-		FD3D12PerFrameConstantBuffer& RingBuffer = ConstantBufferRingBufferList[GCurrentFrameIndex % GNumBackBufferCount];
-		RingBuffer.Reset();
-	}
 }
 
 void FD3D12PerFrameConstantBufferManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
-
+	FD3D12PerFrameConstantBuffer& RingBuffer = ConstantBufferRingBufferList[GCurrentBackbufferIndex];
+	RingBuffer.Reset();
 }
 
 void FD3D12PerFrameConstantBufferManager::OnEndFrame(FD3D12CommandContext& InCommandContext)

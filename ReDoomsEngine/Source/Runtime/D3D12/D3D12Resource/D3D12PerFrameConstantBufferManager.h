@@ -31,7 +31,7 @@ public:
 	void Init();
 	FD3D12ConstantBufferBlock Allocate(const uint64_t InSize);
 
-	virtual void OnPreStartFrame(FD3D12CommandContext& InCommandContext);
+	virtual void OnPreStartFrame();
 	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
 	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 

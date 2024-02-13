@@ -61,7 +61,13 @@ static void DeallocateFromMemoryTraceStack(const size_t InSize)
 }
 
 // this is for eastl
-void* operator new[](size_t size, const char* pName, int flags, unsigned     debugFlags, const char* file, int line)
+void* operator new(size_t size, const char* pName, int flags, unsigned int debugFlags, const char* file, int line)
+	{
+		AllocateToMemoryTraceStack(size);
+		return mi_malloc(size);
+	}
+
+void* operator new[](size_t size, const char* pName, int flags, unsigned int debugFlags, const char* file, int line)
 { 
 	AllocateToMemoryTraceStack(size);  
 	return mi_malloc(size); 
