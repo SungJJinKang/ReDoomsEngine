@@ -76,17 +76,18 @@ void FD3D12Swapchain::ResizeIfRequired()
 	if (IsRequireResize())
 	{
         FFrameResourceContainer& PreviousFrameContainer = FRenderer::GetInstance()->GetPreviousFrameResourceContainer();
-        PreviousFrameContainer.FrameWorkEndFence.WaitOnLastSignal();
+        PreviousFrameContainer.FrameWorkEndFence.CPUWaitOnLastSignal();
        
-		for (FD3D12RenderTargetResource& RenderTarget : RenderTargets)
-		{
-			RenderTarget.ReleaseResource();
-		}
-		RenderTargets.clear();
+        eastl::vector<FD3D12RenderTargetResource> TempRenderTargets = eastl::move(RenderTargets);
+        for (FD3D12RenderTargetResource& RenderTarget : TempRenderTargets)
+        {
+            RenderTarget.ReleaseResource();
+        }
 		VERIFYD3D12RESULT(D3DSwapchain->ResizeBuffers(NumBuffer, (UINT)LOWORD(ResizedWidth), (UINT)HIWORD(ResizedHeight), Format, 0));
         UpdateCurrentBackbufferIndex();
 
 		CreateRenderTargets();
+
 
 		Width = ResizedWidth;
 		Height = ResizedHeight;

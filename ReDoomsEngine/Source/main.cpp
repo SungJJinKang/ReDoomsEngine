@@ -61,8 +61,6 @@ int main(int argc, char** argv)
 		if (bQuit)
 			break;
 
-		EA_ASSERT(TestRenderer.GetCurrentRendererState() != ERendererState::Initializing);
-
 		TestRenderer.OnPreStartFrame();
 		TestRenderer.OnStartFrame();
 		TestRenderer.Draw();

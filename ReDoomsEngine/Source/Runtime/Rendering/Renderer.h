@@ -17,6 +17,7 @@ class FFrameResourceContainer
 public:
 	eastl::array<eastl::shared_ptr<FD3D12CommandAllocator>, static_cast<uint32_t>(ECommandAllocatotrType::Num)> CommandAllocatorList;
 	FD3D12Fence FrameWorkEndFence;
+	eastl::vector<eastl::shared_ptr<FD3D12Fence>> TransientFrameWorkEndFenceList;
 
 	void Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> InOnlineDescriptorHeap);
 	void ResetForNewFrame();
@@ -29,7 +30,6 @@ private:
 enum ERendererState
 {
 	Initializing,
-	FinishInitialzing,
 	OnPreStartFrame,
 	OnStartFrame,
 	Draw,

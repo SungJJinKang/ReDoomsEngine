@@ -92,7 +92,7 @@ void FD3D12CommandAllocator::ResetCommandAllocator(const bool bWaitForCompletati
 
  	if (bWaitForCompletationOfCommandLists && (AllocatedCommandListPool.size() > 0))
  	{
-		AllocatedCommandListPool.back()->Fence.WaitOnLastSignal();
+		AllocatedCommandListPool.back()->Fence.CPUWaitOnLastSignal();
  	}
 
 	VERIFYD3D12RESULT(CommandAllocator->Reset());
