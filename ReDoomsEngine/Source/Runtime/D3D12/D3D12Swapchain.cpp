@@ -67,7 +67,7 @@ void FD3D12Swapchain::CreateRenderTargets()
 		ComPtr<ID3D12Resource> SwapChainBuffer{};
 
 		VERIFYD3D12RESULT(D3DSwapchain->GetBuffer(BufferIndex, IID_PPV_ARGS(&SwapChainBuffer)));
-		RenderTargets.emplace_back(SwapChainBuffer).InitResource();
+		RenderTargets.emplace_back(eastl::make_shared<FD3D12RenderTargetResource>(SwapChainBuffer))->InitResource();
 	}
 }
 
@@ -78,16 +78,11 @@ void FD3D12Swapchain::ResizeIfRequired()
         FFrameResourceContainer& PreviousFrameContainer = FRenderer::GetInstance()->GetPreviousFrameResourceContainer();
         PreviousFrameContainer.FrameWorkEndFence.CPUWaitOnLastSignal();
        
-        eastl::vector<FD3D12RenderTargetResource> TempRenderTargets = eastl::move(RenderTargets);
-        for (FD3D12RenderTargetResource& RenderTarget : TempRenderTargets)
-        {
-            RenderTarget.ReleaseResource();
-        }
+        RenderTargets.clear();
 		VERIFYD3D12RESULT(D3DSwapchain->ResizeBuffers(NumBuffer, (UINT)LOWORD(ResizedWidth), (UINT)HIWORD(ResizedHeight), Format, 0));
         UpdateCurrentBackbufferIndex();
 
 		CreateRenderTargets();
-
 
 		Width = ResizedWidth;
 		Height = ResizedHeight;

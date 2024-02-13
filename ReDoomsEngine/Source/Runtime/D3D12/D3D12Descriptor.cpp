@@ -102,10 +102,13 @@ bool FD3D12DescriptorHeap::AllocateFreeDescriptorHeapBlock(FD3D12DescriptorHeapB
             FreeDescriptorHeapBlockList.erase(FreeDescriptorHeapBlockList.begin() + FreeDescriptorHeapBlockIndex);
 
             bSuccess = true;
-
-            // @todo : merge with freed blocks
             break;
         }
+    }
+
+    if (!bSuccess)
+    {
+        // @todo try merge FreeDescriptorHeapBlocks
     }
     
     return bSuccess;
@@ -136,7 +139,7 @@ void FD3D12OnlineDescriptorHeapContainer::Init()
     FD3D12DescriptorHeapContainer::Init();
 
     EA_ASSERT(OnlineHeap == nullptr);
-    OnlineHeap = eastl::make_unique<FD3D12DescriptorHeap>(NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, HeapType);
+    OnlineHeap = eastl::make_shared<FD3D12DescriptorHeap>(NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, HeapType);
     OnlineHeap->Init();
 }
 
@@ -238,7 +241,7 @@ FD3D12DescriptorHeap* FD3D12OfflineDescriptorHeapContainer::AllocateNewHeap()
     }
     else
     {
-        Heap = DescriptorHeapListAllocatedToUser.emplace_back(eastl::make_unique<FD3D12DescriptorHeap>(NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, HeapType)).get();
+        Heap = DescriptorHeapListAllocatedToUser.emplace_back(eastl::make_shared<FD3D12DescriptorHeap>(NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, HeapType)).get();
         Heap->Init();
     }
 
