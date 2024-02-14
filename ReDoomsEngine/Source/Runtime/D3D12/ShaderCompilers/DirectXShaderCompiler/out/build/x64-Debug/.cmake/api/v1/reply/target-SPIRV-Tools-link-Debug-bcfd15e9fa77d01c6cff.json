@@ -336,42 +336,42 @@
 			"includes" : 
 			[
 				{
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/external/SPIRV-Tools/source/link"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/external/SPIRV-Tools/source/link"
 				},
 				{
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Tools/source/link"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Tools/source/link"
 				},
 				{
 					"backtrace" : 28,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
 				},
 				{
 					"backtrace" : 29,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
 				},
 				{
 					"backtrace" : 29,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
 				},
 				{
 					"backtrace" : 30,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
 				},
 				{
 					"backtrace" : 31,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Tools"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Tools"
 				},
 				{
 					"backtrace" : 32,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Tools/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Tools/include"
 				},
 				{
 					"backtrace" : 32,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Headers/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Headers/include"
 				},
 				{
 					"backtrace" : 32,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/external/SPIRV-Tools"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/external/SPIRV-Tools"
 				}
 			],
 			"language" : "CXX",
@@ -416,7 +416,7 @@
 		],
 		"prefix" : 
 		{
-			"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/install/x64-Debug"
+			"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/install/x64-Debug"
 		}
 	},
 	"name" : "SPIRV-Tools-link",

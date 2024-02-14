@@ -291,26 +291,26 @@
 			"includes" : 
 			[
 				{
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/utils/unittest"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/utils/unittest"
 				},
 				{
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/unittest"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/unittest"
 				},
 				{
 					"backtrace" : 24,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
 				},
 				{
 					"backtrace" : 25,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
 				},
 				{
 					"backtrace" : 25,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
 				},
 				{
 					"backtrace" : 26,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
 				},
 				{
 					"backtrace" : 27,
@@ -322,19 +322,19 @@
 				},
 				{
 					"backtrace" : 28,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/unittest/googletest/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/unittest/googletest/include"
 				},
 				{
 					"backtrace" : 28,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/unittest/googletest"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/unittest/googletest"
 				},
 				{
 					"backtrace" : 28,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/unittest/googlemock/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/unittest/googlemock/include"
 				},
 				{
 					"backtrace" : 28,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/unittest/googlemock"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/utils/unittest/googlemock"
 				}
 			],
 			"language" : "CXX",

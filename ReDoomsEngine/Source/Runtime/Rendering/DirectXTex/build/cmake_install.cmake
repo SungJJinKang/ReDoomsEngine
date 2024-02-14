@@ -1,4 +1,4 @@
-# Install script for directory: F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex
+# Install script for directory: $(SolutionDir)Source/Runtime/Rendering/DirectXTex
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,13 +34,13 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/bin/CMake/Debug/DirectXTex.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/bin/CMake/Debug/DirectXTex.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/bin/CMake/Release/DirectXTex.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/bin/CMake/Release/DirectXTex.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Mm][Ii][Nn][Ss][Ii][Zz][Ee][Rr][Ee][Ll])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/bin/CMake/MinSizeRel/DirectXTex.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/bin/CMake/MinSizeRel/DirectXTex.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/bin/CMake/RelWithDebInfo/DirectXTex.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/bin/CMake/RelWithDebInfo/DirectXTex.lib")
   endif()
 endif()
 
@@ -48,7 +48,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/directxtex/DirectXTex-targets.cmake")
     file(DIFFERENT _cmake_export_file_changed FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/directxtex/DirectXTex-targets.cmake"
-         "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets.cmake")
+         "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets.cmake")
     if(_cmake_export_file_changed)
       file(GLOB _cmake_old_config_files "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/directxtex/DirectXTex-targets-*.cmake")
       if(_cmake_old_config_files)
@@ -61,37 +61,37 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
     endif()
     unset(_cmake_export_file_changed)
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets.cmake")
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets-debug.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets-debug.cmake")
   endif()
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Mm][Ii][Nn][Ss][Ii][Zz][Ee][Rr][Ee][Ll])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets-minsizerel.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets-minsizerel.cmake")
   endif()
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets-relwithdebinfo.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets-relwithdebinfo.cmake")
   endif()
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets-release.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/CMakeFiles/Export/b4b8ccd0ed55b608a430a1ab561f6d94/DirectXTex-targets-release.cmake")
   endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES
-    "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/DirectXTex/DirectXTex.h"
-    "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/DirectXTex/DirectXTex.inl"
+    "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/DirectXTex/DirectXTex.h"
+    "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/DirectXTex/DirectXTex.inl"
     )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/directxtex" TYPE FILE FILES
-    "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/directxtex-config.cmake"
-    "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/directxtex-config-version.cmake"
+    "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/directxtex-config.cmake"
+    "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/directxtex-config-version.cmake"
     )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/DirectXTex.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/DirectXTex.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -102,5 +102,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "$(SolutionDir)Source/Runtime/Rendering/DirectXTex/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

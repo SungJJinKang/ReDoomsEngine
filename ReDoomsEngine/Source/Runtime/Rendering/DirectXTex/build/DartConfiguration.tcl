@@ -4,8 +4,8 @@
 
 
 # Configuration directories and files
-SourceDirectory: F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex
-BuildDirectory: F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex/build
+SourceDirectory: $(SolutionDir)Source/Runtime/Rendering/DirectXTex
+BuildDirectory: $(SolutionDir)Source/Runtime/Rendering/DirectXTex/build
 
 # Where to place the cost data store
 CostDataFile: 
@@ -27,7 +27,7 @@ SubmitInactivityTimeout:
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "C:/Program Files/CMake/bin/cmake.exe" "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/Rendering/DirectXTex"
+ConfigureCommand: "C:/Program Files/CMake/bin/cmake.exe" "$(SolutionDir)Source/Runtime/Rendering/DirectXTex"
 MakeCommand: "C:\Program Files\CMake\bin\cmake.exe" --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 

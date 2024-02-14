@@ -16,7 +16,7 @@
 #ifndef LLVM_CLANG_UNITTESTS_SPIRV_TEST_OPTIONS_H
 #define LLVM_CLANG_UNITTESTS_SPIRV_TEST_OPTIONS_H
 
-#define DEFAULT_TEST_DIR "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/tools/clang/test/CodeGenSPIRV/"
+#define DEFAULT_TEST_DIR "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/tools/clang/test/CodeGenSPIRV/"
 
 #include <string>
 

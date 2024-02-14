@@ -37,10 +37,10 @@ private:
 	FD3D12RootSignature* CachedRootSignature = nullptr;
 
 	eastl::bitset<EShaderFrequency::NumShaderFrequency> DirtyFlagsOfSRVs;
-	eastl::array<eastl::array<FD3D12ShaderResourceView*, MAX_SRVS>, EShaderFrequency::NumShaderFrequency> CachedSRVs;
+	eastl::array<eastl::array<CD3DX12_CPU_DESCRIPTOR_HANDLE, MAX_SRVS>, EShaderFrequency::NumShaderFrequency> CachedSRVs;
 
 	eastl::bitset<EShaderFrequency::NumShaderFrequency> DirtyFlagsOfUAVs;
-	eastl::array<eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>, EShaderFrequency::NumShaderFrequency> CachedUAVs;
+	eastl::array<eastl::array<CD3DX12_CPU_DESCRIPTOR_HANDLE, MAX_UAVS>, EShaderFrequency::NumShaderFrequency> CachedUAVs;
 
 // 	bool bIsRTVDirty = true;
 // 	eastl::array<eastl::array<FViewBindPointInfo, MAX_SRVS>, EShaderFrequency::NumShaderFrequency> CachedRTVBindPointInfosOfFrequencies;
@@ -50,7 +50,7 @@ private:
 
 	// Constant buffer is bind only by root constant buffer view
 	bool bIsRootCBVDirty = true;
-	eastl::array<eastl::bitset<MAX_ROOT_CBV>, EShaderFrequency::NumShaderFrequency> DirtyFlagsOfRootCBVs;
+	eastl::array<eastl::array<D3D12_GPU_VIRTUAL_ADDRESS, MAX_ROOT_CBV>, EShaderFrequency::NumShaderFrequency> CachedConstantBufferGPUVirtualAddressOfFrequencies;
 	eastl::array<eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>, EShaderFrequency::NumShaderFrequency> CachedConstantBufferBindPointInfosOfFrequencies;
 
 	bool bNeedToSetDescriptorHeaps = true;

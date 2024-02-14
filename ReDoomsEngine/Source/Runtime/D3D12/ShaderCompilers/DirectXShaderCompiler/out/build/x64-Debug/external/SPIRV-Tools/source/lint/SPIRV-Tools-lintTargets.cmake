@@ -50,7 +50,7 @@ unset(_cmake_expected_targets)
 add_library(SPIRV-Tools-lint STATIC IMPORTED)
 
 set_target_properties(SPIRV-Tools-lint PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Tools/include;F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Headers/include"
+  INTERFACE_INCLUDE_DIRECTORIES "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Tools/include;$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/external/SPIRV-Headers/include"
   INTERFACE_LINK_LIBRARIES "SPIRV-Tools-static;SPIRV-Tools-opt"
 )
 
@@ -58,7 +58,7 @@ set_target_properties(SPIRV-Tools-lint PROPERTIES
 set_property(TARGET SPIRV-Tools-lint APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(SPIRV-Tools-lint PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/SPIRV-Tools-lint.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/SPIRV-Tools-lint.lib"
   )
 
 # Make sure the targets which have been exported in some other

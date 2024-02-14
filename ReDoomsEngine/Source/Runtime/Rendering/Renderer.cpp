@@ -25,6 +25,9 @@ void FFrameResourceContainer::ResetForNewFrame()
 	{
 		CommandAllocator->ResetCommandAllocator();
 	}
+
+	TransientFrameWorkEndFenceList.clear();
+	DeferredDeletedResourceList.clear();
 }
 
 void FRenderer::Init()
