@@ -164,6 +164,14 @@ FD3D12TextureResource::FD3D12TextureResource(const FResourceCreateProperties& In
 
 }
 
+FD3D12TextureResource::~FD3D12TextureResource()
+{
+	if (ResourcePoolBlock.has_value())
+	{
+		ResourcePoolBlock->FreeBlock();
+	}
+}
+
 FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: FD3D12TextureResource(InResource, InResourceCreateProperties, InDesc)
 {
