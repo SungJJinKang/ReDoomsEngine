@@ -25,9 +25,9 @@ public:
 		return D3DDevice.Get();
 	}
 
-	FD3D12CommandQueue* GetCommandQueue(const ED3D12QueueType QueueType)
+	FD3D12CommandQueue& GetCommandQueue(const ED3D12QueueType QueueType)
 	{
-		return &CommandQueueList[static_cast<uint64_t>(QueueType)];
+		return *CommandQueueList[static_cast<uint32_t>(QueueType)];
 	}
 
 	D3D12_RESOURCE_HEAP_TIER GetResourceHeapTier() const
@@ -53,5 +53,5 @@ private:
 	D3D12_RESOURCE_BINDING_TIER ResourceBindingTier;
 	D3D_ROOT_SIGNATURE_VERSION RootSignatureVersion;
 
-	eastl::vector<FD3D12CommandQueue> CommandQueueList;
+	eastl::array<eastl::unique_ptr<FD3D12CommandQueue>, ED3D12QueueType::NumD3D12QueueType> CommandQueueList;
 };

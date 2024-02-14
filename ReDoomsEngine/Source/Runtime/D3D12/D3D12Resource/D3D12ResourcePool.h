@@ -9,11 +9,10 @@ struct FD3D12ResourcePoolBlock
 {
 	eastl::weak_ptr<FD3D12ResourcePoolHeapContainer> OwnerResourcePoolHeapContainer;
 
-	eastl::vector<eastl::weak_ptr<FD3D12Resource>> AllocatedResource;
 	uint64_t Size;
 	uint64_t OffsetFromBase;
 
-	FD3D12Fence Fence;
+	void FreeBlock();
 };
 
 
@@ -43,5 +42,4 @@ struct FD3D12ResourcePool
 	bool IsForPlacedResource() const;
 
 	bool AllocateBlock(const uint64_t InSize, const uint64_t InAlignment, FD3D12ResourcePoolBlock& OutAllocatedBlock);
-	void FreeBlock(const FD3D12ResourcePoolBlock& FreedBlock);
 };

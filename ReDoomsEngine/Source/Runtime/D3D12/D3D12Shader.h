@@ -427,6 +427,11 @@ public:
 		Offset = InOffset;
 	}
 
+	uint8_t* GetShadowDataAddress() const
+	{
+		return ConstantBuffer->GetShadowData() + Offset;
+	}
+
 protected:
 
 	FShaderParameterConstantBuffer* ConstantBuffer;
@@ -446,13 +451,18 @@ public:
 
 	TShaderParameterConstantBufferMemberVariable& operator=(const VariableType& InValue)
 	{
-		if (EA::StdC::Memcmp(ConstantBuffer->GetShadowData() + Offset, &InValue, sizeof(VariableType)) != 0)
+		if (EA::StdC::Memcmp(GetShadowDataAddress(), &InValue, sizeof(VariableType)) != 0)
 		{
-			EA::StdC::Memcpy(ConstantBuffer->GetShadowData() + Offset, &InValue, sizeof(VariableType));
+			EA::StdC::Memcpy(GetShadowDataAddress(), &InValue, sizeof(VariableType));
 			ConstantBuffer->MakeDirty();
 		}
 
 		return *this;
+	}
+
+	operator VariableType() const
+	{
+		return *reinterpret_cast<VariableType*>(GetShadowDataAddress());
 	}
 };
 

@@ -1,7 +1,7 @@
 #include "D3D12Resource.h"
 
 #include "D3D12Device.h"
-#include "D3D12PerFrameConstantBufferManager.h"
+#include "D3D12ConstantBufferRingBuffer.h"
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resource(),
@@ -164,6 +164,14 @@ FD3D12TextureResource::FD3D12TextureResource(const FResourceCreateProperties& In
 
 }
 
+FD3D12TextureResource::~FD3D12TextureResource()
+{
+	if (ResourcePoolBlock.has_value())
+	{
+		ResourcePoolBlock->FreeBlock();
+	}
+}
+
 FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: FD3D12TextureResource(InResource, InResourceCreateProperties, InDesc)
 {
@@ -196,7 +204,7 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResou
 FD3D12BufferResource::FD3D12BufferResource(
 	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress, const bool bNeverCreateShadowData)
 	: 
-	FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
+	FD3D12Resource(MakeResourceCreateProperties(bInDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
 	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress), bIsShadowDataDirty(true)
 {
 	if (!ShadowDataAddress && !bNeverCreateShadowData)
@@ -347,7 +355,7 @@ void FD3D12ConstantBufferResource::Versioning()
 {
 	EA_ASSERT(IsDynamicBuffer()); // todo : support no-dynamic buffer
 
-	ConstantBufferBlock = FD3D12PerFrameConstantBufferManager::GetInstance()->Allocate(GetBufferSize());
+	ConstantBufferBlock = FD3D12ConstantBufferRingBuffer::GetInstance()->Allocate(GetBufferSize());
 
 	MappedAddress = ConstantBufferBlock.MappedAddress;
 

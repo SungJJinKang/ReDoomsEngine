@@ -42,7 +42,7 @@ eastl::wstring FAssetManager::MakeAbsolutePathFromAssetFolder(const eastl::wstri
     return AbsolutePath;
 }
 
-bool FAssetManager::SimpleReadEntireFile(const const wchar_t* const FilePath, eastl::vector<uint8_t>& OutData)
+bool FAssetManager::SimpleReadEntireFile(const wchar_t* const FilePath, eastl::vector<uint8_t>& OutData)
 {
     bool bIsSuccess = false;
 

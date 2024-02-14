@@ -4,15 +4,6 @@
 #include "D3D12Include.h"
 #include "D3D12Fence.h"
 
-enum ED3D12QueueType : uint64_t
-{
-	Direct = 0,
-	Copy,
-	Async,
-	
-	Count
-};
-
 D3D12_COMMAND_LIST_TYPE GetD3D12CommandListType(ED3D12QueueType QueueType);
 const wchar_t* GetD3D12QueueTypeString(ED3D12QueueType QueueType);
 

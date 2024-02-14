@@ -23,10 +23,10 @@ void FD3D12Device::Init()
 {
     VERIFYD3D12RESULT(D3D12CreateDevice(Adapter->GetD3DAdapter(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&D3DDevice)));
 
-    for (uint64_t QueueTypeIndex = 0; QueueTypeIndex < static_cast<uint64_t>(ED3D12QueueType::Count); ++QueueTypeIndex)
+    for (uint32_t QueueTypeIndex = 0; QueueTypeIndex < static_cast<uint32_t>(ED3D12QueueType::NumD3D12QueueType); ++QueueTypeIndex)
     {
-        FD3D12CommandQueue& CommandQueue = CommandQueueList.emplace_back(static_cast<ED3D12QueueType>(QueueTypeIndex));
-        CommandQueue.Init();
+        CommandQueueList[QueueTypeIndex] = eastl::make_unique<FD3D12CommandQueue>(static_cast<ED3D12QueueType>(QueueTypeIndex));
+        CommandQueueList[QueueTypeIndex]->Init();
     }
 
     D3D12_FEATURE_DATA_D3D12_OPTIONS D3D12Caps;

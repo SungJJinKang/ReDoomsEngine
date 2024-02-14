@@ -1,5 +1,14 @@
 #include "D3D12ResourcePool.h"
 
+void FD3D12ResourcePoolBlock::FreeBlock()
+{
+	if (eastl::shared_ptr<FD3D12ResourcePoolHeapContainer> ResourcePoolHeapContainer = OwnerResourcePoolHeapContainer.lock())
+	{
+		ResourcePoolHeapContainer->FreeBlockList.emplace_back(*this);
+	}
+	OwnerResourcePoolHeapContainer.reset();
+}
+
 bool FD3D12ResourcePool::IsForPlacedResource() const
 {
 	return HeapDesc.SizeInBytes != 0;
@@ -30,10 +39,11 @@ bool FD3D12ResourcePool::AllocateBlock(const uint64_t InSize, const uint64_t InA
 					NewFreedBlock.Size = FreedBlock.Size - AlignedSize;
 					NewFreedBlock.OffsetFromBase = FreedBlock.OffsetFromBase + AlignedSize;
 
-					FreeBlock(NewFreedBlock);
+					NewFreedBlock.FreeBlock();
 				}
 
 				ResourcePoolHeapContainer->FreeBlockList.erase(ResourcePoolHeapContainer->FreeBlockList.begin() + FreeBlockIndex);
+				ResourcePoolHeapContainer->AllocatedBlockList.push_back(OutAllocatedBlock);
 
 				bSuccess = true;
 				break;
@@ -42,11 +52,4 @@ bool FD3D12ResourcePool::AllocateBlock(const uint64_t InSize, const uint64_t InA
 	}
 
 	return bSuccess;
-}
-
-void FD3D12ResourcePool::FreeBlock(const FD3D12ResourcePoolBlock& FreedBlock)
-{
-	FreedBlock.OwnerResourcePoolHeapContainer.lock()->FreeBlockList.emplace_back(FreedBlock);
-
-	// @todo merge with adjacent block
 }

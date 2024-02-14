@@ -11,7 +11,8 @@ struct FD3D12CommandContext
 {
 	FD3D12StateCache StateCache;
 	FFrameResourceContainer* FrameResourceCounter = nullptr;
-	eastl::array<eastl::shared_ptr<FD3D12CommandAllocator>, static_cast<uint32_t>(ECommandAllocatotrType::Num)> CommandAllocatorList;
+	eastl::array<FD3D12CommandQueue*, ED3D12QueueType::NumD3D12QueueType> CommandQueueList;
+	eastl::array<eastl::shared_ptr<FD3D12CommandAllocator>, static_cast<uint32_t>(ECommandAllocatorType::Num)> CommandAllocatorList;
 	eastl::shared_ptr<FD3D12CommandList> GraphicsCommandList;
 
 	void DrawInstanced(
