@@ -196,7 +196,7 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResou
 FD3D12BufferResource::FD3D12BufferResource(
 	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress, const bool bNeverCreateShadowData)
 	: 
-	FD3D12Resource(MakeResourceCreateProperties(bDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
+	FD3D12Resource(MakeResourceCreateProperties(bInDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
 	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress), bIsShadowDataDirty(true)
 {
 	if (!ShadowDataAddress && !bNeverCreateShadowData)
