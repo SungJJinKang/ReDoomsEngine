@@ -30,7 +30,7 @@ eastl::shared_ptr<FD3D12Fence> FD3D12ResourceUploadBatcher::Flush(FD3D12CommandC
 
 		FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);
 
-		eastl::shared_ptr<FD3D12CommandList> CommandListForUploadBatcher = InCommandContext.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatotrType::ResourceUploadBatcher)]->GetOrCreateNewCommandList();
+		eastl::shared_ptr<FD3D12CommandList> CommandListForUploadBatcher = InCommandContext.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatorType::ResourceUploadBatcher)]->GetOrCreateNewCommandList();
 
 		if (ResourceBarriersBeforeUpload.size() > 0)
 		{

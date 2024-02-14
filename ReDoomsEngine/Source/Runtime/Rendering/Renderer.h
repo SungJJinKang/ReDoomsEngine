@@ -15,7 +15,7 @@ class FD3D12CommandAllocator;
 class FFrameResourceContainer
 {
 public:
-	eastl::array<eastl::shared_ptr<FD3D12CommandAllocator>, static_cast<uint32_t>(ECommandAllocatotrType::Num)> CommandAllocatorList;
+	eastl::array<eastl::shared_ptr<FD3D12CommandAllocator>, static_cast<uint32_t>(ECommandAllocatorType::Num)> CommandAllocatorList;
 	FD3D12Fence FrameWorkEndFence;
 	eastl::vector<eastl::shared_ptr<FD3D12Fence>> TransientFrameWorkEndFenceList;
 
