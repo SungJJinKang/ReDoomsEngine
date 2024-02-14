@@ -44,12 +44,14 @@ void FD3D12Device::Init()
     }
     RootSignatureVersion = D3D12RootSignatureCaps.HighestVersion;
 
+    #if RD_DEBUG
     ComPtr<ID3D12InfoQueue> InfoQueue{};
     GetD3D12Device()->QueryInterface(IID_PPV_ARGS(&InfoQueue));
-
-    #if RD_DEBUG
-    InfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-    InfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-    InfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+    if (InfoQueue)
+	{
+		InfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+		InfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+		InfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+    }
     #endif
 }
