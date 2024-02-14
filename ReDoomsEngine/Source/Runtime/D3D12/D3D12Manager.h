@@ -58,7 +58,7 @@ private:
 	eastl::unique_ptr<FD3D12ShaderManager> D3D12ShaderManager;
 	eastl::unique_ptr<FD3D12PSOManager> D3D12PSOManager;
 	eastl::unique_ptr<FD3D12RootSignatureManager> D3D12RootSignatureManager;
-	eastl::unique_ptr<FD3D12ConstantBufferRingBuffer> D3D12PerFrameConstantBufferManager;
+	eastl::unique_ptr<FD3D12ConstantBufferRingBuffer> D3D12ConstantBufferRingBuffer;
 	eastl::unique_ptr<FD3D12ResourceAllocator> D3D12ResourceAllocator;
 
 	eastl::vector<ID3D12RendererStateCallbackInterface*> TickedManagerList;
