@@ -41,7 +41,6 @@ int main(int argc, char** argv)
 
 	while (!bQuit)
 	{
-		++GCurrentFrameIndex;
 		CPUTimerBeginFrame();
 
 		TickTimer.UpdateElapsedTicks();
@@ -67,6 +66,8 @@ int main(int argc, char** argv)
 		}
 
 		CPUTimerEndFrame();
+
+		++GCurrentFrameIndex;
 	}
 
 	TestRenderer.Destroy();
