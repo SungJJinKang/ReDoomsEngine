@@ -18,6 +18,7 @@ public:
 	eastl::array<eastl::shared_ptr<FD3D12CommandAllocator>, static_cast<uint32_t>(ECommandAllocatorType::Num)> CommandAllocatorList;
 	FD3D12Fence FrameWorkEndFence;
 	eastl::vector<eastl::shared_ptr<FD3D12Fence>> TransientFrameWorkEndFenceList;
+	eastl::vector<eastl::weak_ptr<FD3D12Resource>> DeferredDeletedResourceList;
 
 	void Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> InOnlineDescriptorHeap);
 	void ResetForNewFrame();

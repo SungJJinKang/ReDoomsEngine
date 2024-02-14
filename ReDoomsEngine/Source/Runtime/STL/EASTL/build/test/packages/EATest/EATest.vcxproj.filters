@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EATest\source\EATest.cpp">
+    <ClCompile Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\source\EATest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\test\packages\EATest\CMakeLists.txt" />
+    <CustomBuild Include="$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
+    <Natvis Include="$(SolutionDir)Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

@@ -41,7 +41,8 @@ void FD3D12StateCache::SetSRVs(const EShaderFrequency InShaderFrequency, const e
 	bool bEqual = true;
 	for (uint32_t SRVIndex = 0; SRVIndex < MAX_SRVS; ++SRVIndex)
 	{
-		if (CachedSRVs[InShaderFrequency][SRVIndex] != BindPointInfos[SRVIndex])
+		CD3DX12_CPU_DESCRIPTOR_HANDLE Handle = BindPointInfos[SRVIndex] ? BindPointInfos[SRVIndex]->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
+		if (CachedSRVs[InShaderFrequency][SRVIndex] != Handle)
 		{
 			bEqual = false;
 			break;
@@ -50,19 +51,41 @@ void FD3D12StateCache::SetSRVs(const EShaderFrequency InShaderFrequency, const e
 	if (!bEqual)
 	{
 		DirtyFlagsOfSRVs[InShaderFrequency] = true;
-		CachedSRVs[InShaderFrequency] = BindPointInfos;
+
+		for (uint32_t SRVIndex = 0; SRVIndex < MAX_SRVS; ++SRVIndex)
+		{
+			CD3DX12_CPU_DESCRIPTOR_HANDLE Handle = BindPointInfos[SRVIndex] ? BindPointInfos[SRVIndex]->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
+			CachedSRVs[InShaderFrequency][SRVIndex] = Handle;
+		}
 	}
 }
 
 void FD3D12StateCache::SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>& BindPointInfos)
 {
-	// @todo : check if it is dirty
-	CachedUAVs[InShaderFrequency] = BindPointInfos;
+	bool bEqual = true;
+	for (uint32_t UAVIndex = 0; UAVIndex < MAX_UAVS; ++UAVIndex)
+	{
+		CD3DX12_CPU_DESCRIPTOR_HANDLE Handle = BindPointInfos[UAVIndex] ? BindPointInfos[UAVIndex]->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
+		if (CachedUAVs[InShaderFrequency][UAVIndex] != Handle)
+		{
+			bEqual = false;
+			break;
+		}
+	}
+	if (!bEqual)
+	{
+		DirtyFlagsOfUAVs[InShaderFrequency] = true;
+
+		for (uint32_t SRVIndex = 0; SRVIndex < MAX_UAVS; ++SRVIndex)
+		{
+			CD3DX12_CPU_DESCRIPTOR_HANDLE Handle = BindPointInfos[SRVIndex] ? BindPointInfos[SRVIndex]->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
+			CachedUAVs[InShaderFrequency][SRVIndex] = Handle;
+		}
+	}
 }
 
 void FD3D12StateCache::SetConstantBuffer(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>& BindPointInfos)
 {
-	// @todo : check if it is dirty
 	CachedConstantBufferBindPointInfosOfFrequencies[InShaderFrequency] = BindPointInfos;
 	bIsRootCBVDirty = true;
 }
@@ -99,15 +122,15 @@ void FD3D12StateCache::ApplySRVs(FD3D12CommandList& InCommandList, const FD3D12D
 
 		if (SlotsNeeded > 0 && DirtyFlagsOfSRVs[FrequencyIndex])
 		{
-			D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor = BaseHeapBlcok.CPUDescriptorHandle().Offset(FirstSlotIndex);
-			eastl::array<D3D12_CPU_DESCRIPTOR_HANDLE, MAX_SRVS> SrcDescriptors;
+			CD3DX12_CPU_DESCRIPTOR_HANDLE DestDescriptor = BaseHeapBlcok.CPUDescriptorHandle().Offset(FirstSlotIndex);
+			eastl::array<CD3DX12_CPU_DESCRIPTOR_HANDLE, MAX_SRVS> SrcDescriptors;
 
 			for (uint32_t SlotIndex = 0; SlotIndex < SlotsNeeded; ++SlotIndex)
 			{
-				FD3D12ShaderResourceView* SRV = CachedSRVs[FrequencyIndex][SlotIndex];
-				if (SRV)
+				CD3DX12_CPU_DESCRIPTOR_HANDLE SRV = CachedSRVs[FrequencyIndex][SlotIndex];
+				if (SRV.ptr != NULL)
 				{
-					SrcDescriptors[SlotIndex] = SRV->GetDescriptorHeapBlock().CPUDescriptorHandle();
+					SrcDescriptors[SlotIndex] = SRV;
 				}
 				else
 				{
@@ -117,7 +140,7 @@ void FD3D12StateCache::ApplySRVs(FD3D12CommandList& InCommandList, const FD3D12D
 
 			GetD3D12Device()->CopyDescriptors(1, &DestDescriptor, &SlotsNeeded, SlotsNeeded, SrcDescriptors.data(), nullptr, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-			const D3D12_GPU_DESCRIPTOR_HANDLE BindDescriptor = BaseHeapBlcok.GPUDescriptorHandle().Offset(FirstSlotIndex);
+			const CD3DX12_GPU_DESCRIPTOR_HANDLE BindDescriptor = BaseHeapBlcok.GPUDescriptorHandle().Offset(FirstSlotIndex);
 			InCommandList.GetD3DCommandList()->SetGraphicsRootDescriptorTable(CachedRootSignature->SRVBindSlot[FrequencyIndex], BindDescriptor);
 
 			OutUsedBlockCount += SlotsNeeded;
@@ -149,16 +172,29 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 				{
 					FD3D12ConstantBufferResource* const ConstantBufferResource = ShaderParameterConstantBuffer->GetConstantBufferResource();
 					EA_ASSERT(ConstantBufferResource);
+
+					bool bNeedSetGraphicsRootConstantBufferView = false;
 					if (ConstantBufferResource->IsShadowDataDirty())
 					{
 						ConstantBufferResource->Versioning();
 						ShaderParameterConstantBuffer->FlushShadowData(ConstantBufferResource->GetMappedAddress());
+						bNeedSetGraphicsRootConstantBufferView = true;
 					}
 
 					const D3D12_GPU_VIRTUAL_ADDRESS GPUVirtualAddress = ConstantBufferResource->GPUVirtualAddress();
-					EA_ASSERT(IsAligned(GPUVirtualAddress, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
-					EA_ASSERT(ShaderParameterConstantBuffer->GetReflectionData()->ResourceBindingDesc.BindPoint == CBVRegisterIndex);
-					InCommandList.GetD3DCommandList()->SetGraphicsRootConstantBufferView(BaseIndex + CBVRegisterIndex, GPUVirtualAddress);
+					if (CachedConstantBufferGPUVirtualAddressOfFrequencies[FrequencyIndex][CBVRegisterIndex] != GPUVirtualAddress)
+					{
+						bNeedSetGraphicsRootConstantBufferView = true;
+					}
+
+					if (bNeedSetGraphicsRootConstantBufferView)
+					{
+						EA_ASSERT(IsAligned(GPUVirtualAddress, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
+						EA_ASSERT(ShaderParameterConstantBuffer->GetReflectionData()->ResourceBindingDesc.BindPoint == CBVRegisterIndex);
+						InCommandList.GetD3DCommandList()->SetGraphicsRootConstantBufferView(BaseIndex + CBVRegisterIndex, GPUVirtualAddress);
+
+						CachedConstantBufferGPUVirtualAddressOfFrequencies[FrequencyIndex][CBVRegisterIndex] = GPUVirtualAddress;
+					}
 
 					RootConstantBufferViewCount += 1;
 				}
@@ -235,5 +271,6 @@ void FD3D12StateCache::ResetForNewCommandlist()
 	DirtyFlagsOfUAVs.set();
 	MEM_ZERO(CachedSRVs);
 	MEM_ZERO(CachedUAVs);
+	MEM_ZERO(CachedConstantBufferGPUVirtualAddressOfFrequencies); // always set constant buffer view at first flush of new frame
 	MEM_ZERO(CachedConstantBufferBindPointInfosOfFrequencies);
 }

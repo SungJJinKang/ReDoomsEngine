@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="F:\ReDoomsEngine\ReDoomsEngine\Source\Runtime\STL\EASTL\build\CMakeFiles\c3b0ecbe4bc10da7b1671f9a2bf8af6e\INSTALL_force.rule">
-      <Filter>CMake Rules</Filter>
-    </CustomBuild>
+    
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
