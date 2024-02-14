@@ -4,8 +4,8 @@ import os
 import sys
 
 # Variables configured at build time.
-llvm_source_root = "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler"
-llvm_obj_root = "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug"
+llvm_source_root = "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler"
+llvm_obj_root = "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug"
 
 # Make sure we can find the lit package.
 sys.path.insert(0, os.path.join(llvm_source_root, 'utils', 'lit'))

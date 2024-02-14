@@ -448,26 +448,26 @@
 			"includes" : 
 			[
 				{
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/tools/dxilconv"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/tools/dxilconv"
 				},
 				{
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/tools/dxilconv"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/tools/dxilconv"
 				},
 				{
 					"backtrace" : 52,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
 				},
 				{
 					"backtrace" : 53,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
 				},
 				{
 					"backtrace" : 53,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
 				},
 				{
 					"backtrace" : 54,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
 				},
 				{
 					"backtrace" : 55,
@@ -479,19 +479,19 @@
 				},
 				{
 					"backtrace" : 9,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/include"
 				},
 				{
 					"backtrace" : 9,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/include"
 				},
 				{
 					"backtrace" : 9,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/include"
 				},
 				{
 					"backtrace" : 9,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/include"
 				}
 			],
 			"language" : "CXX",
@@ -511,7 +511,7 @@
 				},
 				{
 					"backtrace" : 56,
-					"fragment" : "/I F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/utils/version"
+					"fragment" : "/I $(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/utils/version"
 				}
 			],
 			"defines" : 
@@ -576,26 +576,26 @@
 			"includes" : 
 			[
 				{
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/tools/dxilconv"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/tools/dxilconv"
 				},
 				{
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/tools/dxilconv"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/tools/dxilconv"
 				},
 				{
 					"backtrace" : 52,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include/llvm/llvm_assert"
 				},
 				{
 					"backtrace" : 53,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include"
 				},
 				{
 					"backtrace" : 53,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/include"
 				},
 				{
 					"backtrace" : 54,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/include/dxc/Tracing"
 				},
 				{
 					"backtrace" : 55,
@@ -607,19 +607,19 @@
 				},
 				{
 					"backtrace" : 9,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/include"
 				},
 				{
 					"backtrace" : 9,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/include"
 				},
 				{
 					"backtrace" : 9,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/include"
 				},
 				{
 					"backtrace" : 9,
-					"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/include"
+					"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/include"
 				}
 			],
 			"language" : "RC",
@@ -740,7 +740,7 @@
 		],
 		"prefix" : 
 		{
-			"path" : "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/install/x64-Debug"
+			"path" : "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/install/x64-Debug"
 		}
 	},
 	"link" : 

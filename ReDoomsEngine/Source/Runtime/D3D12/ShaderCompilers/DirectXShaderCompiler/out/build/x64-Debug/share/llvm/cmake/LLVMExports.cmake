@@ -269,14 +269,14 @@ add_library(LLVMDxilCompression STATIC IMPORTED)
 add_library(DxilConvPasses STATIC IMPORTED)
 
 set_target_properties(DxilConvPasses PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/include;F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/include"
+  INTERFACE_INCLUDE_DIRECTORIES "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/include;$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/dxilconv/include"
 )
 
 # Create imported target DxbcConverter
 add_library(DxbcConverter STATIC IMPORTED)
 
 set_target_properties(DxbcConverter PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/include;F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/include"
+  INTERFACE_INCLUDE_DIRECTORIES "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/include;$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/projects/include"
   INTERFACE_LINK_LIBRARIES "DxilConvPasses;ShaderBinary"
 )
 
@@ -284,7 +284,7 @@ set_target_properties(DxbcConverter PROPERTIES
 add_library(ShaderBinary STATIC IMPORTED)
 
 set_target_properties(ShaderBinary PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/include"
+  INTERFACE_INCLUDE_DIRECTORIES "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/projects/dxilconv/include"
 )
 
 # Create imported target dxilconv
@@ -333,337 +333,337 @@ add_executable(clang-tblgen IMPORTED)
 set_property(TARGET LLVMSupport APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMSupport PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C;CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMSupport.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMSupport.lib"
   )
 
 # Import target "LLVMMSSupport" for configuration "Debug"
 set_property(TARGET LLVMMSSupport APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMMSSupport PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMMSSupport.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMMSSupport.lib"
   )
 
 # Import target "LLVMTableGen" for configuration "Debug"
 set_property(TARGET LLVMTableGen APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMTableGen PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMTableGen.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMTableGen.lib"
   )
 
 # Import target "llvm-tblgen" for configuration "Debug"
 set_property(TARGET llvm-tblgen APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(llvm-tblgen PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-tblgen.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-tblgen.exe"
   )
 
 # Import target "LLVMCore" for configuration "Debug"
 set_property(TARGET LLVMCore APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMCore PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMCore.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMCore.lib"
   )
 
 # Import target "LLVMIRReader" for configuration "Debug"
 set_property(TARGET LLVMIRReader APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMIRReader PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMIRReader.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMIRReader.lib"
   )
 
 # Import target "LLVMBitReader" for configuration "Debug"
 set_property(TARGET LLVMBitReader APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMBitReader PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMBitReader.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMBitReader.lib"
   )
 
 # Import target "LLVMBitWriter" for configuration "Debug"
 set_property(TARGET LLVMBitWriter APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMBitWriter PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMBitWriter.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMBitWriter.lib"
   )
 
 # Import target "LLVMTransformUtils" for configuration "Debug"
 set_property(TARGET LLVMTransformUtils APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMTransformUtils PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMTransformUtils.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMTransformUtils.lib"
   )
 
 # Import target "LLVMInstCombine" for configuration "Debug"
 set_property(TARGET LLVMInstCombine APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMInstCombine PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMInstCombine.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMInstCombine.lib"
   )
 
 # Import target "LLVMScalarOpts" for configuration "Debug"
 set_property(TARGET LLVMScalarOpts APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMScalarOpts PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMScalarOpts.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMScalarOpts.lib"
   )
 
 # Import target "LLVMipo" for configuration "Debug"
 set_property(TARGET LLVMipo APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMipo PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMipo.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMipo.lib"
   )
 
 # Import target "LLVMVectorize" for configuration "Debug"
 set_property(TARGET LLVMVectorize APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMVectorize PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMVectorize.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMVectorize.lib"
   )
 
 # Import target "LLVMLinker" for configuration "Debug"
 set_property(TARGET LLVMLinker APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMLinker PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMLinker.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMLinker.lib"
   )
 
 # Import target "LLVMAnalysis" for configuration "Debug"
 set_property(TARGET LLVMAnalysis APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMAnalysis PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMAnalysis.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMAnalysis.lib"
   )
 
 # Import target "LLVMipa" for configuration "Debug"
 set_property(TARGET LLVMipa APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMipa PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMipa.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMipa.lib"
   )
 
 # Import target "LLVMOption" for configuration "Debug"
 set_property(TARGET LLVMOption APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMOption PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMOption.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMOption.lib"
   )
 
 # Import target "LLVMTarget" for configuration "Debug"
 set_property(TARGET LLVMTarget APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMTarget PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMTarget.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMTarget.lib"
   )
 
 # Import target "LLVMAsmParser" for configuration "Debug"
 set_property(TARGET LLVMAsmParser APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMAsmParser PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMAsmParser.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMAsmParser.lib"
   )
 
 # Import target "LLVMProfileData" for configuration "Debug"
 set_property(TARGET LLVMProfileData APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMProfileData PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMProfileData.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMProfileData.lib"
   )
 
 # Import target "LLVMPasses" for configuration "Debug"
 set_property(TARGET LLVMPasses APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMPasses PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMPasses.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMPasses.lib"
   )
 
 # Import target "LLVMPassPrinters" for configuration "Debug"
 set_property(TARGET LLVMPassPrinters APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMPassPrinters PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMPassPrinters.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMPassPrinters.lib"
   )
 
 # Import target "LLVMDxcSupport" for configuration "Debug"
 set_property(TARGET LLVMDxcSupport APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMDxcSupport PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxcSupport.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxcSupport.lib"
   )
 
 # Import target "LLVMHLSL" for configuration "Debug"
 set_property(TARGET LLVMHLSL APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMHLSL PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMHLSL.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMHLSL.lib"
   )
 
 # Import target "LLVMDXIL" for configuration "Debug"
 set_property(TARGET LLVMDXIL APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMDXIL PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDXIL.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDXIL.lib"
   )
 
 # Import target "LLVMDxilContainer" for configuration "Debug"
 set_property(TARGET LLVMDxilContainer APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMDxilContainer PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilContainer.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilContainer.lib"
   )
 
 # Import target "LLVMDxilPdbInfo" for configuration "Debug"
 set_property(TARGET LLVMDxilPdbInfo APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMDxilPdbInfo PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilPdbInfo.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilPdbInfo.lib"
   )
 
 # Import target "LLVMDxilPIXPasses" for configuration "Debug"
 set_property(TARGET LLVMDxilPIXPasses APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMDxilPIXPasses PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilPIXPasses.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilPIXPasses.lib"
   )
 
 # Import target "LLVMDxilDia" for configuration "Debug"
 set_property(TARGET LLVMDxilDia APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMDxilDia PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilDia.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilDia.lib"
   )
 
 # Import target "LLVMDxilRootSignature" for configuration "Debug"
 set_property(TARGET LLVMDxilRootSignature APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMDxilRootSignature PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilRootSignature.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilRootSignature.lib"
   )
 
 # Import target "LLVMDxcBindingTable" for configuration "Debug"
 set_property(TARGET LLVMDxcBindingTable APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMDxcBindingTable PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxcBindingTable.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxcBindingTable.lib"
   )
 
 # Import target "LLVMDxrFallback" for configuration "Debug"
 set_property(TARGET LLVMDxrFallback APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMDxrFallback PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxrFallback.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxrFallback.lib"
   )
 
 # Import target "LLVMDxilCompression" for configuration "Debug"
 set_property(TARGET LLVMDxilCompression APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(LLVMDxilCompression PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C;CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilCompression.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/LLVMDxilCompression.lib"
   )
 
 # Import target "DxilConvPasses" for configuration "Debug"
 set_property(TARGET DxilConvPasses APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(DxilConvPasses PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/DxilConvPasses.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/DxilConvPasses.lib"
   )
 
 # Import target "DxbcConverter" for configuration "Debug"
 set_property(TARGET DxbcConverter APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(DxbcConverter PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/DxbcConverter.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/DxbcConverter.lib"
   )
 
 # Import target "ShaderBinary" for configuration "Debug"
 set_property(TARGET ShaderBinary APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(ShaderBinary PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/ShaderBinary.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/ShaderBinary.lib"
   )
 
 # Import target "dxilconv" for configuration "Debug"
 set_property(TARGET dxilconv APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(dxilconv PROPERTIES
-  IMPORTED_IMPLIB_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/dxilconv.lib"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/dxilconv.dll"
+  IMPORTED_IMPLIB_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/dxilconv.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/dxilconv.dll"
   )
 
 # Import target "dxilconv-tests" for configuration "Debug"
 set_property(TARGET dxilconv-tests APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(dxilconv-tests PROPERTIES
-  IMPORTED_IMPLIB_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/dxilconv-tests.lib"
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/dxilconv-tests.dll"
+  IMPORTED_IMPLIB_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/lib/dxilconv-tests.lib"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/dxilconv-tests.dll"
   )
 
 # Import target "llvm-config" for configuration "Debug"
 set_property(TARGET llvm-config APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(llvm-config PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-config.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-config.exe"
   )
 
 # Import target "opt" for configuration "Debug"
 set_property(TARGET opt APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(opt PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/opt.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/opt.exe"
   )
 
 # Import target "llvm-as" for configuration "Debug"
 set_property(TARGET llvm-as APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(llvm-as PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-as.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-as.exe"
   )
 
 # Import target "llvm-dis" for configuration "Debug"
 set_property(TARGET llvm-dis APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(llvm-dis PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-dis.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-dis.exe"
   )
 
 # Import target "dxexp" for configuration "Debug"
 set_property(TARGET dxexp APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(dxexp PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/dxexp.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/dxexp.exe"
   )
 
 # Import target "llvm-link" for configuration "Debug"
 set_property(TARGET llvm-link APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(llvm-link PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-link.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-link.exe"
   )
 
 # Import target "llvm-extract" for configuration "Debug"
 set_property(TARGET llvm-extract APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(llvm-extract PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-extract.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-extract.exe"
   )
 
 # Import target "llvm-diff" for configuration "Debug"
 set_property(TARGET llvm-diff APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(llvm-diff PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-diff.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-diff.exe"
   )
 
 # Import target "llvm-bcanalyzer" for configuration "Debug"
 set_property(TARGET llvm-bcanalyzer APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(llvm-bcanalyzer PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-bcanalyzer.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-bcanalyzer.exe"
   )
 
 # Import target "llvm-stress" for configuration "Debug"
 set_property(TARGET llvm-stress APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(llvm-stress PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-stress.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/llvm-stress.exe"
   )
 
 # Import target "verify-uselistorder" for configuration "Debug"
 set_property(TARGET verify-uselistorder APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(verify-uselistorder PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/verify-uselistorder.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/verify-uselistorder.exe"
   )
 
 # Import target "clang-tblgen" for configuration "Debug"
 set_property(TARGET clang-tblgen APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(clang-tblgen PROPERTIES
-  IMPORTED_LOCATION_DEBUG "F:/ReDoomsEngine/ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/clang-tblgen.exe"
+  IMPORTED_LOCATION_DEBUG "$(SolutionDir)Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/clang-tblgen.exe"
   )
 
 # This file does not depend on other imported targets which have
