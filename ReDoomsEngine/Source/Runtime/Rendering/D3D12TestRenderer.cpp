@@ -49,10 +49,9 @@ void D3D12TestRenderer::Init()
 	const size_t VerticeSize = sizeof(TriangleVertices);
 	VerticeStride = sizeof(Vertex);
 
-	VertexBuffer = eastl::make_unique<FD3D12BufferResource>(VerticeSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, 0, false);
+	VertexBuffer = eastl::make_unique<FD3D12BufferResource>(VerticeSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, 0, true);
 	VertexBuffer->InitResource();
 
-	VertexBuffer->Map();
 	EA::StdC::Memcpy(VertexBuffer->GetMappedAddress(), TriangleVertices, VerticeSize);
 	VertexBuffer->Unmap();
 }
