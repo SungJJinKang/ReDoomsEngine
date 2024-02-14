@@ -67,3 +67,14 @@ enum class ECommandAllocatotrType : uint32_t
 
 	Num
 };
+enum ERendererState : uint64_t
+{
+	Initializing,
+	OnPreStartFrame,
+	OnStartFrame,
+	Draw,
+	OnPreEndFrame,
+	OnEndFrame,
+	OnPostEndFrame,
+	Destroying
+};

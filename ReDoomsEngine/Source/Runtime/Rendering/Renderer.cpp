@@ -164,7 +164,7 @@ void FRenderer::Destroy()
 
 FFrameResourceContainer& FRenderer::GetPreviousFrameResourceContainer()
 {
-	EA_ASSERT(CurrentRendererState | ERendererState::FrameResourceAccessible);
+	EA_ASSERT(CurrentRendererState | FFrameResourceContainer::AccessibleRendererState);
 
 	const uint64_t CurrentBackbufferIndex = GCurrentBackbufferIndex;
 	return FrameContainerList[(CurrentBackbufferIndex == 0) ? (GNumBackBufferCount - 1) : (CurrentBackbufferIndex - 1)];
@@ -172,7 +172,7 @@ FFrameResourceContainer& FRenderer::GetPreviousFrameResourceContainer()
 
 FFrameResourceContainer& FRenderer::GetCurrentFrameResourceContainer()
 {
-	EA_ASSERT(CurrentRendererState | ERendererState::FrameResourceAccessible);
+	EA_ASSERT(CurrentRendererState | FFrameResourceContainer::AccessibleRendererState);
 	
 	return FrameContainerList[GCurrentBackbufferIndex];
 }

@@ -2,7 +2,7 @@
 #include "D3D12Include.h"
 
 #include "D3D12View.h"
-#include "D3D12PerFrameConstantBufferManager.h"
+#include "D3D12ConstantBufferRingBuffer.h"
 #include "D3D12ResourcePool.h"
 #include "D3D12Fence.h"
 
