@@ -2,8 +2,12 @@
 
 #include <windows.h>
 
+#include "D3D12GlobalVariables.h"
+
+#if ENABLE_PROFILER
 #include "Editor/ImguiHelper.h"
 #include "imgui.h"
+#endif
 
 static LARGE_INTEGER QPCFrequency{
 	[]()->LARGE_INTEGER {
@@ -12,7 +16,7 @@ static LARGE_INTEGER QPCFrequency{
 	return QPCFrequency;
 	}() };
 
-
+#if ENABLE_PROFILER
 static struct FRegisterProfilerImguiCallback
 {
 	FRegisterProfilerImguiCallback()
@@ -64,11 +68,14 @@ static struct FRegisterProfilerImguiCallback
 		});
 	}
 } RegisterProfilerImguiCallback{};
+#endif
 
 eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/> FProfilingManager::CPUTimerElapsedSecondsMap[2]{};
 
 FCPUTimer::FCPUTimer(const char* const InTimerName) :
 	TimerName(InTimerName),
+	QPCLastTime(0),
+	ElapsedSeconds(0),
 	ElapsedTicks(0)
 {
 	LARGE_INTEGER CurrentTime;
@@ -114,3 +121,30 @@ const eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elaps
 {
 	return CPUTimerElapsedSecondsMap[InFrameIndex % 2];
 }
+
+#if ENABLE_PROFILER
+extern eastl::vector<const char*> MemoryTraceStack{};
+
+// use literal string address as key
+extern eastl::hash_map<const char*, FMemoryTraceData> TraceDataMap{};
+
+FScopedMemoryTrace::FScopedMemoryTrace(const char* const InTraceName)
+	: TraceName(InTraceName)
+{
+	FMemoryTraceData& TraceData = TraceDataMap.try_emplace(InTraceName).first->second;
+	TraceData.TraceName = InTraceName;
+
+	if (MemoryTraceStack.size() > 0)
+	{
+		EA_ASSERT(MemoryTraceStack.back() != InTraceName);
+	}
+	MemoryTraceStack.emplace_back(InTraceName);
+}
+
+FScopedMemoryTrace::~FScopedMemoryTrace()
+{
+	EA_ASSERT(MemoryTraceStack.back() == TraceName);
+	MemoryTraceStack.pop_back();
+}
+
+#endif

@@ -104,7 +104,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>mimalloc-override.lib;dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc.lib;mimalloc-redirect.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Debug;;$(SolutionDir)Source\Runtime\STL\mimalloc\bin</AdditionalLibraryDirectories>
-      <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
+      <ForceSymbolReferences>%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
     <FxCompile>
       <EntryPointName />
@@ -136,7 +136,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>mimalloc-override.lib;dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;mimalloc.lib;mimalloc-redirect.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release;;$(SolutionDir)Source\Runtime\STL\mimalloc\bin</AdditionalLibraryDirectories>
-      <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
+      <ForceSymbolReferences>%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
     <FxCompile>
       <EntryPointName />
@@ -164,7 +164,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>mimalloc-override.lib;dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Debug;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Debug;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Debug;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\build\bin\CMake\Debug;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
-      <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
+      <ForceSymbolReferences>%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
     <FxCompile>
       <EntryPointName />
@@ -196,7 +196,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>mimalloc-override.lib;dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Release;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\build\bin\CMake\Release;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
-      <ForceSymbolReferences>mi_version;%(ForceSymbolReferences)</ForceSymbolReferences>
+      <ForceSymbolReferences>%(ForceSymbolReferences)</ForceSymbolReferences>
     </Link>
     <FxCompile>
       <EntryPointName />

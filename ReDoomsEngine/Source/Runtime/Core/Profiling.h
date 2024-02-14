@@ -3,6 +3,9 @@
 #include "Macros.h"
 #include "EASTL/hash_map.h"
 
+#define ENABLE_PROFILER 1
+//#define ENABLE_PROFILER RD_DEBUG
+
 struct FCPUTimer;
 
 class FProfilingManager
@@ -47,12 +50,32 @@ private:
 	unsigned long long ElapsedTicks;
 };
 
-#if RD_DEBUG
+#if ENABLE_PROFILER
+struct FScopedMemoryTrace
+{
+	// use address of literal string as key
+	FScopedMemoryTrace(const char* const InTraceName);
+	~FScopedMemoryTrace();
+
+	const char* const TraceName;
+};
+
+struct FMemoryTraceData
+{
+	const char* TraceName = nullptr;
+	uint64_t Allocated = 0;
+};
+
+#endif
+
+#if ENABLE_PROFILER
 
 #define SCOPED_CPU_TIMER(TRACE_NAME) FCPUTimer RD_CONCAT(FCPUTimer, RD_UNIQUE_NAME(TRACE_NAME)){#TRACE_NAME};
+#define SCOPED_MEMORY_TRACE(TRACE_NAME) FScopedMemoryTrace RD_CONCAT(ScopedMemoryTrace, RD_UNIQUE_NAME(TRACE_NAME)){#TRACE_NAME};
 
 #else
 
 #define SCOPED_CPU_TIMER(TRACE_NAME)
+#define SCOPED_MEMORY_TRACE(TRACE_NAME)
 
 #endif
