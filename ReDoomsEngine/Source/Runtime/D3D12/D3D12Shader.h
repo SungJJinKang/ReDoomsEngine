@@ -583,6 +583,7 @@ private:
 	SHADER_CONSTANT_BUFFER_TYPE(GlobalConstantBuffer, __VA_ARGS__) GlobalConstantBuffer{this, GLOBAL_CONSTANT_BUFFER_NAME, true};
 
 // This should match with variable declared in shader
+// Recommendation : Divide frequently changed variables to another constant buffer type
 #define ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Type, VariableNameStr) \
 	TShaderParameterConstantBufferMemberVariable<Type> VariableNameStr{ConstructingVariable, #VariableNameStr};
 
