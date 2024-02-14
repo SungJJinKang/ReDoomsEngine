@@ -32,11 +32,20 @@ static struct FRegisterProfilerImguiCallback
 				// e.g. Leave a fixed amount of width for labels (by passing a negative value), the rest goes to widgets.
 				ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 
+				const eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/>& CPUTimerElapsedSecondsMap = FProfilingManager::GetCPUTimerElapsedSecondsMap(GCurrentFrameIndex - 1);
+
+				auto TickTimer = CPUTimerElapsedSecondsMap.find("Tick");
+				if (TickTimer != CPUTimerElapsedSecondsMap.end())
+				{
+					ImGui::Text("FPS : %f", 1.0 / (TickTimer->second));
+					ImGui::Text("FrameTime : %f(ms)", (TickTimer->second) * 1000.0);
+				}
+
 				if (ImGui::TreeNode("CPU Timer"))
 				{
-					for (auto& CPUTimerElapsedSecondPair : FProfilingManager::GetCPUTimerElapsedSecondsMap(GCurrentFrameIndex - 1))
+					for (auto& CPUTimerElapsedSecondPair : CPUTimerElapsedSecondsMap)
 					{
-						ImGui::Text("%s : %f(s)", CPUTimerElapsedSecondPair.first, CPUTimerElapsedSecondPair.second);
+						ImGui::Text("%s : %f(ms)", CPUTimerElapsedSecondPair.first, CPUTimerElapsedSecondPair.second * 1000.0);
 					}
 
 					ImGui::TreePop();
