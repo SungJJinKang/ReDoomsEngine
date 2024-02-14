@@ -34,7 +34,7 @@ FD3D12ConstantBufferBlock FD3D12ConstantBufferRingBuffer::Allocate(uint64_t InSi
 		ConstantBufferRingBuffer.CurrentOffset = 0;
 	}
 
-#define EXHAUST_RING_BUFFER EA_ASSERT_MSG(false, "Exhausted constant buffer ring buffer. GRingBufferSize")
+#define EXHAUST_RING_BUFFER EA_ASSERT_MSG(false, "Exhausted constant buffer ring buffer. Increase GRingBufferSize")
 
 	{
 		uint64_t StartOffset = ConstantBufferRingBuffer.CurrentOffset;

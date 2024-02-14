@@ -194,12 +194,13 @@ public:
 		{
 			SCOPED_CPU_TIMER(FGPUTimerManager_EndFrame)
 
+			static uint32_t FrameIndex = 0;
 			// Resolve query for the current frame.
-			uint64_t ResolveToBaseAddress = GCurrentBackbufferIndex * GPU_TRACE_DATA_SLOT_COUNT * sizeof(UINT64);
+			uint64_t ResolveToBaseAddress = FrameIndex * GPU_TRACE_DATA_SLOT_COUNT * sizeof(UINT64);
 			InD3D12CommandContext->GraphicsCommandList->GetD3DCommandList()->ResolveQueryData(GPUTimerHeap.Get(), D3D12_QUERY_TYPE_TIMESTAMP, 0, GPU_TRACE_DATA_SLOT_COUNT, GPUTimerBuffer.Get(), ResolveToBaseAddress);
 
 			// Grab read-back data for the queries from a finished frame MaxframeCount ago.                                                           
-			uint32_t ReadBackFrameID = (GCurrentBackbufferIndex + 1) % (MaxFrameCount + 1);
+			uint32_t ReadBackFrameID = (FrameIndex + 1) % (MaxFrameCount + 1);
 			size_t ReadBackBaseOffset = ReadBackFrameID * GPU_TRACE_DATA_SLOT_COUNT * sizeof(UINT64);
 			D3D12_RANGE DataRange =
 			{
@@ -248,6 +249,8 @@ public:
 				}
 			}
 
+			FrameIndex = ReadBackFrameID;
+
 			CurrentD3D12CommandContext = nullptr;
 		}
 	}
@@ -259,7 +262,7 @@ public:
 		{
 			EA_ASSERT(CurrentD3D12CommandContext);
 
-			uint64_t TimerID = GetOrCreateTimerID(InTimerName);
+			uint32_t TimerID = GetOrCreateTimerID(InTimerName);
 
 			InCommandList->GetD3DCommandList()->EndQuery(GPUTimerHeap.Get(), D3D12_QUERY_TYPE_TIMESTAMP, TimerID * 2);
 		}
@@ -270,7 +273,7 @@ public:
 		{
 			EA_ASSERT(CurrentD3D12CommandContext);
 
-			uint64_t TimerID = GetOrCreateTimerID(InTimerName);
+			uint32_t TimerID = GetOrCreateTimerID(InTimerName);
 
 			FGPUTimerData& GPUTimerData = GPUTimerDataList[TimerID];
 			GPUTimerData.bUpdatedCurrentFrame = true;
@@ -340,9 +343,9 @@ private:
 		GPUTimerBuffer->SetName(L"GPUTimerBuffer");
 	}
 
-	uint64_t GetOrCreateTimerID(const char* const InTimerName)
+	uint32_t GetOrCreateTimerID(const char* const InTimerName)
 	{
-		uint64_t TimerID = 0;
+		uint32_t TimerID = 0;
 
 		auto AllocatedTimerID = AllocatedTimerIDMap.find(InTimerName);
 		if (AllocatedTimerID == AllocatedTimerIDMap.end())
@@ -361,9 +364,9 @@ private:
 		return TimerID;	
 	}
 
-	eastl::atomic<uint64_t> CurrentAllocatedTimerIDCount{ 0 };
+	eastl::atomic<uint32_t> CurrentAllocatedTimerIDCount{ 0 };
 	eastl::array<FGPUTimerData, GPU_TRACE_DATA_MAX_COUNT> GPUTimerDataList{};
-	eastl::hash_map<const char*, uint64_t> AllocatedTimerIDMap{};
+	eastl::hash_map<const char*, uint32_t> AllocatedTimerIDMap{};
 
 	Microsoft::WRL::ComPtr<ID3D12QueryHeap> GPUTimerHeap;
 	Microsoft::WRL::ComPtr<ID3D12Resource>  GPUTimerBuffer;
