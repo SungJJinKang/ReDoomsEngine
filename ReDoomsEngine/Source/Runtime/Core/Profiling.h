@@ -1,20 +1,18 @@
 #pragma once
 
 #include "Macros.h"
+
+#define ENABLE_PROFILER 1
+//#define ENABLE_PROFILER RD_DEBUG
+
+#if ENABLE_PROFILER
 #include "EASTL/hash_map.h"
+#include "EASTL/array.h"
+#endif
 
-struct FCPUTimer;
-
-class FProfilingManager
-{
-public:
-	static void NewFrame();
-	static void UpdateCPUTimer(const FCPUTimer* const InTimer);
-	static const eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/>& GetCPUTimerElapsedSecondsMap(const uint64_t InFrameIndex);
-
-private:
-	static eastl::hash_map<const char* /*Timer name. Literal string*/, double /*Elapsed Seconds*/> CPUTimerElapsedSecondsMap[2];
-};
+class FD3D12CommandQueue;
+class FD3D12CommandList;
+struct FD3D12CommandContext;
 
 struct FCPUTimer
 {
@@ -25,7 +23,7 @@ public:
 
 	void UpdateElapsedTicks();
 
-	inline const char* const GetTimerName() const {	return TimerName; }
+	inline const char* const GetTimerName() const { return TimerName; }
 
 	// Get elapsed time since the previous Update call.
 	inline unsigned long long GetElapsedTicks() const { return ElapsedTicks; }
@@ -47,12 +45,82 @@ private:
 	unsigned long long ElapsedTicks;
 };
 
-#if RD_DEBUG
+#if ENABLE_PROFILER
+struct FTimerData
+{
+	double ElapsedSeconds;
+	double Average = 0.0;
+	double ShownAverage = 0.0;
+};
+
+struct FScopedMemoryTrace
+{
+	// use address of literal string as key
+	FScopedMemoryTrace(const char* const InTraceName);
+	~FScopedMemoryTrace();
+
+	const char* const TraceName;
+};
+
+struct FMemoryTraceData
+{
+	const char* TraceName = nullptr;
+	uint64_t Allocated = 0;
+};
+#endif
+
+struct FGPUTimer
+{
+public:
+
+	#if ENABLE_PROFILER
+	FGPUTimer(const char* const InTimerName);
+	FGPUTimer(FD3D12CommandQueue* const InCommandQueue, FD3D12CommandList* const InCommandList, const char* const InTimerName);
+	~FGPUTimer();
+	void Start(FD3D12CommandQueue* const InCommandQueue, FD3D12CommandList* const InCommandList);
+	void End(FD3D12CommandList* const InCommandList);
+	#else
+	inline FGPUTimer(const char* const InTimerName) {}
+	inline FGPUTimer(FD3D12CommandQueue* const InCommandQueue, FD3D12CommandList* const InCommandList, const char* const InTimerName) {}
+	inline ~FGPUTimer() {}
+	inline void Start(FD3D12CommandQueue* const InCommandQueue, FD3D12CommandList* const InCommandList) {}
+	inline void End(FD3D12CommandList* const InCommandList) {}
+
+#endif
+
+private:
+
+	#if ENABLE_PROFILER
+	FD3D12CommandList* TargetCommandList;
+	const char* TimerName;
+	bool bScoped;
+	#endif
+};
+
+#if ENABLE_PROFILER
 
 #define SCOPED_CPU_TIMER(TRACE_NAME) FCPUTimer RD_CONCAT(FCPUTimer, RD_UNIQUE_NAME(TRACE_NAME)){#TRACE_NAME};
+#define SCOPED_GPU_TIMER_DIRECT_QUEUE(COMMAND_CONTEXT, TRACE_NAME) FGPUTimer RD_CONCAT(FGPUTimer, RD_UNIQUE_NAME(TRACE_NAME)){COMMAND_CONTEXT.CommandQueueList[ED3D12QueueType::Direct], COMMAND_CONTEXT.GraphicsCommandList.get(), #TRACE_NAME};
+#define SCOPED_GPU_TIMER_DIRECT_QUEUE_COMMAND_LIST(COMMAND_CONTEXT, COMMAND_LIST, TRACE_NAME) FGPUTimer RD_CONCAT(FGPUTimer, RD_UNIQUE_NAME(TRACE_NAME)){COMMAND_CONTEXT.CommandQueueList[ED3D12QueueType::Direct], COMMAND_LIST, #TRACE_NAME};
+#define SCOPED_MEMORY_TRACE(TRACE_NAME) FScopedMemoryTrace RD_CONCAT(ScopedMemoryTrace, RD_UNIQUE_NAME(TRACE_NAME)){#TRACE_NAME};
 
 #else
 
 #define SCOPED_CPU_TIMER(TRACE_NAME)
+#define SCOPED_GPU_TIMER_DIRECT_QUEUE(COMMAND_CONTEXT, TRACE_NAME)
+#define SCOPED_GPU_TIMER_DIRECT_QUEUE_COMMAND_LIST(COMMAND_CONTEXT, COMMAND_LIST, TRACE_NAME)
+#define SCOPED_MEMORY_TRACE(TRACE_NAME)
 
+#endif
+
+#if ENABLE_PROFILER
+void CPUTimerBeginFrame();
+void CPUTimerEndFrame();
+void GPUTimerBeginFrame(FD3D12CommandContext* const InD3D12CommandContext);
+void GPUTimerEndFrame(FD3D12CommandContext* const InD3D12CommandContext);
+#else
+inline void CPUTimerBeginFrame() {}
+inline void CPUTimerEndFrame() {}
+inline void GPUTimerBeginFrame(FD3D12CommandContext* const InD3D12CommandContext) {}
+inline void GPUTimerEndFrame(FD3D12CommandContext* const InD3D12CommandContext) {}
 #endif

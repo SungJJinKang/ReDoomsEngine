@@ -9,7 +9,7 @@
 #include "D3D12PSO.h"
 #include "D3D12RootSignature.h"
 #include "D3D12CommandList.h"
-#include "D3D12Resource/D3D12PerFrameConstantBufferManager.h"
+#include "D3D12Resource/D3D12ConstantBufferRingBuffer.h"
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 
 FD3D12Manager::FD3D12Manager() = default;
@@ -26,10 +26,9 @@ void FD3D12Manager::Init(FRenderer* const InRenderer)
     {
         uint32_t DXGIFactoryFlags = 0;
 
-#if RD_DEBUG
+#if 1
         // Enable the debug layer (requires the Graphics Tools "optional feature").
         // NOTE: Enabling the debug layer after device creation will invalidate the active device.
-        if (RD_DEBUG)
         {
             ComPtr<ID3D12Debug> DebugController;
             if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&DebugController))))
@@ -52,7 +51,7 @@ void FD3D12Manager::Init(FRenderer* const InRenderer)
     }
 
     {
-        Swapchain = eastl::make_unique<FD3D12Swapchain> (GetChoosenAdapter()->GetDevice()->GetCommandQueue(ED3D12QueueType::Direct),
+        Swapchain = eastl::make_unique<FD3D12Swapchain> (&(GetChoosenAdapter()->GetDevice()->GetCommandQueue(ED3D12QueueType::Direct)),
             D3D12Window.get(), GNumBackBufferCount, GWindowWidth, GWindowHeight, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT);
         Swapchain->Init();
         TickedManagerList.emplace_back(Swapchain.get());
@@ -82,9 +81,9 @@ void FD3D12Manager::Init(FRenderer* const InRenderer)
     }
 
     {
-        D3D12PerFrameConstantBufferManager = eastl::make_unique<FD3D12PerFrameConstantBufferManager>();
-        D3D12PerFrameConstantBufferManager->Init();
-        TickedManagerList.emplace_back(D3D12PerFrameConstantBufferManager.get());
+        D3D12ConstantBufferRingBuffer = eastl::make_unique<FD3D12ConstantBufferRingBuffer>();
+        D3D12ConstantBufferRingBuffer->Init();
+        TickedManagerList.emplace_back(D3D12ConstantBufferRingBuffer.get());
     }
 
     {

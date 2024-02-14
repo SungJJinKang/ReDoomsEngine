@@ -28,25 +28,28 @@ eastl::shared_ptr<FD3D12Fence> FD3D12ResourceUploadBatcher::Flush(FD3D12CommandC
 			ResourceBarriersAfterUpload.insert(ResourceBarriersAfterUpload.end(), PendingResourceUpload.ResourceBarriersAfterUpload.begin(), PendingResourceUpload.ResourceBarriersAfterUpload.end());
 		}
 
-		FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);
+		FD3D12CommandQueue* const TargetCommandQueue = InCommandContext.CommandQueueList[ED3D12QueueType::Direct];
 
-		eastl::shared_ptr<FD3D12CommandList> CommandListForUploadBatcher = InCommandContext.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatotrType::ResourceUploadBatcher)]->GetOrCreateNewCommandList();
-
-		if (ResourceBarriersBeforeUpload.size() > 0)
+		eastl::shared_ptr<FD3D12CommandList> CommandListForUploadBatcher = InCommandContext.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatorType::ResourceUploadBatcher)]->GetOrCreateNewCommandList();
 		{
-			CommandListForUploadBatcher->GetD3DCommandList()->ResourceBarrier(ResourceBarriersBeforeUpload.size(), ResourceBarriersBeforeUpload.data());
-		}
+			SCOPED_GPU_TIMER_DIRECT_QUEUE_COMMAND_LIST(InCommandContext, CommandListForUploadBatcher.get(), FD3D12ResourceUploadBatcher_Flush)
 
-		for (FD3D12ResourceUpload& PendingResourceUpload : PendingResourceUploadList)
-		{
-			FD3D12UploadBufferContainer* UploadBufferContainer = AllocateUploadBuffer(PendingResourceUpload.Resource.get());
-			UpdateSubresources<1>(CommandListForUploadBatcher->GetD3DCommandList(), PendingResourceUpload.Resource->GetResource(), UploadBufferContainer->UploadBuffer->GetResource(), 0, 0, 1, &PendingResourceUpload.SubresourceContainer.SubresourceData);
-			UploadBufferContainer->Fence = UploadBatcherFence;
-		}
+			if (ResourceBarriersBeforeUpload.size() > 0)
+			{
+				CommandListForUploadBatcher->GetD3DCommandList()->ResourceBarrier(ResourceBarriersBeforeUpload.size(), ResourceBarriersBeforeUpload.data());
+			}
 
-		if (ResourceBarriersAfterUpload.size() > 0)
-		{
-			CommandListForUploadBatcher->GetD3DCommandList()->ResourceBarrier(ResourceBarriersAfterUpload.size(), ResourceBarriersAfterUpload.data());
+			for (FD3D12ResourceUpload& PendingResourceUpload : PendingResourceUploadList)
+			{
+				FD3D12UploadBufferContainer* UploadBufferContainer = AllocateUploadBuffer(PendingResourceUpload.Resource.get());
+				UpdateSubresources<1>(CommandListForUploadBatcher->GetD3DCommandList(), PendingResourceUpload.Resource->GetResource(), UploadBufferContainer->UploadBuffer->GetResource(), 0, 0, 1, &PendingResourceUpload.SubresourceContainer.SubresourceData);
+				UploadBufferContainer->Fence = UploadBatcherFence;
+			}
+
+			if (ResourceBarriersAfterUpload.size() > 0)
+			{
+				CommandListForUploadBatcher->GetD3DCommandList()->ResourceBarrier(ResourceBarriersAfterUpload.size(), ResourceBarriersAfterUpload.data());
+			}
 		}
 
 		eastl::vector<eastl::shared_ptr<FD3D12CommandList>> CommandLists{ CommandListForUploadBatcher };

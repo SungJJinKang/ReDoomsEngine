@@ -9,8 +9,8 @@ public:
 	static HINSTANCE HInstance;
 	static int NumCmdShow;
 
-	static const eastl::wstring& const GetExecutablePath();
-	static const eastl::wstring& const GetExecutableDirectory();
+	static const eastl::wstring& GetExecutablePath();
+	static const eastl::wstring& GetExecutableDirectory();
 
 private:
 
