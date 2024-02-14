@@ -71,7 +71,10 @@ void FD3D12Fence::GPUWaitOnSignal(FD3D12CommandQueue* const InCommandQueue, cons
 
 void FD3D12Fence::GPUWaitOnLastSignal(FD3D12CommandQueue* const InCommandQueue)
 {
-	InCommandQueue->GetD3DCommandQueue()->Wait(GetD3DFence(), LastSignaledValue);
+	if (LastSignaledValue > 0)
+	{
+		InCommandQueue->GetD3DCommandQueue()->Wait(GetD3DFence(), LastSignaledValue);
+	}
 }
 
 bool FD3D12Fence::IsCompleteSignal(const uint64_t SignaledValue)

@@ -31,3 +31,13 @@ EASTL_FORCE_INLINE constexpr bool IsAligned(T Val, uint64_t Alignment)
 
 	return !((uint64_t)Val & (Alignment - 1));
 }
+
+EASTL_FORCE_INLINE constexpr double Lerp(double A, double B, double F)
+{
+	return (1.0 - F) * A + F * B;
+}
+
+EASTL_FORCE_INLINE constexpr float Lerp(float A, float B, float F)
+{
+	return (1.0f - F) * A + F * B;
+}

@@ -67,6 +67,16 @@ enum class ECommandAllocatorType : uint32_t
 
 	Num
 };
+
+enum ED3D12QueueType : uint32_t
+{
+	Direct = 0,
+	Copy,
+	Async,
+
+	NumD3D12QueueType
+};
+
 enum ERendererState : uint64_t
 {
 	Initializing,

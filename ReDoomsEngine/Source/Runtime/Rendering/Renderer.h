@@ -22,22 +22,11 @@ public:
 	void Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> InOnlineDescriptorHeap);
 	void ResetForNewFrame();
 
+	static constexpr uint64_t AccessibleRendererState = ERendererState::OnStartFrame | ERendererState::Draw | ERendererState::OnPreEndFrame | ERendererState::OnEndFrame;
+
 private:
 
 	bool bInit = false;
-};
-
-enum ERendererState
-{
-	Initializing,
-	OnPreStartFrame,
-	OnStartFrame,
-	Draw,
-	OnPreEndFrame,
-	OnEndFrame,
-	OnPostEndFrame,
-	Destroying,
-	FrameResourceAccessible = OnStartFrame | Draw | OnPreEndFrame | OnEndFrame
 };
 
 class FRenderer : public EA::StdC::Singleton<FRenderer>
@@ -54,6 +43,8 @@ public:
 	void OnEndFrame();
 	virtual void OnPostEndFrame();
 	virtual void Destroy();
+
+	void Tick();
 
 	FFrameResourceContainer& GetPreviousFrameResourceContainer();
 	FFrameResourceContainer& GetCurrentFrameResourceContainer();
@@ -76,5 +67,12 @@ protected:
 	eastl::array<FFrameResourceContainer, GNumBackBufferCount> FrameContainerList;
 
 private :
+
+	FGPUTimer FrametimeGPUTimer{ "FrameTime" };
 	ERendererState CurrentRendererState = ERendererState::Initializing;
 };
+
+inline ERendererState GetCurrentRendererState()
+{
+	return FRenderer::GetInstance()->GetCurrentRendererState();
+}
