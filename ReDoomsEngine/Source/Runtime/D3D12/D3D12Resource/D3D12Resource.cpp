@@ -1,7 +1,7 @@
 #include "D3D12Resource.h"
 
 #include "D3D12Device.h"
-#include "D3D12PerFrameConstantBufferManager.h"
+#include "D3D12ConstantBufferRingBuffer.h"
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resource(),
@@ -347,7 +347,7 @@ void FD3D12ConstantBufferResource::Versioning()
 {
 	EA_ASSERT(IsDynamicBuffer()); // todo : support no-dynamic buffer
 
-	ConstantBufferBlock = FD3D12PerFrameConstantBufferManager::GetInstance()->Allocate(GetBufferSize());
+	ConstantBufferBlock = FD3D12ConstantBufferRingBuffer::GetInstance()->Allocate(GetBufferSize());
 
 	MappedAddress = ConstantBufferBlock.MappedAddress;
 
