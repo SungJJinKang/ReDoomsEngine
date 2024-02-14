@@ -42,32 +42,31 @@ int main(int argc, char** argv)
 	while (!bQuit)
 	{
 		++GCurrentFrameIndex;
+		CPUTimerBeginFrame();
 
 		TickTimer.UpdateElapsedTicks();
 		GTimeDelta = TickTimer.GetElapsedSeconds();
 
-		SCOPED_CPU_TIMER(Tick)
-
-		// Poll and handle messages (inputs, window resize, etc.)
-		// See the WndProc() function below for our to dispatch events to the Win32 backend.
-		MSG msg;
-		while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
 		{
-			::TranslateMessage(&msg);
-			::DispatchMessage(&msg);
-			if (msg.message == WM_QUIT)
-				bQuit = true;
+			SCOPED_CPU_TIMER(Tick)
+
+			// Poll and handle messages (inputs, window resize, etc.)
+			// See the WndProc() function below for our to dispatch events to the Win32 backend.
+			MSG msg;
+			while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
+			{
+				::TranslateMessage(&msg);
+				::DispatchMessage(&msg);
+				if (msg.message == WM_QUIT)
+					bQuit = true;
+			}
+			if (bQuit)
+				break;
+
+			TestRenderer.Tick();
 		}
-		if (bQuit)
-			break;
 
-		TestRenderer.OnPreStartFrame();
-		TestRenderer.OnStartFrame();
-		TestRenderer.Draw();
-		TestRenderer.OnPreEndFrame();
-
-		TestRenderer.OnEndFrame();
-		TestRenderer.OnPostEndFrame();
+		CPUTimerEndFrame();
 	}
 
 	TestRenderer.Destroy();

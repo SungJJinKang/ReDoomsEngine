@@ -73,8 +73,15 @@ void FRenderer::OnStartFrame()
 	CurrentFrameContainer.ResetForNewFrame();
 	CurrentFrameCommandContext.StateCache.ResetForNewCommandlist();
 	CurrentFrameCommandContext.FrameResourceCounter = &CurrentFrameContainer;
+	for (uint32_t QueueIndex = 0; QueueIndex < ED3D12QueueType::NumD3D12QueueType; ++QueueIndex)
+	{
+		CurrentFrameCommandContext.CommandQueueList[QueueIndex] = &(FD3D12Device::GetInstance()->GetCommandQueue(static_cast<ED3D12QueueType>(QueueIndex)));
+	}
 	CurrentFrameCommandContext.CommandAllocatorList = CurrentFrameContainer.CommandAllocatorList;
-	CurrentFrameCommandContext.GraphicsCommandList = CurrentFrameContainer.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatotrType::Graphics)]->GetOrCreateNewCommandList();
+	CurrentFrameCommandContext.GraphicsCommandList = CurrentFrameContainer.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatorType::Graphics)]->GetOrCreateNewCommandList();
+	GPUTimerBeginFrame(&CurrentFrameCommandContext);
+
+	FrametimeGPUTimer.Start(CurrentFrameCommandContext.CommandQueueList[ED3D12QueueType::Direct], CurrentFrameCommandContext.GraphicsCommandList.get());
 
 	D3D12Manager.OnStartFrame(CurrentFrameCommandContext);
 	FImguiHelperSingleton::GetInstance()->NewFrame();
@@ -136,7 +143,10 @@ void FRenderer::OnEndFrame()
 	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ResourceBarrier(1, &ResourceBarrierB);
 
-	FD3D12CommandQueue* const TargetCommandQueue = FD3D12Device::GetInstance()->GetCommandQueue(ED3D12QueueType::Direct);
+	FrametimeGPUTimer.End(CurrentFrameCommandContext.GraphicsCommandList.get());
+	GPUTimerEndFrame(&CurrentFrameCommandContext);
+
+	FD3D12CommandQueue* const TargetCommandQueue = CurrentFrameCommandContext.CommandQueueList[ED3D12QueueType::Direct];
 
 	eastl::vector<eastl::shared_ptr<FD3D12CommandList>> CommandLists = { CurrentFrameCommandContext.GraphicsCommandList };
 	TargetCommandQueue->ExecuteCommandLists(CommandLists);
@@ -160,6 +170,20 @@ void FRenderer::Destroy()
 	D3D12Manager.OnDestory(CurrentFrameCommandContext);
 
 	GetCurrentFrameResourceContainer().FrameWorkEndFence.CPUWaitOnLastSignal();
+}
+
+void FRenderer::Tick()
+{
+	OnPreStartFrame();
+	OnStartFrame();
+	{
+		SCOPED_GPU_TIMER_DIRECT_QUEUE(CurrentFrameCommandContext, Renderer_Draw)
+		Draw();
+	}
+	OnPreEndFrame();
+
+	OnEndFrame();
+	OnPostEndFrame();
 }
 
 FFrameResourceContainer& FRenderer::GetPreviousFrameResourceContainer()
