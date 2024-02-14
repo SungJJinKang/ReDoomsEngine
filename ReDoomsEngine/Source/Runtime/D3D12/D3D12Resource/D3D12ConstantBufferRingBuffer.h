@@ -42,7 +42,7 @@ private:
 
 	FD3D12PerFrameConstantBuffer ConstantBufferRingBuffer;
 	bool bAnyAllocedThisFrame{ false };
-	eastl::array<int64_t, GNumBackBufferCount> OffsetFromBaseWhenStartFrameList{ 0 };
+	eastl::array<uint64_t, GNumBackBufferCount> OffsetFromBaseWhenStartFrameList{ 0 };
 
 };
 
