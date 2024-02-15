@@ -8,7 +8,7 @@ void FFrameResourceContainer::Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapC
 	EA_ASSERT(!bInit);
 	bInit = true;
 
-	FrameWorkEndFence.Init();
+	FrameWorkEndFence.InitIfRequired();
 
 	for (uint32_t CommandAllocatorIndex = 0; CommandAllocatorIndex < CommandAllocatorList.size(); ++CommandAllocatorIndex)
 	{
