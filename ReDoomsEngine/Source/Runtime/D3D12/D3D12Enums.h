@@ -77,6 +77,19 @@ enum ED3D12QueueType : uint32_t
 	NumD3D12QueueType
 };
 
+inline ED3D12QueueType CommandAllocatorTypeTiD3D12QueueType(const ECommandAllocatorType InCommandAllocatorType)
+{
+	switch (InCommandAllocatorType)
+	{
+	case ECommandAllocatorType::Graphics:
+		return ED3D12QueueType::Direct;
+	case ECommandAllocatorType::ResourceUploadBatcher:
+		return ED3D12QueueType::Direct; // @todo : use copy queue
+	default:
+		EA_ASSUME(false);
+	}
+}
+
 enum ERendererState : uint64_t
 {
 	Initializing,

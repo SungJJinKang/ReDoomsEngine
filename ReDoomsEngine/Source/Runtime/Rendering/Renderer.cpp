@@ -12,7 +12,7 @@ void FFrameResourceContainer::Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapC
 
 	for (uint32_t CommandAllocatorIndex = 0; CommandAllocatorIndex < CommandAllocatorList.size(); ++CommandAllocatorIndex)
 	{
-		CommandAllocatorList[CommandAllocatorIndex] = eastl::make_shared<FD3D12CommandAllocator>(ED3D12QueueType::Direct);
+		CommandAllocatorList[CommandAllocatorIndex] = eastl::make_shared<FD3D12CommandAllocator>(CommandAllocatorTypeTiD3D12QueueType(static_cast<ECommandAllocatorType>(CommandAllocatorIndex)));
 		CommandAllocatorList[CommandAllocatorIndex]->Init();
 	}
 }
