@@ -105,13 +105,8 @@ bool FRenderer::Draw()
 
 	CurrentRendererState = ERendererState::Draw;
 
-	eastl::shared_ptr<FD3D12Fence> ResourceUploadFence = FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext);
-	if (ResourceUploadFence)
-	{
-		FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
-		CurrentFrameContainer.TransientFrameWorkEndFenceList.emplace_back(ResourceUploadFence);
-	}
-
+	FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext);
+	
 	return true;
 }
 

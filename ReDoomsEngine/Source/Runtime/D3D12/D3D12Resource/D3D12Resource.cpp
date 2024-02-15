@@ -236,7 +236,30 @@ FD3D12BufferResource::FD3D12BufferResource(
 	}
 }
 
-D3D12_VERTEX_BUFFER_VIEW FD3D12BufferResource::GetVertexBufferView(const uint32_t InStrideInBytes) const
+FD3D12BufferResource::FResourceCreateProperties FD3D12BufferResource::MakeResourceCreateProperties(const bool bDynamic) const
+{
+	FResourceCreateProperties ResourceCreateProperties{};
+
+	// if dynamic, use upload heap for gpu
+	ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(bDynamic ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT);
+	ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
+	ResourceCreateProperties.InitialResourceStates = bDynamic ? D3D12_RESOURCE_STATE_GENERIC_READ : D3D12_RESOURCE_STATE_COPY_DEST; // if not dynamic, set D3D12_RESOURCE_STATE_COPY_DEST to initial state for upload
+
+	return ResourceCreateProperties;
+}
+
+FD3D12VertexIndexBufferResource::FD3D12VertexIndexBufferResource(const uint64_t InSize, const uint32_t InDefaultStrideInBytes, const bool bInDynamic /*= false*/)
+	: FD3D12BufferResource(InSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE, 0, bInDynamic, nullptr, true), DefaultStrideInBytes(InDefaultStrideInBytes)
+{
+
+}
+
+D3D12_VERTEX_BUFFER_VIEW FD3D12VertexIndexBufferResource::GetVertexBufferView() const
+{
+	return GetVertexBufferView(DefaultStrideInBytes);
+}
+
+D3D12_VERTEX_BUFFER_VIEW FD3D12VertexIndexBufferResource::GetVertexBufferView(const uint32_t InStrideInBytes) const
 {
 	D3D12_VERTEX_BUFFER_VIEW View{};
 
@@ -247,7 +270,7 @@ D3D12_VERTEX_BUFFER_VIEW FD3D12BufferResource::GetVertexBufferView(const uint32_
 	return View;
 }
 
-D3D12_VERTEX_BUFFER_VIEW FD3D12BufferResource::GetVertexBufferView(const uint64_t InBaseOffsetInBytes, const uint32_t InSizeInBytes, const uint32_t InStrideInBytes) const
+D3D12_VERTEX_BUFFER_VIEW FD3D12VertexIndexBufferResource::GetVertexBufferView(const uint64_t InBaseOffsetInBytes, const uint32_t InSizeInBytes, const uint32_t InStrideInBytes) const
 {
 	D3D12_VERTEX_BUFFER_VIEW View{};
 
@@ -258,7 +281,7 @@ D3D12_VERTEX_BUFFER_VIEW FD3D12BufferResource::GetVertexBufferView(const uint64_
 	return View;
 }
 
-D3D12_INDEX_BUFFER_VIEW FD3D12BufferResource::GetIndexBufferView(const uint64_t InBaseOffsetInBytes, const DXGI_FORMAT InFormat, const uint32_t InSizeInBytes) const
+D3D12_INDEX_BUFFER_VIEW FD3D12VertexIndexBufferResource::GetIndexBufferView(const uint64_t InBaseOffsetInBytes, const DXGI_FORMAT InFormat, const uint32_t InSizeInBytes) const
 {
 	D3D12_INDEX_BUFFER_VIEW View;
 	View.BufferLocation = GPUVirtualAddress() + InBaseOffsetInBytes;
@@ -266,24 +289,6 @@ D3D12_INDEX_BUFFER_VIEW FD3D12BufferResource::GetIndexBufferView(const uint64_t 
 	View.SizeInBytes = InSizeInBytes;
 
 	return View;
-}
-
-FD3D12BufferResource::FResourceCreateProperties FD3D12BufferResource::MakeResourceCreateProperties(const bool bDynamic) const
-{
-	FResourceCreateProperties ResourceCreateProperties{};
-
-	// if dynamic, use upload heap for gpu
-	ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(bDynamic ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT);
-	ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
-	ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_GENERIC_READ;
-
-	return ResourceCreateProperties;
-}
-
-FD3D12VertexIndexBufferResource::FD3D12VertexIndexBufferResource(const uint64_t InSize, const bool bInDynamic /*= false*/)
-	: FD3D12BufferResource(InSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE, 0, bInDynamic, nullptr, true)
-{
-
 }
 
 void FD3D12BufferResource::InitResource()
@@ -355,6 +360,8 @@ void FD3D12BufferResource::FlushShadowData()
 	{
 		// @todo : upload to gpu
 	}
+
+	bIsShadowDataDirty = false;
 }
 
 void FD3D12ConstantBufferResource::InitResource()
@@ -374,8 +381,6 @@ void FD3D12ConstantBufferResource::Versioning()
 	ConstantBufferBlock = FD3D12ConstantBufferRingBuffer::GetInstance()->Allocate(GetBufferSize());
 
 	MappedAddress = ConstantBufferBlock.MappedAddress;
-
-	bIsShadowDataDirty = false;
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS FD3D12ConstantBufferResource::GPUVirtualAddress() const

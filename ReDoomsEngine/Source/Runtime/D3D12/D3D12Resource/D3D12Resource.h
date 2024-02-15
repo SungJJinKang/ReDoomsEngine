@@ -199,10 +199,6 @@ public:
 		return bIsShadowDataDirty;
 	}
 
-	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint32_t InStrideInBytes) const;
-	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint64_t InBaseOffsetInBytes, const uint32_t InSizeInBytes, const uint32_t InStrideInBytes) const;
-	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView(const uint64_t InBaseOffsetInBytes, const DXGI_FORMAT InFormat, const uint32_t InSizeInBytes) const;
-
 protected:
 
 	FResourceCreateProperties MakeResourceCreateProperties(const bool bDynamic) const;
@@ -221,9 +217,16 @@ class FD3D12VertexIndexBufferResource : public FD3D12BufferResource
 {
 public:
 
-	FD3D12VertexIndexBufferResource(const uint64_t InSize, const bool bInDynamic = false);
+	FD3D12VertexIndexBufferResource(const uint64_t InSize, const uint32_t InDefaultStrideInBytes, const bool bInDynamic = false);
 
+	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
+	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint32_t InStrideInBytes) const;
+	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint64_t InBaseOffsetInBytes, const uint32_t InSizeInBytes, const uint32_t InStrideInBytes) const;
+	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView(const uint64_t InBaseOffsetInBytes, const DXGI_FORMAT InFormat, const uint32_t InSizeInBytes) const;
 
+private:
+
+	uint32_t DefaultStrideInBytes;
 };
 
 template <typename BufferDataType>

@@ -6,7 +6,8 @@
 #include "D3D12Resource/D3D12Resource.h"
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 
-eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromDDSFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder, const D3D12_RESOURCE_FLAGS InD3DResourceFlags, const DirectX::CREATETEX_FLAGS InCreateTexFlag)
+eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromDDSFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder, 
+	const D3D12_RESOURCE_FLAGS InD3DResourceFlags, const DirectX::CREATETEX_FLAGS InCreateTexFlag, const eastl::optional<D3D12_RESOURCE_STATES>& InResourceStateAfterUpload)
 {
 	EA_ASSERT(!(InD3DResourceFlags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET));
 	EA_ASSERT(!(InD3DResourceFlags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL));
@@ -51,14 +52,14 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromDDSFile(FD3D1
 			ResourceDesc = CD3DX12_RESOURCE_DESC{ desc };
 		}
 		
-		eastl::vector<FD3D12SubresourceContainer> SubresourceDataList{};
+		eastl::vector<eastl::unique_ptr<FD3D12SubresourceContainer>> SubresourceDataList{};
 
 		{
-			FD3D12SubresourceContainer SubresourceContainer{};
-			SubresourceContainer.ScreatchImage = eastl::move(ScreatchImage);
-			SubresourceContainer.SubresourceData.pData = DXImage->pixels;
-			SubresourceContainer.SubresourceData.RowPitch = static_cast<LONG_PTR>(DXImage->rowPitch);
-			SubresourceContainer.SubresourceData.SlicePitch = static_cast<LONG_PTR>(DXImage->slicePitch);
+			eastl::unique_ptr<FD3D12TextureSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12TextureSubresourceContainer>();
+			SubresourceContainer->ScreatchImage = eastl::move(ScreatchImage);
+			SubresourceContainer->SubresourceData.pData = DXImage->pixels;
+			SubresourceContainer->SubresourceData.RowPitch = static_cast<LONG_PTR>(DXImage->rowPitch);
+			SubresourceContainer->SubresourceData.SlicePitch = static_cast<LONG_PTR>(DXImage->slicePitch);
 
 			SubresourceDataList.emplace_back(eastl::move(SubresourceContainer));
 		}
@@ -68,7 +69,7 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromDDSFile(FD3D1
 		ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
 		ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_COPY_DEST;
 
-		D3D12TextureResource = FD3D12ResourceAllocator::GetInstance()->Allocate(InCommandContext, eastl::move(SubresourceDataList), ResourceCreateProperties, ResourceDesc);
+		D3D12TextureResource = FD3D12ResourceAllocator::GetInstance()->AllocateTexture2D(InCommandContext, eastl::move(SubresourceDataList), ResourceCreateProperties, ResourceDesc, InResourceStateAfterUpload);
 	}
 	else
 	{

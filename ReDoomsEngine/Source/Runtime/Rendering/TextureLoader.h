@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CommonInclude.h"
 #include "D3D12Include.h"
 #include "DirectXTex.h"
 
@@ -14,7 +15,7 @@ public:
 	static eastl::shared_ptr<FD3D12Texture2DResource> LoadFromDDSFile(FD3D12CommandContext& InCommandContext, 
 		const wchar_t* const InRelativePathToAssetFolder,
 		const D3D12_RESOURCE_FLAGS InD3DResourceFlags,
-		const DirectX::CREATETEX_FLAGS InCreateTexFlag
+		const DirectX::CREATETEX_FLAGS InCreateTexFlag, const eastl::optional<D3D12_RESOURCE_STATES>& InResourceStateAfterUpload
 	);
 
 
