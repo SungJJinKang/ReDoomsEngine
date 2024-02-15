@@ -63,7 +63,6 @@ const wchar_t* GetShaderFrequencyString(const EShaderFrequency ShaderFrequency);
 enum class ECommandAllocatorType : uint32_t
 {
 	Graphics,
-	ResourceUploadBatcher,
 
 	Num
 };
