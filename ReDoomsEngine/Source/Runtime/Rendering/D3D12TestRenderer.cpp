@@ -32,28 +32,6 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 void D3D12TestRenderer::Init()
 {
 	FRenderer::Init();
-
-	float m_aspectRatio = 1.0f;
-	struct Vertex
-	{
-		XMFLOAT3 position;
-		XMFLOAT4 color;
-		XMFLOAT2 uv;
-	};
-	Vertex TriangleVertices[] =
-	{
-		{ { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.0f } },
-		{ { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
-		{ { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
-	};
-	const size_t VerticeSize = sizeof(TriangleVertices);
-	VerticeStride = sizeof(Vertex);
-
-	VertexBuffer = eastl::make_unique<FD3D12BufferResource>(VerticeSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, 0, true);
-	VertexBuffer->InitResource();
-
-	EA::StdC::Memcpy(VertexBuffer->GetMappedAddress(), TriangleVertices, VerticeSize);
-	VertexBuffer->Unmap();
 }
 
 void D3D12TestRenderer::OnStartFrame()
@@ -63,10 +41,42 @@ void D3D12TestRenderer::OnStartFrame()
 	if (!TestTexture)
 	{
 		TestTexture = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
-			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT);
+			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT, 
+			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE); // d3d debug layer doesn't complain even if don't transition to shader resource state. why????
+		TestTexture->SetDebugNameToResource(EA_WCHAR("TestRenderer TestTexture"));
 
 		TestTexture1 = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
-			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT);
+			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,
+			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+		TestTexture1->SetDebugNameToResource(EA_WCHAR("TestRenderer TestTexture1"));
+
+	}
+
+	if (!VertexBuffer)
+	{
+		float m_aspectRatio = 1.0f;
+		struct Vertex
+		{
+			XMFLOAT3 position;
+			XMFLOAT4 color;
+			XMFLOAT2 uv;
+		};
+		Vertex TriangleVertices[] =
+		{
+			{ { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.0f } },
+			{ { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
+			{ { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
+		};
+
+// 		Vertex TriangleVertices[] =
+// 		{
+// 			{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
+// 			{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } },
+// 			{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } }
+// 		};
+
+		VertexBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(CurrentFrameCommandContext, reinterpret_cast<uint8_t*>(TriangleVertices), sizeof(TriangleVertices), sizeof(Vertex));
+		VertexBuffer->SetDebugNameToResource(EA_WCHAR("TestRenderer VertexBuffer1"));
 	}
 }
 
@@ -149,7 +159,7 @@ bool D3D12TestRenderer::Draw()
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearRenderTargetView(RTVCPUHandle, clearColor, 0, nullptr);
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	D3D12_VERTEX_BUFFER_VIEW VertexBufferView = VertexBuffer->GetVertexBufferView(VerticeStride);
+	D3D12_VERTEX_BUFFER_VIEW VertexBufferView = VertexBuffer->GetVertexBufferView();
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, 1, &VertexBufferView);
 
 	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
@@ -163,7 +173,7 @@ bool D3D12TestRenderer::Draw()
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
-	for (uint32_t i = 0; i < 50; ++i)
+	for (uint32_t i = 0; i < 100; ++i)
 	{
 		TestVSInstance->Parameter.VertexOffset->Offset = TestVSInstance->Parameter.VertexOffset->Offset + XMVECTOR{ 0.1f };
 		TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);

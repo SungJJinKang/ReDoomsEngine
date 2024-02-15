@@ -11,10 +11,20 @@ class FD3D12Fence
 public:
 
 	FD3D12Fence(const bool bInit = false);
-	void Init();
-	void CreateD3DFence();
-	void CreateD3DFence(const eastl::wstring& InDebugName);
-	void SetDebugNameToFence(const eastl::wstring& InDebugName);
+	~FD3D12Fence();
+	void InitIfRequired();
+	void InitIfRequired(const wchar_t* const InDebugName);
+	void Release();
+	#if D3D_NAME_OBJECT
+	void SetDebugNameToFence(const wchar_t* const InDebugName);
+	#else
+	void SetDebugNameToFence(const wchar_t* const InDebugName) {}
+	#endif
+
+	inline bool IsInit() const
+	{
+		return D3DFence.Get();
+	}
 	ID3D12Fence* GetD3DFence() const
 	{
 		return D3DFence.Get();
@@ -28,6 +38,9 @@ public:
 	bool IsCompleteLastSignal();
 
 private:
+
+	void CreateD3DFence();
+	void CreateD3DFence(const wchar_t* const InDebugName);
 
 	ComPtr<ID3D12Fence> D3DFence{};
 	uint64_t LastSignaledValue = 0;

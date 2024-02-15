@@ -5,6 +5,25 @@
 #include "Renderer.h"
 #include "D3D12CommandList.h"
 
+FD3D12VertexIndexBufferSubresourceContainer::FD3D12VertexIndexBufferSubresourceContainer(const uint8_t* const Data, const size_t InSize)
+	: VertexIndexData()
+{
+	VertexIndexData.resize(InSize);
+	EA::StdC::Memcpy(VertexIndexData.data(), Data, InSize);
+
+	SubresourceData.pData = VertexIndexData.data();
+	SubresourceData.RowPitch = InSize;
+	SubresourceData.SlicePitch = SubresourceData.RowPitch;
+}
+
+FD3D12VertexIndexBufferSubresourceContainer::FD3D12VertexIndexBufferSubresourceContainer(eastl::vector<uint8_t>&& InVertexIndexData)
+	: VertexIndexData(eastl::move(InVertexIndexData))
+{
+	SubresourceData.pData = VertexIndexData.data();
+	SubresourceData.RowPitch = VertexIndexData.size();
+	SubresourceData.SlicePitch = SubresourceData.RowPitch;
+}
+
 void FD3D12ResourceUploadBatcher::AddPendingResourceUpload(FD3D12ResourceUpload&& InResourceUpload)
 {
 	EA_ASSERT(FRenderer::GetInstance()->GetCurrentRendererState() == ERendererState::OnStartFrame);
@@ -12,12 +31,11 @@ void FD3D12ResourceUploadBatcher::AddPendingResourceUpload(FD3D12ResourceUpload&
 	PendingResourceUploadList.emplace_back(eastl::move(InResourceUpload));
 }
 
-eastl::shared_ptr<FD3D12Fence> FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext, const bool bAddGPUSideWait)
+void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 {
-	eastl::shared_ptr<FD3D12Fence> UploadBatcherFence{};
 	if (PendingResourceUploadList.size() > 0)
 	{
-		UploadBatcherFence = eastl::make_shared<FD3D12Fence>(true);
+		eastl::shared_ptr<FD3D12Fence> UploadBatcherFence = eastl::make_shared<FD3D12Fence>(true);
 
 		eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersBeforeUpload;
 		eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersAfterUpload;
@@ -42,7 +60,13 @@ eastl::shared_ptr<FD3D12Fence> FD3D12ResourceUploadBatcher::Flush(FD3D12CommandC
 			for (FD3D12ResourceUpload& PendingResourceUpload : PendingResourceUploadList)
 			{
 				FD3D12UploadBufferContainer* UploadBufferContainer = AllocateUploadBuffer(PendingResourceUpload.Resource.get());
-				UpdateSubresources<1>(CommandListForUploadBatcher->GetD3DCommandList(), PendingResourceUpload.Resource->GetResource(), UploadBufferContainer->UploadBuffer->GetResource(), 0, 0, 1, &PendingResourceUpload.SubresourceContainer.SubresourceData);
+				const uint32_t SubresourceCount = PendingResourceUpload.SubresourceContainers.size();
+				for (uint32_t SubresourceIndex = 0; SubresourceIndex < SubresourceCount; ++SubresourceIndex)
+				{
+					// @todo : support mips. change UpdateSubresources's template paramter value
+					UpdateSubresources<1>(CommandListForUploadBatcher->GetD3DCommandList(), PendingResourceUpload.Resource->GetResource(), UploadBufferContainer->UploadBuffer->GetResource(),
+						0, SubresourceIndex, SubresourceCount, &PendingResourceUpload.SubresourceContainers[SubresourceIndex]->SubresourceData);
+				}
 				UploadBufferContainer->Fence = UploadBatcherFence;
 			}
 
@@ -55,16 +79,10 @@ eastl::shared_ptr<FD3D12Fence> FD3D12ResourceUploadBatcher::Flush(FD3D12CommandC
 		eastl::vector<eastl::shared_ptr<FD3D12CommandList>> CommandLists{ CommandListForUploadBatcher };
 		TargetCommandQueue->ExecuteCommandLists(CommandLists);
 
-		UploadBatcherFence->Signal(TargetCommandQueue);
-		if (bAddGPUSideWait)
-		{
-			UploadBatcherFence->GPUWaitOnLastSignal(TargetCommandQueue);
-		}
+		UploadBatcherFence->Signal(TargetCommandQueue); // this is for checking if upload buffer can be reused(if upload work is finished)
 
 		PendingResourceUploadList.clear();
 	}
-
-	return UploadBatcherFence;
 }
 
 FD3D12UploadBufferContainer* FD3D12ResourceUploadBatcher::AllocateUploadBuffer(const FD3D12Resource* const InUploadedResource)
@@ -87,6 +105,7 @@ FD3D12UploadBufferContainer* FD3D12ResourceUploadBatcher::AllocateUploadBuffer(c
 		eastl::unique_ptr<FD3D12UploadBufferContainer> NewUploadBufferContainer = eastl::make_unique<FD3D12UploadBufferContainer>();
 		NewUploadBufferContainer->UploadBuffer = eastl::make_unique<FD3D12BufferResource>(ConvertUploadBufferSizeTypeToSize(BufferSizeType), D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, 0, true);
 		NewUploadBufferContainer->UploadBuffer->InitResource();
+		NewUploadBufferContainer->UploadBuffer->SetDebugNameToResource(EA_WCHAR("Upload Buffer"));
 		UploadBufferContainer = NewUploadBufferContainer.get();
 
 		TargetBufferQueue.push(eastl::move(NewUploadBufferContainer));

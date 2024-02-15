@@ -31,6 +31,7 @@ using Microsoft::WRL::ComPtr;
 #include "EASTL/shared_ptr.h"
 #include "EASTL/bitvector.h"
 #include "EASTL/queue.h"
+#include "EASTL/optional.h"
 #include "eathread/eathread_futex.h"
 #include "EAStdC/EASingleton.h"
 

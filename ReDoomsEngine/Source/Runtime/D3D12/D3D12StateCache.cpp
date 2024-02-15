@@ -177,7 +177,7 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 					if (ConstantBufferResource->IsShadowDataDirty())
 					{
 						ConstantBufferResource->Versioning();
-						ShaderParameterConstantBuffer->FlushShadowData(ConstantBufferResource->GetMappedAddress());
+						ShaderParameterConstantBuffer->FlushShadowData();
 						bNeedSetGraphicsRootConstantBufferView = true;
 					}
 

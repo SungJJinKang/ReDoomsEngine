@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Macros.h"
 
 // Large root signature may be bad for performance
 /*
@@ -11,3 +12,5 @@
 #define MAX_SRVS		32
 #define MAX_UAVS		16
 #define MAX_ROOT_CBV	16 // if increase this, Bit count of "CBVRegisterMask" variable should be changed properly
+
+#define D3D_NAME_OBJECT RD_DEBUG

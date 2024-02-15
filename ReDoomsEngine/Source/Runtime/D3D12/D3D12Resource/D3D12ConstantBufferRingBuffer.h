@@ -7,7 +7,7 @@ class FD3D12ConstantBufferResource;
 
 struct FD3D12ConstantBufferBlock
 {
-	eastl::shared_ptr<FD3D12ConstantBufferResource> Resource{};
+	FD3D12ConstantBufferResource* OwnerResource{};
 	D3D12_GPU_VIRTUAL_ADDRESS GPUVirtualAddress;
 
 	uint8_t* MappedAddress;

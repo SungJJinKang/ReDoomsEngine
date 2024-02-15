@@ -577,7 +577,7 @@ FD3D12ConstantBufferResource* FShaderParameterConstantBuffer::GetConstantBufferR
 	return ConstantBufferResource.get();
 }
 
-void FShaderParameterConstantBuffer::FlushShadowData(uint8* const InShadowDataAddress)
+void FShaderParameterConstantBuffer::FlushShadowData()
 {
 	ConstantBufferResource->FlushShadowData();
 }

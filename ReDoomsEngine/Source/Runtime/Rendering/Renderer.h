@@ -62,8 +62,7 @@ protected:
 
 	FD3D12CommandContext CurrentFrameCommandContext;
 
-	eastl::unique_ptr<FD3D12BufferResource> VertexBuffer;
-	uint32_t VerticeStride;
+	eastl::shared_ptr<FD3D12VertexIndexBufferResource> VertexBuffer;
 
 	eastl::array<FFrameResourceContainer, GNumBackBufferCount> FrameContainerList;
 

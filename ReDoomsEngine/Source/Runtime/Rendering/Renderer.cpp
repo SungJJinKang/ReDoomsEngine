@@ -8,7 +8,7 @@ void FFrameResourceContainer::Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapC
 	EA_ASSERT(!bInit);
 	bInit = true;
 
-	FrameWorkEndFence.Init();
+	FrameWorkEndFence.InitIfRequired();
 
 	for (uint32_t CommandAllocatorIndex = 0; CommandAllocatorIndex < CommandAllocatorList.size(); ++CommandAllocatorIndex)
 	{
@@ -27,6 +27,14 @@ void FFrameResourceContainer::ResetForNewFrame()
 	}
 
 	TransientFrameWorkEndFenceList.clear();
+
+	for (eastl::weak_ptr<FD3D12Resource>& WeakPtrDeferredDeletedResource : DeferredDeletedResourceList)
+	{
+		if (eastl::shared_ptr<FD3D12Resource> SharedPtrDeferredDeletedResource = WeakPtrDeferredDeletedResource.lock())
+		{
+			SharedPtrDeferredDeletedResource->ReleaseResource();
+		}
+	}
 	DeferredDeletedResourceList.clear();
 }
 
@@ -97,13 +105,8 @@ bool FRenderer::Draw()
 
 	CurrentRendererState = ERendererState::Draw;
 
-	eastl::shared_ptr<FD3D12Fence> ResourceUploadFence = FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext);
-	if (ResourceUploadFence)
-	{
-		FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
-		CurrentFrameContainer.TransientFrameWorkEndFenceList.emplace_back(ResourceUploadFence);
-	}
-
+	FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext);
+	
 	return true;
 }
 

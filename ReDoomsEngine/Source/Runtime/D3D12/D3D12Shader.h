@@ -378,7 +378,7 @@ public:
 	uint8_t* GetShadowData();
 
 	FD3D12ConstantBufferResource* GetConstantBufferResource();
-	void FlushShadowData(uint8* const InShadowDataAddress);
+	void FlushShadowData();
 	void MakeDirty();
 
 protected:
