@@ -63,6 +63,16 @@ void FD3D12Resource::ReleaseResource()
 	Resource.Reset();
 }
 
+#if D3D_NAME_OBJECT
+void FD3D12Resource::SetDebugNameToResource(const wchar_t* const InDebugName)
+{
+	if (Resource)
+	{
+		Resource->SetName(InDebugName);
+	}
+}
+#endif
+
 void FD3D12Resource::ValidateResourceProperties() const
 {
 // 	if (Desc.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL))

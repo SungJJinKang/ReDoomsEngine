@@ -32,6 +32,11 @@ public:
 		return true;
 	}
 	virtual void ReleaseResource();
+	#if D3D_NAME_OBJECT
+	void SetDebugNameToResource(const wchar_t* const InDebugName);
+	#else
+	void SetDebugNameToResource(const wchar_t* const InDebugName) {}
+	#endif
 	void ValidateResourceProperties() const;
 
 	inline const CD3DX12_HEAP_PROPERTIES& GetHeapProperties() const
