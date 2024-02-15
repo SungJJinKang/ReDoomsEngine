@@ -2,6 +2,7 @@
 
 #include "D3D12Device.h"
 #include "D3D12ConstantBufferRingBuffer.h"
+#include "Renderer.h"
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resource(),
@@ -35,6 +36,11 @@ void FD3D12Resource::InitResource()
 	{
 		CreateD3D12Resource();
 	}
+}
+
+void FD3D12Resource::DeferredRelease()
+{
+	FRenderer::GetInstance()->GetCurrentFrameResourceContainer().DeferredDeletedResourceList.push_back(weak_from_this());
 }
 
 void FD3D12Resource::CreateD3D12Resource()
