@@ -163,7 +163,7 @@ bool D3D12TestRenderer::Draw()
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
-	for (uint32_t i = 0; i < 50; ++i)
+	for (uint32_t i = 0; i < 100; ++i)
 	{
 		TestVSInstance->Parameter.VertexOffset->Offset = TestVSInstance->Parameter.VertexOffset->Offset + XMVECTOR{ 0.1f };
 		TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
