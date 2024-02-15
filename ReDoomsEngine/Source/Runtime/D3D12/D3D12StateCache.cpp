@@ -138,7 +138,19 @@ void FD3D12StateCache::ApplySRVs(FD3D12CommandList& InCommandList, const FD3D12D
 				}
 			}
 
-			GetD3D12Device()->CopyDescriptors(1, &DestDescriptor, &SlotsNeeded, SlotsNeeded, SrcDescriptors.data(), nullptr, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			if (SlotsNeeded == 1)
+			{
+				/*
+					https://gpuopen.com/learn/rdna-performance-guide/#synchronization
+					Prefer using CopyDescriptorsSimple / vkUpdateDescriptorSet over CopyDescriptors / vkUpdateDescriptorSetWithTemplate.
+					This function has a better CPU cache hit rate.
+				*/
+				GetD3D12Device()->CopyDescriptorsSimple(1, DestDescriptor, SrcDescriptors[0], D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			}
+			else
+			{
+				GetD3D12Device()->CopyDescriptors(1, &DestDescriptor, &SlotsNeeded, SlotsNeeded, SrcDescriptors.data(), nullptr, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			}
 
 			const CD3DX12_GPU_DESCRIPTOR_HANDLE BindDescriptor = BaseHeapBlcok.GPUDescriptorHandle().Offset(FirstSlotIndex);
 			InCommandList.GetD3DCommandList()->SetGraphicsRootDescriptorTable(CachedRootSignature->SRVBindSlot[FrequencyIndex], BindDescriptor);

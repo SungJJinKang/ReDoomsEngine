@@ -32,6 +32,13 @@ public:
 	uint64_t Signal(FD3D12CommandQueue* const InCommandQueue, const bool bWaitInstantly = false);
 	void CPUWaitOnSignal(const uint64_t SignaledValue);
 	void CPUWaitOnLastSignal();
+
+	/*
+		https://gpuopen.com/learn/rdna-performance-guide/#synchronization
+		Work submitted does not need semaphores/fences for synchronization on the same queue – use barriers in the command buffers.
+		Command buffers will be executed in order of submission.
+		Cross queue synchronization is done with fences or semaphores at submission boundaries.
+	*/
 	void GPUWaitOnSignal(FD3D12CommandQueue* const InCommandQueue, const uint64_t SignaledValue);
 	void GPUWaitOnLastSignal(FD3D12CommandQueue* const InCommandQueue);
 	bool IsCompleteSignal(const uint64_t SignaledValue);
