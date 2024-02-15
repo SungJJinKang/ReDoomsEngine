@@ -25,6 +25,7 @@ public:
 		return bInit;
 	}
 	virtual void InitResource();
+	void DeferredRelease();
 	virtual void CreateD3D12Resource();
 	virtual bool IsCreateD3D12ResourceOnInitResource() const
 	{

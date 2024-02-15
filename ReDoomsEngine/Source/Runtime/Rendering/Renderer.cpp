@@ -27,6 +27,14 @@ void FFrameResourceContainer::ResetForNewFrame()
 	}
 
 	TransientFrameWorkEndFenceList.clear();
+
+	for (eastl::weak_ptr<FD3D12Resource>& WeakPtrDeferredDeletedResource : DeferredDeletedResourceList)
+	{
+		if (eastl::shared_ptr<FD3D12Resource> SharedPtrDeferredDeletedResource = WeakPtrDeferredDeletedResource.lock())
+		{
+			SharedPtrDeferredDeletedResource->ReleaseResource();
+		}
+	}
 	DeferredDeletedResourceList.clear();
 }
 
