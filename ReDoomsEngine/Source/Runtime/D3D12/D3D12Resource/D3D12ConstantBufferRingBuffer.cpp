@@ -59,7 +59,7 @@ FD3D12ConstantBufferBlock FD3D12ConstantBufferRingBuffer::Allocate(uint64_t InSi
 		}
 	}
 
-	Block.Resource = ConstantBufferRingBuffer.ConstantBufferResource;
+	Block.OwnerResource = ConstantBufferRingBuffer.ConstantBufferResource.get();
 	Block.GPUVirtualAddress = ConstantBufferRingBuffer.ConstantBufferResource->GPUVirtualAddress() + ConstantBufferRingBuffer.CurrentOffset;
 	Block.MappedAddress = ConstantBufferRingBuffer.ConstantBufferResource->GetMappedAddress() + ConstantBufferRingBuffer.CurrentOffset;
 	Block.SizeInBytes = InSize;
