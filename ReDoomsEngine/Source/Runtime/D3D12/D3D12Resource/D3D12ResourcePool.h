@@ -29,8 +29,6 @@ struct FD3D12ResourcePool
 	enum EResourcePoolType
 	{
 		ReadOnlyTexture,
-		RenderTarget,
-		UAVTexture,
 
 		Num
 	};
