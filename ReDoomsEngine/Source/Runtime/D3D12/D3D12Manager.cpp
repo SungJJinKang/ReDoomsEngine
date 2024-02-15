@@ -26,7 +26,7 @@ void FD3D12Manager::Init(FRenderer* const InRenderer)
     {
         uint32_t DXGIFactoryFlags = 0;
 
-#if 1
+#if RD_DEBUG
         // Enable the debug layer (requires the Graphics Tools "optional feature").
         // NOTE: Enabling the debug layer after device creation will invalidate the active device.
         {
