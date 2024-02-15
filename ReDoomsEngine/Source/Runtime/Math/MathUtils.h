@@ -41,3 +41,9 @@ EASTL_FORCE_INLINE constexpr float Lerp(float A, float B, float F)
 {
 	return (1.0f - F) * A + F * B;
 }
+
+template <typename T>
+EASTL_FORCE_INLINE constexpr T DivideRoudingUp(T x, T y)
+{
+	return (x + y - 1) / y;
+}
