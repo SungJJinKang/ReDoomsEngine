@@ -319,7 +319,7 @@ eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::Allo
 	eastl::unique_ptr<FD3D12SubresourceContainer>&& SubresourceDataList, const uint32_t InDefaultStrideInBytes, const bool bVertexBuffer)
 {
     // @todo implment vertex/index buffer pool. currently a lot of unused memory is wasted because of d3d12 64kb alignment limitation.
-    // Create large heap and sub-allocate vertex/index buffer resource on it
+    // Create large heap and create vertex/index buffer resource on it
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> VertexIndexBufferResource =  eastl::make_shared<FD3D12VertexIndexBufferResource>(SubresourceDataList->SubresourceData.RowPitch, InDefaultStrideInBytes, false);
 	VertexIndexBufferResource->InitResource();
 

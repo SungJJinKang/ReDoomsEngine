@@ -48,9 +48,9 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 
 		FD3D12CommandQueue* const TargetCommandQueue = InCommandContext.CommandQueueList[ED3D12QueueType::Direct];
 
-		eastl::shared_ptr<FD3D12CommandList>& CommandListForUploadBatcher = InCommandContext.GraphicsCommandList;
+		eastl::shared_ptr<FD3D12CommandList> CommandListForUploadBatcher = InCommandContext.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatorType::ResourceUploadBatcher)]->GetOrCreateNewCommandList();
 		{
-			SCOPED_GPU_TIMER_DIRECT_QUEUE(InCommandContext, FD3D12ResourceUploadBatcher_Flush)
+			SCOPED_GPU_TIMER_DIRECT_QUEUE_COMMAND_LIST(InCommandContext, CommandListForUploadBatcher.get(), FD3D12ResourceUploadBatcher_Flush)
 
 			if (ResourceBarriersBeforeUpload.size() > 0)
 			{
@@ -63,12 +63,11 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 				const uint32_t SubresourceCount = PendingResourceUpload.SubresourceContainers.size();
 				for (uint32_t SubresourceIndex = 0; SubresourceIndex < SubresourceCount; ++SubresourceIndex)
 				{
-					// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-updatesubresource
 					// @todo : support mips. change UpdateSubresources's template paramter value
 					UpdateSubresources<1>(CommandListForUploadBatcher->GetD3DCommandList(), PendingResourceUpload.Resource->GetResource(), UploadBufferContainer->UploadBuffer->GetResource(),
 						0, SubresourceIndex, SubresourceCount, &PendingResourceUpload.SubresourceContainers[SubresourceIndex]->SubresourceData);
 				}
-				UploadBufferContainer->Fence = InCommandContext.FrameResourceCounter->FrameWorkEndFence;
+				UploadBufferContainer->Fence = UploadBatcherFence;
 			}
 
 			if (ResourceBarriersAfterUpload.size() > 0)
@@ -76,6 +75,11 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 				CommandListForUploadBatcher->GetD3DCommandList()->ResourceBarrier(ResourceBarriersAfterUpload.size(), ResourceBarriersAfterUpload.data());
 			}
 		}
+
+		eastl::vector<eastl::shared_ptr<FD3D12CommandList>> CommandLists{ CommandListForUploadBatcher };
+		TargetCommandQueue->ExecuteCommandLists(CommandLists);
+
+		UploadBatcherFence->Signal(TargetCommandQueue); // this is for checking if upload buffer can be reused(if upload work is finished)
 
 		PendingResourceUploadList.clear();
 	}
@@ -89,7 +93,7 @@ FD3D12UploadBufferContainer* FD3D12ResourceUploadBatcher::AllocateUploadBuffer(c
 	const ED3D12UploadBufferSizeType BufferSizeType = ConvertSizeToUploadBufferSizeType(UploadBufferSize);
 	eastl::queue<eastl::unique_ptr<FD3D12UploadBufferContainer>>& TargetBufferQueue = UploadBufferQueue[static_cast<uint32_t>(BufferSizeType)];
 
-	if (TargetBufferQueue.size() > 0 && (!(TargetBufferQueue.front()->Fence.expired()) ? TargetBufferQueue.front()->Fence.lock()->IsCompleteLastSignal() : true))
+	if (TargetBufferQueue.size() > 0 && (TargetBufferQueue.front()->Fence ? TargetBufferQueue.front()->Fence->IsCompleteLastSignal() : true))
 	{
 		eastl::unique_ptr<FD3D12UploadBufferContainer> Temp = eastl::move(TargetBufferQueue.front());
 		UploadBufferContainer = Temp.get();

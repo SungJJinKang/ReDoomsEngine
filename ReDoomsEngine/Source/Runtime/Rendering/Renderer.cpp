@@ -8,8 +8,7 @@ void FFrameResourceContainer::Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapC
 	EA_ASSERT(!bInit);
 	bInit = true;
 
-	FrameWorkEndFence = eastl::make_shared<FD3D12Fence>();
-	FrameWorkEndFence->InitIfRequired();
+	FrameWorkEndFence.InitIfRequired();
 
 	for (uint32_t CommandAllocatorIndex = 0; CommandAllocatorIndex < CommandAllocatorList.size(); ++CommandAllocatorIndex)
 	{
@@ -77,7 +76,7 @@ void FRenderer::OnStartFrame()
 	CurrentRendererState = ERendererState::OnStartFrame;
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
-	CurrentFrameContainer.FrameWorkEndFence->CPUWaitOnLastSignal();
+	CurrentFrameContainer.FrameWorkEndFence.CPUWaitOnLastSignal();
 	for (eastl::shared_ptr<FD3D12Fence>& TransientFrameWorkEndFence : CurrentFrameContainer.TransientFrameWorkEndFenceList)
 	{
 		TransientFrameWorkEndFence->CPUWaitOnLastSignal();
@@ -163,7 +162,7 @@ void FRenderer::OnEndFrame()
 	SwapChain->Present(0);
 	SwapChain->UpdateCurrentBackbufferIndex();
 
-	CurrentFrameContainer.FrameWorkEndFence->Signal(TargetCommandQueue, false);
+	CurrentFrameContainer.FrameWorkEndFence.Signal(TargetCommandQueue, false);
 }
 
 void FRenderer::Destroy()
@@ -177,7 +176,7 @@ void FRenderer::Destroy()
 
 	D3D12Manager.OnDestory(CurrentFrameCommandContext);
 
-	GetCurrentFrameResourceContainer().FrameWorkEndFence->CPUWaitOnLastSignal();
+	GetCurrentFrameResourceContainer().FrameWorkEndFence.CPUWaitOnLastSignal();
 }
 
 void FRenderer::Tick()
