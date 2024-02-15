@@ -45,10 +45,10 @@ void D3D12TestRenderer::OnStartFrame()
 			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE); // d3d debug layer doesn't complain even if don't transition to shader resource state. why????
 		TestTexture->SetDebugNameToResource(EA_WCHAR("TestRenderer TestTexture"));
 
-		TestTexture1 = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
+		SmallTexture = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("SmallTexture.dds"),
 			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,
 			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-		TestTexture1->SetDebugNameToResource(EA_WCHAR("TestRenderer TestTexture1"));
+		SmallTexture->SetDebugNameToResource(EA_WCHAR("TestRenderer SmallTexture"));
 
 	}
 
@@ -85,9 +85,9 @@ bool D3D12TestRenderer::Draw()
 	FRenderer::Draw();
 
 	Offset += GTimeDelta;
-	if (Offset > 1.0f)
+	if (Offset > 2.0f)
 	{
-		Offset = -1.0f;
+		Offset = -2.0f;
 	}
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
@@ -127,7 +127,7 @@ bool D3D12TestRenderer::Draw()
 	// Set necessary state.
 	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
-	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.4f + Offset };
+	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.4f };
 	TestVSInstance->Parameter.GlobalConstantBuffer->AddOffset = true;
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 10.0f };
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 11.0f };
@@ -165,7 +165,7 @@ bool D3D12TestRenderer::Draw()
 	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
 	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
-	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f + Offset };
+	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f };
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
@@ -173,10 +173,22 @@ bool D3D12TestRenderer::Draw()
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
 	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
+	XMVECTOR OriginalOffset = TestVSInstance->Parameter.VertexOffset->Offset;
+
 	for (uint32_t i = 0; i < 100; ++i)
 	{
-		TestVSInstance->Parameter.VertexOffset->Offset = TestVSInstance->Parameter.VertexOffset->Offset + XMVECTOR{ 0.1f };
+		if (i >= 50)
+		{
+			TestPSInstance->Parameter.TestTexture = SmallTexture->GetSRV();
+			TestVSInstance->Parameter.VertexOffset->Offset = OriginalOffset + XMVECTOR{0.0f, 0.5f, 0.0f, 0.0f} + XMVECTOR{ Offset, 0.0f, 0.0f, 0.0f} + XMVECTOR{ 0.1f, 0.0f, 0.0f, 0.0f } * (i - 50);
+		}
+		else
+		{
+			TestVSInstance->Parameter.VertexOffset->Offset = OriginalOffset + XMVECTOR{ Offset, 0.0f, 0.0f, 0.0f } + XMVECTOR{ 0.1f, 0.0f, 0.0f, 0.0f }* i;
+		}
+
 		TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
+		TestPSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 		CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
 	}
 

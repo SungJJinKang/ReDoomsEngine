@@ -3,6 +3,194 @@
 #include "D3D12Device.h"
 #include "D3D12Resource.h"
 
+static bool IsFormatCompressed(DXGI_FORMAT format)
+{
+    switch (format)
+    {
+    case DXGI_FORMAT_BC1_TYPELESS:
+    case DXGI_FORMAT_BC1_UNORM:
+    case DXGI_FORMAT_BC1_UNORM_SRGB:
+    case DXGI_FORMAT_BC2_TYPELESS:
+    case DXGI_FORMAT_BC2_UNORM:
+    case DXGI_FORMAT_BC2_UNORM_SRGB:
+    case DXGI_FORMAT_BC3_TYPELESS:
+    case DXGI_FORMAT_BC3_UNORM:
+    case DXGI_FORMAT_BC3_UNORM_SRGB:
+    case DXGI_FORMAT_BC4_TYPELESS:
+    case DXGI_FORMAT_BC4_UNORM:
+    case DXGI_FORMAT_BC4_SNORM:
+    case DXGI_FORMAT_BC5_TYPELESS:
+    case DXGI_FORMAT_BC5_UNORM:
+    case DXGI_FORMAT_BC5_SNORM:
+    case DXGI_FORMAT_BC6H_TYPELESS:
+    case DXGI_FORMAT_BC6H_UF16:
+    case DXGI_FORMAT_BC6H_SF16:
+    case DXGI_FORMAT_BC7_TYPELESS:
+    case DXGI_FORMAT_BC7_UNORM:
+    case DXGI_FORMAT_BC7_UNORM_SRGB:
+        return true;
+    default:
+        return false;
+    }
+}
+
+// Only some formats are supported. For others it returns 0.
+static UINT GetBitsPerPixel(DXGI_FORMAT format)
+{
+    switch (format)
+    {
+    case DXGI_FORMAT_R32G32B32A32_TYPELESS:
+    case DXGI_FORMAT_R32G32B32A32_FLOAT:
+    case DXGI_FORMAT_R32G32B32A32_UINT:
+    case DXGI_FORMAT_R32G32B32A32_SINT:
+        return 128;
+    case DXGI_FORMAT_R32G32B32_TYPELESS:
+    case DXGI_FORMAT_R32G32B32_FLOAT:
+    case DXGI_FORMAT_R32G32B32_UINT:
+    case DXGI_FORMAT_R32G32B32_SINT:
+        return 96;
+    case DXGI_FORMAT_R16G16B16A16_TYPELESS:
+    case DXGI_FORMAT_R16G16B16A16_FLOAT:
+    case DXGI_FORMAT_R16G16B16A16_UNORM:
+    case DXGI_FORMAT_R16G16B16A16_UINT:
+    case DXGI_FORMAT_R16G16B16A16_SNORM:
+    case DXGI_FORMAT_R16G16B16A16_SINT:
+        return 64;
+    case DXGI_FORMAT_R32G32_TYPELESS:
+    case DXGI_FORMAT_R32G32_FLOAT:
+    case DXGI_FORMAT_R32G32_UINT:
+    case DXGI_FORMAT_R32G32_SINT:
+        return 64;
+    case DXGI_FORMAT_R32G8X24_TYPELESS:
+    case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+    case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+    case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT:
+        return 64;
+    case DXGI_FORMAT_R10G10B10A2_TYPELESS:
+    case DXGI_FORMAT_R10G10B10A2_UNORM:
+    case DXGI_FORMAT_R10G10B10A2_UINT:
+    case DXGI_FORMAT_R11G11B10_FLOAT:
+        return 32;
+    case DXGI_FORMAT_R8G8B8A8_TYPELESS:
+    case DXGI_FORMAT_R8G8B8A8_UNORM:
+    case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+    case DXGI_FORMAT_R8G8B8A8_UINT:
+    case DXGI_FORMAT_R8G8B8A8_SNORM:
+    case DXGI_FORMAT_R8G8B8A8_SINT:
+        return 32;
+    case DXGI_FORMAT_R16G16_TYPELESS:
+    case DXGI_FORMAT_R16G16_FLOAT:
+    case DXGI_FORMAT_R16G16_UNORM:
+    case DXGI_FORMAT_R16G16_UINT:
+    case DXGI_FORMAT_R16G16_SNORM:
+    case DXGI_FORMAT_R16G16_SINT:
+        return 32;
+    case DXGI_FORMAT_R32_TYPELESS:
+    case DXGI_FORMAT_D32_FLOAT:
+    case DXGI_FORMAT_R32_FLOAT:
+    case DXGI_FORMAT_R32_UINT:
+    case DXGI_FORMAT_R32_SINT:
+        return 32;
+    case DXGI_FORMAT_R24G8_TYPELESS:
+    case DXGI_FORMAT_D24_UNORM_S8_UINT:
+    case DXGI_FORMAT_R24_UNORM_X8_TYPELESS:
+    case DXGI_FORMAT_X24_TYPELESS_G8_UINT:
+        return 32;
+    case DXGI_FORMAT_R8G8_TYPELESS:
+    case DXGI_FORMAT_R8G8_UNORM:
+    case DXGI_FORMAT_R8G8_UINT:
+    case DXGI_FORMAT_R8G8_SNORM:
+    case DXGI_FORMAT_R8G8_SINT:
+        return 16;
+    case DXGI_FORMAT_R16_TYPELESS:
+    case DXGI_FORMAT_R16_FLOAT:
+    case DXGI_FORMAT_D16_UNORM:
+    case DXGI_FORMAT_R16_UNORM:
+    case DXGI_FORMAT_R16_UINT:
+    case DXGI_FORMAT_R16_SNORM:
+    case DXGI_FORMAT_R16_SINT:
+        return 16;
+    case DXGI_FORMAT_R8_TYPELESS:
+    case DXGI_FORMAT_R8_UNORM:
+    case DXGI_FORMAT_R8_UINT:
+    case DXGI_FORMAT_R8_SNORM:
+    case DXGI_FORMAT_R8_SINT:
+    case DXGI_FORMAT_A8_UNORM:
+        return 8;
+    case DXGI_FORMAT_BC1_TYPELESS:
+    case DXGI_FORMAT_BC1_UNORM:
+    case DXGI_FORMAT_BC1_UNORM_SRGB:
+        return 4;
+    case DXGI_FORMAT_BC2_TYPELESS:
+    case DXGI_FORMAT_BC2_UNORM:
+    case DXGI_FORMAT_BC2_UNORM_SRGB:
+        return 8;
+    case DXGI_FORMAT_BC3_TYPELESS:
+    case DXGI_FORMAT_BC3_UNORM:
+    case DXGI_FORMAT_BC3_UNORM_SRGB:
+        return 8;
+    case DXGI_FORMAT_BC4_TYPELESS:
+    case DXGI_FORMAT_BC4_UNORM:
+    case DXGI_FORMAT_BC4_SNORM:
+        return 4;
+    case DXGI_FORMAT_BC5_TYPELESS:
+    case DXGI_FORMAT_BC5_UNORM:
+    case DXGI_FORMAT_BC5_SNORM:
+        return 8;
+    case DXGI_FORMAT_BC6H_TYPELESS:
+    case DXGI_FORMAT_BC6H_UF16:
+    case DXGI_FORMAT_BC6H_SF16:
+        return 8;
+    case DXGI_FORMAT_BC7_TYPELESS:
+    case DXGI_FORMAT_BC7_UNORM:
+    case DXGI_FORMAT_BC7_UNORM_SRGB:
+        return 8;
+    default:
+        return 0;
+    }
+}
+
+// copy from https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator/commit/c7f78c8c083735ed2e34c277cd35e1e61556461b
+// This algorithm is overly conservative.
+static bool CanUseSmallAlignment(const D3D12_RESOURCE_DESC& resourceDesc)
+{
+    if (resourceDesc.Dimension != D3D12_RESOURCE_DIMENSION_TEXTURE2D)
+        return false;
+    if ((resourceDesc.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)) != 0)
+        return false;
+    if (resourceDesc.SampleDesc.Count > 1)
+        return false;
+    if (resourceDesc.DepthOrArraySize != 1)
+        return false;
+
+    UINT sizeX = (UINT)resourceDesc.Width;
+    UINT sizeY = resourceDesc.Height;
+    UINT bitsPerPixel = GetBitsPerPixel(resourceDesc.Format);
+    if (GetBitsPerPixel == 0)
+        return false;
+
+    if (IsFormatCompressed(resourceDesc.Format))
+    {
+        sizeX = DivideRoudingUp(sizeX / 4, 1u);
+        sizeY = DivideRoudingUp(sizeY / 4, 1u);
+        bitsPerPixel *= 16;
+    }
+
+    UINT tileSizeX = 0, tileSizeY = 0;
+    switch (bitsPerPixel)
+    {
+    case   8: tileSizeX = 64; tileSizeY = 64; break;
+    case  16: tileSizeX = 64; tileSizeY = 32; break;
+    case  32: tileSizeX = 32; tileSizeY = 32; break;
+    case  64: tileSizeX = 32; tileSizeY = 16; break;
+    case 128: tileSizeX = 16; tileSizeY = 16; break;
+    default: return false;
+    }
+
+    const UINT tileCount = DivideRoudingUp(sizeX, tileSizeX) * DivideRoudingUp(sizeY, tileSizeY);
+    return tileCount <= 16;
+}
+
 void FD3D12ResourceAllocator::Init()
 {
 	{
@@ -19,7 +207,7 @@ void FD3D12ResourceAllocator::Init()
 eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateTexture2D(FD3D12CommandContext& InCommandContext, eastl::vector<eastl::unique_ptr<FD3D12SubresourceContainer>>&& SubresourceDataList,
 	const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties, CD3DX12_RESOURCE_DESC InD3DResourceDesc, const eastl::optional<D3D12_RESOURCE_STATES>& InResourceStateAfterUpload)
 {
-	EA_ASSERT(InD3DResourceDesc.SampleDesc.Count == 1);
+	EA_ASSERT(InD3DResourceDesc.SampleDesc.Count == 1); // doesn't support msaa for now
 	EA_ASSERT(InResourceCreateProperties.InitialResourceStates == D3D12_RESOURCE_STATE_COPY_DEST);
 
 	eastl::shared_ptr<FD3D12Texture2DResource> D3D12TextureResource{};
@@ -34,8 +222,29 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 		FD3D12ResourcePool::EResourcePoolType TargetTexturePoolType = FD3D12ResourcePool::EResourcePoolType::ReadOnlyTexture;
 
 		D3D12_RESOURCE_ALLOCATION_INFO AllocInfo;
-		InD3DResourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+
+		if (CanUseSmallAlignment(InD3DResourceDesc))
+		{
+            InD3DResourceDesc.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+		}
+        else
+        {
+            InD3DResourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+        }
 		AllocInfo = GetD3D12Device()->GetResourceAllocationInfo(0, 1, &InD3DResourceDesc);
+
+		// Below code doesn't work for now.. Debug layer complains about invalid alignment
+		// https://www.asawicki.info/news_1726_secrets_of_direct3d_12_resource_alignment
+// 		InD3DResourceDesc.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+// 		AllocInfo = GetD3D12Device()->GetResourceAllocationInfo(0, 1, &InD3DResourceDesc);
+// 
+// 		if (AllocInfo.Alignment != D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT)
+// 		{
+// 			// If the alignment requested is not granted, then let D3D tell us
+// 			// the alignment that needs to be used for these resources.
+// 			InD3DResourceDesc.Alignment = 0;
+// 			AllocInfo = GetD3D12Device()->GetResourceAllocationInfo(0, 1, &InD3DResourceDesc);
+// 		}
 
 		ComPtr<ID3D12Resource> TextureResource;
 

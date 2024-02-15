@@ -32,6 +32,7 @@ void FFrameResourceContainer::ResetForNewFrame()
 	{
 		if (eastl::shared_ptr<FD3D12Resource> SharedPtrDeferredDeletedResource = WeakPtrDeferredDeletedResource.lock())
 		{
+			EA_ASSERT(SharedPtrDeferredDeletedResource.unique());
 			SharedPtrDeferredDeletedResource->ReleaseResource();
 		}
 	}
