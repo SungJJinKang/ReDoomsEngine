@@ -51,7 +51,7 @@ enum class ED3D12UploadBufferSizeType : uint32_t
 struct FD3D12UploadBufferContainer
 {
 	eastl::unique_ptr<FD3D12BufferResource> UploadBuffer;
-	eastl::shared_ptr<FD3D12Fence> Fence;
+	eastl::weak_ptr<FD3D12Fence> Fence;
 };
 
 class FD3D12ResourceUploadBatcher
