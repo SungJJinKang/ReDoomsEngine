@@ -99,7 +99,7 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 
 		if (ShaderParameter->IsConstantBuffer())
 		{
-			const FShaderParameterConstantBuffer* const ConstantBuffer = dynamic_cast<FShaderParameterConstantBuffer*>(ShaderParameter);
+			const FShaderParameterConstantBuffer* const ConstantBuffer = static_cast<FShaderParameterConstantBuffer*>(ShaderParameter);
 
 			auto ValidateConstantBuffer = [&](const FShaderParameterConstantBuffer& ConstantBuffer, const FD3D12ConstantBufferReflectionData& ReflectionData)
 				{
@@ -492,20 +492,20 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 	{
 		if (ShaderParamter->IsConstantBuffer())
 		{
-			FShaderParameterConstantBuffer* ShaderParameterConstantBuffer = dynamic_cast<FShaderParameterConstantBuffer*>(ShaderParamter);
+			FShaderParameterConstantBuffer* ShaderParameterConstantBuffer = static_cast<FShaderParameterConstantBuffer*>(ShaderParamter);
 			EA_ASSERT(ShaderParameterConstantBuffer);
 			ConstantBufferBindPointInfoList[ShaderParameterConstantBuffer->GetConstantBufferReflectionData()->ResourceBindingDesc.BindPoint] = ShaderParameterConstantBuffer;
 		}
 		else if (ShaderParamter->IsSRV())
 		{
-			FShaderParameterShaderResourceView* ShaderParameterSRV = dynamic_cast<FShaderParameterShaderResourceView*>(ShaderParamter);
+			FShaderParameterShaderResourceView* ShaderParameterSRV = static_cast<FShaderParameterShaderResourceView*>(ShaderParamter);
 			EA_ASSERT(ShaderParameterSRV);
 			SRVBindPointInfoList[ShaderParameterSRV->GetReflectionData().BindPoint] = ShaderParameterSRV->GetTargetSRV();
 		}
 		else if (ShaderParamter->IsUAV())
 		{
 			EA_ASSERT_MSG(false, "Currently, it isn't supported yet");
-// 			FShaderParameterShaderResourceView* ShaderParameterSRV = dynamic_cast<FShaderParameterShaderResourceView*>(ShaderParamter);
+// 			FShaderParameterShaderResourceView* ShaderParameterSRV = static_cast<FShaderParameterShaderResourceView*>(ShaderParamter);
 // 			EA_ASSERT(ShaderParameterSRV);
 // 			UAVBindPointInfoList[ShaderParameterSRV->GetReflectionData().BindPoint] = ShaderParameterSRV;
 		}
