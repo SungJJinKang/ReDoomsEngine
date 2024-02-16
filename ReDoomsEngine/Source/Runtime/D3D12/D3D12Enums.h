@@ -82,8 +82,8 @@ inline ED3D12QueueType CommandAllocatorTypeTiD3D12QueueType(const ECommandAlloca
 	{
 	case ECommandAllocatorType::Graphics:
 		return ED3D12QueueType::Direct;
-	case ECommandAllocatorType::ResourceUploadBatcher:
-		return ED3D12QueueType::Direct; // @todo : use copy queue
+// 	case ECommandAllocatorType::ResourceUploadBatcher:
+// 		return ED3D12QueueType::Direct; // @todo : use copy queue
 	default:
 		EA_ASSUME(false);
 	}
