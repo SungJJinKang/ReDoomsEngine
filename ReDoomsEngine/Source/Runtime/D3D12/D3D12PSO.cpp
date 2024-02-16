@@ -25,7 +25,7 @@ void FD3D12PSOInitializer::FinishCreating()
     BoundShaderSetHash.first = BoundShaderSet.CachedHash.Value[0];
     BoundShaderSetHash.second = BoundShaderSet.CachedHash.Value[1];
     const uint64 BoundShaderSetHash64 = Hash128to64(BoundShaderSetHash);
-    const uint64 DescHash = CityHash64(reinterpret_cast<const char*>(&Desc), sizeof(BoundShaderSetHash));
+    const uint64 DescHash = CityHash64(reinterpret_cast<const char*>(&Desc), sizeof(Desc));
 
     CachedHash = BoundShaderSetHash64 ^ DescHash;
 }
