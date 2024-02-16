@@ -337,7 +337,12 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 				case D3D_SIT_SAMPLER:
 				{
 					ShaderReflectionData.SamplerCount++;
-					ShaderReflectionData.SamplerResourceBindingDescList.emplace_back(ResourceBindingDesc);
+
+					FSamplerResourceBindingDesc SamplerResourceBindingDesc;
+					SamplerResourceBindingDesc.Desc = ResourceBindingDesc;
+					SamplerResourceBindingDesc.SamplerType = NameToEStaticSamplerType(ResourceBindingDesc.Name);
+					EA_ASSERT(SamplerResourceBindingDesc.SamplerType < EStaticSamplerType::NumStaticSamplerType);
+					ShaderReflectionData.SamplerResourceBindingDescList.emplace_back(SamplerResourceBindingDesc);
 
 					ShaderReflectionData.SamplerCount = eastl::max(ShaderReflectionData.SamplerCount, ResourceBindingDesc.BindPoint + ResourceBindingDesc.BindCount);
 					break;

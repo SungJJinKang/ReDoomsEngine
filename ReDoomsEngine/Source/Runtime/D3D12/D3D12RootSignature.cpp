@@ -196,11 +196,9 @@ static void AnalyizeRootSignature(ROOT_SIGNATURE_DESC_TYPE& Desc, FD3D12RootSign
 	}
 }
 
-static bool MakeStaticSamplerDescFromByName(LPCSTR Name, D3D12_STATIC_SAMPLER_DESC& OutSamplerDesc)
+static eastl::array<D3D12_STATIC_SAMPLER_DESC, EStaticSamplerType::NumStaticSamplerType> GStaticSamplerDescList
 {
-	if (EA::StdC::Strcmp(Name, "StaticPointWrapSampler") == 0)
-	{
-		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
+	D3D12_STATIC_SAMPLER_DESC{
 			D3D12_FILTER_MIN_MAG_MIP_POINT,
 			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressU
 			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressV
@@ -214,12 +212,8 @@ static bool MakeStaticSamplerDescFromByName(LPCSTR Name, D3D12_STATIC_SAMPLER_DE
 			0, // ShaderRegister
 			0, // RegisterSpace
 			D3D12_SHADER_VISIBILITY_ALL,
-		};
-		return true;
-	}
-	else if (EA::StdC::Strcmp(Name, "StaticPointClampSampler") == 0)
-	{
-		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
+	},
+	D3D12_STATIC_SAMPLER_DESC{
 			D3D12_FILTER_MIN_MAG_MIP_POINT,
 			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressU
 			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressV
@@ -233,88 +227,68 @@ static bool MakeStaticSamplerDescFromByName(LPCSTR Name, D3D12_STATIC_SAMPLER_DE
 			0, // ShaderRegister
 			0, // RegisterSpace
 			D3D12_SHADER_VISIBILITY_ALL,
-		};
-		return true;
+	},
+	D3D12_STATIC_SAMPLER_DESC{
+		D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressU
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressV
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressW
+		0, // MipLODBias
+		D3D12_MAX_MAXANISOTROPY,
+		D3D12_COMPARISON_FUNC_NEVER,
+		D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+		0, // MinLOD
+		FLT_MAX, // MaxLOD
+		0, // ShaderRegister
+		0, // RegisterSpace
+		D3D12_SHADER_VISIBILITY_ALL,
+	},
+	D3D12_STATIC_SAMPLER_DESC{
+		D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressU
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressV
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressW
+		0, // MipLODBias
+		D3D12_MAX_MAXANISOTROPY,
+		D3D12_COMPARISON_FUNC_NEVER,
+		D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+		0, // MinLOD
+		FLT_MAX, // MaxLOD
+		0, // ShaderRegister
+		0, // RegisterSpace
+		D3D12_SHADER_VISIBILITY_ALL,
+	},
+	D3D12_STATIC_SAMPLER_DESC{
+		D3D12_FILTER_ANISOTROPIC,
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressU
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressV
+		D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressW
+		0, // MipLODBias
+		D3D12_MAX_MAXANISOTROPY,
+		D3D12_COMPARISON_FUNC_NEVER,
+		D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+		0, // MinLOD
+		FLT_MAX, // MaxLOD
+		0, // ShaderRegister
+		0, // RegisterSpace
+		D3D12_SHADER_VISIBILITY_ALL,
+	},
+	D3D12_STATIC_SAMPLER_DESC{
+		D3D12_FILTER_ANISOTROPIC,
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressU
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressV
+		D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressW
+		0, // MipLODBias
+		D3D12_MAX_MAXANISOTROPY,
+		D3D12_COMPARISON_FUNC_NEVER,
+		D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
+		0, // MinLOD
+		FLT_MAX, // MaxLOD
+		0, // ShaderRegister
+		0, // RegisterSpace
+		D3D12_SHADER_VISIBILITY_ALL,
 	}
-	else if (EA::StdC::Strcmp(Name, "StaticLinearWrapSampler") == 0)
-	{
-		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
-			D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressU
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressV
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressW
-			0, // MipLODBias
-			D3D12_MAX_MAXANISOTROPY,
-			D3D12_COMPARISON_FUNC_NEVER,
-			D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
-			0, // MinLOD
-			FLT_MAX, // MaxLOD
-			0, // ShaderRegister
-			0, // RegisterSpace
-			D3D12_SHADER_VISIBILITY_ALL,
-		};
-		return true;
-	}
-	else if (EA::StdC::Strcmp(Name, "StaticLinearClampSampler") == 0)
-	{
-		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
-			D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressU
-			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressV
-			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressW
-			0, // MipLODBias
-			D3D12_MAX_MAXANISOTROPY,
-			D3D12_COMPARISON_FUNC_NEVER,
-			D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
-			0, // MinLOD
-			FLT_MAX, // MaxLOD
-			0, // ShaderRegister
-			0, // RegisterSpace
-			D3D12_SHADER_VISIBILITY_ALL,
-		};
-		return true;
-	}
-	else if (EA::StdC::Strcmp(Name, "StaticAnisotropicWrapSampler") == 0)
-	{
-		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
-			D3D12_FILTER_ANISOTROPIC,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressU
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressV
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP, // AddressW
-			0, // MipLODBias
-			D3D12_MAX_MAXANISOTROPY,
-			D3D12_COMPARISON_FUNC_NEVER,
-			D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
-			0, // MinLOD
-			FLT_MAX, // MaxLOD
-			0, // ShaderRegister
-			0, // RegisterSpace
-			D3D12_SHADER_VISIBILITY_ALL,
-		};
-		return true;
-	}
-	else if (EA::StdC::Strcmp(Name, "StaticAnisotropicClampSampler") == 0)
-	{
-		OutSamplerDesc = D3D12_STATIC_SAMPLER_DESC{
-			D3D12_FILTER_ANISOTROPIC,
-			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressU
-			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressV
-			D3D12_TEXTURE_ADDRESS_MODE_CLAMP, // AddressW
-			0, // MipLODBias
-			D3D12_MAX_MAXANISOTROPY,
-			D3D12_COMPARISON_FUNC_NEVER,
-			D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK,
-			0, // MinLOD
-			FLT_MAX, // MaxLOD
-			0, // ShaderRegister
-			0, // RegisterSpace
-			D3D12_SHADER_VISIBILITY_ALL,
-		};
-		return true;
-	}
-
-	return false;
-}
+};
 
 FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderSet& InBoundShaderSet)
 {
@@ -398,12 +372,11 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 // 						RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
 // 						RootSignature.RootParameterCount++;
 
-						for (const D3D12_SHADER_INPUT_BIND_DESC& InputBindDesc : ReflectionData.SamplerResourceBindingDescList)
+						for (const FSamplerResourceBindingDesc& SamplerResourceBindingDesc : ReflectionData.SamplerResourceBindingDescList)
 						{
-							D3D12_STATIC_SAMPLER_DESC StaticSamplerDesc{};
-							const bool bFound = MakeStaticSamplerDescFromByName(InputBindDesc.Name, StaticSamplerDesc);
-							EA_ASSERT_FORMATTED(bFound, ("Unsupported Sampler(\"%s\")", InputBindDesc.Name));
-							StaticSamplerDesc.ShaderRegister = InputBindDesc.BindPoint;
+							EA_ASSERT(SamplerResourceBindingDesc.SamplerType < EStaticSamplerType::NumStaticSamplerType);
+							D3D12_STATIC_SAMPLER_DESC StaticSamplerDesc = GStaticSamplerDescList[SamplerResourceBindingDesc.SamplerType];
+							StaticSamplerDesc.ShaderRegister = SamplerResourceBindingDesc.Desc.BindPoint;
 							StaticSamplerDescList.emplace_back(StaticSamplerDesc);
 						}
 						

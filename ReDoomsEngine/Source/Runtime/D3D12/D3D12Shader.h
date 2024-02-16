@@ -63,6 +63,12 @@ struct FD3D12ConstantBufferReflectionData
 	eastl::hash_map<eastl::string, FD3D12VariableOfConstantBufferReflectionData> VariableList; // variables declared in cbuffer or global variables
 };
 
+struct FSamplerResourceBindingDesc
+{
+	EStaticSamplerType SamplerType;
+	D3D12_SHADER_INPUT_BIND_DESC Desc;
+};
+
 // Member variables never be touched after PopulateShaderReflectionData because shader parameters reference the variables by reference
 struct FD3D12ShaderReflectionData
 {
@@ -90,7 +96,7 @@ struct FD3D12ShaderReflectionData
 	eastl::vector<FD3D12ConstantBufferReflectionData> ConstantBufferList;
 
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> TextureResourceBindingDescList;
-	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> SamplerResourceBindingDescList;
+	eastl::vector<FSamplerResourceBindingDesc> SamplerResourceBindingDescList;
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> UAVResourceBindingDescList;
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> ByteAddressBufferResourceBindingDescList;
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> StructuredBufferResourceBindingDescList;
