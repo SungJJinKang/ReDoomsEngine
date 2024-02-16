@@ -76,7 +76,7 @@ void FD3D12Swapchain::ResizeIfRequired()
 	if (IsRequireResize())
 	{
         FFrameResourceContainer& PreviousFrameContainer = FRenderer::GetInstance()->GetPreviousFrameResourceContainer();
-        PreviousFrameContainer.FrameWorkEndFence.CPUWaitOnLastSignal();
+        PreviousFrameContainer.FrameWorkEndFence->CPUWaitOnLastSignal();
        
         RenderTargets.clear();
 		VERIFYD3D12RESULT(D3DSwapchain->ResizeBuffers(NumBuffer, (UINT)LOWORD(ResizedWidth), (UINT)HIWORD(ResizedHeight), Format, 0));

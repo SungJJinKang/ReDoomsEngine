@@ -13,8 +13,8 @@ public:
 
 private:
 
-	float Offset = -1.0f;
+	float Offset = -2.0f;
 	eastl::shared_ptr<FD3D12TextureResource> TestTexture;
-	eastl::shared_ptr<FD3D12TextureResource> TestTexture1;
+	eastl::shared_ptr<FD3D12TextureResource> SmallTexture;
 };
 
