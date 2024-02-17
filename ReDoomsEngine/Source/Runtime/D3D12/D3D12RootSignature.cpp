@@ -290,6 +290,20 @@ static eastl::array<D3D12_STATIC_SAMPLER_DESC, EStaticSamplerType::NumStaticSamp
 	}
 };
 
+/*
+	https://gpuopen.com/wp-content/uploads/2016/03/GDC_2016_D3D12_Right_On_Queue_final.pdf
+	Root copied to SGPR on launch
+	‒Layout defined at compile time
+	‒Only what’s required for each shader
+	stage
+	‒Too many SGPR ->
+	Root Signature will spill into local
+	memory
+	 Most frequently changed entries
+	first
+	 Avoid spilling of Descriptor Tables!
+*/
+
 FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderSet& InBoundShaderSet)
 {
 	FD3D12RootSignature RootSignature;
