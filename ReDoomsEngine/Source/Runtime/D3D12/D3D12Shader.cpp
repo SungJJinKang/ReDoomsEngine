@@ -7,7 +7,7 @@
 #include "D3D12CommandContext.h"
 #include "ShaderCompilers/HLSLTypeHelper.h"
 
-FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> InShaderList)
+FBoundShaderSet::FBoundShaderSet(const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& InShaderList)
 	: ShaderList(InShaderList)
 {
 	CacheHash();
@@ -19,7 +19,7 @@ void FBoundShaderSet::CacheHash()
 	{
 		if (ShaderList[ShaderIndex])
 		{
-			CachedHash = CombineHash(CachedHash, ShaderList[ShaderIndex]->GetShaderHash());
+			CachedHash = CombineHash(CachedHash, ShaderList[ShaderIndex]->GetShaderTemplate()->GetShaderHash());
 		}
 	}
 }
@@ -28,10 +28,12 @@ void FBoundShaderSet::Validate()
 {
 	bool bFound = false;
 
-	for (FD3D12ShaderTemplate* Shader : ShaderList)
+	for (eastl::shared_ptr<FD3D12ShaderInstance>& Shader : ShaderList)
 	{
 		if (Shader)
 		{
+			EA_ASSERT(Shader->GetShaderTemplate());
+
 			bFound = true;
 			break;
 		}

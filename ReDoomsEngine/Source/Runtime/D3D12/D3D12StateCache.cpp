@@ -219,7 +219,7 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 }
 
 
-void FD3D12StateCache::Flush(FD3D12CommandList& InCommandList)
+void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext)
 {
 	FD3D12DescriptorHeapBlock BaseHeapBlcok;
 
@@ -243,29 +243,38 @@ void FD3D12StateCache::Flush(FD3D12CommandList& InCommandList)
 
 	uint32_t OutUsedBlockCount = 0;
 
+	for (uint32_t ShaderFrequencyIndex = 0; ShaderFrequencyIndex < EShaderFrequency::NumShaderFrequency; ++ShaderFrequencyIndex)
+	{
+		eastl::shared_ptr<FD3D12ShaderInstance>& ShaderInstance = CachedPSOInitializer.BoundShaderSet.ShaderList[ShaderFrequencyIndex];
+		if (ShaderInstance)
+		{
+			ShaderInstance->ApplyShaderParameter(InCommandContext);
+		}
+	}
+
 	if (bIsPSODirty)
 	{
-		ApplyPSO(InCommandList);
+		ApplyPSO(*(InCommandContext.GraphicsCommandList));
 	}
 	if (bIsRootSignatureDirty)
 	{
-		ApplyRootSignature(InCommandList);
+		ApplyRootSignature(*(InCommandContext.GraphicsCommandList));
 	}
 	if (bNeedToSetDescriptorHeaps)
 	{
-		ApplyDescriptorHeap(InCommandList);
+		ApplyDescriptorHeap(*(InCommandContext.GraphicsCommandList));
 	}
 	if (DirtyFlagsOfSRVs.any())
 	{
-		ApplySRVs(InCommandList, BaseHeapBlcok, OutUsedBlockCount);
+		ApplySRVs(*(InCommandContext.GraphicsCommandList), BaseHeapBlcok, OutUsedBlockCount);
 	}
 	if (DirtyFlagsOfUAVs.any())
 	{
-		ApplyUAVs(InCommandList, BaseHeapBlcok, OutUsedBlockCount);
+		ApplyUAVs(*(InCommandContext.GraphicsCommandList), BaseHeapBlcok, OutUsedBlockCount);
 	}
 	if (bIsRootCBVDirty)
 	{
-		ApplyConstantBuffers(InCommandList);
+		ApplyConstantBuffers(*(InCommandContext.GraphicsCommandList));
 	}
 }
 

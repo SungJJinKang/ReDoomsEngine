@@ -8,7 +8,7 @@
 
 struct FD3D12CommandContext;
 class FD3D12RootSignature;
-class FD3D12ShaderTemplate;
+class FD3D12ShaderInstance;
 class FShaderParameterTemplate;
 class FD3D12ShaderInstance;
 class FShaderParameterConstantBuffer;
@@ -28,11 +28,11 @@ struct FShaderPreprocessorDefineAdd;
 struct FBoundShaderSet
 {
 	FBoundShaderSet() = default;
-	FBoundShaderSet(const eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> InShaderList);
+	FBoundShaderSet(const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& InShaderList);
 	void CacheHash();
 	void Validate();
 
-	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderList{ nullptr };
+	eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency> ShaderList{ nullptr };
 	FShaderHash CachedHash;
 
 	FD3D12RootSignature* GetRootSignature() const;
@@ -655,8 +655,8 @@ private:
 // @todo : this constant buffer should be allocated on default heap because it's modified once for a frame
 DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 	ViewConstantBuffer, false,
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(XMMATRIX, ViewProjectionMatrix)
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(XMMATRIX, PrevViewProjectionMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(XMFLOAT4X4, ViewProjectionMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(XMFLOAT4X4, PrevViewProjectionMatrix)
 )
 
 // TODO) Need to support permutation?
@@ -679,10 +679,10 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 		} \
 		__VA_ARGS__ \
 		virtual void OnFinishShaderCompile() { FD3D12ShaderTemplate::OnFinishShaderCompile(); ShaderParameter.Init(); } \
-		static eastl::unique_ptr<TD3D12ShaderInstance<F##ShaderName>> MakeShaderInstance()  \
+		static eastl::shared_ptr<TD3D12ShaderInstance<F##ShaderName>> MakeShaderInstance()  \
 		{ \
 			EA_ASSERT(TemplateVariable->IsFinishToCompile()); \
-			eastl::unique_ptr<TD3D12ShaderInstance<F##ShaderName>> ShaderInstance = eastl::make_unique<TD3D12ShaderInstance<F##ShaderName>>(TemplateVariable); \
+			eastl::shared_ptr<TD3D12ShaderInstance<F##ShaderName>> ShaderInstance = eastl::make_shared<TD3D12ShaderInstance<F##ShaderName>>(TemplateVariable); \
 			ShaderInstance->Init(); \
 			return ShaderInstance;	\
 		} \
