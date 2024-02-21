@@ -2,7 +2,7 @@
 #include "D3D12Include.h"
 #include "D3D12PSO.h"
 
-class FD3D12CommandList;
+class FD3D12CommandContext;
 class FD3D12View;
 class FD3D12DescriptorHeap;
 class FD3D12RootSignature;
@@ -16,7 +16,7 @@ public:
 	void SetSRVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_SRVS>& BindPointInfos);
 	void SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>& BindPointInfos);
 	void SetConstantBuffer(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>& BindPointInfos);
-	void Flush(FD3D12CommandList& InCommandList);
+	void Flush(FD3D12CommandContext& InCommandList);
 	void ResetForNewCommandlist();
 
 private:

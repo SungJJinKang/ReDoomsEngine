@@ -354,11 +354,11 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 		{
 			const D3D12_SHADER_VISIBILITY Visibility = ShaderVisibilityPriorityOrder[ShaderVisibilityIndex];
 			const EShaderFrequency ShaderFrequency = D3D12ShaderVisibilityToShaderFrequency(Visibility);
-			const FD3D12ShaderTemplate* Shader = InBoundShaderSet.ShaderList[ShaderFrequency];
+			const eastl::shared_ptr<FD3D12ShaderInstance>& Shader = InBoundShaderSet.ShaderList[ShaderFrequency];
 			
 			if (Shader)
 			{
-				const FD3D12ShaderReflectionData& ReflectionData = Shader->GetD3D12ShaderReflection();
+				const FD3D12ShaderReflectionData& ReflectionData = Shader->GetShaderTemplate()->GetD3D12ShaderReflection();
 
 				switch (RootParameterType)
 				{
