@@ -116,6 +116,7 @@ void FD3D12Swapchain::Present(const int32_t SyncInterval)
 {
     SCOPED_CPU_TIMER(Swapchain_Present)
     VERIFYD3D12RESULT(GetD3DSwapchain()->Present(SyncInterval, 0));
+    UpdateCurrentBackbufferIndex();
 }
 
 void FD3D12Swapchain::UpdateCurrentBackbufferIndex()
