@@ -208,14 +208,17 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 			bFoundMatchingReflectionData = true; //temp
 			if (ShaderParameter->IsSRV())
 			{
+				// @todo : implement
 
 			}
 			else if (ShaderParameter->IsUAV())
 			{
+				// @todo : implement
 
 			}
 			else if (ShaderParameter->IsRTV())
 			{
+				// @todo : implement
 
 			}
 			else
@@ -675,6 +678,4 @@ void FShaderParameterShaderResourceView::SetReflectionDataFromShaderReflectionDa
 			break;
 		}
 	}
-
-	EA_ASSERT(bFoundReflectionData);
 }

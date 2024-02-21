@@ -1,0 +1,38 @@
+#pragma once
+
+#include "CommonInclude.h"
+#include "D3D12Include.h"
+#include "D3D12Resource.h"
+
+#define MAX_NUMBER_OF_TEXTURECOORDS 5
+
+struct FMesh
+{
+	inline static const D3D12_INPUT_ELEMENT_DESC InputElementDescs[]{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 36, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD0", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 48, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD1", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 56, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD2", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 64, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD3", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 72, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD4", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 80, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
+
+	eastl::shared_ptr<FD3D12VertexIndexBufferResource> PositionBuffer;
+	eastl::shared_ptr<FD3D12VertexIndexBufferResource> NormalBuffer;
+	eastl::shared_ptr<FD3D12VertexIndexBufferResource> TangentBuffer;
+	eastl::shared_ptr<FD3D12VertexIndexBufferResource> BiTangentBuffer;
+	eastl::array<eastl::shared_ptr<FD3D12VertexIndexBufferResource>, MAX_NUMBER_OF_TEXTURECOORDS> TexCoordBuffers;
+
+	eastl::shared_ptr<FD3D12VertexIndexBufferResource> IndexBuffer;
+
+	eastl::vector<D3D12_VERTEX_BUFFER_VIEW> CreateVertexBufferViewList() const;
+	D3D12_INDEX_BUFFER_VIEW CreateIndexBufferView() const;
+};
+
+struct F3DModel
+{
+	eastl::vector<FMesh> MeshList;
+};

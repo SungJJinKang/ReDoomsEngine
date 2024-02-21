@@ -281,6 +281,16 @@ D3D12_VERTEX_BUFFER_VIEW FD3D12VertexIndexBufferResource::GetVertexBufferView(co
 	return View;
 }
 
+D3D12_INDEX_BUFFER_VIEW FD3D12VertexIndexBufferResource::GetIndexBufferView() const
+{
+	D3D12_INDEX_BUFFER_VIEW View;
+	View.BufferLocation = GPUVirtualAddress();
+	View.Format = DXGI_FORMAT::DXGI_FORMAT_R32_UINT;
+	View.SizeInBytes = Desc.Width;
+
+	return View;
+}
+
 D3D12_INDEX_BUFFER_VIEW FD3D12VertexIndexBufferResource::GetIndexBufferView(const uint64_t InBaseOffsetInBytes, const DXGI_FORMAT InFormat, const uint32_t InSizeInBytes) const
 {
 	D3D12_INDEX_BUFFER_VIEW View;

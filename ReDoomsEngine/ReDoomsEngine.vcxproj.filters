@@ -204,6 +204,9 @@
     <ClCompile Include="Source\Runtime\Rendering\MeshLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
@@ -1323,6 +1326,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Rendering\MeshLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
