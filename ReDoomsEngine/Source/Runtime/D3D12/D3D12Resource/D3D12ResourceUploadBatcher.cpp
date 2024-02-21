@@ -69,6 +69,7 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 						0, SubresourceIndex, SubresourceCount, &PendingResourceUpload.SubresourceContainers[SubresourceIndex]->SubresourceData);
 				}
 				UploadBufferContainer->Fence = InCommandContext.FrameResourceCounter->FrameWorkEndFence;
+				UploadBufferContainer->UploadedFrameIndex = GCurrentFrameIndex;
 			}
 
 			if (ResourceBarriersAfterUpload.size() > 0)
@@ -89,7 +90,7 @@ FD3D12UploadBufferContainer* FD3D12ResourceUploadBatcher::AllocateUploadBuffer(c
 	const ED3D12UploadBufferSizeType BufferSizeType = ConvertSizeToUploadBufferSizeType(UploadBufferSize);
 	eastl::queue<eastl::unique_ptr<FD3D12UploadBufferContainer>>& TargetBufferQueue = UploadBufferQueue[static_cast<uint32_t>(BufferSizeType)];
 
-	if (TargetBufferQueue.size() > 0 && (!(TargetBufferQueue.front()->Fence.expired()) ? TargetBufferQueue.front()->Fence.lock()->IsCompleteLastSignal() : true))
+	if (TargetBufferQueue.size() > 0 && TargetBufferQueue.front()->CanFree())
 	{
 		eastl::unique_ptr<FD3D12UploadBufferContainer> Temp = eastl::move(TargetBufferQueue.front());
 		UploadBufferContainer = Temp.get();
@@ -111,9 +112,30 @@ FD3D12UploadBufferContainer* FD3D12ResourceUploadBatcher::AllocateUploadBuffer(c
 	return UploadBufferContainer;
 }
 
+void FD3D12ResourceUploadBatcher::FreeUnusedUploadBuffers()
+{
+	for (uint32_t UploadBufferSizeTypeIndex = 0; UploadBufferSizeTypeIndex < static_cast<uint32_t>(ED3D12UploadBufferSizeType::Num); ++UploadBufferSizeTypeIndex)
+	{
+		eastl::queue<eastl::unique_ptr<FD3D12UploadBufferContainer>>& TargetBufferQueue = UploadBufferQueue[static_cast<uint32_t>(UploadBufferSizeTypeIndex)];
+	
+		while (TargetBufferQueue.size() > 0 && TargetBufferQueue.front()->CanFree())
+		{
+			TargetBufferQueue.pop();
+		};
+	}
+}
+
 ED3D12UploadBufferSizeType FD3D12ResourceUploadBatcher::ConvertSizeToUploadBufferSizeType(const uint64_t InSize)
 {
-	return ED3D12UploadBufferSizeType::VeryLarge;
+	for (uint32_t UploadBufferSizeTypeIndex = 0; UploadBufferSizeTypeIndex < static_cast<uint32_t>(ED3D12UploadBufferSizeType::Num); ++UploadBufferSizeTypeIndex)
+	{
+		if (InSize < ConvertUploadBufferSizeTypeToSize(static_cast<ED3D12UploadBufferSizeType>(UploadBufferSizeTypeIndex)))
+		{
+			return static_cast<ED3D12UploadBufferSizeType>(UploadBufferSizeTypeIndex);
+		}
+	}
+
+	RD_ASSUME(false);
 }
 
 uint64_t FD3D12ResourceUploadBatcher::ConvertUploadBufferSizeTypeToSize(const ED3D12UploadBufferSizeType InUploadBufferSizeType)
@@ -121,12 +143,20 @@ uint64_t FD3D12ResourceUploadBatcher::ConvertUploadBufferSizeTypeToSize(const ED
 	switch (InUploadBufferSizeType)
 	{
 	case ED3D12UploadBufferSizeType::Small:
+		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
 	case ED3D12UploadBufferSizeType::Medium:
+		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 32;
 	case ED3D12UploadBufferSizeType::Large:
+		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 64;
 	case ED3D12UploadBufferSizeType::VeryLarge:
-		return 1024 * 1024 * 16; // @todo elborate this
+		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 128;
 	default:
 		RD_ASSUME(0);
 		break;
 	}
+}
+
+bool FD3D12UploadBufferContainer::CanFree() const
+{
+	return (UploadedFrameIndex != GCurrentFrameIndex) && (!(Fence.expired()) ? Fence.lock()->IsCompleteLastSignal() : true);
 }

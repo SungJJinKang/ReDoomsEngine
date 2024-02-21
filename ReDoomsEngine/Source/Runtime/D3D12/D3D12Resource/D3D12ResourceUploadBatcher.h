@@ -52,6 +52,9 @@ struct FD3D12UploadBufferContainer
 {
 	eastl::unique_ptr<FD3D12BufferResource> UploadBuffer;
 	eastl::weak_ptr<FD3D12Fence> Fence;
+	uint64_t UploadedFrameIndex;
+
+	bool CanFree() const;
 };
 
 class FD3D12ResourceUploadBatcher
@@ -60,6 +63,7 @@ public:
 
 	void AddPendingResourceUpload(FD3D12ResourceUpload&& InResourceUpload);
 	void Flush(FD3D12CommandContext& InCommandContext);
+	void FreeUnusedUploadBuffers();
 
 private:
 
