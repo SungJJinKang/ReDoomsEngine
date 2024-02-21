@@ -166,7 +166,6 @@ void FRenderer::OnEndFrame()
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
 	SwapChain->Present(0);
-	SwapChain->UpdateCurrentBackbufferIndex();
 
 	CurrentFrameContainer.FrameWorkEndFence->Signal(TargetCommandQueue, false);
 }
