@@ -254,6 +254,7 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 		EA_ASSERT(bIsSuccess);
 
 		InD3DResourceDesc.Alignment = TargetPool.HeapDesc.Alignment; // Follow heap's alignment
+        EA_ASSERT(IsAligned(OutAllocatedBlock.OffsetFromBase, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT));
 
 		VERIFYD3D12RESULT(GetD3D12Device()->CreatePlacedResource(
 			OutAllocatedBlock.OwnerResourcePoolHeapContainer.lock()->Heap.Get(),
@@ -349,16 +350,7 @@ void FD3D12ResourceAllocator::OnEndFrame(FD3D12CommandContext& InCommandContext)
 FD3D12ResourcePool FD3D12ResourceAllocator::AllocateNewPool(const D3D12_HEAP_DESC InHeapDesc)
 {
 	FD3D12ResourcePool Pool{};
+    Pool.HeapDesc = InHeapDesc;
 
-	EA_ASSERT(InHeapDesc.SizeInBytes > 0);
-	eastl::shared_ptr<FD3D12ResourcePoolHeapContainer>& NewResourcePoolHeapContainer = Pool.ResourcePoolHeapContainerList.emplace_back(eastl::make_shared<FD3D12ResourcePoolHeapContainer>());
-	VERIFYD3D12RESULT(GetD3D12Device()->CreateHeap(&(InHeapDesc), IID_PPV_ARGS(&(NewResourcePoolHeapContainer->Heap))));
-
-	FD3D12ResourcePoolBlock FreeBlock{};
-	FreeBlock.Size = InHeapDesc.SizeInBytes;
-	FreeBlock.OffsetFromBase = 0;
-
-	NewResourcePoolHeapContainer->FreeBlockList.emplace_back(FreeBlock);
-	
 	return Pool;
 }

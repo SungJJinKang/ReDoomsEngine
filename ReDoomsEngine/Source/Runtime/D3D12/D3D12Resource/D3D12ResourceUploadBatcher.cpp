@@ -129,7 +129,7 @@ ED3D12UploadBufferSizeType FD3D12ResourceUploadBatcher::ConvertSizeToUploadBuffe
 {
 	for (uint32_t UploadBufferSizeTypeIndex = 0; UploadBufferSizeTypeIndex < static_cast<uint32_t>(ED3D12UploadBufferSizeType::Num); ++UploadBufferSizeTypeIndex)
 	{
-		if (InSize < ConvertUploadBufferSizeTypeToSize(static_cast<ED3D12UploadBufferSizeType>(UploadBufferSizeTypeIndex)))
+		if (InSize <= ConvertUploadBufferSizeTypeToSize(static_cast<ED3D12UploadBufferSizeType>(UploadBufferSizeTypeIndex)))
 		{
 			return static_cast<ED3D12UploadBufferSizeType>(UploadBufferSizeTypeIndex);
 		}
@@ -148,8 +148,8 @@ uint64_t FD3D12ResourceUploadBatcher::ConvertUploadBufferSizeTypeToSize(const ED
 		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 32;
 	case ED3D12UploadBufferSizeType::Large:
 		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 64;
-	case ED3D12UploadBufferSizeType::VeryLarge:
-		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 128;
+	case ED3D12UploadBufferSizeType::FourK:
+		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 1024;
 	default:
 		RD_ASSUME(0);
 		break;

@@ -656,6 +656,7 @@ void FShaderParameterConstantBuffer::SetReflectionDataFromShaderReflectionData()
 
 FShaderParameterShaderResourceView& FShaderParameterShaderResourceView::operator=(FD3D12ShaderResourceView* const InSRV)
 {
+	// @todo : check if is culled
 	TargetSRV = InSRV;
 	return *this;
 }

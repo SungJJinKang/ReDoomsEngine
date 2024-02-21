@@ -28,11 +28,23 @@ struct FMesh
 
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> IndexBuffer;
 
+	uint32_t MaterialIndex;
+
 	eastl::vector<D3D12_VERTEX_BUFFER_VIEW> CreateVertexBufferViewList() const;
 	D3D12_INDEX_BUFFER_VIEW CreateIndexBufferView() const;
+};
+
+struct FMeshMaterial
+{
+	eastl::shared_ptr<FD3D12Texture2DResource> DiffuseTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> EmissiveTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> ShininessTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> MetalnessTexture;
+
 };
 
 struct F3DModel
 {
 	eastl::vector<FMesh> MeshList;
+	eastl::vector<FMeshMaterial> Material;
 };

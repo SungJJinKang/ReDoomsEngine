@@ -29,7 +29,7 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 DEFINE_SHADER(MeshDrawVS, "MeshDraw.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMMATRIX, ModelMatrix)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMFLOAT4X4, ModelMatrix)
 		)
 	)
 );
@@ -51,12 +51,12 @@ void D3D12TestRenderer::OnStartFrame()
 
 	if (!TestTexture)
 	{
-		TestTexture = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
+		TestTexture = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
 			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT, 
 			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE); // d3d debug layer doesn't complain even if don't transition to shader resource state. why????
 		TestTexture->SetDebugNameToResource(EA_WCHAR("TestRenderer TestTexture"));
 
-		SmallTexture = FTextureLoader::LoadFromDDSFile(CurrentFrameCommandContext, EA_WCHAR("SmallTexture.dds"),
+		SmallTexture = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("SmallTexture.dds"),
 			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,
 			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 		SmallTexture->SetDebugNameToResource(EA_WCHAR("TestRenderer SmallTexture"));
@@ -65,7 +65,7 @@ void D3D12TestRenderer::OnStartFrame()
 
 	if (!Mesh)
 	{
-		Mesh = FMeshLoader::LoadFromMeshFile(CurrentFrameCommandContext, EA_WCHAR("SpaceShip1.obj"));
+		Mesh = FMeshLoader::LoadFromMeshFile(CurrentFrameCommandContext, EA_WCHAR("Building/Buildings/Buildings.fbx"));
 	}
 
 	if (!VertexBuffer)
@@ -109,9 +109,12 @@ bool D3D12TestRenderer::Draw()
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
 	//Test Code
-	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderList{};
-	ShaderList[EShaderFrequency::Vertex] = &TestVS;
-	ShaderList[EShaderFrequency::Pixel] = &TestPS;
+	auto TestVSInstance = FTestVS::MakeShaderInstance();
+	auto TestPSInstance = FTestPS::MakeShaderInstance();
+
+	eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency> ShaderList{};
+	ShaderList[EShaderFrequency::Vertex] = TestVSInstance;
+	ShaderList[EShaderFrequency::Pixel] = TestPSInstance;
 
 	FBoundShaderSet BoundShaderSet{ ShaderList };
 
@@ -137,9 +140,6 @@ bool D3D12TestRenderer::Draw()
 	PSOInitializer.Desc.SampleDesc.Count = 1;
 	PSOInitializer.FinishCreating();
 
-	auto TestVSInstance = FTestVS::MakeShaderInstance();
-	auto TestPSInstance = FTestPS::MakeShaderInstance();
-
 	// Set necessary state.
 	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
@@ -153,9 +153,6 @@ bool D3D12TestRenderer::Draw()
 	TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 13.0f };
 	TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset3 = XMVECTOR{ 14.0f };
 	
-	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
-	TestPSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
-
 	CD3DX12_VIEWPORT Viewport{ 0.0f, 0.0f, static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
 	CD3DX12_RECT Rect{ 0, 0, static_cast<LONG>(SwapChain->GetWidth()), static_cast<LONG>(SwapChain->GetHeight()) };
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetViewports(1, &Viewport);
@@ -183,11 +180,9 @@ bool D3D12TestRenderer::Draw()
 
 	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f };
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
-	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
 	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
 	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
-	TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 
 	XMVECTOR OriginalOffset = TestVSInstance->Parameter.VertexOffset->Offset;
 
@@ -202,11 +197,20 @@ bool D3D12TestRenderer::Draw()
 		{
 			TestVSInstance->Parameter.VertexOffset->Offset = OriginalOffset + XMVECTOR{ Offset, 0.0f, 0.0f, 0.0f } + XMVECTOR{ 0.1f, 0.0f, 0.0f, 0.0f }* i;
 		}
-
-		TestVSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
-		TestPSInstance->ApplyShaderParameter(CurrentFrameCommandContext);
 		CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
 	}
+
+	XMFLOAT4X4 ViewProjMat = View.Get3DViewProjMatrices(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+
+	auto MeshDrawVSInstance = FMeshDrawVS::MakeShaderInstance();
+	auto MeshDrawPSInstance = FMeshDrawPS::MakeShaderInstance();
+
+	MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
+	MeshDrawPSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
+	MeshDrawPSInstance->Parameter.TriangleColorTexture = Mesh->Material[0].DiffuseTexture->GetSRV();
+
+	eastl::vector<D3D12_VERTEX_BUFFER_VIEW> VertexBufferViewList = Mesh->MeshList[0].CreateVertexBufferViewList();
+	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, VertexBufferViewList.size(), VertexBufferViewList.data());
 
 	return true;
 }

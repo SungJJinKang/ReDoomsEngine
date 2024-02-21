@@ -49,7 +49,7 @@ enum class ED3D12UploadBufferSizeType : uint32_t
 	Small,
 	Medium,
 	Large,
-	VeryLarge,
+	FourK,
 	Num
 };
 
