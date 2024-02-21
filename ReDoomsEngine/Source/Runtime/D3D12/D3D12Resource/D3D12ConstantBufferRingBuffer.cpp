@@ -1,6 +1,6 @@
 #include "D3D12ConstantBufferRingBuffer.h"
 #include "D3D12Resource.h"
-#include "Renderer.h"
+#include "Renderer/Renderer.h"
 
 static uint64_t GRingBufferSize = D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT * 500 * GNumBackBufferCount;
 

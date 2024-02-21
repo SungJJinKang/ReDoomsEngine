@@ -6,6 +6,7 @@
 #include "D3D12Fence.h"
 #include "D3D12Descriptor.h"
 #include "D3D12RendererStateCallbackInterface.h"
+#include "D3D12Shader.h"
 
 class FD3D12CommandAllocator;
 
