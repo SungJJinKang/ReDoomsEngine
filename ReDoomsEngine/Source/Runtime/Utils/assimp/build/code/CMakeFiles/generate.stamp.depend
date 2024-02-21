@@ -1,0 +1,2 @@
+# CMake generation dependency list for this directory.
+$(SolutionDir)Source/Runtime/Utils/assimp/code/CMakeLists.txt
