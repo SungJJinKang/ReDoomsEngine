@@ -126,7 +126,7 @@ uint64_t FD3D12ResourceUploadBatcher::ConvertUploadBufferSizeTypeToSize(const ED
 	case ED3D12UploadBufferSizeType::VeryLarge:
 		return 1024 * 1024 * 16; // @todo elborate this
 	default:
-		EA_ASSUME(0);
+		RD_ASSUME(0);
 		break;
 	}
 }

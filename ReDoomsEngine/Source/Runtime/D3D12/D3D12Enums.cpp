@@ -25,7 +25,7 @@ EShaderFrequency D3D12ShaderVisibilityToShaderFrequency(const D3D12_SHADER_VISIB
 		return EShaderFrequency::Pixel;
 	}
 	default:
-		EA_ASSUME(0);
+		RD_ASSUME(0);
 	}
 }
 
@@ -38,7 +38,7 @@ D3D12_SHADER_VISIBILITY ShaderFrequencyToD3D12ShaderVisibility(const EShaderFreq
 	case EShaderFrequency::Pixel:
 		return D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL;
 	default:
-		EA_ASSUME(0);
+		RD_ASSUME(0);
 	}
 }
 
@@ -53,7 +53,7 @@ const wchar_t* GetShaderFrequencyString(const EShaderFrequency ShaderFrequency)
 	case EShaderFrequency::Compute:
 		return EA_WCHAR("Compute");
 	default:
-		EA_ASSUME(0);
+		RD_ASSUME(0);
 	}
 }
 
@@ -66,7 +66,7 @@ ED3D12QueueType CommandAllocatorTypeTiD3D12QueueType(const ECommandAllocatorType
 		// 	case ECommandAllocatorType::ResourceUploadBatcher:
 		// 		return ED3D12QueueType::Direct; // @todo : use copy queue
 	default:
-		EA_ASSUME(false);
+		RD_ASSUME(false);
 	}
 }
 
