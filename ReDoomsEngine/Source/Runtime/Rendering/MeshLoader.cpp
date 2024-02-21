@@ -2,7 +2,9 @@
 
 #include "AssetManager.h"
 #include "D3D12Resource/D3D12ResourceAllocator.h"
+#include "TextureLoader.h"
 
+#include  <filesystem>
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
@@ -87,7 +89,89 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
                     reinterpret_cast<const uint8_t*>(IndexList.data()), IndexList.size() * sizeof(uint32_t), sizeof(uint32_t), AssimpImporter);
                 Mesh.IndexBuffer->SetDebugNameToResource((MeshName + EA_WCHAR("(IndexBuffer)")).c_str());
             }
+
+            Mesh.MaterialIndex = AssimpMesh->mMaterialIndex;
         }
+
+        Result->Material.resize(AssimpScene->mNumMaterials);
+        for (uint32_t MaterialIndex = 0; MaterialIndex < AssimpScene->mNumMaterials; ++MaterialIndex)
+        {
+            FMeshMaterial& MeshMaterial = Result->Material[MaterialIndex];
+
+            const aiMaterial* const AssimpMaterial = AssimpScene->mMaterials[MaterialIndex];
+
+            aiTextureType TextureTypes[] = {
+                aiTextureType::aiTextureType_DIFFUSE,
+                aiTextureType::aiTextureType_EMISSIVE,
+                aiTextureType::aiTextureType_SHININESS,
+                aiTextureType::aiTextureType_METALNESS
+            };
+
+            for (uint32_t TextureTypeIndex = 0; TextureTypeIndex < ARRAY_LENGTH(TextureTypes); ++TextureTypeIndex)
+            {
+                const aiTextureType TextureType = TextureTypes[TextureTypeIndex];
+                const uint32_t TextureCount = AssimpMaterial->GetTextureCount(TextureType);
+
+                for (uint32_t TextureIndex = 0; TextureIndex < TextureCount; ++TextureIndex)
+                {
+                    struct FAssimpMaterialProperty
+                    {
+                        aiString Path;
+                        aiTextureMapping Mapping;
+                        unsigned int UVindex;
+                        ai_real Blend;
+                        aiTextureOp TextureOP;
+                        aiTextureMapMode MapMode[2];
+                    } MaterialProperty;
+
+                    EA::StdC::Memset8(&MaterialProperty, 0xFF, sizeof(MaterialProperty));
+
+                    AssimpMaterial->GetTexture(TextureType, TextureIndex,
+                        &MaterialProperty.Path,
+                        &MaterialProperty.Mapping,
+                        &MaterialProperty.UVindex,
+                        &MaterialProperty.Blend,
+                        &MaterialProperty.TextureOP,
+                        MaterialProperty.MapMode
+                    );
+
+
+					std::filesystem::path ShaderTextFilePath{ InRelativePathToAssetFolder };
+                  
+                    eastl::wstring TextureRelativePath = ShaderTextFilePath.parent_path().c_str();
+                    TextureRelativePath += EA_WCHAR("/");
+                    TextureRelativePath += ANSI_TO_WCHAR(MaterialProperty.Path.C_Str());
+
+                    eastl::shared_ptr<FD3D12Texture2DResource> TextureResource = FTextureLoader::LoadFromFile(InCommandContext,
+                        TextureRelativePath.c_str(),
+                        D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE,
+                        DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,
+                        D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+                    );
+
+                    switch (TextureType)
+                    {
+                    case aiTextureType_DIFFUSE:
+                        MeshMaterial.DiffuseTexture = TextureResource;
+                        break;
+					case aiTextureType_EMISSIVE:
+						MeshMaterial.EmissiveTexture = TextureResource;
+                        break;
+					case aiTextureType_SHININESS:
+						MeshMaterial.ShininessTexture = TextureResource;
+                        break;
+					case aiTextureType_METALNESS:
+						MeshMaterial.MetalnessTexture = TextureResource;
+                        break;
+                    default:
+                        EA_ASSUME(false);
+                        break;
+                    }
+                }
+            }
+
+        }
+
     }
     else
     {

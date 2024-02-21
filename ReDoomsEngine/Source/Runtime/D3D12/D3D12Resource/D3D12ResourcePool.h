@@ -40,4 +40,6 @@ struct FD3D12ResourcePool
 	bool IsForPlacedResource() const;
 
 	bool AllocateBlock(const uint64_t InSize, const uint64_t InAlignment, FD3D12ResourcePoolBlock& OutAllocatedBlock);
+
+	eastl::shared_ptr<FD3D12ResourcePoolHeapContainer> AllocateNewResourcePoolHeapContainer();
 };

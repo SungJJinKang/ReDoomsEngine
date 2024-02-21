@@ -229,6 +229,11 @@ public:
 		}
 	}
 
+	inline FShaderParameterContainerTemplate* GetShaderParameterContainerTemplate() const
+	{
+		return ShaderParameterContainerTemplate;
+	}
+
 	virtual void Init();
 
 	const char* const GetVariableName() const
@@ -448,8 +453,8 @@ class TShaderParameter : public FShaderParameterTemplate
 class FShaderParameterConstantBufferMemberVariableTemplate
 {
 public:
-	FShaderParameterConstantBufferMemberVariableTemplate(FShaderParameterConstantBuffer* InConstantBuffer, const bool bInAllowCull)
-		: ConstantBuffer(InConstantBuffer), bSetOffset(false), bAllowCull(bInAllowCull)
+	FShaderParameterConstantBufferMemberVariableTemplate(FShaderParameterConstantBuffer* InConstantBuffer, const char* const InVariableName, const bool bInAllowCull)
+		: ConstantBuffer(InConstantBuffer), bSetOffset(false), bAllowCull(bInAllowCull), VariableName(InVariableName)
 	{
 		EA_ASSERT(ConstantBuffer);
 	}
@@ -471,6 +476,11 @@ public:
 		return bAllowCull;
 	}
 
+	inline const char* const GetVariableName() const
+	{
+		return VariableName;
+	}
+
 protected:
 
 	FShaderParameterConstantBuffer* ConstantBuffer;
@@ -480,6 +490,7 @@ private:
 
 	bool bSetOffset;
 	bool bAllowCull;
+	const char* const VariableName;
 };
 
 template<typename VariableType>
@@ -488,7 +499,7 @@ class TShaderParameterConstantBufferMemberVariable : public FShaderParameterCons
 public:
 
 	TShaderParameterConstantBufferMemberVariable(FShaderParameterConstantBuffer* InConstantBuffer, const char* const InVariableName, const bool bInAllowCull)
-		: FShaderParameterConstantBufferMemberVariableTemplate(InConstantBuffer, bInAllowCull)
+		: FShaderParameterConstantBufferMemberVariableTemplate(InConstantBuffer, InVariableName, bInAllowCull)
 	{
 		ConstantBuffer->AddMemberVariable(this, sizeof(TShaderParameterConstantBufferMemberVariable<VariableType>), InVariableName, typeid(VariableType));
 	}
@@ -502,6 +513,15 @@ public:
 				EA::StdC::Memcpy(GetShadowDataAddress(), &InValue, sizeof(VariableType));
 				ConstantBuffer->MakeDirty();
 			}
+		}
+		else
+		{
+// 			RD_LOG(ELogVerbosity::Warning,
+// 				EA_WCHAR("Fail to set value to member variable of constant buffer because the variable is culled(ShaderName : %s, ConstantBuffer : %s, VariableName : %s)"),
+// 				ConstantBuffer->GetShaderParameterContainerTemplate()->GetD3D12ShaderTemplate()->GetShaderDeclaration().ShaderName,
+// 				ANSI_TO_WCHAR(ConstantBuffer->GetVariableName()),
+// 				ANSI_TO_WCHAR(GetVariableName())
+// 			);
 		}
 		return *this;
 	}

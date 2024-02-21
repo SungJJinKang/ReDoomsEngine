@@ -1,5 +1,7 @@
 #pragma once
 
+using namespace DirectX;
+
 template <typename T>
 EASTL_FORCE_INLINE constexpr T Align(T Val, uint64_t Alignment)
 {

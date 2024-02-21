@@ -178,6 +178,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Core\WindowsApplication.cpp" />
     <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc" />
     <ClCompile Include="Source\Runtime\Rendering\TextureLoader.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.h" />
@@ -554,6 +555,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Utils\cityhash\src\city.h" />
     <ClInclude Include="Source\Runtime\Utils\cityhash\src\citycrc.h" />
     <ClInclude Include="Source\Runtime\Rendering\TextureLoader.h" />
+    <ClInclude Include="Source\Runtime\Rendering\View.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Source\Editor\imgui\misc\debuggers\imgui.natvis" />

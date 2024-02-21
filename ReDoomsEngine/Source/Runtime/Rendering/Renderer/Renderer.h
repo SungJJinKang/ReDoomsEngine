@@ -7,6 +7,7 @@
 #include "D3D12Descriptor.h"
 #include "D3D12RendererStateCallbackInterface.h"
 #include "D3D12Shader.h"
+#include "View.h"
 
 class FD3D12CommandAllocator;
 
@@ -58,6 +59,8 @@ public:
 	}
 
 	FD3D12Manager D3D12Manager;
+
+	FView View;
 
 protected:
 
