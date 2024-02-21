@@ -272,7 +272,13 @@ private:
 
 	virtual void SetReflectionDataFromShaderReflectionData() = 0;
 };
- 
+
+enum class EShaderParameterResourceType
+{
+	Texture,
+	Buffer
+};
+
 class FShaderParameterResourceView : public FShaderParameterTemplate
 {
 public:
@@ -282,8 +288,8 @@ public:
 	{
 	}
 
-	FShaderParameterResourceView(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInAllowCull)
-		: FShaderParameterTemplate(InShaderParameter, InVariableName, bInAllowCull), ReflectionData()
+	FShaderParameterResourceView(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const EShaderParameterResourceType InShaderParameterResourceType, const bool bInAllowCull)
+		: FShaderParameterTemplate(InShaderParameter, InVariableName, bInAllowCull), ReflectionData(), ShaderParameterResourceType(InShaderParameterResourceType)
 	{
 	}
 
@@ -296,9 +302,18 @@ public:
 		return ReflectionData == nullptr;
 	}
 
+	inline EShaderParameterResourceType GetShaderParameterResourceType() const
+	{
+		return ShaderParameterResourceType;
+	}
+
 protected:
 
 	const D3D12_SHADER_INPUT_BIND_DESC* ReflectionData;
+
+private:
+
+	EShaderParameterResourceType ShaderParameterResourceType;
 };
 
 class FShaderParameterShaderResourceView : public FShaderParameterResourceView
@@ -310,8 +325,8 @@ public:
 	{
 	}
  
-	FShaderParameterShaderResourceView(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInAllowCull)
- 	: FShaderParameterResourceView(InShaderParameter, InVariableName, bInAllowCull), TargetSRV(nullptr)
+	FShaderParameterShaderResourceView(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const EShaderParameterResourceType InShaderParameterResourceType, const bool bInAllowCull)
+ 	: FShaderParameterResourceView(InShaderParameter, InVariableName, InShaderParameterResourceType, bInAllowCull), TargetSRV(nullptr)
 	{
 	}
 
@@ -627,9 +642,9 @@ private:
 
 #define ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Type, VariableNameStr) ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_INTERNAL(Type, VariableNameStr, true)
 
-#define ADD_SHADER_SRV_VARIABLE(VariableNameStr) \
+#define ADD_SHADER_SRV_VARIABLE(VariableNameStr, InShaderParameterResourceType) \
 	public: \
-	FShaderParameterShaderResourceView VariableNameStr{this, #VariableNameStr, false};
+	FShaderParameterShaderResourceView VariableNameStr{this, #VariableNameStr, InShaderParameterResourceType, false};
 
 #define ADD_SHADER_UAV_VARIABLE
 

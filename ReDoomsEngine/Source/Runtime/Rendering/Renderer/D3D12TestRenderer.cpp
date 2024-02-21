@@ -21,7 +21,22 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset3)
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
 		)
-		ADD_SHADER_SRV_VARIABLE(TestTexture)
+		ADD_SHADER_SRV_VARIABLE(TestTexture, EShaderParameterResourceType::Texture)
+	)
+);
+
+
+DEFINE_SHADER(MeshDrawVS, "MeshDraw.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMMATRIX, ModelMatrix)
+		)
+	)
+);
+
+DEFINE_SHADER(MeshDrawPS, "MeshDraw.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+		ADD_SHADER_SRV_VARIABLE(TriangleColorTexture, EShaderParameterResourceType::Texture)
 	)
 );
 

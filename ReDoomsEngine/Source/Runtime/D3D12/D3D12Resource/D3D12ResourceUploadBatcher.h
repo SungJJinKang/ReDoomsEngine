@@ -10,6 +10,10 @@ class FD3D12BufferResource;
 class FD3D12Texture2DResource;
 struct FD3D12UploadBufferBlock;
 
+namespace Assimp {
+	class Importer;
+}
+
 struct FD3D12SubresourceContainer
 {
 	virtual ~FD3D12SubresourceContainer() = default;
@@ -23,6 +27,7 @@ struct FD3D12VertexIndexBufferSubresourceContainer : public FD3D12SubresourceCon
 	FD3D12VertexIndexBufferSubresourceContainer(const uint8_t* const Data, const size_t InSize);
 	FD3D12VertexIndexBufferSubresourceContainer(eastl::vector<uint8_t>&& InVertexIndexData);
 	eastl::vector<uint8_t> VertexIndexData;
+	eastl::shared_ptr<Assimp::Importer> Importer;
 };
 
 struct FD3D12TextureSubresourceContainer : public FD3D12SubresourceContainer
@@ -68,6 +73,7 @@ public:
 private:
 
 	FD3D12UploadBufferContainer* AllocateUploadBuffer(const FD3D12Resource* const InUploadedResource);
+	
 	static ED3D12UploadBufferSizeType ConvertSizeToUploadBufferSizeType(const uint64_t InSize);
 	static uint64_t ConvertUploadBufferSizeTypeToSize(const ED3D12UploadBufferSizeType InUploadBufferSizeType);
 
