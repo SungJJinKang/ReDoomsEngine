@@ -1,11 +1,7 @@
 #include "D3D12TestRenderer.h"
 
 #include "D3D12Resource/D3D12ResourceAllocator.h"
-
-DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
-	VertexOffset,
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, Offset)
-)
+#include "MeshLoader.h"
 
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
@@ -50,6 +46,11 @@ void D3D12TestRenderer::OnStartFrame()
 			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 		SmallTexture->SetDebugNameToResource(EA_WCHAR("TestRenderer SmallTexture"));
 
+	}
+
+	if (!Mesh)
+	{
+		Mesh = FMeshLoader::LoadFromMeshFile(CurrentFrameCommandContext, EA_WCHAR("SpaceShip1.obj"));
 	}
 
 	if (!VertexBuffer)

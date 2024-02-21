@@ -3,7 +3,7 @@
 #include "Commandline.h"
 #include "WindowsApplication.h"
 #include "D3D12Window.h"
-#include "D3D12TestRenderer.h"
+#include "Renderer/D3D12TestRenderer.h"
 #include <windows.h>
 
 int main(int argc, char** argv)

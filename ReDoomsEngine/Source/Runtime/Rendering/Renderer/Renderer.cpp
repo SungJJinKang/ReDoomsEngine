@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "Renderer/Renderer.h"
 
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "Editor/ImguiHelper.h"
@@ -108,6 +108,11 @@ bool FRenderer::Draw()
 	CurrentRendererState = ERendererState::Draw;
 
 	FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext);
+
+	if (GCurrentFrameIndex == GNumBackBufferCount)
+	{
+		FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.FreeUnusedUploadBuffers(); // free upload buffers allocated at app launch. this is temporary workaround
+	}
 	
 	return true;
 }

@@ -9,7 +9,7 @@
 #include "D3D12Shader.h"
 #include "D3D12Resource/D3D12Resource.h"
 #include "D3D12CommandList.h"
-#include "Renderer.h"
+#include "Renderer/Renderer.h"
 #include "EASTL/sort.h"
 
 void FD3D12StateCache::SetPSO(const FD3D12PSOInitializer& InPSOInitializer)
