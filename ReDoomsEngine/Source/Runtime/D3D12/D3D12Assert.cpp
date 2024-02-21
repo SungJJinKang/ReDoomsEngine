@@ -3,6 +3,8 @@
 
 #define D3DERR(x) case x: ErrorCodeText = TEXT(#x); break;
 
+#define STRING_STACK_BUFFER_LENGTH 300
+
 static EA::Thread::Futex VerifyD3D12ResultFutex{};
 
 eastl::wstring d3d12::assert::GetD3D12ErrorString(HRESULT Result)
@@ -73,6 +75,7 @@ void d3d12::assert::D3D12CallFail(HRESULT Result, const wchar_t* const Statement
 
 	}
 
-	eastl::string8 ErrorStr{ reinterpret_cast<const char8_t*>(ErrorBlob->GetBufferPointer()), ErrorBlob->GetBufferSize() };
-	redooms::log::LogInternal(ELogVerbosity::Fatal, FilePath, CodeLine, EA_WCHAR("VerifyD3D12Result Fail : %s (Error Code : %s)(Error String : %s)"), Statement, GetD3D12ErrorString(Result).c_str(), UTF8_TO_WCHAR(ErrorStr));
+	wchar_t ErrorStr[STRING_STACK_BUFFER_LENGTH]{};
+	EA::StdC::Strlcpy(ErrorStr, reinterpret_cast<const char8_t*>(ErrorBlob->GetBufferPointer()), STRING_STACK_BUFFER_LENGTH, ErrorBlob->GetBufferSize());
+	redooms::log::LogInternal(ELogVerbosity::Fatal, FilePath, CodeLine, EA_WCHAR("VerifyD3D12Result Fail : %s (Error Code : %s)(Error String : %s)"), Statement, GetD3D12ErrorString(Result).c_str(), ErrorStr);
 }

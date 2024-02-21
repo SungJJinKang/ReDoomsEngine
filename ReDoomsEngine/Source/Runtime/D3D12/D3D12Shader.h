@@ -214,8 +214,8 @@ public:
 
 	}
 
-	FShaderParameterTemplate(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName)
-		: ShaderParameterContainerTemplate(InShaderParameter), VariableName(InVariableName), bInit(false)
+	FShaderParameterTemplate(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInAllowCull)
+		: ShaderParameterContainerTemplate(InShaderParameter), VariableName(InVariableName), bInit(false), bAllowCull(bInAllowCull)
 	{
 		InShaderParameter->AddShaderParamter(this);
 
@@ -253,13 +253,18 @@ public:
 		return false;
 	}
 	virtual bool IsTemplateVariable() const = 0;
-	virtual bool HasReflectionData() const = 0;
+	virtual bool IsCulled() const = 0;
+	inline bool IsAllowCull() const
+	{
+		return bAllowCull;
+	}
 
 	void ApplyResource(FD3D12CommandContext& InCommandContext, const FD3D12RootSignature* const InRootSignature);
 
 protected:
 
 	bool bInit;
+	bool bAllowCull;
 	FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate;
 	const char* const VariableName;
 
@@ -277,8 +282,8 @@ public:
 	{
 	}
 
-	FShaderParameterResourceView(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName)
-		: FShaderParameterTemplate(InShaderParameter, InVariableName), ReflectionData()
+	FShaderParameterResourceView(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInAllowCull)
+		: FShaderParameterTemplate(InShaderParameter, InVariableName, bInAllowCull), ReflectionData()
 	{
 	}
 
@@ -286,9 +291,9 @@ public:
 	{
 		return *ReflectionData;
 	}
-	virtual bool HasReflectionData() const
+	virtual bool IsCulled() const
 	{
-		return ReflectionData;
+		return ReflectionData == nullptr;
 	}
 
 protected:
@@ -305,8 +310,8 @@ public:
 	{
 	}
  
-	FShaderParameterShaderResourceView(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName)
- 	: FShaderParameterResourceView(InShaderParameter, InVariableName), TargetSRV(nullptr)
+	FShaderParameterShaderResourceView(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInAllowCull)
+ 	: FShaderParameterResourceView(InShaderParameter, InVariableName, bInAllowCull), TargetSRV(nullptr)
 	{
 	}
 
@@ -347,8 +352,8 @@ public:
 	{
 	}
 
-	FShaderParameterConstantBuffer(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInGlobalConstantBuffer)
-		: FShaderParameterTemplate(InShaderParameter, InVariableName), bGlobalConstantBuffer(bInGlobalConstantBuffer), MemberVariableMap(), ConstantBufferResource(), ReflectionData(nullptr), ShadowData()
+	FShaderParameterConstantBuffer(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInGlobalConstantBuffer, const bool bInIsDynamic, const bool bInAllowCull)
+		: FShaderParameterTemplate(InShaderParameter, InVariableName, bInAllowCull), bGlobalConstantBuffer(bInGlobalConstantBuffer), MemberVariableMap(), ConstantBufferResource(), ReflectionData(nullptr), ShadowData(), bIsDynamic(bInIsDynamic)
 	{
 	}
 
@@ -361,6 +366,10 @@ public:
 		return true;
 	}
 
+	inline bool IsDynamicConstantBuffer() const
+	{
+		return bIsDynamic;
+	}
 	inline bool IsGlobalConstantBuffer() const
 	{
 		return bGlobalConstantBuffer;
@@ -377,9 +386,9 @@ public:
 	{
 		return ReflectionData;
 	}
-	virtual bool HasReflectionData() const
+	virtual bool IsCulled() const
 	{
-		return GetReflectionData() != nullptr;
+		return GetReflectionData() == nullptr;
 	}
 	uint8_t* GetShadowData();
 
@@ -400,6 +409,8 @@ private:
 
 	eastl::unique_ptr<FD3D12ConstantBufferResource> ConstantBufferResource;
 	eastl::vector<uint8_t> ShadowData;
+
+	bool bIsDynamic;
 };
 
 template<typename VariableType>
@@ -422,8 +433,8 @@ class TShaderParameter : public FShaderParameterTemplate
 class FShaderParameterConstantBufferMemberVariableTemplate
 {
 public:
-	FShaderParameterConstantBufferMemberVariableTemplate(FShaderParameterConstantBuffer* InConstantBuffer)
-		: ConstantBuffer(InConstantBuffer)
+	FShaderParameterConstantBufferMemberVariableTemplate(FShaderParameterConstantBuffer* InConstantBuffer, const bool bInAllowCull)
+		: ConstantBuffer(InConstantBuffer), bSetOffset(false), bAllowCull(bInAllowCull)
 	{
 		EA_ASSERT(ConstantBuffer);
 	}
@@ -431,17 +442,29 @@ public:
 	void SetOffset(const uint32_t InOffset)
 	{
 		Offset = InOffset;
+		bSetOffset = true;
 	}
 
 	uint8_t* GetShadowDataAddress() const
 	{
+		EA_ASSERT(bSetOffset);
 		return ConstantBuffer->GetShadowData() + Offset;
+	}
+
+	inline bool IsAllowCull() const
+	{
+		return bAllowCull;
 	}
 
 protected:
 
 	FShaderParameterConstantBuffer* ConstantBuffer;
 	uint32_t Offset;
+
+private:
+
+	bool bSetOffset;
+	bool bAllowCull;
 };
 
 template<typename VariableType>
@@ -449,20 +472,22 @@ class TShaderParameterConstantBufferMemberVariable : public FShaderParameterCons
 {
 public:
 
-	TShaderParameterConstantBufferMemberVariable(FShaderParameterConstantBuffer* InConstantBuffer, const char* const InVariableName)
-		: FShaderParameterConstantBufferMemberVariableTemplate(InConstantBuffer)
+	TShaderParameterConstantBufferMemberVariable(FShaderParameterConstantBuffer* InConstantBuffer, const char* const InVariableName, const bool bInAllowCull)
+		: FShaderParameterConstantBufferMemberVariableTemplate(InConstantBuffer, bInAllowCull)
 	{
 		ConstantBuffer->AddMemberVariable(this, sizeof(TShaderParameterConstantBufferMemberVariable<VariableType>), InVariableName, typeid(VariableType));
 	}
 
 	TShaderParameterConstantBufferMemberVariable& operator=(const VariableType& InValue)
 	{
-		if (EA::StdC::Memcmp(GetShadowDataAddress(), &InValue, sizeof(VariableType)) != 0)
+		if (!(ConstantBuffer->IsCulled()))
 		{
-			EA::StdC::Memcpy(GetShadowDataAddress(), &InValue, sizeof(VariableType));
-			ConstantBuffer->MakeDirty();
+			if (EA::StdC::Memcmp(GetShadowDataAddress(), &InValue, sizeof(VariableType)) != 0)
+			{
+				EA::StdC::Memcpy(GetShadowDataAddress(), &InValue, sizeof(VariableType));
+				ConstantBuffer->MakeDirty();
+			}
 		}
-
 		return *this;
 	}
 
@@ -539,9 +564,10 @@ private:
 		FShaderParameterContainer(FD3D12ShaderTemplate* InD3D12ShaderTemplate, FD3D12ShaderInstance* InD3D12ShaderInstance) \
 			: FShaderParameterContainerTemplate(InD3D12ShaderTemplate, InD3D12ShaderInstance) {} \
 		__VA_ARGS__ \
+		ADD_SHADER_CONSTANT_BUFFER(ViewConstantBuffer, ViewConstantBuffer) \
 	} ShaderParameter{this};	
 
-#define SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, ...) \
+#define SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, bInIsDynamic, bInAllowCull, ...) \
 	class FConstantBufferType##ConstantBufferTypeName : public FShaderParameterConstantBuffer { \
 		public: \
 		FConstantBufferType##ConstantBufferTypeName() \
@@ -553,7 +579,7 @@ private:
 		} \
 		struct FMemberVariableContainer; \
 		FConstantBufferType##ConstantBufferTypeName(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bIsGlobalConstantBuffer) \
-		: FShaderParameterConstantBuffer(InShaderParameter, InVariableName, bIsGlobalConstantBuffer), SetConstructingVariable(this), MemberVariables() \
+		: FShaderParameterConstantBuffer(InShaderParameter, InVariableName, bIsGlobalConstantBuffer, bInIsDynamic, bInAllowCull), SetConstructingVariable(this), MemberVariables() \
 		{ \
 			if(!TemplateVariable) TemplateVariable = this; \
 			ConstructingVariable = nullptr; \
@@ -577,8 +603,12 @@ private:
 		FMemberVariableContainer* operator->(){ return &MemberVariables; } \
 	}  
 
-#define DEFINE_SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, ...) \
-	SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, __VA_ARGS__) ConstantBufferTypeName{};
+#define DEFINE_SHADER_CONSTANT_BUFFER_TYPE_INTERNAL(ConstantBufferTypeName, bInIsDynamic, bInAllowCull, ...) \
+	inline const SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, bInIsDynamic, bInAllowCull, __VA_ARGS__) ConstantBufferTypeName{};
+
+#define DEFINE_SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, bInIsDynamic, ...) DEFINE_SHADER_CONSTANT_BUFFER_TYPE_INTERNAL(ConstantBufferTypeName, bInIsDynamic, false, __VA_ARGS__)
+
+#define DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(ConstantBufferTypeName, bInIsDynamic, ...) DEFINE_SHADER_CONSTANT_BUFFER_TYPE_INTERNAL(ConstantBufferTypeName, bInIsDynamic, true, __VA_ARGS__)
 
 #define ADD_SHADER_CONSTANT_BUFFER(ConstantBufferTypeName, VariableNameStr) \
 	public: \
@@ -586,22 +616,33 @@ private:
 
 #define ADD_SHADER_GLOBAL_CONSTANT_BUFFER(...) \
 	public: \
-	SHADER_CONSTANT_BUFFER_TYPE(GlobalConstantBuffer, __VA_ARGS__) GlobalConstantBuffer{this, GLOBAL_CONSTANT_BUFFER_NAME, true};
+	SHADER_CONSTANT_BUFFER_TYPE(GlobalConstantBuffer, true, false, __VA_ARGS__) GlobalConstantBuffer{this, GLOBAL_CONSTANT_BUFFER_NAME, true};
 
 // This should match with variable declared in shader
 // Recommendation : Divide frequently changed variables to another constant buffer type
-#define ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Type, VariableNameStr) \
-	TShaderParameterConstantBufferMemberVariable<Type> VariableNameStr{ConstructingVariable, #VariableNameStr};
+#define ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_INTERNAL(Type, VariableNameStr, bInAllowCull) \
+	TShaderParameterConstantBufferMemberVariable<Type> VariableNameStr{ConstructingVariable, #VariableNameStr, bInAllowCull};
+
+#define ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Type, VariableNameStr) ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_INTERNAL(Type, VariableNameStr, false)
+
+#define ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Type, VariableNameStr) ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_INTERNAL(Type, VariableNameStr, true)
 
 #define ADD_SHADER_SRV_VARIABLE(VariableNameStr) \
 	public: \
-	FShaderParameterShaderResourceView VariableNameStr{this, #VariableNameStr};
+	FShaderParameterShaderResourceView VariableNameStr{this, #VariableNameStr, false};
 
 #define ADD_SHADER_UAV_VARIABLE
 
 #define ADD_PREPROCESSOR_DEFINE(DefineStr) \
 	private: \
 	FShaderPreprocessorDefineAdd RD_UNIQUE_NAME(ShaderPreprocessorDefine) {*this, #DefineStr};
+
+// @todo : this constant buffer should be allocated on default heap because it's modified once for a frame
+DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
+	ViewConstantBuffer, false,
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(XMMATRIX, ViewProjectionMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(XMMATRIX, PrevViewProjectionMatrix)
+)
 
 // TODO) Need to support permutation?
 // Example 1 : DEFINE_SHADER(MotionBlurVS, "MotionBlur.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None, "EARLY_OUT", "FAST_PATH=1");
