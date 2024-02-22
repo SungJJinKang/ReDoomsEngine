@@ -29,7 +29,7 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 DEFINE_SHADER(MeshDrawVS, "MeshDraw.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMFLOAT4X4, ModelMatrix)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ModelMatrix)
 		)
 	)
 );
@@ -73,9 +73,9 @@ void D3D12TestRenderer::OnStartFrame()
 		float m_aspectRatio = 1.0f;
 		struct Vertex
 		{
-			XMFLOAT3 position;
-			XMFLOAT4 color;
-			XMFLOAT2 uv;
+			Vector3 position;
+			Vector4 color;
+			Vector2 uv;
 		};
 		Vertex TriangleVertices[] =
 		{
@@ -210,10 +210,6 @@ bool D3D12TestRenderer::Draw()
 	}
 
 	{
-		XMFLOAT4X4 ViewProjMat = View.Get3DViewProjMatrices(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
-		XMFLOAT4X4 ViewMat = View.Get3DViewMatrices();
-		XMFLOAT4X4 ProjMat = View.Get3DProjMatrices(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
-
 		auto MeshDrawVSInstance = FMeshDrawVS::MakeShaderInstance();
 		auto MeshDrawPSInstance = FMeshDrawPS::MakeShaderInstance();
 
@@ -240,37 +236,41 @@ bool D3D12TestRenderer::Draw()
 		// Set necessary state.
 		CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
-		XMFLOAT4X4 ModelMatrix;
-
 		float Speed = GTimeDelta * 5.5f;
 
 		if (FD3D12Window::LeftArrowKeyPressed)
 		{
-			View.RotateYaw(-Speed);
+			View.Transform.RotateYaw(-Speed * 10.0f);
 		}
 		else if (FD3D12Window::RIghtArrowKeyPressed)
 		{
-			View.RotateYaw(Speed);
+			View.Transform.RotateYaw(Speed * 10.0f);
 		}
 
 		if (FD3D12Window::WKeyPressed)
 		{
-			View.Translate(XMVECTOR{0.0f, 0.0f, 1.0f * Speed, 0.0f});
-		}
-		else if (FD3D12Window::AKeyPressed)
-		{
-			View.Translate(XMVECTOR{ -1.0f * Speed, 0.0f, 0.0f, 0.0f });
+			View.Transform.Translate(Vector3{0.0f, 0.0f, 1.0f} * Speed, ESpace::Self);
 		}
 		else if (FD3D12Window::SKeyPressed)
 		{
-			View.Translate(XMVECTOR{ 0.0f, 0.0f, -1.0f * Speed, 0.0f });
+			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed, ESpace::Self);
+		}
+
+		if (FD3D12Window::AKeyPressed)
+		{
+			View.Transform.Translate(Vector3{ -1.0f , 0.0f, 0.0f} *Speed, ESpace::Self);
 		}
 		else if (FD3D12Window::DKeyPressed)
 		{
-			View.Translate(XMVECTOR{ 1.0f * Speed, 0.0f, 0.0f, 0.0f });
+			View.Transform.Translate(Vector3{ 1.0f, 0.0f, 0.0f} *Speed, ESpace::Self);
 		}
 		 
-		XMStoreFloat4x4(&ModelMatrix, XMMatrixMultiply(XMMatrixScaling(0.1f, 0.1f, 0.1f), XMMatrixTranslation(0.0f, 0.0f, 10.0f)));
+		Matrix ModelMatrix = Matrix::CreateScale(0.1f, 0.1f, 0.1f) * Matrix::CreateTranslation(0.0f, 0.0f, 5.0f);
+
+		Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+		Matrix ViewMat = View.Get3DViewMatrices();
+		Matrix ProjMat = View.GetPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+
 		MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
 		MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewMatrix = ViewMat;
 		MeshDrawVSInstance->Parameter.ViewConstantBuffer->ProjectionMatrix = ProjMat;
