@@ -21,6 +21,10 @@ void FD3D12StateCache::SetPSO(const FD3D12PSOInitializer& InPSOInitializer)
 		SetRootSignature(CachedPSOInitializer.BoundShaderSet.GetRootSignature());
 		bIsPSODirty = true;
 	}
+	else
+	{
+		CachedPSOInitializer.BoundShaderSet = InPSOInitializer.BoundShaderSet;
+	}
 }
 
 void FD3D12StateCache::SetRootSignature(FD3D12RootSignature* const InRootSignature)

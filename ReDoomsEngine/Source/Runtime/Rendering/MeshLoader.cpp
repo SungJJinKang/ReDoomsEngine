@@ -67,8 +67,19 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             {
                 if (AssimpMesh->HasTextureCoords(UVIndex))
                 {
-                    Mesh.TexCoordBuffers[UVIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext,
-                        reinterpret_cast<const uint8_t*>(AssimpMesh->mTextureCoords), sizeof(aiVector3D) * AssimpMesh->mNumVertices, sizeof(aiVector3D), AssimpImporter);
+                    EA_ASSERT(AssimpMesh->mNumUVComponents[UVIndex] == 2);
+
+                    eastl::vector<uint8_t> TextureCoords;  // @todo : doesn't need default initialize
+                    TextureCoords.resize(AssimpMesh->mNumVertices * sizeof(XMFLOAT2));
+
+                    for (uint32_t TextureCoordIndex = 0; TextureCoordIndex < AssimpMesh->mNumVertices; ++TextureCoordIndex)
+                    {
+                        EA::StdC::Memcpy(TextureCoords.data() + TextureCoordIndex * sizeof(XMFLOAT2), AssimpMesh->mTextureCoords[UVIndex] + TextureCoordIndex, sizeof(XMFLOAT2));
+                    }
+
+                    eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(TextureCoords));
+
+                    Mesh.TexCoordBuffers[UVIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(XMFLOAT2));
                     Mesh.TexCoordBuffers[UVIndex]->SetDebugNameToResource((MeshName + TextureCoordsDebugName[UVIndex]).c_str());
                 }
             }
@@ -77,17 +88,20 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             {
                 static_assert(sizeof(uint32_t) == sizeof(unsigned int));
 
-                eastl::vector<uint32_t> IndexList{};
-                IndexList.resize(AssimpMesh->mNumFaces * 3);
+                eastl::vector<uint8_t> IndexList{};
+                IndexList.resize(AssimpMesh->mNumFaces * sizeof(uint32_t) * 3); // @todo : doesn't need default initialize
                 for (uint32_t FaceIndex = 0; FaceIndex < AssimpMesh->mNumFaces; ++FaceIndex)
                 {
                     EA_ASSERT(AssimpMesh->mFaces[FaceIndex].mNumIndices == 3);
 
-                    EA::StdC::Memcpy(IndexList.data() + FaceIndex * 3, AssimpMesh->mFaces[FaceIndex].mIndices, sizeof(uint32_t) * 3);
+                    EA::StdC::Memcpy(IndexList.data() + FaceIndex * sizeof(uint32_t) * 3, AssimpMesh->mFaces[FaceIndex].mIndices, sizeof(uint32_t) * 3);
                 }
-                Mesh.IndexBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticIndexBuffer(InCommandContext,
-                    reinterpret_cast<const uint8_t*>(IndexList.data()), IndexList.size() * sizeof(uint32_t), sizeof(uint32_t), AssimpImporter);
+                eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(IndexList));
+
+                Mesh.IndexBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticIndexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(uint32_t));
                 Mesh.IndexBuffer->SetDebugNameToResource((MeshName + EA_WCHAR("(IndexBuffer)")).c_str());
+
+                Mesh.IndexCount = AssimpMesh->mNumFaces * 3;
             }
 
             Mesh.MaterialIndex = AssimpMesh->mMaterialIndex;

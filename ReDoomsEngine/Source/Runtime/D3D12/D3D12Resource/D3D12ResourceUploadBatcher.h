@@ -24,10 +24,16 @@ struct FD3D12SubresourceContainer
 struct FD3D12VertexIndexBufferSubresourceContainer : public FD3D12SubresourceContainer
 {
 	FD3D12VertexIndexBufferSubresourceContainer() = delete;
-	FD3D12VertexIndexBufferSubresourceContainer(const uint8_t* const Data, const size_t InSize);
-	FD3D12VertexIndexBufferSubresourceContainer(eastl::vector<uint8_t>&& InVertexIndexData);
-	eastl::vector<uint8_t> VertexIndexData;
-	eastl::shared_ptr<Assimp::Importer> Importer;
+	FD3D12VertexIndexBufferSubresourceContainer(const uint8_t* const InData, const size_t InSize, eastl::shared_ptr<Assimp::Importer>& AssimpImporter);
+	FD3D12VertexIndexBufferSubresourceContainer(eastl::vector<uint8_t>&& InCopiedData);
+
+	void InitSubresourceData();
+
+	const eastl::vector<uint8_t> ShadowDataStorage;
+	const uint8_t* const Data;
+	const size_t Size;
+
+	const eastl::shared_ptr<Assimp::Importer> AssimpImporter;
 };
 
 struct FD3D12TextureSubresourceContainer : public FD3D12SubresourceContainer

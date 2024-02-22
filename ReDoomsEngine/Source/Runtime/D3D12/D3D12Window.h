@@ -24,6 +24,13 @@ public:
 		return WindowHandle;
 	}
 
+	inline static bool WKeyPressed = false;
+	inline static bool AKeyPressed = false;
+	inline static bool SKeyPressed = false;
+	inline static bool DKeyPressed = false;
+	inline static bool LeftArrowKeyPressed = false;
+	inline static bool RIghtArrowKeyPressed = false;
+
 private:
 
 	FRenderer* const TargetRenderer;

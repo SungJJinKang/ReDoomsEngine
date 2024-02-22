@@ -301,8 +301,7 @@ eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::Allo
 
 eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::AllocateStaticVertexBuffer(FD3D12CommandContext& InCommandContext, const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes, eastl::shared_ptr<Assimp::Importer> Importer)
 {
-	eastl::unique_ptr<FD3D12VertexIndexBufferSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(Data, InSize);
-    SubresourceContainer->Importer = Importer;
+	eastl::unique_ptr<FD3D12VertexIndexBufferSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(Data, InSize, Importer);
 	return AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), InDefaultStrideInBytes);
 }
 
@@ -313,8 +312,7 @@ eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::Allo
 
 eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::AllocateStaticIndexBuffer(FD3D12CommandContext& InCommandContext, const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes, eastl::shared_ptr<Assimp::Importer> Importer)
 {
-	eastl::unique_ptr<FD3D12VertexIndexBufferSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(Data, InSize);
-    SubresourceContainer->Importer = Importer;
+	eastl::unique_ptr<FD3D12VertexIndexBufferSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(Data, InSize, Importer);
 	return AllocateStaticIndexBuffer(InCommandContext, eastl::move(SubresourceContainer), InDefaultStrideInBytes);
 }
 
