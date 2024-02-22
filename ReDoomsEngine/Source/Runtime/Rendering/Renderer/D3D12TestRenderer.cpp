@@ -91,7 +91,13 @@ void D3D12TestRenderer::OnStartFrame()
 // 			{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f } }
 // 		};
 
-		VertexBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(CurrentFrameCommandContext, reinterpret_cast<uint8_t*>(TriangleVertices), sizeof(TriangleVertices), sizeof(Vertex));
+		eastl::vector<uint8> VertexData;
+		VertexData.resize(sizeof(TriangleVertices));
+		EA::StdC::Memcpy(VertexData.data(), TriangleVertices, sizeof(TriangleVertices));
+
+		eastl::unique_ptr<FD3D12VertexIndexBufferSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(VertexData));
+
+		VertexBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(CurrentFrameCommandContext, eastl::move(SubresourceContainer), sizeof(Vertex));
 		VertexBuffer->SetDebugNameToResource(EA_WCHAR("TestRenderer VertexBuffer1"));
 	}
 }
@@ -109,108 +115,180 @@ bool D3D12TestRenderer::Draw()
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
 	//Test Code
-	auto TestVSInstance = FTestVS::MakeShaderInstance();
-	auto TestPSInstance = FTestPS::MakeShaderInstance();
 
-	eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency> ShaderList{};
-	ShaderList[EShaderFrequency::Vertex] = TestVSInstance;
-	ShaderList[EShaderFrequency::Pixel] = TestPSInstance;
-
-	FBoundShaderSet BoundShaderSet{ ShaderList };
-
-	// Define the vertex input layout.
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-	};
+		auto TestVSInstance = FTestVS::MakeShaderInstance();
+		auto TestPSInstance = FTestPS::MakeShaderInstance();
 
-	FD3D12PSOInitializer PSOInitializer{};
-	PSOInitializer.BoundShaderSet = BoundShaderSet;
-	PSOInitializer.Desc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-	PSOInitializer.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	PSOInitializer.Desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	PSOInitializer.Desc.DepthStencilState.DepthEnable = FALSE;
-	PSOInitializer.Desc.DepthStencilState.StencilEnable = FALSE;
-	PSOInitializer.Desc.SampleMask = UINT_MAX;
-	PSOInitializer.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	PSOInitializer.Desc.NumRenderTargets = 1;
-	PSOInitializer.Desc.RTVFormats[0] = SwapChain->GetFormat();
-	PSOInitializer.Desc.SampleDesc.Count = 1;
-	PSOInitializer.FinishCreating();
+		eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency> ShaderList{};
+		ShaderList[EShaderFrequency::Vertex] = TestVSInstance;
+		ShaderList[EShaderFrequency::Pixel] = TestPSInstance;
 
-	// Set necessary state.
-	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
+		FBoundShaderSet BoundShaderSet{ ShaderList };
 
-	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.4f };
-	TestVSInstance->Parameter.GlobalConstantBuffer->AddOffset = true;
-	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 10.0f };
-	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 11.0f };
-
-	TestPSInstance->Parameter.TestTexture = TestTexture->GetSRV();
-	TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 12.0f };
-	TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 13.0f };
-	TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset3 = XMVECTOR{ 14.0f };
-	
-	CD3DX12_VIEWPORT Viewport{ 0.0f, 0.0f, static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
-	CD3DX12_RECT Rect{ 0, 0, static_cast<LONG>(SwapChain->GetWidth()), static_cast<LONG>(SwapChain->GetHeight()) };
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetViewports(1, &Viewport);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
-
-	// Indicate that the back buffer will be used as a render target.
-	eastl::shared_ptr<FD3D12RenderTargetResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
-
-	CD3DX12_RESOURCE_BARRIER ResourceBarrierA = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ResourceBarrier(1, &ResourceBarrierA);
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = TargetRenderTarget->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->OMSetRenderTargets(1, &RTVCPUHandle, FALSE, nullptr);
-
-	// Record commands.
-	const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearRenderTargetView(RTVCPUHandle, clearColor, 0, nullptr);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	D3D12_VERTEX_BUFFER_VIEW VertexBufferView = VertexBuffer->GetVertexBufferView();
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, 1, &VertexBufferView);
-
-	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
-	CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
-
-	TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f };
-	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
-
-	CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
-	TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
-
-	XMVECTOR OriginalOffset = TestVSInstance->Parameter.VertexOffset->Offset;
-
-	for (uint32_t i = 0; i < 100; ++i)
-	{
-		if (i >= 50)
+		// Define the vertex input layout.
+		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
 		{
-			TestPSInstance->Parameter.TestTexture = SmallTexture->GetSRV();
-			TestVSInstance->Parameter.VertexOffset->Offset = OriginalOffset + XMVECTOR{0.0f, 0.5f, 0.0f, 0.0f} + XMVECTOR{ Offset, 0.0f, 0.0f, 0.0f} + XMVECTOR{ 0.1f, 0.0f, 0.0f, 0.0f } * (i - 50);
-		}
-		else
-		{
-			TestVSInstance->Parameter.VertexOffset->Offset = OriginalOffset + XMVECTOR{ Offset, 0.0f, 0.0f, 0.0f } + XMVECTOR{ 0.1f, 0.0f, 0.0f, 0.0f }* i;
-		}
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		};
+
+		FD3D12PSOInitializer PSOInitializer{};
+		PSOInitializer.BoundShaderSet = BoundShaderSet;
+		PSOInitializer.Desc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
+		PSOInitializer.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		PSOInitializer.Desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+		PSOInitializer.Desc.DepthStencilState.DepthEnable = FALSE;
+		PSOInitializer.Desc.DepthStencilState.StencilEnable = FALSE;
+		PSOInitializer.Desc.SampleMask = UINT_MAX;
+		PSOInitializer.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		PSOInitializer.Desc.NumRenderTargets = 1;
+		PSOInitializer.Desc.RTVFormats[0] = SwapChain->GetFormat();
+		PSOInitializer.Desc.SampleDesc.Count = 1;
+		PSOInitializer.FinishCreating();
+
+		// Set necessary state.
+		CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
+
+		TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.4f };
+		TestVSInstance->Parameter.GlobalConstantBuffer->AddOffset = true;
+		TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 10.0f };
+		TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 11.0f };
+
+		TestPSInstance->Parameter.TestTexture = TestTexture->GetSRV();
+		TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 12.0f };
+		TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 13.0f };
+		TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset3 = XMVECTOR{ 14.0f };
+
+		CD3DX12_VIEWPORT Viewport{ 0.0f, 0.0f, static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
+		CD3DX12_RECT Rect{ 0, 0, static_cast<LONG>(SwapChain->GetWidth()), static_cast<LONG>(SwapChain->GetHeight()) };
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetViewports(1, &Viewport);
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
+
+		// Indicate that the back buffer will be used as a render target.
+		eastl::shared_ptr<FD3D12RenderTargetResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+
+		CD3DX12_RESOURCE_BARRIER ResourceBarrierA = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ResourceBarrier(1, &ResourceBarrierA);
+
+		CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = TargetRenderTarget->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->OMSetRenderTargets(1, &RTVCPUHandle, FALSE, nullptr);
+
+		// Record commands.
+		const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearRenderTargetView(RTVCPUHandle, clearColor, 0, nullptr);
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		D3D12_VERTEX_BUFFER_VIEW VertexBufferView = VertexBuffer->GetVertexBufferView();
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, 1, &VertexBufferView);
+
 		CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
+		CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
+
+		TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f };
+		TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
+
+		CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
+		TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
+
+		XMVECTOR OriginalOffset = TestVSInstance->Parameter.VertexOffset->Offset;
+
+		for (uint32_t i = 0; i < 100; ++i)
+		{
+			if (i >= 50)
+			{
+				TestPSInstance->Parameter.TestTexture = SmallTexture->GetSRV();
+				TestVSInstance->Parameter.VertexOffset->Offset = OriginalOffset + XMVECTOR{ 0.0f, 0.5f, 0.0f, 0.0f } + XMVECTOR{ Offset, 0.0f, 0.0f, 0.0f } + XMVECTOR{ 0.1f, 0.0f, 0.0f, 0.0f } *(i - 50);
+			}
+			else
+			{
+				TestVSInstance->Parameter.VertexOffset->Offset = OriginalOffset + XMVECTOR{ Offset, 0.0f, 0.0f, 0.0f } + XMVECTOR{ 0.1f, 0.0f, 0.0f, 0.0f }*i;
+			}
+			CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
+		}
 	}
 
-	XMFLOAT4X4 ViewProjMat = View.Get3DViewProjMatrices(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+	{
+		XMFLOAT4X4 ViewProjMat = View.Get3DViewProjMatrices(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+		XMFLOAT4X4 ViewMat = View.Get3DViewMatrices();
+		XMFLOAT4X4 ProjMat = View.Get3DProjMatrices(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
 
-	auto MeshDrawVSInstance = FMeshDrawVS::MakeShaderInstance();
-	auto MeshDrawPSInstance = FMeshDrawPS::MakeShaderInstance();
+		auto MeshDrawVSInstance = FMeshDrawVS::MakeShaderInstance();
+		auto MeshDrawPSInstance = FMeshDrawPS::MakeShaderInstance();
 
-	MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
-	MeshDrawPSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
-	MeshDrawPSInstance->Parameter.TriangleColorTexture = Mesh->Material[0].DiffuseTexture->GetSRV();
+		eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency> ShaderList{};
+		ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
+		ShaderList[EShaderFrequency::Pixel] = MeshDrawPSInstance;
 
-	eastl::vector<D3D12_VERTEX_BUFFER_VIEW> VertexBufferViewList = Mesh->MeshList[0].CreateVertexBufferViewList();
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, VertexBufferViewList.size(), VertexBufferViewList.data());
+		FBoundShaderSet BoundShaderSet{ ShaderList };
+
+		FD3D12PSOInitializer PSOInitializer{};
+		PSOInitializer.BoundShaderSet = BoundShaderSet;
+		PSOInitializer.Desc.InputLayout = { FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
+		PSOInitializer.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		PSOInitializer.Desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+		PSOInitializer.Desc.DepthStencilState.DepthEnable = FALSE;
+		PSOInitializer.Desc.DepthStencilState.StencilEnable = FALSE;
+		PSOInitializer.Desc.SampleMask = UINT_MAX;
+		PSOInitializer.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		PSOInitializer.Desc.NumRenderTargets = 1;
+		PSOInitializer.Desc.RTVFormats[0] = SwapChain->GetFormat();
+		PSOInitializer.Desc.SampleDesc.Count = 1;
+		PSOInitializer.FinishCreating();
+
+		// Set necessary state.
+		CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
+
+		XMFLOAT4X4 ModelMatrix;
+
+		float Speed = GTimeDelta * 5.5f;
+
+		if (FD3D12Window::LeftArrowKeyPressed)
+		{
+			View.RotateYaw(-Speed);
+		}
+		else if (FD3D12Window::RIghtArrowKeyPressed)
+		{
+			View.RotateYaw(Speed);
+		}
+
+		if (FD3D12Window::WKeyPressed)
+		{
+			View.Translate(XMVECTOR{0.0f, 0.0f, 1.0f * Speed, 0.0f});
+		}
+		else if (FD3D12Window::AKeyPressed)
+		{
+			View.Translate(XMVECTOR{ -1.0f * Speed, 0.0f, 0.0f, 0.0f });
+		}
+		else if (FD3D12Window::SKeyPressed)
+		{
+			View.Translate(XMVECTOR{ 0.0f, 0.0f, -1.0f * Speed, 0.0f });
+		}
+		else if (FD3D12Window::DKeyPressed)
+		{
+			View.Translate(XMVECTOR{ 1.0f * Speed, 0.0f, 0.0f, 0.0f });
+		}
+		 
+		XMStoreFloat4x4(&ModelMatrix, XMMatrixMultiply(XMMatrixScaling(0.1f, 0.1f, 0.1f), XMMatrixTranslation(0.0f, 0.0f, 10.0f)));
+		MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
+		MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewMatrix = ViewMat;
+		MeshDrawVSInstance->Parameter.ViewConstantBuffer->ProjectionMatrix = ProjMat;
+		MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
+		MeshDrawPSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
+		MeshDrawPSInstance->Parameter.TriangleColorTexture = Mesh->Material[0].DiffuseTexture->GetSRV();
+
+
+		eastl::vector<D3D12_VERTEX_BUFFER_VIEW> VertexBufferViewList = Mesh->MeshList[0].CreateVertexBufferViewList();
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, VertexBufferViewList.size(), VertexBufferViewList.data());
+
+		D3D12_INDEX_BUFFER_VIEW IndexBufferView = Mesh->MeshList[0].CreateIndexBufferView();
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetIndexBuffer(&IndexBufferView);
+
+		CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
+	}
+
+
 
 	return true;
 }

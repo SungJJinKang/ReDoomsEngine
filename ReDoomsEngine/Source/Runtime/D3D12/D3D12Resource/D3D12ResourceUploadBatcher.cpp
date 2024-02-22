@@ -5,22 +5,23 @@
 #include "Renderer/Renderer.h"
 #include "D3D12CommandList.h"
 
-FD3D12VertexIndexBufferSubresourceContainer::FD3D12VertexIndexBufferSubresourceContainer(const uint8_t* const Data, const size_t InSize)
-	: VertexIndexData()
+FD3D12VertexIndexBufferSubresourceContainer::FD3D12VertexIndexBufferSubresourceContainer(const uint8_t* const InData, const size_t InSize, eastl::shared_ptr<Assimp::Importer>& InAssimpImporter)
+	: ShadowDataStorage(), Data(InData), Size(InSize), AssimpImporter(InAssimpImporter)
 {
-	VertexIndexData.resize(InSize);
-	EA::StdC::Memcpy(VertexIndexData.data(), Data, InSize);
-
-	SubresourceData.pData = VertexIndexData.data();
-	SubresourceData.RowPitch = InSize;
-	SubresourceData.SlicePitch = SubresourceData.RowPitch;
+	EA_ASSERT_MSG(AssimpImporter, "AssimpImporter is null. To prevent data variable from being dangling pointer, original data should be maintained");
+	InitSubresourceData();
 }
 
-FD3D12VertexIndexBufferSubresourceContainer::FD3D12VertexIndexBufferSubresourceContainer(eastl::vector<uint8_t>&& InVertexIndexData)
-	: VertexIndexData(eastl::move(InVertexIndexData))
+FD3D12VertexIndexBufferSubresourceContainer::FD3D12VertexIndexBufferSubresourceContainer(eastl::vector<uint8_t>&& InCopiedData)
+	: ShadowDataStorage(eastl::move(InCopiedData)), Data(ShadowDataStorage.data()), Size(ShadowDataStorage.size()), AssimpImporter()
 {
-	SubresourceData.pData = VertexIndexData.data();
-	SubresourceData.RowPitch = VertexIndexData.size();
+	InitSubresourceData();
+}
+
+void FD3D12VertexIndexBufferSubresourceContainer::InitSubresourceData()
+{
+	SubresourceData.pData = Data;
+	SubresourceData.RowPitch = Size;
 	SubresourceData.SlicePitch = SubresourceData.RowPitch;
 }
 

@@ -10,6 +10,8 @@ SamplerState StaticAnisotropicClampSampler;
 
 cbuffer ViewConstantBuffer
 {
+	float4x4 ViewMatrix;
+	float4x4 ProjectionMatrix;
 	float4x4 ViewProjectionMatrix;
 	float4x4 PrevViewProjectionMatrix;
 };
