@@ -46,6 +46,8 @@ void FImguiHelper::NewFrame()
 
 void FImguiHelper::EndDraw(FD3D12CommandContext& InCommandContext)
 {
+	SCOPED_GPU_TIMER_DIRECT_QUEUE(InCommandContext, Imgui)
+
 	// Rendering
 	// (Your code clears your framebuffer, renders your other stuff etc.)
 	ImGui::Render();
