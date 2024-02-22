@@ -581,7 +581,7 @@ void FShaderParameterConstantBuffer::Init()
 	{
 		const uint32_t ConstantBufferSize = GetReflectionData()->Desc.Size;
 		ShadowData.resize(ConstantBufferSize);
-		ConstantBufferResource = eastl::make_unique<FD3D12ConstantBufferResource>(ConstantBufferSize, true, ShadowData.data(), false);
+		ConstantBufferResource = eastl::make_unique<FD3D12ConstantBufferResource>(ConstantBufferSize, true, ShadowData.data(), ConstantBufferSize, false);
 		ConstantBufferResource->InitResource();
 
 		for (auto& MemberVariablePair : MemberVariableMap)
@@ -610,21 +610,25 @@ void FShaderParameterConstantBuffer::AddMemberVariable(FShaderParameterConstantB
 
 uint8_t* FShaderParameterConstantBuffer::GetShadowData()
 {
+	EA_ASSERT(!IsCulled());
 	return reinterpret_cast<uint8_t*>(ShadowData.data());
 }
 
 FD3D12ConstantBufferResource* FShaderParameterConstantBuffer::GetConstantBufferResource()
 {
+	EA_ASSERT(!IsCulled());
 	return ConstantBufferResource.get();
 }
 
 void FShaderParameterConstantBuffer::FlushShadowData()
 {
+	EA_ASSERT(!IsCulled());
 	ConstantBufferResource->FlushShadowData();
 }
 
 void FShaderParameterConstantBuffer::MakeDirty()
 {
+	EA_ASSERT(!IsCulled());
 	ConstantBufferResource->MakeDirty();
 }
 
