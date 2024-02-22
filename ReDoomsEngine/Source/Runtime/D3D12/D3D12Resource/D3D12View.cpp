@@ -8,6 +8,26 @@ FD3D12View::~FD3D12View()
 	FreeDescriptorHeapBlock();
 }
 
+FD3D12Resource* FD3D12View::GetUnderlyingResource() const
+{
+	eastl::shared_ptr<FD3D12Resource> LockedResource = Resource.lock();
+	return LockedResource ? LockedResource.get() : nullptr;
+}
+
+FD3D12DescriptorHeapBlock FD3D12View::GetDescriptorHeapBlock() const
+{
+	return OfflineDescriptorHeapBlock;
+}
+
+void FD3D12View::FreeDescriptorHeapBlock()
+{
+	if (eastl::shared_ptr<FD3D12DescriptorHeap> OfflineDescriptorHeap = OfflineDescriptorHeapBlock.ParentDescriptorHeap.lock())
+	{
+		OfflineDescriptorHeap->FreeDescriptorHeapBlock(OfflineDescriptorHeapBlock);
+	}
+	OfflineDescriptorHeapBlock.Clear();
+}
+
 FD3D12ShaderResourceView::FD3D12ShaderResourceView(eastl::weak_ptr<FD3D12Resource> InResource)
 	: TD3D12View(InResource)
 {

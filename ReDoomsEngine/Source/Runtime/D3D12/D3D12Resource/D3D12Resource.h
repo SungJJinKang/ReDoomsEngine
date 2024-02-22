@@ -185,7 +185,7 @@ public:
 	}
 
 	/// <summary>
-	/// Mapped address is write-combined type so it's recommended to copy data using memcpy style copy and not to read it
+	/// Mapped address is on write-combined page so it's recommended to copy data using memcpy style copy and not to read it
 	/// </summary>
 	/// <returns></returns>
 	virtual uint8_t* GetMappedAddress() const;

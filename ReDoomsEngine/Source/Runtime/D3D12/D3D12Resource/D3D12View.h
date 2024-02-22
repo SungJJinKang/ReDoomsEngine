@@ -25,26 +25,12 @@ public:
 
 	virtual ~FD3D12View();
 
-	inline FD3D12Resource* GetUnderlyingResource() const
-	{
-		eastl::shared_ptr<FD3D12Resource> LockedResource = Resource.lock();
-		return LockedResource ? LockedResource.get() : nullptr;
-	}
+	FD3D12Resource* GetUnderlyingResource() const;
 
-	inline FD3D12DescriptorHeapBlock GetDescriptorHeapBlock() const
-	{
-		return OfflineDescriptorHeapBlock;
-	}
+	FD3D12DescriptorHeapBlock GetDescriptorHeapBlock() const;
 
 	virtual void UpdateDescriptor() = 0;
-	void FreeDescriptorHeapBlock()
-	{
-		if (eastl::shared_ptr<FD3D12DescriptorHeap> OfflineDescriptorHeap = OfflineDescriptorHeapBlock.ParentDescriptorHeap.lock())
-		{
-			OfflineDescriptorHeap->FreeDescriptorHeapBlock(OfflineDescriptorHeapBlock);
-		}
-		OfflineDescriptorHeapBlock.Clear();
-	}
+	void FreeDescriptorHeapBlock();
 
 	virtual bool IsCBV() const { return false; }
 	virtual bool IsSRV() const { return false; }

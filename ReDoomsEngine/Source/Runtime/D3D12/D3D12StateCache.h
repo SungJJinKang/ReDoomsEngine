@@ -2,7 +2,7 @@
 #include "D3D12Include.h"
 #include "D3D12PSO.h"
 
-class FD3D12CommandContext;
+struct FD3D12CommandContext;
 class FD3D12View;
 class FD3D12DescriptorHeap;
 class FD3D12RootSignature;
