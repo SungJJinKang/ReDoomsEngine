@@ -70,16 +70,16 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
                     EA_ASSERT(AssimpMesh->mNumUVComponents[UVIndex] == 2);
 
                     eastl::vector<uint8_t> TextureCoords;  // @todo : doesn't need default initialize
-                    TextureCoords.resize(AssimpMesh->mNumVertices * sizeof(XMFLOAT2));
+                    TextureCoords.resize(AssimpMesh->mNumVertices * sizeof(Vector2));
 
                     for (uint32_t TextureCoordIndex = 0; TextureCoordIndex < AssimpMesh->mNumVertices; ++TextureCoordIndex)
                     {
-                        EA::StdC::Memcpy(TextureCoords.data() + TextureCoordIndex * sizeof(XMFLOAT2), AssimpMesh->mTextureCoords[UVIndex] + TextureCoordIndex, sizeof(XMFLOAT2));
+                        EA::StdC::Memcpy(TextureCoords.data() + TextureCoordIndex * sizeof(Vector2), AssimpMesh->mTextureCoords[UVIndex] + TextureCoordIndex, sizeof(Vector2));
                     }
 
                     eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(TextureCoords));
 
-                    Mesh.TexCoordBuffers[UVIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(XMFLOAT2));
+                    Mesh.TexCoordBuffers[UVIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(Vector2));
                     Mesh.TexCoordBuffers[UVIndex]->SetDebugNameToResource((MeshName + TextureCoordsDebugName[UVIndex]).c_str());
                 }
             }

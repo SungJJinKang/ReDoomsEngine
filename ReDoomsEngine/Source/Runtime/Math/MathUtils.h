@@ -1,5 +1,12 @@
 #pragma once
 
+#include "DirectXMath.h"
+#include "DirectXCollision.h"
+#include "DirectXColors.h"
+#include "DirectXPackedVector.h"
+#include "Math/SimpleMath.h"
+
+using namespace DirectX::SimpleMath;
 using namespace DirectX;
 
 template <typename T>
@@ -48,4 +55,18 @@ template <typename T>
 EASTL_FORCE_INLINE constexpr T DivideRoudingUp(T x, T y)
 {
 	return (x + y - 1) / y;
+}
+
+inline Quaternion EulerAngleToQuaternion(Vector3 EulerAngle)
+{
+	Vector3 c{ XMScalarCos(EulerAngle.x * 0.5f), XMScalarCos(EulerAngle.y * 0.5f), XMScalarCos(EulerAngle.z * 0.5f)};
+	Vector3 s{ XMScalarASin(EulerAngle.x * 0.5f), XMScalarASin(EulerAngle.y * 0.5f), XMScalarASin(EulerAngle.z * 0.5f) };
+
+	Quaternion result{};
+	result.w = c.x * c.y * c.z + s.x * s.y * s.z;
+	result.x = s.x * c.y * c.z - c.x * s.y * s.z;
+	result.y = c.x * s.y * c.z + s.x * c.y * s.z;
+	result.z = c.x * c.y * s.z - s.x * s.y * c.z;
+
+	return result;
 }

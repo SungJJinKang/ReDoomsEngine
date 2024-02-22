@@ -2,26 +2,26 @@
 
 #include "CommonInclude.h"
 
+#include "Math/Transform.h"
+
 class FView
 {
 public:
 
 	FView();
 
-	XMFLOAT4X4 Get3DViewMatrices();
-	XMFLOAT4X4 Get3DProjMatrices(const float InFovInDegrees, const float InScreenWidth, const float InScreenHeight);
-	XMFLOAT4X4 Get3DViewProjMatrices(const float InFovInDegrees, const float InScreenWidth, const float InScreenHeight);
+	Matrix Get3DViewMatrices();
+	Matrix GetPerspectiveProjectionMatrix(const float InFovInDegrees, const float InScreenWidth, const float InScreenHeight);
+	Matrix GetViewPerspectiveProjectionMatrix(const float InFovInDegrees, const float InScreenWidth, const float InScreenHeight);
+	Matrix GetOrthoProjMatrices(const float InWidth, const float InHeight);
 	void Reset();
-	void Set(const XMVECTOR& InEye, const XMVECTOR& InAt, const XMVECTOR& InUp);
-	void Translate(XMVECTOR Value);
-	void RotateYaw(float InDegree);
-	void RotatePitch(float InDegree);
-	XMFLOAT4X4 GetOrthoProjMatrices(const float InWidth, const float InHeight);
+
+	FTransform Transform;
 
 private:
 
-	XMVECTOR Eye;
-	XMVECTOR LookAt;
-	XMVECTOR Up;
+	float NearPlane = 0.01f;
+	float FarPlane = 125.0f;
+
 };
 

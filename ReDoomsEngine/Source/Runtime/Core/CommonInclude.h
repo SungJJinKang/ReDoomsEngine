@@ -40,7 +40,9 @@ using Microsoft::WRL::ComPtr;
 #include "DirectXCollision.h"
 #include "DirectXColors.h"
 #include "DirectXPackedVector.h"
+#include "Math/SimpleMath.h"
 #include "Math/MathUtils.h"
+using namespace DirectX::SimpleMath;
 using namespace DirectX;
 
 #include "Log.h"
