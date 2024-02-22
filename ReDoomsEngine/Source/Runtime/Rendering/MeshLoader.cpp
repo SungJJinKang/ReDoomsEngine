@@ -21,10 +21,10 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
     // probably to request more postprocessing than we do in this example.
     const aiScene* const AssimpScene = AssimpImporter->ReadFile(WCHAR_TO_UTF8(FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePathToAssetFolder)),
         aiProcess_CalcTangentSpace |
-        aiProcess_MakeLeftHanded | // directx is left-handed
-        aiProcess_Triangulate |
-        aiProcess_JoinIdenticalVertices |
-        aiProcess_SortByPType);
+        aiProcess_ConvertToLeftHanded | // directx is left-handed
+        aiProcess_Triangulate
+        //aiProcess_JoinIdenticalVertices |
+        );
 
     // If the import failed, report it
     if (AssimpScene) 
