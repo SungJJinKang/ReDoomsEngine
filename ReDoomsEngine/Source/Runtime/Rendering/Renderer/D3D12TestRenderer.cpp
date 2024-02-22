@@ -51,21 +51,19 @@ void D3D12TestRenderer::OnStartFrame()
 
 	if (!TestTexture)
 	{
-		TestTexture = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds"),
-			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT, 
-			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE); // d3d debug layer doesn't complain even if don't transition to shader resource state. why????
+		TestTexture = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds")); // d3d debug layer doesn't complain even if don't transition to shader resource state. why????
 		TestTexture->SetDebugNameToResource(EA_WCHAR("TestRenderer TestTexture"));
 
-		SmallTexture = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("SmallTexture.dds"),
-			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,
-			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+		SmallTexture = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("SmallTexture.dds"));
 		SmallTexture->SetDebugNameToResource(EA_WCHAR("TestRenderer SmallTexture"));
 
 	}
 
 	if (!Mesh)
 	{
-		Mesh = FMeshLoader::LoadFromMeshFile(CurrentFrameCommandContext, EA_WCHAR("Building/Buildings/Buildings.fbx"));
+		Mesh = FMeshLoader::LoadFromMeshFile(CurrentFrameCommandContext, EA_WCHAR("Drone/Drone.fbx"));
+		//Mesh = FMeshLoader::LoadFromMeshFile(CurrentFrameCommandContext, EA_WCHAR("cabriolet-from-the-concept/source/Cabrio.fbx"));
+		Mesh->Material[0].DiffuseTexture = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("Drone/Drone_diff.jpg"));
 	}
 
 	if (!VertexBuffer)
@@ -223,6 +221,7 @@ bool D3D12TestRenderer::Draw()
 		PSOInitializer.BoundShaderSet = BoundShaderSet;
 		PSOInitializer.Desc.InputLayout = { FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
 		PSOInitializer.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		PSOInitializer.Desc.RasterizerState.FrontCounterClockwise = true;
 		PSOInitializer.Desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 		PSOInitializer.Desc.DepthStencilState.DepthEnable = FALSE;
 		PSOInitializer.Desc.DepthStencilState.StencilEnable = FALSE;
@@ -236,24 +235,33 @@ bool D3D12TestRenderer::Draw()
 		// Set necessary state.
 		CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
-		float Speed = GTimeDelta * 5.5f;
+		float Speed = GTimeDelta * 10.0f;
 
 		if (FD3D12Window::LeftArrowKeyPressed)
 		{
-			View.Transform.RotateYaw(-Speed * 10.0f);
+			View.Transform.RotateYaw(Speed);
 		}
 		else if (FD3D12Window::RIghtArrowKeyPressed)
 		{
-			View.Transform.RotateYaw(Speed * 10.0f);
+			View.Transform.RotateYaw(-Speed);
+		}
+		
+		if (FD3D12Window::UpArrowKeyPressed)
+		{
+			View.Transform.RotatePitch(Speed);
+		}
+		else if (FD3D12Window::DownArrowKeyPressed)
+		{
+			View.Transform.RotatePitch(-Speed);
 		}
 
 		if (FD3D12Window::WKeyPressed)
 		{
-			View.Transform.Translate(Vector3{0.0f, 0.0f, 1.0f} * Speed, ESpace::Self);
+			View.Transform.Translate(Vector3{0.0f, 0.0f, -1.0f} * Speed, ESpace::Self);
 		}
 		else if (FD3D12Window::SKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed, ESpace::Self);
+			View.Transform.Translate(Vector3{ 0.0f, 0.0f, 1.0f } *Speed, ESpace::Self);
 		}
 
 		if (FD3D12Window::AKeyPressed)
@@ -265,7 +273,7 @@ bool D3D12TestRenderer::Draw()
 			View.Transform.Translate(Vector3{ 1.0f, 0.0f, 0.0f} *Speed, ESpace::Self);
 		}
 		 
-		Matrix ModelMatrix = Matrix::CreateScale(0.1f, 0.1f, 0.1f) * Matrix::CreateTranslation(0.0f, 0.0f, 5.0f);
+		Matrix ModelMatrix = Matrix::CreateScale(0.05f, 0.05f, 0.05f) * Matrix::CreateRotationX(0) * Matrix::CreateTranslation(0.0f, 0.0f, -5.0f);
 
 		Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
 		Matrix ViewMat = View.Get3DViewMatrices();
