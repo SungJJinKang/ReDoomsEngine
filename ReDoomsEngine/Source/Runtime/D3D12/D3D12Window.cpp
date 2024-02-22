@@ -85,7 +85,13 @@ LRESULT FD3D12Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
             break;
         case VK_RIGHT:
             RIghtArrowKeyPressed = true;
-            break;
+			break;
+		case VK_UP:
+            UpArrowKeyPressed = true;
+			break;
+		case VK_DOWN:
+            DownArrowKeyPressed = true;
+			break;
         case 0x57:
             WKeyPressed = true;
             break;
@@ -97,7 +103,7 @@ LRESULT FD3D12Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
             break;
         case 0x44:
             DKeyPressed = true;
-            break;
+			break;
         }
         return 0;
     case WM_KEYUP:
@@ -108,7 +114,13 @@ LRESULT FD3D12Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
             break;
         case VK_RIGHT:
             RIghtArrowKeyPressed = false;
-            break;
+			break;
+		case VK_UP:
+			UpArrowKeyPressed = false;
+			break;
+		case VK_DOWN:
+			DownArrowKeyPressed = false;
+			break;
         case 0x57:
             WKeyPressed = false;
             break;
