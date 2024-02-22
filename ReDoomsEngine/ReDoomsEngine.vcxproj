@@ -115,6 +115,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.cpp" />
+    <ClCompile Include="Source\Runtime\Math\SimpleMath.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\MeshLoader.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.cpp" />
     <ClCompile Include="Source\Runtime\Core\Profiling.cpp" />
@@ -179,9 +180,11 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc" />
     <ClCompile Include="Source\Runtime\Rendering\TextureLoader.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\View.cpp" />
+    <ClCompile Include="Source\Runtime\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.h" />
+    <ClInclude Include="Source\Runtime\Math\SimpleMath.h" />
     <ClInclude Include="Source\Runtime\Rendering\MeshLoader.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.h" />
     <ClInclude Include="Source\Runtime\Core\Profiling.h" />
@@ -556,6 +559,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Utils\cityhash\src\citycrc.h" />
     <ClInclude Include="Source\Runtime\Rendering\TextureLoader.h" />
     <ClInclude Include="Source\Runtime\Rendering\View.h" />
+    <ClInclude Include="Source\Runtime\Math\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Source\Editor\imgui\misc\debuggers\imgui.natvis" />
@@ -569,6 +573,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathMisc.inl" />
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathVector.inl" />
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl" />
+    <None Include="Source\Runtime\Math\SimpleMath.inl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\seafloor.dds" />
