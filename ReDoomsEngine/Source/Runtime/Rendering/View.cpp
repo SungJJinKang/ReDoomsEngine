@@ -10,7 +10,7 @@ Matrix FView::Get3DViewMatrices()
 	const Vector3& Eye = Transform.Position;
 	const Vector3 Forward = Transform.Forward();
 	const Vector3 Up = Transform.Up();
-	return Matrix::CreateLookAt(Eye, Forward, Up);
+	return Matrix::CreateLookAt(Eye, Eye + Forward, Up);
 }
 
 Matrix FView::GetPerspectiveProjectionMatrix(const float InFovInDegrees, const float InScreenWidth, const float InScreenHeight)
@@ -38,7 +38,7 @@ Matrix FView::GetOrthoProjMatrices(const float InWidth, const float InHeight)
 
 void FView::Reset()
 {
-	Transform.Position = Vector3{ 0.0f, 0.0f, -10.0f };
+	Transform.Position = Vector3{ 0.0f, 0.0f, 5.0f };
 	Transform.Scale = Vector3{ 1.0f, 1.0f, 1.0f };
-	Transform.LookAt(Vector3{ 0.0f, 0.0f, 10.0f }, Vector3::Up);
+	Transform.Rotation = Quaternion::LookRotation(Vector3::Forward, Vector3::Up);
 }

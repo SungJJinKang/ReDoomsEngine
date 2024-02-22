@@ -33,12 +33,12 @@ void FTransform::Rotate(const Vector3 EulerAngle, const ESpace& RelativeTo)
 
 void FTransform::RotateYaw(const float EulerAngle)
 {
-	Rotation = Quaternion::CreateFromAxisAngle(Up(), EulerAngle);
+	Rotation *= Quaternion::CreateFromYawPitchRoll(EulerAngle, 0.0f, 0.0f);
 }
 
 void FTransform::RotatePitch(const float EulerAngle)
 {
-	Rotation = Quaternion::CreateFromAxisAngle(Right(), EulerAngle);
+	Rotation *= Quaternion::CreateFromYawPitchRoll(0.0f, EulerAngle, 0.0f);
 }
 
 void FTransform::RotateAround(const Vector3& CenterPoint, const Vector3& Axis, const float Angle)
