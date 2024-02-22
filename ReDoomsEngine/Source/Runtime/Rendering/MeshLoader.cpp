@@ -21,9 +21,7 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
     // probably to request more postprocessing than we do in this example.
     const aiScene* const AssimpScene = AssimpImporter->ReadFile(WCHAR_TO_UTF8(FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePathToAssetFolder)),
         aiProcess_CalcTangentSpace |
-        aiProcess_ConvertToLeftHanded | // directx is left-handed
         aiProcess_Triangulate
-        //aiProcess_JoinIdenticalVertices |
         );
 
     // If the import failed, report it
@@ -39,6 +37,7 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
 
             eastl::wstring MeshName = AssimpMesh->mName.C_Str() ? ANSI_TO_WCHAR(AssimpMesh->mName.C_Str()) : InRelativePathToAssetFolder;
             
+            Mesh.MeshName = MeshName;
             Mesh.PositionBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext,
                 reinterpret_cast<const uint8_t*>(AssimpMesh->mVertices), sizeof(aiVector3D) * AssimpMesh->mNumVertices, sizeof(aiVector3D), AssimpImporter);
             Mesh.PositionBuffer->SetDebugNameToResource((MeshName + EA_WCHAR("(VertexBuffer)")).c_str());
@@ -55,6 +54,38 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
                 reinterpret_cast<const uint8_t*>(AssimpMesh->mBitangents), sizeof(aiVector3D) * AssimpMesh->mNumVertices, sizeof(aiVector3D), AssimpImporter);
             Mesh.BiTangentBuffer->SetDebugNameToResource((MeshName + EA_WCHAR("(BiTangentBuffer)")).c_str());
 
+            static_assert(MAX_NUMBER_OF_VERTEXCOLOR == AI_MAX_NUMBER_OF_COLOR_SETS);
+			static const wchar_t* const VertexColorsDebugName[MAX_NUMBER_OF_VERTEXCOLOR]{
+			  EA_WCHAR("(VertexColor 0)"),
+			  EA_WCHAR("(VertexColor 1)"),
+			  EA_WCHAR("(VertexColor 2)"),
+			  EA_WCHAR("(VertexColor 3)"),
+			  EA_WCHAR("(VertexColor 4)"),
+			  EA_WCHAR("(VertexColor 5)"),
+			  EA_WCHAR("(VertexColor 6)"),
+			  EA_WCHAR("(VertexColor 7)")
+			};
+            for (uint32_t VertexColorIndex = 0; VertexColorIndex < MAX_NUMBER_OF_VERTEXCOLOR; ++VertexColorIndex)
+            {
+                if (AssimpMesh->HasVertexColors(VertexColorIndex))
+                {
+                    EA_ASSERT(AssimpMesh->GetNumColorChannels() == 3);
+
+					eastl::vector<uint8_t> VertexColors;  // @todo : doesn't need default initialize
+					VertexColors.resize(AssimpMesh->mNumVertices * sizeof(Vector3));
+
+					for (uint32_t VertexIndex = 0; VertexIndex < AssimpMesh->mNumVertices; ++VertexIndex)
+					{
+						EA::StdC::Memcpy(VertexColors.data() + VertexIndex * sizeof(Vector3), AssimpMesh->mColors[VertexColorIndex] + VertexIndex, sizeof(Vector3));
+					}
+
+					eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(VertexColors));
+
+					Mesh.VertexColorBuffer[VertexColorIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(Vector2));
+					Mesh.VertexColorBuffer[VertexColorIndex]->SetDebugNameToResource((MeshName + VertexColorsDebugName[VertexColorIndex]).c_str());
+                }
+            }
+           
             static_assert(MAX_NUMBER_OF_TEXTURECOORDS <= AI_MAX_NUMBER_OF_TEXTURECOORDS);
             static const wchar_t* const TextureCoordsDebugName[MAX_NUMBER_OF_TEXTURECOORDS]{
                 EA_WCHAR("(TextureCoords 0)"),
@@ -67,8 +98,6 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             {
                 if (AssimpMesh->HasTextureCoords(UVIndex))
                 {
-                    EA_ASSERT(AssimpMesh->mNumUVComponents[UVIndex] == 2);
-
                     eastl::vector<uint8_t> TextureCoords;  // @todo : doesn't need default initialize
                     TextureCoords.resize(AssimpMesh->mNumVertices * sizeof(Vector2));
 
@@ -118,7 +147,8 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
                 aiTextureType::aiTextureType_DIFFUSE,
                 aiTextureType::aiTextureType_EMISSIVE,
                 aiTextureType::aiTextureType_SHININESS,
-                aiTextureType::aiTextureType_METALNESS
+                aiTextureType::aiTextureType_METALNESS,
+                aiTextureType::aiTextureType_BASE_COLOR
             };
 
             for (uint32_t TextureTypeIndex = 0; TextureTypeIndex < ARRAY_LENGTH(TextureTypes); ++TextureTypeIndex)
@@ -172,7 +202,7 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
 						MeshMaterial.EmissiveTexture = TextureResource;
                         break;
 					case aiTextureType_SHININESS:
-						MeshMaterial.ShininessTexture = TextureResource;
+						MeshMaterial.ShinessTexture = TextureResource;
                         break;
 					case aiTextureType_METALNESS:
 						MeshMaterial.MetalnessTexture = TextureResource;
