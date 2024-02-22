@@ -218,11 +218,16 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResou
 }
 
 FD3D12BufferResource::FD3D12BufferResource(
-	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress, const bool bNeverCreateShadowData)
+	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress, const uint32_t InShadowDataSize, const bool bNeverCreateShadowData)
 	: 
 	FD3D12Resource(MakeResourceCreateProperties(bInDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
-	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress), bIsShadowDataDirty(true)
+	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress), ShadowDataSize(InShadowDataSize), bIsShadowDataDirty(true)
 {
+	if (ShadowDataAddress)
+	{
+		EA_ASSERT(ShadowDataSize > 0);
+	}
+
 	if (!ShadowDataAddress && !bNeverCreateShadowData)
 	{
 		ShadowData.resize(GetBufferSize());
@@ -364,7 +369,8 @@ void FD3D12BufferResource::FlushShadowData()
 	if (bDynamic)
 	{
 		// memcpy is recommended to write on write combined type page. it's for preventing from flushing write combined buffer before fill up it
-		EA::StdC::Memcpy(GetMappedAddress(), GetShadowDataAddress(), GetBufferSize());
+		EA_ASSERT(ShadowDataSize > 0);
+		EA::StdC::Memcpy(GetMappedAddress(), GetShadowDataAddress(), ShadowDataSize); // d3d resource size can be different with shadow data size because of alignment requirement
 	}
 	else
 	{

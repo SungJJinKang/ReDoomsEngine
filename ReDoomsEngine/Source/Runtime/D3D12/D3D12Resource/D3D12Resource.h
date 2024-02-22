@@ -154,7 +154,8 @@ class FD3D12BufferResource : public FD3D12Resource
 {
 public:
 
-	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowDataAddress = nullptr, const bool bNeverCreateShadowData = false);
+	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowDataAddress = nullptr, 
+		const uint32_t InShadowDataSize = 0, const bool bNeverCreateShadowData = false);
 	
 	virtual bool IsBuffer() const
 	{
@@ -208,6 +209,7 @@ protected:
 
 	bool bShadowDataCreatedFromThisInstance;
 	uint8_t* ShadowDataAddress;
+	uint32_t ShadowDataSize;
 
 	bool bIsShadowDataDirty;
 	eastl::vector<uint8_t> ShadowData;
@@ -235,8 +237,8 @@ class TD3D12BufferResource : public FD3D12BufferResource
 {
 public:
 	
-	TD3D12BufferResource(const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowDataAddress = nullptr)
-		: FD3D12BufferResource(sizeof(BufferDataType), InFlags, InAlignment, bInDynamic, InShadowDataAddress)
+	TD3D12BufferResource(const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowDataAddress = nullptr, const uint32_t InShadowDataSize = 0)
+		: FD3D12BufferResource(sizeof(BufferDataType), InFlags, InAlignment, bInDynamic, InShadowDataAddress, InShadowDataSize)
 	{
 	}
 
@@ -262,13 +264,14 @@ public:
 	/// This can be slow. But it's acceptable when it's size is small and the data changes frequently
 	/// https://therealmjp.github.io/posts/gpu-memory-pool/
 	/// </param>
-	FD3D12ConstantBufferResource(const uint64_t InSize, const bool bInDynamic = true, uint8_t* const InShadowDataAddress = nullptr, const bool bNeverCreateShadowData = false)
+	FD3D12ConstantBufferResource(const uint64_t InSize, const bool bInDynamic = true, uint8_t* const InShadowDataAddress = nullptr, const uint32_t InShadowDataSize = 0, const bool bNeverCreateShadowData = false)
 		: FD3D12BufferResource( // @todo : 
 			Align(InSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT),
 			D3D12_RESOURCE_FLAG_NONE,
 			0,
 			bInDynamic,
 			InShadowDataAddress,
+			InShadowDataSize,
 			bNeverCreateShadowData),
 		ConstantBufferBlock()
 	{
