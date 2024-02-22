@@ -216,6 +216,9 @@
     <ClCompile Include="Source\Runtime\Math\SimpleMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Runtime\Rendering\MeshDraw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
@@ -1347,6 +1350,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Math\SimpleMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Rendering\MeshDraw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
