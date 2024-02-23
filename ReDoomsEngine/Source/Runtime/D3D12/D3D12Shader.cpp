@@ -8,18 +8,35 @@
 #include "ShaderCompilers/HLSLTypeHelper.h"
 
 FBoundShaderSet::FBoundShaderSet(const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& InShaderList)
-	: ShaderList(InShaderList)
+	: ShaderInstanceList()
 {
+	Set(InShaderList);
 	CacheHash();
+}
+
+void FBoundShaderSet::Set(const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& InShaderList)
+{
+	ShaderInstanceList = InShaderList;
+	for (uint32_t ShaderIndex = 0; ShaderIndex < EShaderFrequency::NumShaderFrequency; ++ShaderIndex)
+	{
+		if (ShaderInstanceList[ShaderIndex])
+		{
+			ShaderTemplateList[ShaderIndex] = ShaderInstanceList[ShaderIndex]->GetShaderTemplate();
+			CachedHash = CombineHash(CachedHash, ShaderInstanceList[ShaderIndex]->GetShaderTemplate()->GetShaderHash());
+		}
+	}
+
+	CacheHash();
+	Validate();
 }
 
 void FBoundShaderSet::CacheHash()
 {
 	for (uint32_t ShaderIndex = 0; ShaderIndex < EShaderFrequency::NumShaderFrequency; ++ShaderIndex)
 	{
-		if (ShaderList[ShaderIndex])
+		if (ShaderInstanceList[ShaderIndex])
 		{
-			CachedHash = CombineHash(CachedHash, ShaderList[ShaderIndex]->GetShaderTemplate()->GetShaderHash());
+			CachedHash = CombineHash(CachedHash, ShaderInstanceList[ShaderIndex]->GetShaderTemplate()->GetShaderHash());
 		}
 	}
 }
@@ -28,7 +45,7 @@ void FBoundShaderSet::Validate()
 {
 	bool bFound = false;
 
-	for (eastl::shared_ptr<FD3D12ShaderInstance>& Shader : ShaderList)
+	for (eastl::shared_ptr<FD3D12ShaderInstance>& Shader : ShaderInstanceList)
 	{
 		if (Shader)
 		{
@@ -433,7 +450,7 @@ void FD3D12ShaderManager::Init()
 
 void FD3D12ShaderManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
-
+	ResetShaderInstancePoolOfAllShadersForCurrentFrame();
 }
 
 void FD3D12ShaderManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
@@ -471,6 +488,7 @@ bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12ShaderTemplate& Shader, c
 
 			Shader.OnFinishShaderCompile();
 			
+			CompiledShaderList.push_back(&Shader);
 			// @todo check if name of the shader exists already
 		}
 	}
@@ -480,6 +498,8 @@ bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12ShaderTemplate& Shader, c
 void FD3D12ShaderManager::CompileAllPendingShader()
 {
 	FShaderCompileArguments DeafulatShaderCompileArguments{};
+
+	CompiledShaderList.reserve(GetCompilePendingShaderList().size());
 	for (FD3D12ShaderTemplate* D3D12Shader : GetCompilePendingShaderList())
 	{
 		CompileAndAddNewShader(*D3D12Shader, DeafulatShaderCompileArguments);
@@ -498,9 +518,22 @@ void FD3D12ShaderManager::AddCompilePendingShader(FD3D12ShaderTemplate& CompileP
 	GetCompilePendingShaderList().push_back(&CompilePendingShader);
 }
 
+void FD3D12ShaderManager::ResetShaderInstancePoolOfAllShadersForCurrentFrame()
+{
+	for (FD3D12ShaderTemplate* Shader : CompiledShaderList)
+	{
+		Shader->ResetUsedShaderInstanceCountForCurrentFrame();
+	}
+}
+
 void FD3D12ShaderInstance::ApplyShaderParameter(FD3D12CommandContext& InCommandContext)
 {
 	ShaderParameterContainerTemplate->ApplyShaderParameters(InCommandContext);
+}
+
+void FD3D12ShaderInstance::ResetForReuse()
+{
+
 }
 
 void FShaderParameterContainerTemplate::Init()

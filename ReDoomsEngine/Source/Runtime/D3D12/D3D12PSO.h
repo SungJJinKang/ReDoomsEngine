@@ -8,16 +8,29 @@ class FD3D12RootSignature;
 
 struct FD3D12PSOInitializer
 {
-	FBoundShaderSet BoundShaderSet;
+    /// <summary>
+    /// This struct should contains states changed frequently per draw
+    /// </summary>
+    struct FDrawDesc
+    {
+        FBoundShaderSet BoundShaderSet;
 
-    struct FDesc
+        struct FPSODesc
+        {
+            D3D12_INPUT_LAYOUT_DESC InputLayout;
+            CD3DX12_BLEND_DESC BlendState;
+            CD3DX12_RASTERIZER_DESC RasterizerState;
+            CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
+        } PSODesc;
+    } DrawDesc;
+
+    /// <summary>
+    /// This struct should contains states never changed during a pass
+    /// </summary>
+    struct FPassDesc
     {
         D3D12_STREAM_OUTPUT_DESC StreamOutput;
-        CD3DX12_BLEND_DESC BlendState;
         UINT SampleMask;
-        CD3DX12_RASTERIZER_DESC RasterizerState;
-        CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
-        D3D12_INPUT_LAYOUT_DESC InputLayout;
         D3D12_INDEX_BUFFER_STRIP_CUT_VALUE IBStripCutValue;
         D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
         UINT NumRenderTargets;
@@ -27,7 +40,7 @@ struct FD3D12PSOInitializer
         UINT NodeMask;
         D3D12_CACHED_PIPELINE_STATE CachedPSO;
         D3D12_PIPELINE_STATE_FLAGS Flags;
-    } Desc;
+    } PassDesc;
 
 	uint64 CachedHash;
 
@@ -38,11 +51,11 @@ struct FD3D12PSOInitializer
 
 inline bool operator==(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)
 {
-    return lhs.CachedHash == rhs.CachedHash;
+    return (lhs.CachedHash == rhs.CachedHash);
 }
 inline bool operator!=(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)
 {
-    return lhs.CachedHash != rhs.CachedHash;
+    return (lhs.CachedHash != rhs.CachedHash);
 }
 
 struct FD3D12PSO

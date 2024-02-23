@@ -27,7 +27,7 @@ void FD3D12VertexIndexBufferSubresourceContainer::InitSubresourceData()
 
 void FD3D12ResourceUploadBatcher::AddPendingResourceUpload(FD3D12ResourceUpload&& InResourceUpload)
 {
-	EA_ASSERT(FRenderer::GetInstance()->GetCurrentRendererState() == ERendererState::OnStartFrame);
+	EA_ASSERT(GCurrentRendererState == ERendererState::OnStartFrame);
 
 	PendingResourceUploadList.emplace_back(eastl::move(InResourceUpload));
 }

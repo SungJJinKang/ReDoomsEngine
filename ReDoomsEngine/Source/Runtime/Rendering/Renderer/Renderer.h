@@ -8,6 +8,7 @@
 #include "D3D12RendererStateCallbackInterface.h"
 #include "D3D12Shader.h"
 #include "View.h"
+#include "RenderScene.h"
 
 class FD3D12CommandAllocator;
 
@@ -53,13 +54,9 @@ public:
 	FFrameResourceContainer& GetCurrentFrameResourceContainer();
 	eastl::array<FFrameResourceContainer, GNumBackBufferCount>& GetFrameContainerList();
 
-	inline ERendererState GetCurrentRendererState() const
-	{
-		return CurrentRendererState;
-	}
-
 	FD3D12Manager D3D12Manager;
 
+	FRenderScene RenderScene;
 	FView View;
 
 protected:
@@ -73,10 +70,4 @@ protected:
 private :
 
 	FGPUTimer FrametimeGPUTimer{ "FrameTime" };
-	ERendererState CurrentRendererState = ERendererState::Initializing;
 };
-
-inline ERendererState GetCurrentRendererState()
-{
-	return FRenderer::GetInstance()->GetCurrentRendererState();
-}

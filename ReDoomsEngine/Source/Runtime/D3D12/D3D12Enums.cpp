@@ -1,5 +1,7 @@
 #include "D3D12Enums.h"
 
+#include "D3D12Include.h"
+
 bool IsSupportedShaderFrequency(const EShaderFrequency InShaderFrequency)
 {
 	switch (InShaderFrequency)

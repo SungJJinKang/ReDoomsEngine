@@ -16,9 +16,9 @@ void FD3D12StateCache::SetPSOInputLayout(const D3D12_INPUT_LAYOUT_DESC& InputLay
 {
 	bool bIsSame = false;
 
-	if (CachedPSOInitializer.Desc.InputLayout.NumElements == InputLayoutDesc.NumElements)
+	if (CachedPSOInitializer.DrawDesc.PSODesc.InputLayout.NumElements == InputLayoutDesc.NumElements)
 	{
-		if (EA::StdC::Memcmp(CachedPSOInitializer.Desc.InputLayout.pInputElementDescs, InputLayoutDesc.pInputElementDescs, sizeof(D3D12_INPUT_ELEMENT_DESC) * InputLayoutDesc.NumElements) == 0)
+		if (EA::StdC::Memcmp(CachedPSOInitializer.DrawDesc.PSODesc.InputLayout.pInputElementDescs, InputLayoutDesc.pInputElementDescs, sizeof(D3D12_INPUT_ELEMENT_DESC) * InputLayoutDesc.NumElements) == 0)
 		{
 			bIsSame = true;
 		}
@@ -26,7 +26,7 @@ void FD3D12StateCache::SetPSOInputLayout(const D3D12_INPUT_LAYOUT_DESC& InputLay
 	
 	if (!bIsSame)
 	{
-		CachedPSOInitializer.Desc.InputLayout = InputLayoutDesc;
+		CachedPSOInitializer.DrawDesc.PSODesc.InputLayout = InputLayoutDesc;
 ;		bIsPSODirty = true;
 	}
 }
@@ -35,14 +35,14 @@ void FD3D12StateCache::SetRasterizeDesc(const CD3DX12_RASTERIZER_DESC& Rasterize
 {
 	bool bIsSame = false;
 
-	if (EA::StdC::Memcmp(&(CachedPSOInitializer.Desc.RasterizerState), &RasterizeDesc, sizeof(CD3DX12_RASTERIZER_DESC)) == 0)
+	if (EA::StdC::Memcmp(&(CachedPSOInitializer.DrawDesc.PSODesc.RasterizerState), &RasterizeDesc, sizeof(CD3DX12_RASTERIZER_DESC)) == 0)
 	{
 		bIsSame = true;
 	}
 
 	if (!bIsSame)
 	{
-		CachedPSOInitializer.Desc.RasterizerState = RasterizeDesc;
+		CachedPSOInitializer.DrawDesc.PSODesc.RasterizerState = RasterizeDesc;
 		bIsPSODirty = true;
 	}
 }
@@ -51,14 +51,14 @@ void FD3D12StateCache::SetBlendDesc(const CD3DX12_BLEND_DESC& BlendDesc)
 {
 	bool bIsSame = false;
 
-	if (EA::StdC::Memcmp(&(CachedPSOInitializer.Desc.BlendState), &BlendDesc, sizeof(CD3DX12_BLEND_DESC)) == 0)
+	if (EA::StdC::Memcmp(&(CachedPSOInitializer.DrawDesc.PSODesc.BlendState), &BlendDesc, sizeof(CD3DX12_BLEND_DESC)) == 0)
 	{
 		bIsSame = true;
 	}
 
 	if (!bIsSame)
 	{
-		CachedPSOInitializer.Desc.BlendState = BlendDesc;
+		CachedPSOInitializer.DrawDesc.PSODesc.BlendState = BlendDesc;
 		bIsPSODirty = true;
 	}
 }
@@ -67,14 +67,14 @@ void FD3D12StateCache::SetDepthEnable(const bool bInEnable)
 {
 	bool bIsSame = false;
 
-	if (CachedPSOInitializer.Desc.DepthStencilState.DepthEnable == bInEnable)
+	if (CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.DepthEnable == bInEnable)
 	{
 		bIsSame = true;
 	}
 
 	if (!bIsSame)
 	{
-		CachedPSOInitializer.Desc.DepthStencilState.DepthEnable = bInEnable;
+		CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.DepthEnable = bInEnable;
 		bIsPSODirty = true;
 	}
 }
@@ -83,30 +83,30 @@ void FD3D12StateCache::SetStencilEnable(const bool bInEnable)
 {
 	bool bIsSame = false;
 
-	if (CachedPSOInitializer.Desc.DepthStencilState.StencilEnable == bInEnable)
+	if (CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.StencilEnable == bInEnable)
 	{
 		bIsSame = true;
 	}
 
 	if (!bIsSame)
 	{
-		CachedPSOInitializer.Desc.DepthStencilState.StencilEnable = bInEnable;
+		CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.StencilEnable = bInEnable;
 		bIsPSODirty = true;
 	}
 }
 
 void FD3D12StateCache::SetBoundShaderSet(const FBoundShaderSet& InBoundShaderSet)
 {
-	EA_ASSERT(InBoundShaderSet.CachedHash.IsValid());
-	if (CachedPSOInitializer.BoundShaderSet.CachedHash != InBoundShaderSet.CachedHash)
+	EA_ASSERT(InBoundShaderSet.GetCachedHash().IsValid());
+	if (CachedPSOInitializer.DrawDesc.BoundShaderSet.GetCachedHash() != InBoundShaderSet.GetCachedHash())
 	{
-		CachedPSOInitializer.BoundShaderSet = InBoundShaderSet;
-		SetRootSignature(CachedPSOInitializer.BoundShaderSet.GetRootSignature());
+		CachedPSOInitializer.DrawDesc.BoundShaderSet = InBoundShaderSet;
+		SetRootSignature(CachedPSOInitializer.DrawDesc.BoundShaderSet.GetRootSignature());
 		bIsPSODirty = true;
 	}
 	else
 	{
-		CachedPSOInitializer.BoundShaderSet = InBoundShaderSet; // Different shader instances can have same hash when its ShaderTemplate is same
+		CachedPSOInitializer.DrawDesc.BoundShaderSet = InBoundShaderSet; // Different shader instances can have same hash when its ShaderTemplate is same
 	}
 }
 
@@ -116,7 +116,7 @@ void FD3D12StateCache::SetPSO(const FD3D12PSOInitializer& InPSOInitializer)
 	if (CachedPSOInitializer.CachedHash != InPSOInitializer.CachedHash)
 	{
 		CachedPSOInitializer = InPSOInitializer;
-		SetBoundShaderSet(InPSOInitializer.BoundShaderSet);
+		SetBoundShaderSet(InPSOInitializer.DrawDesc.BoundShaderSet);
 		bIsPSODirty = true;
 	}
 }
@@ -147,10 +147,10 @@ void FD3D12StateCache::SetRenderTargets(const eastl::array<FD3D12Texture2DResour
 			}
 		}
 
-		if (CachedPSOInitializer.Desc.RTVFormats[RenderTargetIndex] != RTVFormat)
+		if (CachedPSOInitializer.PassDesc.RTVFormats[RenderTargetIndex] != RTVFormat)
 		{
-			CachedPSOInitializer.Desc.RTVFormats[RenderTargetIndex] = RTVFormat;
-			CachedPSOInitializer.Desc.NumRenderTargets = RenderTargetIndex + 1;
+			CachedPSOInitializer.PassDesc.RTVFormats[RenderTargetIndex] = RTVFormat;
+			CachedPSOInitializer.PassDesc.NumRenderTargets = RenderTargetIndex + 1;
 			bIsPSODirty = true;
 		}
 		
@@ -184,9 +184,9 @@ void FD3D12StateCache::SetDepthStencilTarget(FD3D12Texture2DResource* const InDe
 		}
 	}
 
-	if (CachedPSOInitializer.Desc.DSVFormat != DSVFormat)
+	if (CachedPSOInitializer.PassDesc.DSVFormat != DSVFormat)
 	{
-		CachedPSOInitializer.Desc.DSVFormat = DSVFormat;
+		CachedPSOInitializer.PassDesc.DSVFormat = DSVFormat;
 		bIsPSODirty = true;
 	}
 }
@@ -320,7 +320,7 @@ void FD3D12StateCache::ApplyRTVAndDSV(FD3D12CommandList& InCommandList)
 
 void FD3D12StateCache::ApplyRootSignature(FD3D12CommandList& InCommandList)
 {
-	InCommandList.GetD3DCommandList()->SetGraphicsRootSignature(CachedPSOInitializer.BoundShaderSet.GetRootSignature()->RootSignature.Get());
+	InCommandList.GetD3DCommandList()->SetGraphicsRootSignature(CachedPSOInitializer.DrawDesc.BoundShaderSet.GetRootSignature()->RootSignature.Get());
 
 	bIsRootSignatureDirty = false;
 }
@@ -479,7 +479,7 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipe
 
 	for (uint32_t ShaderFrequencyIndex = 0; ShaderFrequencyIndex < EShaderFrequency::NumShaderFrequency; ++ShaderFrequencyIndex)
 	{
-		eastl::shared_ptr<FD3D12ShaderInstance>& ShaderInstance = CachedPSOInitializer.BoundShaderSet.ShaderList[ShaderFrequencyIndex];
+		eastl::shared_ptr<FD3D12ShaderInstance>& ShaderInstance = CachedPSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[ShaderFrequencyIndex];
 		if (ShaderInstance)
 		{
 			ShaderInstance->ApplyShaderParameter(InCommandContext);
@@ -548,14 +548,14 @@ void FD3D12StateCache::ResetForNewCommandlist()
 
 void FD3D12StateCache::ResetToDefault()
 {
-	CachedPSOInitializer.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	CachedPSOInitializer.Desc.RasterizerState.FrontCounterClockwise = true;
-	CachedPSOInitializer.Desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	CachedPSOInitializer.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	CachedPSOInitializer.Desc.DepthStencilState.DepthEnable = false;
-	CachedPSOInitializer.Desc.DepthStencilState.StencilEnable = false;
-	CachedPSOInitializer.Desc.SampleMask = UINT_MAX;
-	CachedPSOInitializer.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	CachedPSOInitializer.Desc.NumRenderTargets = 1;
-	CachedPSOInitializer.Desc.SampleDesc.Count = 1;
+	CachedPSOInitializer.DrawDesc.PSODesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	CachedPSOInitializer.DrawDesc.PSODesc.RasterizerState.FrontCounterClockwise = true;
+	CachedPSOInitializer.DrawDesc.PSODesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.DepthEnable = false;
+	CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.StencilEnable = false;
+	CachedPSOInitializer.PassDesc.SampleMask = UINT_MAX;
+	CachedPSOInitializer.PassDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	CachedPSOInitializer.PassDesc.NumRenderTargets = 1;
+	CachedPSOInitializer.PassDesc.SampleDesc.Count = 1;
 }

@@ -4,7 +4,7 @@
 #include "D3D12Resource/D3D12Mesh.h"
 
 struct FD3D12CommandContext;
-struct FBoundShaderSet;
+class FBoundShaderSet;
 class FD3D12View;
 class FD3D12DescriptorHeap;
 class FD3D12RootSignature;
@@ -14,6 +14,7 @@ class FD3D12StateCache
 {
 public:
 
+	void SetPSO(const FD3D12PSOInitializer& InPSOInitializer);
 	void SetPSOInputLayout(const D3D12_INPUT_LAYOUT_DESC& InputLayoutDesc);
 	void SetRasterizeDesc(const CD3DX12_RASTERIZER_DESC& RasterizeDesc);
 	void SetBlendDesc(const CD3DX12_BLEND_DESC& BlendDesc);
@@ -35,7 +36,6 @@ public:
 
 private:
 
-	void SetPSO(const FD3D12PSOInitializer& InPSOInitializer);
 	void SetRootSignature(FD3D12RootSignature* const InRootSignature);
 
 	void ApplyPSO(FD3D12CommandList& InCommandList);

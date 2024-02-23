@@ -9,6 +9,7 @@ class FD3D12StateCache;
 class FFrameResourceContainer;
 struct FD3D12CommandContext
 {
+	uint64_t TargetBackbufferIndex;
 	FD3D12StateCache StateCache;
 	FFrameResourceContainer* FrameResourceCounter = nullptr;
 	eastl::array<FD3D12CommandQueue*, ED3D12QueueType::NumD3D12QueueType> CommandQueueList;

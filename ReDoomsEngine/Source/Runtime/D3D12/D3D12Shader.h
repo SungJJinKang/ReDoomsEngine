@@ -9,6 +9,7 @@
 struct FD3D12CommandContext;
 class FD3D12RootSignature;
 class FD3D12ShaderInstance;
+class FD3D12ShaderTemplate;
 class FShaderParameterTemplate;
 class FD3D12ShaderInstance;
 class FShaderParameterConstantBuffer;
@@ -25,26 +26,52 @@ struct FShaderPreprocessorDefineAdd;
 
 #define GLOBAL_CONSTANT_BUFFER_NAME "$Globals"
 
-struct FBoundShaderSet
+class FBoundShaderSet
 {
+public:
 	FBoundShaderSet() = default;
 	FBoundShaderSet(const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& InShaderList);
+	
+	void Set(const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& InShaderList);
 	void CacheHash();
 	void Validate();
+	FD3D12RootSignature* GetRootSignature() const;
+	inline const eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency>& GetShaderTemplateList() const
+	{
+		return ShaderTemplateList;
+	}
+	inline eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency>& GetShaderTemplateList()
+	{
+		return ShaderTemplateList;
+	}
+	inline const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& GetShaderInstanceList() const
+	{
+		return ShaderInstanceList;
+	}
+	inline eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& GetShaderInstanceList()
+	{
+		return ShaderInstanceList;
+	}
+	inline FShaderHash GetCachedHash() const
+	{
+		return CachedHash;
+	}
 
-	eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency> ShaderList{ nullptr };
+private:
+
+	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderTemplateList{ nullptr };
+	eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency> ShaderInstanceList{ nullptr };
 	FShaderHash CachedHash;
 
-	FD3D12RootSignature* GetRootSignature() const;
 };
 
 inline bool operator==(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
 {
-	return lhs.CachedHash == rhs.CachedHash;
+	return lhs.GetCachedHash() == rhs.GetCachedHash();
 }
 inline bool operator!=(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
 {
-	return lhs.CachedHash != rhs.CachedHash;
+	return lhs.GetCachedHash() != rhs.GetCachedHash();
 }
 
 struct FD3D12ConstantBufferReflectionData
@@ -118,6 +145,7 @@ public:
 	void SetShaderCompileResult(FShaderCompileResult& InShaderCompileResult);
 	void PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection);
 	virtual void OnFinishShaderCompile();
+	virtual void ResetUsedShaderInstanceCountForCurrentFrame() = 0;
 
 	const FShaderDeclaration& GetShaderDeclaration() const
 	{
@@ -559,6 +587,7 @@ public:
 	}
 
 	void ApplyShaderParameter(FD3D12CommandContext& InCommandContext);
+	void ResetForReuse();
 
 protected:
 
@@ -701,15 +730,29 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 		} \
 		__VA_ARGS__ \
 		virtual void OnFinishShaderCompile() { FD3D12ShaderTemplate::OnFinishShaderCompile(); ShaderParameter.Init(); } \
-		static eastl::shared_ptr<TD3D12ShaderInstance<F##ShaderName>> MakeShaderInstance()  \
+		static eastl::shared_ptr<TD3D12ShaderInstance<F##ShaderName>> MakeShaderInstanceForCurrentFrame()  \
 		{ \
+			EA_ASSERT_MSG(GCurrentRendererState == ERendererState::Draw, "\"MakeShaderInstanceForCurrentFrame\" function can be called in ERendererState::Draw"); \
 			EA_ASSERT(TemplateVariable->IsFinishToCompile()); \
-			eastl::shared_ptr<TD3D12ShaderInstance<F##ShaderName>> ShaderInstance = eastl::make_shared<TD3D12ShaderInstance<F##ShaderName>>(TemplateVariable); \
-			ShaderInstance->Init(); \
+			eastl::shared_ptr<TD3D12ShaderInstance<F##ShaderName>> ShaderInstance; \
+			if (UsedShaderInstanceCounts[GCurrentBackbufferIndex] < ShaderInstancePools[GCurrentBackbufferIndex].size()) \
+			{ \
+				ShaderInstance = ShaderInstancePools[GCurrentBackbufferIndex][UsedShaderInstanceCounts[GCurrentBackbufferIndex]]; \
+				ShaderInstance->ResetForReuse(); \
+				++UsedShaderInstanceCounts[GCurrentBackbufferIndex]; \
+			} \
+			else \
+			{ \
+				ShaderInstance = ShaderInstancePools[GCurrentBackbufferIndex].emplace_back(eastl::make_shared<TD3D12ShaderInstance<F##ShaderName>>(TemplateVariable)); \
+				ShaderInstance->Init(); \
+			} \
 			return ShaderInstance;	\
 		} \
+		virtual void ResetUsedShaderInstanceCountForCurrentFrame() { UsedShaderInstanceCounts[GCurrentBackbufferIndex] = 0; } \
 		private: \
 		inline static F##ShaderName* TemplateVariable = nullptr; \
+		inline static eastl::array<uint32_t, GNumBackBufferCount> UsedShaderInstanceCounts{0}; \
+		inline static eastl::array<eastl::vector<eastl::shared_ptr<TD3D12ShaderInstance<F##ShaderName>>>, GNumBackBufferCount> ShaderInstancePools{}; \
 	}; \
 	static F##ShaderName ShaderName{ EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \
 		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags };
@@ -730,15 +773,16 @@ public:
 	/// </summary>
 	static eastl::vector<FD3D12ShaderTemplate*>& GetCompilePendingShaderList();
 	static void AddCompilePendingShader(FD3D12ShaderTemplate& CompilePendingShader);
-	inline const eastl::vector<FD3D12ShaderTemplate*>& GetShaderList() const
+	inline const eastl::vector<FD3D12ShaderTemplate*>& GetCompiledShaderList() const
 	{
-		return ShaderList;
+		return CompiledShaderList;
 	}
 private:
+
+	void ResetShaderInstancePoolOfAllShadersForCurrentFrame();
 
 	/// <summary>
 	/// FD3D12Shader objects containing compiled data is added to this list
 	/// </summary>
-	eastl::vector<FD3D12ShaderTemplate*> ShaderList;
-
+	eastl::vector<FD3D12ShaderTemplate*> CompiledShaderList;
 };

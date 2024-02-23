@@ -21,7 +21,7 @@ struct FMesh
 		{ "TEXCOORD", 3, DXGI_FORMAT_R32G32_FLOAT, 7, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 4, DXGI_FORMAT_R32G32_FLOAT, 8, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
-
+	static_assert(ARRAY_LENGTH(FMesh::InputElementDescs) <= MAX_BOUND_VERTEX_BUFFER_VIEW);
 	eastl::wstring MeshName;
 
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> PositionBuffer;
@@ -36,7 +36,7 @@ struct FMesh
 
 	uint32_t MaterialIndex;
 
-	eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)> VertexBufferViewList;
+	eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> VertexBufferViewList;
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView;
 };
 

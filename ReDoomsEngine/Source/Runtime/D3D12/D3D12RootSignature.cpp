@@ -354,7 +354,7 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 		{
 			const D3D12_SHADER_VISIBILITY Visibility = ShaderVisibilityPriorityOrder[ShaderVisibilityIndex];
 			const EShaderFrequency ShaderFrequency = D3D12ShaderVisibilityToShaderFrequency(Visibility);
-			const eastl::shared_ptr<FD3D12ShaderInstance>& Shader = InBoundShaderSet.ShaderList[ShaderFrequency];
+			const eastl::shared_ptr<FD3D12ShaderInstance>& Shader = InBoundShaderSet.GetShaderInstanceList()[ShaderFrequency];
 			
 			if (Shader)
 			{
@@ -465,7 +465,7 @@ void FD3D12RootSignatureManager::Init()
 eastl::shared_ptr<FD3D12RootSignature> FD3D12RootSignatureManager::GetOrCreateRootSignature(const FBoundShaderSet& InBoundShaderSet)
 {
 	eastl::shared_ptr<FD3D12RootSignature> RootSignature{};
-	auto FoundRootSignature = RootSignatureMap.find(InBoundShaderSet.CachedHash);
+	auto FoundRootSignature = RootSignatureMap.find(InBoundShaderSet.GetCachedHash());
 	if (FoundRootSignature != RootSignatureMap.end())
 	{
 		RootSignature = FoundRootSignature->second;
@@ -473,7 +473,7 @@ eastl::shared_ptr<FD3D12RootSignature> FD3D12RootSignatureManager::GetOrCreateRo
 	else
 	{
 		FD3D12RootSignature CreatedD3D12RootSinature = FD3D12RootSignature::CreateRootSignature(InBoundShaderSet);
-		RootSignature = RootSignatureMap.emplace(InBoundShaderSet.CachedHash, eastl::make_shared<FD3D12RootSignature>(CreatedD3D12RootSinature)).first->second;
+		RootSignature = RootSignatureMap.emplace(InBoundShaderSet.GetCachedHash(), eastl::make_shared<FD3D12RootSignature>(CreatedD3D12RootSinature)).first->second;
 	}
 	EA_ASSERT(RootSignature);
 	

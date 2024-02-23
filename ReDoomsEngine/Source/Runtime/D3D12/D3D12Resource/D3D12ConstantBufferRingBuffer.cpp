@@ -2,7 +2,7 @@
 #include "D3D12Resource.h"
 #include "Renderer/Renderer.h"
 
-static uint64_t GRingBufferSize = D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT * 500 * GNumBackBufferCount;
+static uint64_t GRingBufferSize = D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT * 10000 * GNumBackBufferCount;
 
 void FD3D12ConstantBufferRingBuffer::Init()
 {
@@ -20,7 +20,7 @@ void FD3D12ConstantBufferRingBuffer::Init()
 FD3D12ConstantBufferBlock FD3D12ConstantBufferRingBuffer::Allocate(uint64_t InSize)
 {
 	EA_ASSERT(InSize > 0);
-	EA_ASSERT(GetCurrentRendererState() | AllocatableRendererState);
+	EA_ASSERT(GCurrentRendererState | AllocatableRendererState);
 
 	FD3D12ConstantBufferBlock Block;
 
@@ -29,7 +29,7 @@ FD3D12ConstantBufferBlock FD3D12ConstantBufferRingBuffer::Allocate(uint64_t InSi
 	InSize = Align(InSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
 	EA_ASSERT(InSize <= ConstantBufferRingBuffer.ConstantBufferResource->GetBufferSize());
 
-	if (ConstantBufferRingBuffer.ConstantBufferResource->GetBufferSize() <= ConstantBufferRingBuffer.CurrentOffset + InSize)
+	if (ConstantBufferRingBuffer.ConstantBufferResource->GetBufferSize() < ConstantBufferRingBuffer.CurrentOffset + InSize)
 	{
 		ConstantBufferRingBuffer.CurrentOffset = 0;
 	}
