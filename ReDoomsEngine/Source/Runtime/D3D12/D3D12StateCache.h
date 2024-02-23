@@ -1,6 +1,7 @@
 #pragma once
 #include "D3D12Include.h"
 #include "D3D12PSO.h"
+#include "D3D12Resource/D3D12Mesh.h"
 
 struct FD3D12CommandContext;
 struct FBoundShaderSet;
@@ -25,7 +26,7 @@ public:
 	void SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>& BindPointInfos);
 	void SetConstantBuffer(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>& BindPointInfos);
 
-	void SetVertexBufferViewList(const eastl::vector<D3D12_VERTEX_BUFFER_VIEW>& InVertexBufferViewList);
+	void SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)>& InVertexBufferViewList);
 	void SetIndexBufferView(const D3D12_INDEX_BUFFER_VIEW InIndexBufferView);
 
 	void Flush(FD3D12CommandContext& InCommandList, const EPipeline InPipeline);
@@ -76,12 +77,11 @@ private:
 	bool bNeedToSetRTVAndDSV = true;
 
 	uint32_t CachedRTVCount = UINT32_MAX;
-	// @todo : inline allocate D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT using custom allocator
 	eastl::array<CD3DX12_CPU_DESCRIPTOR_HANDLE, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> CachedRTVCPUHandleList;
 	
 	CD3DX12_CPU_DESCRIPTOR_HANDLE CachedDSVCPUHandle;
 
-	eastl::vector<D3D12_VERTEX_BUFFER_VIEW> CachedVertexBufferViewList;
+	eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)> CachedVertexBufferViewList;
 	bool bNeedToSetVertexBufferView = true;
 
 	D3D12_INDEX_BUFFER_VIEW CachedIndexBufferView;

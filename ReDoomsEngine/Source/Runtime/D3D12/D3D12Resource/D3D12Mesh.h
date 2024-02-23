@@ -36,8 +36,8 @@ struct FMesh
 
 	uint32_t MaterialIndex;
 
-	eastl::vector<D3D12_VERTEX_BUFFER_VIEW> CreateVertexBufferViewList() const;
-	D3D12_INDEX_BUFFER_VIEW CreateIndexBufferView() const;
+	eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)> VertexBufferViewList;
+	D3D12_INDEX_BUFFER_VIEW IndexBufferView;
 };
 
 struct FMeshMaterial

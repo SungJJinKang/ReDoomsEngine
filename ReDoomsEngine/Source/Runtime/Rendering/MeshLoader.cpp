@@ -148,6 +148,29 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             }
 
             Mesh.MaterialIndex = AssimpMesh->mMaterialIndex;
+
+            {
+                eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)> VertexBufferViewList{};
+
+                VertexBufferViewList.emplace_back(Mesh.PositionBuffer->GetVertexBufferView());
+                VertexBufferViewList.emplace_back(Mesh.NormalBuffer->GetVertexBufferView());
+                VertexBufferViewList.emplace_back(Mesh.TangentBuffer->GetVertexBufferView());
+                VertexBufferViewList.emplace_back(Mesh.BiTangentBuffer->GetVertexBufferView());
+
+                for (uint32_t UVIndex = 0; UVIndex < MAX_NUMBER_OF_TEXTURECOORDS; ++UVIndex)
+                {
+                    if (Mesh.TexCoordBuffers[UVIndex])
+                    {
+                        VertexBufferViewList.emplace_back(Mesh.TexCoordBuffers[UVIndex]->GetVertexBufferView());
+                    }
+                }
+
+                Mesh.VertexBufferViewList = VertexBufferViewList;
+            }
+
+            {
+                Mesh.IndexBufferView = Mesh.IndexBuffer->GetIndexBufferView();
+            }
         }
 
         Result->Material.resize(AssimpScene->mNumMaterials);
