@@ -24,7 +24,11 @@ public:
 	void SetSRVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_SRVS>& BindPointInfos);
 	void SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>& BindPointInfos);
 	void SetConstantBuffer(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>& BindPointInfos);
-	void Flush(FD3D12CommandContext& InCommandList);
+
+	void SetVertexBufferViewList(const eastl::vector<D3D12_VERTEX_BUFFER_VIEW>& InVertexBufferViewList);
+	void SetIndexBufferView(const D3D12_INDEX_BUFFER_VIEW InIndexBufferView);
+
+	void Flush(FD3D12CommandContext& InCommandList, const EPipeline InPipeline);
 	void ResetForNewCommandlist();
 	void ResetToDefault();
 
@@ -40,6 +44,8 @@ private:
 	void ApplySRVs(FD3D12CommandList& InCommandList, const FD3D12DescriptorHeapBlock& BaseHeapBlcok, uint32_t& OutUsedBlockCount);
 	void ApplyUAVs(FD3D12CommandList& InCommandList, const FD3D12DescriptorHeapBlock& BaseHeapBlcok, uint32_t& OutUsedBlockCount);
 	void ApplyConstantBuffers(FD3D12CommandList& InCommandList);
+	void ApplyVertexBufferViewList(FD3D12CommandList& InCommandList);
+	void ApplyIndexBufferView(FD3D12CommandList& InCommandList);
 
 	bool bIsPSODirty = true;
 	FD3D12PSOInitializer CachedPSOInitializer{};
@@ -74,5 +80,11 @@ private:
 	eastl::array<CD3DX12_CPU_DESCRIPTOR_HANDLE, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> CachedRTVCPUHandleList;
 	
 	CD3DX12_CPU_DESCRIPTOR_HANDLE CachedDSVCPUHandle;
+
+	eastl::vector<D3D12_VERTEX_BUFFER_VIEW> CachedVertexBufferViewList;
+	bool bNeedToSetVertexBufferView = true;
+
+	D3D12_INDEX_BUFFER_VIEW CachedIndexBufferView;
+	bool bNeedToSetIndexBufferView = true;
 };
 

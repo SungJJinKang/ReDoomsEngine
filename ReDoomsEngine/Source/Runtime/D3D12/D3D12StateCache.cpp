@@ -258,6 +258,50 @@ void FD3D12StateCache::SetConstantBuffer(const EShaderFrequency InShaderFrequenc
 	bIsRootCBVDirty = true;
 }
 
+void FD3D12StateCache::SetVertexBufferViewList(const eastl::vector<D3D12_VERTEX_BUFFER_VIEW>& InVertexBufferViewList)
+{
+	bool bNeedToSet = false;
+
+	if (CachedVertexBufferViewList.size() == InVertexBufferViewList.size())
+	{
+		for (uint32_t VertexBufferViewIndex = 0; VertexBufferViewIndex < InVertexBufferViewList.size(); ++VertexBufferViewIndex)
+		{
+			if (
+				(CachedVertexBufferViewList[VertexBufferViewIndex].BufferLocation != InVertexBufferViewList[VertexBufferViewIndex].BufferLocation) ||
+				(CachedVertexBufferViewList[VertexBufferViewIndex].SizeInBytes != InVertexBufferViewList[VertexBufferViewIndex].SizeInBytes) ||
+				(CachedVertexBufferViewList[VertexBufferViewIndex].StrideInBytes != InVertexBufferViewList[VertexBufferViewIndex].StrideInBytes)
+			)
+			{
+				bNeedToSet = true;
+				break;
+			}
+		}
+	}
+	else
+	{
+		bNeedToSet = true;
+	}
+
+	if (bNeedToSet)
+	{
+		CachedVertexBufferViewList = InVertexBufferViewList;
+		bNeedToSetVertexBufferView = true;
+	}
+}
+
+void FD3D12StateCache::SetIndexBufferView(const D3D12_INDEX_BUFFER_VIEW InIndexBufferView)
+{
+	if (
+		(CachedIndexBufferView.BufferLocation != InIndexBufferView.BufferLocation) ||
+		(CachedIndexBufferView.SizeInBytes != InIndexBufferView.SizeInBytes) ||
+		(CachedIndexBufferView.Format != InIndexBufferView.Format)
+		)
+	{
+		CachedIndexBufferView = InIndexBufferView;
+		bNeedToSetIndexBufferView = true;
+	}
+}
+
 void FD3D12StateCache::ApplyPSO(FD3D12CommandList& InCommandList)
 {
 	CachedPSOInitializer.FinishCreating();
@@ -396,7 +440,20 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 }
 
 
-void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext)
+void FD3D12StateCache::ApplyVertexBufferViewList(FD3D12CommandList& InCommandList)
+{
+	EA_ASSERT(CachedVertexBufferViewList.size() > 0);
+	InCommandList.GetD3DCommandList()->IASetVertexBuffers(0, CachedVertexBufferViewList.size(), CachedVertexBufferViewList.data());
+	bNeedToSetVertexBufferView = false;
+}
+
+void FD3D12StateCache::ApplyIndexBufferView(FD3D12CommandList& InCommandList)
+{
+	InCommandList.GetD3DCommandList()->IASetIndexBuffer(&CachedIndexBufferView);
+	bNeedToSetIndexBufferView = false;
+}
+
+void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipeline InPipeline)
 {
 	FD3D12DescriptorHeapBlock BaseHeapBlcok;
 
@@ -433,7 +490,7 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext)
 	{
 		ApplyPSO(*(InCommandContext.GraphicsCommandList));
 	}
-	if (bNeedToSetRTVAndDSV)
+	if ((InPipeline == EPipeline::Graphics) && bNeedToSetRTVAndDSV)
 	{
 		ApplyRTVAndDSV(*(InCommandContext.GraphicsCommandList));
 	}
@@ -457,6 +514,14 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext)
 	{
 		ApplyConstantBuffers(*(InCommandContext.GraphicsCommandList));
 	}
+	if ((InPipeline == EPipeline::Graphics) && bNeedToSetVertexBufferView)
+	{
+		ApplyVertexBufferViewList(*(InCommandContext.GraphicsCommandList));
+	}
+	if ((InPipeline == EPipeline::Graphics) && bNeedToSetIndexBufferView && CachedIndexBufferView.BufferLocation)
+	{
+		ApplyIndexBufferView(*(InCommandContext.GraphicsCommandList));
+	}
 }
 
 void FD3D12StateCache::ResetForNewCommandlist()
@@ -469,6 +534,9 @@ void FD3D12StateCache::ResetForNewCommandlist()
 	bIsRootCBVDirty = true;
 	bNeedToSetDescriptorHeaps = true;
 	bNeedToSetRTVAndDSV = true;
+
+	bNeedToSetVertexBufferView = true;
+	bNeedToSetIndexBufferView = true;
 
 	DirtyFlagsOfSRVs.set();
 	DirtyFlagsOfUAVs.set();
