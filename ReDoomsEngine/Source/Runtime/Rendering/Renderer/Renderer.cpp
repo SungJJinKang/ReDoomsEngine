@@ -179,11 +179,11 @@ void FRenderer::Destroy()
 
 	CurrentRendererState = ERendererState::Destroying;
 
+	GetPreviousFrameResourceContainer().FrameWorkEndFence->CPUWaitOnLastSignal();
+
 	FImguiHelperSingleton::GetInstance()->OnDestory();
 
 	D3D12Manager.OnDestory(CurrentFrameCommandContext);
-
-	GetCurrentFrameResourceContainer().FrameWorkEndFence->CPUWaitOnLastSignal();
 }
 
 void FRenderer::Tick()
