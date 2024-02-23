@@ -156,7 +156,12 @@ FD3D12DepthStencilView* FD3D12Resource::GetDSV()
 
 	if (DefaultDSV == nullptr)
 	{
-		DefaultDSV = eastl::make_shared<FD3D12DepthStencilView>(weak_from_this());
+		D3D12_DEPTH_STENCIL_VIEW_DESC DSVDesc{};
+		DSVDesc.Format = ResourceCreateProperties.ClearValue->Format;
+		EA_ASSERT(Desc.Dimension == D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_TEXTURE2D);
+		DSVDesc.ViewDimension = D3D12_DSV_DIMENSION::D3D12_DSV_DIMENSION_TEXTURE2D;
+
+		DefaultDSV = eastl::make_shared<FD3D12DepthStencilView>(weak_from_this(), DSVDesc);
 		DefaultDSV->UpdateDescriptor();
 	}
 
@@ -176,6 +181,12 @@ FD3D12TextureResource::FD3D12TextureResource(ComPtr<ID3D12Resource>& InResource,
 
 FD3D12TextureResource::FD3D12TextureResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: FD3D12Resource(InResourceCreateProperties, InDesc), ResourcePoolBlock()
+{
+
+}
+
+FD3D12TextureResource::FD3D12TextureResource(ComPtr<ID3D12Resource> InRenderTargetResource)
+	: FD3D12Resource(InRenderTargetResource)
 {
 
 }
@@ -216,6 +227,17 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResou
 {
 
 }
+
+FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource> InRenderTargetResource, const uint32_t InWidth, const uint32_t InHeight, const DXGI_FORMAT InFormat, const uint32_t InSampleCount, const uint32_t InSampleQuality)
+	: FD3D12TextureResource(InRenderTargetResource)
+{
+	Desc.Width = InWidth;
+	Desc.Height = InHeight;
+	Desc.Format = InFormat;
+	Desc.SampleDesc.Count = InSampleCount;
+	Desc.SampleDesc.Quality = InSampleQuality;
+}
+
 
 FD3D12BufferResource::FD3D12BufferResource(
 	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress, const uint32_t InShadowDataSize, const bool bNeverCreateShadowData)
@@ -410,10 +432,4 @@ D3D12_GPU_VIRTUAL_ADDRESS FD3D12ConstantBufferResource::GPUVirtualAddress() cons
 		EA_ASSERT(ConstantBufferBlock.GPUVirtualAddress != 0);
 		return ConstantBufferBlock.GPUVirtualAddress;
 	}
-}
-
-FD3D12RenderTargetResource::FD3D12RenderTargetResource(ComPtr<ID3D12Resource> InRenderTargetResource)
-	: FD3D12Resource(InRenderTargetResource)
-{
-
 }

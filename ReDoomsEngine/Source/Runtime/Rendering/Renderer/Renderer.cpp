@@ -57,6 +57,8 @@ void FRenderer::Init()
 	}
 
 	FImguiHelperSingleton::GetInstance()->Init();
+
+	CurrentFrameCommandContext.StateCache.ResetToDefault();
 }
 
 void FRenderer::OnPreStartFrame()
@@ -150,7 +152,7 @@ void FRenderer::OnEndFrame()
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 	// Indicate that the back buffer will be used as a render target.
-	eastl::shared_ptr<FD3D12RenderTargetResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+	eastl::shared_ptr<FD3D12Texture2DResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
 
 	// Indicate that the back buffer will now be used to present.
 	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);

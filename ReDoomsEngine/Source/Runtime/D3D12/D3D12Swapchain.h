@@ -7,12 +7,21 @@
 
 class FD3D12CommandQueue;
 class FD3D12Window;
-class FD3D12RenderTargetResource;
+class FD3D12Texture2DResource;
 class FD3D12Swapchain : public ID3D12RendererStateCallbackInterface
 {
 public:
 
-	FD3D12Swapchain(FD3D12CommandQueue* const InCommandQueue, FD3D12Window* const InWindow, const uint32_t InNumBuffer, const uint32_t InWidth, const uint32_t InHeight, const DXGI_FORMAT InFormat);
+	FD3D12Swapchain(
+		FD3D12CommandQueue* const InCommandQueue,
+		FD3D12Window* const InWindow, 
+		const uint32_t InNumBuffer, 
+		const uint32_t InWidth, 
+		const uint32_t InHeight, 
+		const DXGI_FORMAT InFormat,
+		const uint32_t InSampleCount, 
+		const uint32_t InSampleQuality
+	);
 	void Init();
 	bool IsRequireResize() const;
 	void QueueResize(const uint32_t InWidth, const uint32_t InHeight);
@@ -26,7 +35,7 @@ public:
 	}
 	void Present(const int32_t SyncInterval);
 	void UpdateCurrentBackbufferIndex();
-	eastl::shared_ptr<FD3D12RenderTargetResource>& GetRenderTarget(const size_t Index)
+	eastl::shared_ptr<FD3D12Texture2DResource>& GetRenderTarget(const size_t Index)
 	{
 		return RenderTargets[Index];
 	}
@@ -54,7 +63,7 @@ private:
 
 	ComPtr<IDXGISwapChain3> D3DSwapchain;
 
-	eastl::vector<eastl::shared_ptr<FD3D12RenderTargetResource>> RenderTargets;
+	eastl::vector<eastl::shared_ptr<FD3D12Texture2DResource>> RenderTargets;
 
 	FD3D12CommandQueue* CommandQueue;
 	FD3D12Window* Window;
@@ -64,5 +73,7 @@ private:
 	uint32_t ResizedWidth;
 	uint32_t ResizedHeight;
 	DXGI_FORMAT Format;
+	uint32_t SampleCount;
+	uint32_t SampleQuality;
 };
 

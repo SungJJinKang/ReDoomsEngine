@@ -21,6 +21,7 @@ public:
 private:
 
 	float Offset = -2.0f;
+	eastl::shared_ptr<FD3D12Texture2DResource> DepthStencilTarget;
 	eastl::shared_ptr<FD3D12TextureResource> TestTexture;
 	eastl::shared_ptr<FD3D12TextureResource> SmallTexture;
 

@@ -81,6 +81,11 @@ struct FShaderHash
 		Value[1] = 0;
 	}
 	uint64_t Value[2];
+
+	inline bool IsValid() const 
+	{
+		return (Value[0] != 0) && (Value[1] != 0);
+	}
 };
 #define SHADER_HASH_SIZE sizeof(FShaderHash)
 
