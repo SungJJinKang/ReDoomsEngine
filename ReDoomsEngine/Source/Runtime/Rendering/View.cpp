@@ -38,7 +38,7 @@ Matrix FView::GetOrthoProjMatrices(const float InWidth, const float InHeight)
 
 void FView::Reset()
 {
-	Transform.Position = Vector3{ 0.0f, 0.0f, 5.0f };
+	Transform.Position = Vector3{ 0.0f, 50.0f, 50.0f };
 	Transform.Scale = Vector3{ 1.0f, 1.0f, 1.0f };
 	Transform.Rotation = Quaternion::LookRotation(Vector3::Forward, Vector3::Up);
 }

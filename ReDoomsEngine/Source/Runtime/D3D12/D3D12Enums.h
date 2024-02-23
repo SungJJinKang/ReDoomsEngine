@@ -1,7 +1,7 @@
 #pragma once
 #include "CommonInclude.h"
 
-#include "D3D12Include.h"
+#include "d3d12.h"
 
 enum EShaderFrequency : uint8_t
 {

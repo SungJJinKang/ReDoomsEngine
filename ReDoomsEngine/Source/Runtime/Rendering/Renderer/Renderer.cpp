@@ -45,7 +45,7 @@ void FRenderer::Init()
 	SCOPED_CPU_TIMER(Renderer_Init)
 	SCOPED_MEMORY_TRACE(Renderer_Init)
 
-	CurrentRendererState = ERendererState::Initializing;
+	GCurrentRendererState = ERendererState::Initializing;
 
 	D3D12Manager.Init(this);
 
@@ -66,7 +66,7 @@ void FRenderer::OnPreStartFrame()
 	SCOPED_CPU_TIMER(Renderer_OnPreStartFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnPreStartFrame)
 
-	CurrentRendererState = ERendererState::OnPreStartFrame;
+	GCurrentRendererState = ERendererState::OnPreStartFrame;
 
 	D3D12Manager.OnPreStartFrame();
 }
@@ -76,13 +76,16 @@ void FRenderer::OnStartFrame()
 	SCOPED_CPU_TIMER(Renderer_OnStartFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnStartFrame)
 
-	CurrentRendererState = ERendererState::OnStartFrame;
+	GCurrentRendererState = ERendererState::OnStartFrame;
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
-	CurrentFrameContainer.FrameWorkEndFence->CPUWaitOnLastSignal();
-	for (eastl::shared_ptr<FD3D12Fence>& TransientFrameWorkEndFence : CurrentFrameContainer.TransientFrameWorkEndFenceList)
 	{
-		TransientFrameWorkEndFence->CPUWaitOnLastSignal();
+		SCOPED_CPU_TIMER(Renderer_OnStartFrame_WaitOnFrameWorkFence)
+		CurrentFrameContainer.FrameWorkEndFence->CPUWaitOnLastSignal();
+		for (eastl::shared_ptr<FD3D12Fence>& TransientFrameWorkEndFence : CurrentFrameContainer.TransientFrameWorkEndFenceList)
+		{
+			TransientFrameWorkEndFence->CPUWaitOnLastSignal();
+		}
 	}
 
 	CurrentFrameContainer.ResetForNewFrame();
@@ -107,7 +110,7 @@ bool FRenderer::Draw()
 	SCOPED_CPU_TIMER(Renderer_Draw)
 	SCOPED_MEMORY_TRACE(Renderer_Draw)
 
-	CurrentRendererState = ERendererState::Draw;
+	GCurrentRendererState = ERendererState::Draw;
 
 	FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext);
 
@@ -124,7 +127,7 @@ void FRenderer::OnPreEndFrame()
 	SCOPED_CPU_TIMER(Renderer_OnPreEndFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnPreEndFrame)
 
-	CurrentRendererState = ERendererState::OnPreEndFrame;
+	GCurrentRendererState = ERendererState::OnPreEndFrame;
 
 	D3D12Manager.OnPreEndFrame(CurrentFrameCommandContext);
 
@@ -136,7 +139,7 @@ void FRenderer::OnPostEndFrame()
 	SCOPED_CPU_TIMER(Renderer_OnPostEndFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnPostEndFrame)
 
-	CurrentRendererState = ERendererState::OnPostEndFrame;
+	GCurrentRendererState = ERendererState::OnPostEndFrame;
 
 	D3D12Manager.OnPostEndFrame();
 }
@@ -146,7 +149,7 @@ void FRenderer::OnEndFrame()
 	SCOPED_CPU_TIMER(Renderer_OnEndFrame)
 	SCOPED_MEMORY_TRACE(Renderer_OnEndFrame)
 
-	CurrentRendererState = ERendererState::OnEndFrame;
+	GCurrentRendererState = ERendererState::OnEndFrame;
 
 	D3D12Manager.OnEndFrame(CurrentFrameCommandContext);
 
@@ -177,7 +180,7 @@ void FRenderer::Destroy()
 	SCOPED_CPU_TIMER(Renderer_Destroy)
 	SCOPED_MEMORY_TRACE(Renderer_Destroy)
 
-	CurrentRendererState = ERendererState::Destroying;
+	GCurrentRendererState = ERendererState::Destroying;
 
 	GetPreviousFrameResourceContainer().FrameWorkEndFence->CPUWaitOnLastSignal();
 
@@ -202,7 +205,7 @@ void FRenderer::Tick()
 
 FFrameResourceContainer& FRenderer::GetPreviousFrameResourceContainer()
 {
-	EA_ASSERT(CurrentRendererState | FFrameResourceContainer::AccessibleRendererState);
+	EA_ASSERT(GCurrentRendererState | FFrameResourceContainer::AccessibleRendererState);
 
 	const uint64_t CurrentBackbufferIndex = GCurrentBackbufferIndex;
 	return FrameContainerList[(CurrentBackbufferIndex == 0) ? (GNumBackBufferCount - 1) : (CurrentBackbufferIndex - 1)];
@@ -210,7 +213,7 @@ FFrameResourceContainer& FRenderer::GetPreviousFrameResourceContainer()
 
 FFrameResourceContainer& FRenderer::GetCurrentFrameResourceContainer()
 {
-	EA_ASSERT(CurrentRendererState | FFrameResourceContainer::AccessibleRendererState);
+	EA_ASSERT(GCurrentRendererState | FFrameResourceContainer::AccessibleRendererState);
 	
 	return FrameContainerList[GCurrentBackbufferIndex];
 }

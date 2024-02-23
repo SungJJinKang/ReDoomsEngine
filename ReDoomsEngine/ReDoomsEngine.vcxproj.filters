@@ -216,7 +216,7 @@
     <ClCompile Include="Source\Runtime\Math\SimpleMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\MeshDraw.cpp">
+    <ClCompile Include="Source\Runtime\Rendering\RenderScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1352,7 +1352,7 @@
     <ClInclude Include="Source\Runtime\Math\SimpleMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\MeshDraw.h">
+    <ClInclude Include="Source\Runtime\Rendering\RenderScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

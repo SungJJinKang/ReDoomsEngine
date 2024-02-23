@@ -120,11 +120,15 @@ bool D3D12TestRenderer::Draw()
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 	eastl::shared_ptr<FD3D12Texture2DResource>& RenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
 
+	CurrentFrameCommandContext.StateCache.SetRenderTargets({ RenderTarget.get() });
+	CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
+	CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
+
 	//Test Code
 
 	{
-		auto TestVSInstance = FTestVS::MakeShaderInstance();
-		auto TestPSInstance = FTestPS::MakeShaderInstance();
+		auto TestVSInstance = FTestVS::MakeShaderInstanceForCurrentFrame();
+		auto TestPSInstance = FTestPS::MakeShaderInstanceForCurrentFrame();
 
 		eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency> ShaderList{};
 		ShaderList[EShaderFrequency::Vertex] = TestVSInstance;
@@ -145,7 +149,7 @@ bool D3D12TestRenderer::Draw()
 		{
 			D3D12_INPUT_LAYOUT_DESC InputDesc{ inputElementDescs, _countof(inputElementDescs) };
 			CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
-			CurrentFrameCommandContext.StateCache.SetRenderTargets({ RenderTarget.get() });
+
 		}
 
 		TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.4f };
@@ -206,8 +210,8 @@ bool D3D12TestRenderer::Draw()
 	}
 
 	{
-		auto MeshDrawVSInstance = FMeshDrawVS::MakeShaderInstance();
-		auto MeshDrawPSInstance = FMeshDrawPS::MakeShaderInstance();
+		auto MeshDrawVSInstance = FMeshDrawVS::MakeShaderInstanceForCurrentFrame();
+		auto MeshDrawPSInstance = FMeshDrawPS::MakeShaderInstanceForCurrentFrame();
 
 		eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency> ShaderList{};
 		ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
@@ -271,15 +275,8 @@ bool D3D12TestRenderer::Draw()
 		MeshDrawPSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
 		MeshDrawPSInstance->Parameter.TriangleColorTexture = Mesh->Material[0].DiffuseTexture->GetSRV();
 
-
-		eastl::vector<D3D12_VERTEX_BUFFER_VIEW> VertexBufferViewList = Mesh->MeshList[0].CreateVertexBufferViewList();
-		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(VertexBufferViewList);
-		
-		D3D12_INDEX_BUFFER_VIEW IndexBufferView = Mesh->MeshList[0].CreateIndexBufferView();
-		CurrentFrameCommandContext.StateCache.SetIndexBufferView(IndexBufferView);
-
-		CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
-		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
+		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(Mesh->MeshList[0].VertexBufferViewList);
+		CurrentFrameCommandContext.StateCache.SetIndexBufferView(Mesh->MeshList[0].IndexBufferView);
 
 		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearDepthStencilView(
 			DepthStencilTarget->GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
@@ -292,21 +289,26 @@ bool D3D12TestRenderer::Draw()
 
 		CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
 		
-		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(VertexBufferViewList);
-		CurrentFrameCommandContext.StateCache.SetIndexBufferView(IndexBufferView);
-		CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
-		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
-		ModelMatrix = Matrix::CreateTranslation(300.0f, -200.0f, -5.0f) * Matrix::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f) * Matrix::CreateScale(0.05f, 0.05f, 0.05f);
-		MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
-		CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
+		for (int32_t IndexA = -10; IndexA < 10; ++IndexA)
+		{
+			for (uint32_t IndexB = 1; IndexB < 10; ++IndexB)
+			{
+				ModelMatrix = Matrix::CreateTranslation(300.0f * IndexB, 200.0f * IndexA, -5.0f) * Matrix::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f) * Matrix::CreateScale(0.05f, 0.05f, 0.05f);
+				MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
+				CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
+			}
 
-		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(VertexBufferViewList);
-		CurrentFrameCommandContext.StateCache.SetIndexBufferView(IndexBufferView);
-		CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
-		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
-		ModelMatrix = Matrix::CreateTranslation(-300.0f, -200.0f, -5.0f) * Matrix::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f) * Matrix::CreateScale(0.05f, 0.05f, 0.05f);
-		MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
-		CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
+			for (uint32_t IndexB = 1; IndexB < 10; ++IndexB)
+			{
+				CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(Mesh->MeshList[0].VertexBufferViewList);
+				CurrentFrameCommandContext.StateCache.SetIndexBufferView(Mesh->MeshList[0].IndexBufferView);
+				CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
+				CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
+				ModelMatrix = Matrix::CreateTranslation(-300.0f * IndexB, 200.0f * IndexA, -5.0f) * Matrix::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f) * Matrix::CreateScale(0.05f, 0.05f, 0.05f);
+				MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
+				CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
+			}
+		}
 	}
 
 
