@@ -42,13 +42,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\out\msvc-$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir>$(Platform)\$(Configuration)\Intermediate\</IntDir>
     <TargetExt>.dll</TargetExt>
     <TargetName>mimalloc-override</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\out\msvc-$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir>$(Platform)\$(Configuration)\Intermediate\</IntDir>
     <TargetExt>.dll</TargetExt>
     <TargetName>mimalloc-override</TargetName>
   </PropertyGroup>
