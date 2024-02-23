@@ -56,3 +56,6 @@ ReDoomsEngine/Source/Runtime/STL/mimalloc/build/mimalloc-static.dir/Debug/mimall
 
 *.pdb
 ReDoomsEngine/imgui.ini
+
+Intermediate
+ReDoomsEngine/Source/Runtime/Utils/assimp/build/.vs/Assimp/v17
