@@ -30,10 +30,10 @@ struct FTransform
 
 	void LookAt(const FTransform& Target, const Vector3& Up);
 	void LookAt(const Vector3& TargetPoint, const Vector3& Up);
-	void Rotate(const Quaternion& Quat, const ESpace& RelativeTo);
-	void Rotate(const Vector3 EulerAngle, const ESpace& RelativeTo);
-	void RotateYaw(const float EulerAngle);
-	void RotatePitch(const float EulerAngle);
+	void Rotate(const Quaternion& Quat);
+	void Rotate(const Vector3 EulerAngle);
+	void RotateYaw(const float EulerAngle, const ESpace& RelativeTo);
+	void RotatePitch(const float EulerAngle, const ESpace& RelativeTo);
 	void RotateAround(const Vector3& CenterPoint, const Vector3& Axis, const float Angle);
 
 	Vector3 TransformDirection(Vector3 Direction) const
