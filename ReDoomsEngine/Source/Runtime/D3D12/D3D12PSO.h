@@ -13,10 +13,10 @@ struct FD3D12PSOInitializer
     struct FDesc
     {
         D3D12_STREAM_OUTPUT_DESC StreamOutput;
-        D3D12_BLEND_DESC BlendState;
+        CD3DX12_BLEND_DESC BlendState;
         UINT SampleMask;
-        D3D12_RASTERIZER_DESC RasterizerState;
-        D3D12_DEPTH_STENCIL_DESC DepthStencilState;
+        CD3DX12_RASTERIZER_DESC RasterizerState;
+        CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
         D3D12_INPUT_LAYOUT_DESC InputLayout;
         D3D12_INDEX_BUFFER_STRIP_CUT_VALUE IBStripCutValue;
         D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
@@ -32,7 +32,7 @@ struct FD3D12PSOInitializer
 	uint64 CachedHash;
 
     bool IsValid() const;
-    void Reset();
+    //void Reset();
     void FinishCreating();
 };
 

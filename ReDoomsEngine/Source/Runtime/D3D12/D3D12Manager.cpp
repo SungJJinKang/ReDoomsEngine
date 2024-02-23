@@ -52,7 +52,7 @@ void FD3D12Manager::Init(FRenderer* const InRenderer)
 
     {
         Swapchain = eastl::make_unique<FD3D12Swapchain> (&(GetChoosenAdapter()->GetDevice()->GetCommandQueue(ED3D12QueueType::Direct)),
-            D3D12Window.get(), GNumBackBufferCount, GWindowWidth, GWindowHeight, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT);
+            D3D12Window.get(), GNumBackBufferCount, GWindowWidth, GWindowHeight, DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT, 1, 0);
         Swapchain->Init();
         TickedManagerList.emplace_back(Swapchain.get());
     }

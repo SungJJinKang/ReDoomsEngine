@@ -49,6 +49,8 @@ void D3D12TestRenderer::OnStartFrame()
 {
 	FRenderer::OnStartFrame();
 
+	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+
 	if (!TestTexture)
 	{
 		TestTexture = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("seafloor.dds")); // d3d debug layer doesn't complain even if don't transition to shader resource state. why????
@@ -78,8 +80,8 @@ void D3D12TestRenderer::OnStartFrame()
 		Vertex TriangleVertices[] =
 		{
 			{ { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 0.0f } },
-			{ { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
-			{ { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } }
+			{ { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 0.0f, 1.0f } },
+			{ { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } }
 		};
 
 // 		Vertex TriangleVertices[] =
@@ -98,6 +100,11 @@ void D3D12TestRenderer::OnStartFrame()
 		VertexBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(CurrentFrameCommandContext, eastl::move(SubresourceContainer), sizeof(Vertex));
 		VertexBuffer->SetDebugNameToResource(EA_WCHAR("TestRenderer VertexBuffer1"));
 	}
+
+	if (!DepthStencilTarget)
+	{
+		DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
+	}
 }
 
 bool D3D12TestRenderer::Draw()
@@ -111,6 +118,7 @@ bool D3D12TestRenderer::Draw()
 	}
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+	eastl::shared_ptr<FD3D12Texture2DResource>& RenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
 
 	//Test Code
 
@@ -122,7 +130,10 @@ bool D3D12TestRenderer::Draw()
 		ShaderList[EShaderFrequency::Vertex] = TestVSInstance;
 		ShaderList[EShaderFrequency::Pixel] = TestPSInstance;
 
-		FBoundShaderSet BoundShaderSet{ ShaderList };
+		{
+			FBoundShaderSet BoundShaderSet{ ShaderList };
+			CurrentFrameCommandContext.StateCache.SetBoundShaderSet(BoundShaderSet);
+		}
 
 		// Define the vertex input layout.
 		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -131,23 +142,11 @@ bool D3D12TestRenderer::Draw()
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 		};
-
-		FD3D12PSOInitializer PSOInitializer{};
-		PSOInitializer.BoundShaderSet = BoundShaderSet;
-		PSOInitializer.Desc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-		PSOInitializer.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		PSOInitializer.Desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-		PSOInitializer.Desc.DepthStencilState.DepthEnable = FALSE;
-		PSOInitializer.Desc.DepthStencilState.StencilEnable = FALSE;
-		PSOInitializer.Desc.SampleMask = UINT_MAX;
-		PSOInitializer.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		PSOInitializer.Desc.NumRenderTargets = 1;
-		PSOInitializer.Desc.RTVFormats[0] = SwapChain->GetFormat();
-		PSOInitializer.Desc.SampleDesc.Count = 1;
-		PSOInitializer.FinishCreating();
-
-		// Set necessary state.
-		CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
+		{
+			D3D12_INPUT_LAYOUT_DESC InputDesc{ inputElementDescs, _countof(inputElementDescs) };
+			CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
+			CurrentFrameCommandContext.StateCache.SetRenderTargets({ RenderTarget.get() });
+		}
 
 		TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.4f };
 		TestVSInstance->Parameter.GlobalConstantBuffer->AddOffset = true;
@@ -165,7 +164,7 @@ bool D3D12TestRenderer::Draw()
 		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
 
 		// Indicate that the back buffer will be used as a render target.
-		eastl::shared_ptr<FD3D12RenderTargetResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+		eastl::shared_ptr<FD3D12Texture2DResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
 
 		CD3DX12_RESOURCE_BARRIER ResourceBarrierA = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ResourceBarrier(1, &ResourceBarrierA);
@@ -182,7 +181,6 @@ bool D3D12TestRenderer::Draw()
 		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, 1, &VertexBufferView);
 
 		CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
-		CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
 
 		TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f };
 		TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
@@ -215,26 +213,13 @@ bool D3D12TestRenderer::Draw()
 		ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
 		ShaderList[EShaderFrequency::Pixel] = MeshDrawPSInstance;
 
-		FBoundShaderSet BoundShaderSet{ ShaderList };
-
-		FD3D12PSOInitializer PSOInitializer{};
-		PSOInitializer.BoundShaderSet = BoundShaderSet;
-		PSOInitializer.Desc.InputLayout = { FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
-		PSOInitializer.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		PSOInitializer.Desc.RasterizerState.FrontCounterClockwise = true;
-		PSOInitializer.Desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-		PSOInitializer.Desc.DepthStencilState.DepthEnable = FALSE;
-		PSOInitializer.Desc.DepthStencilState.StencilEnable = FALSE;
-		PSOInitializer.Desc.SampleMask = UINT_MAX;
-		PSOInitializer.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		PSOInitializer.Desc.NumRenderTargets = 1;
-		PSOInitializer.Desc.RTVFormats[0] = SwapChain->GetFormat();
-		PSOInitializer.Desc.SampleDesc.Count = 1;
-		PSOInitializer.FinishCreating();
-
-		// Set necessary state.
-		CurrentFrameCommandContext.StateCache.SetPSO(PSOInitializer);
-
+		{
+			FBoundShaderSet BoundShaderSet{ ShaderList };
+			CurrentFrameCommandContext.StateCache.SetBoundShaderSet(BoundShaderSet);
+			D3D12_INPUT_LAYOUT_DESC InputDesc{ FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
+			CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
+		}
+		
 		float Speed = GTimeDelta * 10.0f;
 
 		if (FD3D12Window::LeftArrowKeyPressed)
@@ -292,6 +277,18 @@ bool D3D12TestRenderer::Draw()
 
 		D3D12_INDEX_BUFFER_VIEW IndexBufferView = Mesh->MeshList[0].CreateIndexBufferView();
 		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetIndexBuffer(&IndexBufferView);
+
+		CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
+		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
+
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearDepthStencilView(
+			DepthStencilTarget->GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
+			D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH,
+			1.0f,
+			0.0f,
+			0,
+			nullptr
+		);
 
 		CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
 	}

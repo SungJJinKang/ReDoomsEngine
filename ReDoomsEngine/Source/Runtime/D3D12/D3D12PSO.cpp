@@ -10,17 +10,15 @@ bool FD3D12PSOInitializer::IsValid() const
     return (CachedHash != 0) && (BoundShaderSet.CachedHash.Value[0] != 0) && (BoundShaderSet.CachedHash.Value[1] != 0);
 }
 
-void FD3D12PSOInitializer::Reset()
-{
-    MEM_ZERO(BoundShaderSet);
-    MEM_ZERO(Desc);
-    MEM_ZERO(CachedHash);
-}
+// void FD3D12PSOInitializer::Reset()
+// {
+//     MEM_ZERO(BoundShaderSet);
+//     MEM_ZERO(Desc);
+//     MEM_ZERO(CachedHash);
+// }
 
 void FD3D12PSOInitializer::FinishCreating()
 {
-    EA_ASSERT(CachedHash == 0);
-
     uint128 BoundShaderSetHash;
     BoundShaderSetHash.first = BoundShaderSet.CachedHash.Value[0];
     BoundShaderSetHash.second = BoundShaderSet.CachedHash.Value[1];

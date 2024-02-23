@@ -108,6 +108,10 @@ protected:
 	FD3D12TextureResource(ComPtr<ID3D12Resource>& InResource, const FD3D12ResourcePoolBlock& InResourcePoolBlock, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12TextureResource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12TextureResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+
+	// This constructor is for swap chain
+	FD3D12TextureResource(ComPtr<ID3D12Resource> InRenderTargetResource);
+
 	virtual ~FD3D12TextureResource();
 
 	virtual bool IsBuffer() const
@@ -129,6 +133,10 @@ public:
 	FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResource, const FD3D12ResourcePoolBlock& InResourcePoolBlock, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12Texture2DResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+
+	// This constructor is for swap chain
+	FD3D12Texture2DResource(ComPtr<ID3D12Resource> InRenderTargetResource, const uint32_t InWidth, const uint32_t InHeight, const DXGI_FORMAT InFormat, const uint32_t InSampleCount, const uint32_t InSampleQuality);
+
 	FD3D12Texture2DResource(
 		const FResourceCreateProperties& InResourceCreateProperties,
 		const DXGI_FORMAT InFormat,
@@ -321,39 +329,5 @@ public:
 	}
 
 protected:
-
-};
-
-class FD3D12RenderTargetResource : public FD3D12Resource
-{
-public:
-
-	FD3D12RenderTargetResource(ComPtr<ID3D12Resource> InRenderTargetResource);
-
-	virtual bool IsBuffer() const
-	{
-		return false;
-	}
-	virtual bool IsTexture() const
-	{
-		return true;
-	}
-
-private:
-
-};
-
-class FD3D12DepthStencilTargetResource : public FD3D12Resource
-{
-public:
-
-	virtual bool IsBuffer() const
-	{
-		return false;
-	}
-	virtual bool IsTexture() const
-	{
-		return true;
-	}
 
 };

@@ -5,8 +5,8 @@
 #include "EASTL/optional.h"
 
 class FD3D12Resource;
-class FD3D12RenderTargetResource;
-class FD3D12DepthStencilTargetResource;
+class FD3D12Texture2DResource;
+class FD3D12Texture2DResource;
 
 class FD3D12View
 {
