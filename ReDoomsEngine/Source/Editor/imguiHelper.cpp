@@ -36,7 +36,6 @@ void FImguiHelper::NewFrame()
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow(); // Show demo window! :)
 
 	for (eastl::function<void()>& imguiDrawEvent : ImguiDrawEventList)
 	{
