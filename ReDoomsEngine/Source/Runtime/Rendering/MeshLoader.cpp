@@ -40,19 +40,27 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             Mesh.MeshName = MeshName;
             Mesh.PositionBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext,
                 reinterpret_cast<const uint8_t*>(AssimpMesh->mVertices), sizeof(aiVector3D) * AssimpMesh->mNumVertices, sizeof(aiVector3D), AssimpImporter);
+            #if D3D_NAME_OBJECT
             Mesh.PositionBuffer->SetDebugNameToResource((MeshName + EA_WCHAR("(VertexBuffer)")).c_str());
+            #endif
 
             Mesh.NormalBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext,
                 reinterpret_cast<const uint8_t*>(AssimpMesh->mNormals), sizeof(aiVector3D) * AssimpMesh->mNumVertices, sizeof(aiVector3D), AssimpImporter);
+            #if D3D_NAME_OBJECT
             Mesh.NormalBuffer->SetDebugNameToResource((MeshName + EA_WCHAR("(NormalBuffer)")).c_str());
+            #endif
 
             Mesh.TangentBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext,
                 reinterpret_cast<const uint8_t*>(AssimpMesh->mTangents), sizeof(aiVector3D) * AssimpMesh->mNumVertices, sizeof(aiVector3D), AssimpImporter);
+            #if D3D_NAME_OBJECT
             Mesh.TangentBuffer->SetDebugNameToResource((MeshName + EA_WCHAR("(TangentBuffer)")).c_str());
+            #endif
 
             Mesh.BiTangentBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext,
                 reinterpret_cast<const uint8_t*>(AssimpMesh->mBitangents), sizeof(aiVector3D) * AssimpMesh->mNumVertices, sizeof(aiVector3D), AssimpImporter);
+            #if D3D_NAME_OBJECT
             Mesh.BiTangentBuffer->SetDebugNameToResource((MeshName + EA_WCHAR("(BiTangentBuffer)")).c_str());
+            #endif
 
             static_assert(MAX_NUMBER_OF_VERTEXCOLOR == AI_MAX_NUMBER_OF_COLOR_SETS);
 			static const wchar_t* const VertexColorsDebugName[MAX_NUMBER_OF_VERTEXCOLOR]{
@@ -82,7 +90,9 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
 					eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(VertexColors));
 
 					Mesh.VertexColorBuffer[VertexColorIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(Vector2));
+                    #if D3D_NAME_OBJECT
 					Mesh.VertexColorBuffer[VertexColorIndex]->SetDebugNameToResource((MeshName + VertexColorsDebugName[VertexColorIndex]).c_str());
+                    #endif
                 }
             }
            
@@ -109,7 +119,9 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
                     eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(TextureCoords));
 
                     Mesh.TexCoordBuffers[UVIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(Vector2));
+                    #if D3D_NAME_OBJECT
                     Mesh.TexCoordBuffers[UVIndex]->SetDebugNameToResource((MeshName + TextureCoordsDebugName[UVIndex]).c_str());
+                    #endif
                 }
             }
 
@@ -128,7 +140,9 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
                 eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(IndexList));
 
                 Mesh.IndexBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticIndexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(uint32_t));
+                #if D3D_NAME_OBJECT
                 Mesh.IndexBuffer->SetDebugNameToResource((MeshName + EA_WCHAR("(IndexBuffer)")).c_str());
+                #endif
 
                 Mesh.IndexCount = AssimpMesh->mNumFaces * 3;
             }
