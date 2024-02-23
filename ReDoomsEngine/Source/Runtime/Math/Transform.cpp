@@ -14,31 +14,24 @@ void FTransform::LookAt(const Vector3& TargetPoint, const Vector3& Up)
 	Rotation = Quaternion::LookRotation(NormalizedVector, Up);
 }
 
-void FTransform::Rotate(const Quaternion& Quat, const ESpace& RelativeTo)
+void FTransform::Rotate(const Quaternion& Quat)
 {
-	if (RelativeTo == ESpace::Self)
-	{
-		Rotation = Rotation * Quat;
-	}
-	else if (RelativeTo == ESpace::World)
-	{
-		Rotation = Quat * Rotation;
-	}
+	Rotation = Rotation * Quat;
 }
 
-void FTransform::Rotate(const Vector3 EulerAngle, const ESpace& RelativeTo)
+void FTransform::Rotate(const Vector3 EulerAngle)
 {
-	Rotate(EulerAngleToQuaternion(EulerAngle), RelativeTo);
+	Rotate(Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(EulerAngle.y), XMConvertToRadians(EulerAngle.x), XMConvertToRadians(EulerAngle.z)));
 }
 
-void FTransform::RotateYaw(const float EulerAngle)
+void FTransform::RotateYaw(const float EulerAngle, const ESpace& RelativeTo)
 {
-	Rotation *= Quaternion::CreateFromYawPitchRoll(EulerAngle, 0.0f, 0.0f);
+	Rotate( Quaternion::CreateFromAxisAngle((RelativeTo == ESpace::World) ? Vector3::Up : Up(), EulerAngle));
 }
 
-void FTransform::RotatePitch(const float EulerAngle)
+void FTransform::RotatePitch(const float EulerAngle, const ESpace& RelativeTo)
 {
-	Rotation *= Quaternion::CreateFromYawPitchRoll(0.0f, EulerAngle, 0.0f);
+	Rotate(Quaternion::CreateFromAxisAngle((RelativeTo == ESpace::World) ? Vector3::Right : Right(), EulerAngle));
 }
 
 void FTransform::RotateAround(const Vector3& CenterPoint, const Vector3& Axis, const float Angle)

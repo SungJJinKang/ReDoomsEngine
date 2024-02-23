@@ -224,20 +224,20 @@ bool D3D12TestRenderer::Draw()
 
 		if (FD3D12Window::LeftArrowKeyPressed)
 		{
-			View.Transform.RotateYaw(Speed);
+			View.Transform.RotateYaw(Speed, ESpace::Self);
 		}
 		else if (FD3D12Window::RIghtArrowKeyPressed)
 		{
-			View.Transform.RotateYaw(-Speed);
+			View.Transform.RotateYaw(-Speed, ESpace::Self);
 		}
 		
 		if (FD3D12Window::UpArrowKeyPressed)
 		{
-			View.Transform.RotatePitch(Speed);
+			View.Transform.RotatePitch(Speed, ESpace::Self);
 		}
 		else if (FD3D12Window::DownArrowKeyPressed)
 		{
-			View.Transform.RotatePitch(-Speed);
+			View.Transform.RotatePitch(-Speed, ESpace::Self);
 		}
 
 		if (FD3D12Window::WKeyPressed)
@@ -257,8 +257,8 @@ bool D3D12TestRenderer::Draw()
 		{
 			View.Transform.Translate(Vector3{ 1.0f, 0.0f, 0.0f} *Speed, ESpace::Self);
 		}
-		 
-		Matrix ModelMatrix = Matrix::CreateScale(0.05f, 0.05f, 0.05f) * Matrix::CreateRotationX(0) * Matrix::CreateTranslation(0.0f, 0.0f, -5.0f);
+
+		Matrix ModelMatrix = Matrix::CreateTranslation(0.0f, -200.0f, -5.0f) * Matrix::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f) * Matrix::CreateScale(0.05f, 0.05f, 0.05f);
 
 		Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
 		Matrix ViewMat = View.Get3DViewMatrices();
@@ -296,7 +296,7 @@ bool D3D12TestRenderer::Draw()
 		CurrentFrameCommandContext.StateCache.SetIndexBufferView(IndexBufferView);
 		CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
 		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
-		ModelMatrix = Matrix::CreateScale(0.05f, 0.05f, 0.05f) * Matrix::CreateRotationX(0) * Matrix::CreateTranslation(10.0f, 0.0f, -5.0f);
+		ModelMatrix = Matrix::CreateTranslation(300.0f, -200.0f, -5.0f) * Matrix::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f) * Matrix::CreateScale(0.05f, 0.05f, 0.05f);
 		MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
 		CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
 
@@ -304,7 +304,7 @@ bool D3D12TestRenderer::Draw()
 		CurrentFrameCommandContext.StateCache.SetIndexBufferView(IndexBufferView);
 		CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
 		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
-		ModelMatrix = Matrix::CreateScale(0.05f, 0.05f, 0.05f) * Matrix::CreateRotationX(0) * Matrix::CreateTranslation(-10.0f, 0.0f, -5.0f);
+		ModelMatrix = Matrix::CreateTranslation(-300.0f, -200.0f, -5.0f) * Matrix::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f) * Matrix::CreateScale(0.05f, 0.05f, 0.05f);
 		MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
 		CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
 	}
