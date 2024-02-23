@@ -104,6 +104,9 @@ LRESULT FD3D12Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
         case 0x44:
             DKeyPressed = true;
 			break;
+        case VK_ESCAPE:
+            ::PostQuitMessage(0);
+            break;
         }
         return 0;
     case WM_KEYUP:
