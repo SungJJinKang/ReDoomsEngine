@@ -258,7 +258,7 @@ void FD3D12StateCache::SetConstantBuffer(const EShaderFrequency InShaderFrequenc
 	bIsRootCBVDirty = true;
 }
 
-void FD3D12StateCache::SetVertexBufferViewList(const eastl::vector<D3D12_VERTEX_BUFFER_VIEW>& InVertexBufferViewList)
+void FD3D12StateCache::SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)>& InVertexBufferViewList)
 {
 	bool bNeedToSet = false;
 
