@@ -178,7 +178,7 @@ bool D3D12TestRenderer::Draw()
 		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		D3D12_VERTEX_BUFFER_VIEW VertexBufferView = VertexBuffer->GetVertexBufferView();
-		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, 1, &VertexBufferView);
+		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList({ VertexBufferView });
 
 		CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
 
@@ -273,10 +273,10 @@ bool D3D12TestRenderer::Draw()
 
 
 		eastl::vector<D3D12_VERTEX_BUFFER_VIEW> VertexBufferViewList = Mesh->MeshList[0].CreateVertexBufferViewList();
-		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetVertexBuffers(0, VertexBufferViewList.size(), VertexBufferViewList.data());
-
+		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(VertexBufferViewList);
+		
 		D3D12_INDEX_BUFFER_VIEW IndexBufferView = Mesh->MeshList[0].CreateIndexBufferView();
-		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetIndexBuffer(&IndexBufferView);
+		CurrentFrameCommandContext.StateCache.SetIndexBufferView(IndexBufferView);
 
 		CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
 		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
@@ -290,6 +290,22 @@ bool D3D12TestRenderer::Draw()
 			nullptr
 		);
 
+		CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
+		
+		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(VertexBufferViewList);
+		CurrentFrameCommandContext.StateCache.SetIndexBufferView(IndexBufferView);
+		CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
+		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
+		ModelMatrix = Matrix::CreateScale(0.05f, 0.05f, 0.05f) * Matrix::CreateRotationX(0) * Matrix::CreateTranslation(10.0f, 0.0f, -5.0f);
+		MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
+		CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
+
+		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(VertexBufferViewList);
+		CurrentFrameCommandContext.StateCache.SetIndexBufferView(IndexBufferView);
+		CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
+		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
+		ModelMatrix = Matrix::CreateScale(0.05f, 0.05f, 0.05f) * Matrix::CreateRotationX(0) * Matrix::CreateTranslation(-10.0f, 0.0f, -5.0f);
+		MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
 		CurrentFrameCommandContext.DrawIndexedInstanced(Mesh->MeshList[0].IndexCount, 1, 0, 0, 0);
 	}
 

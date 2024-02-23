@@ -67,3 +67,9 @@ enum EStaticSamplerType
 };
 
 EStaticSamplerType NameToEStaticSamplerType(const char* const InName);
+
+enum class EPipeline
+{
+	Graphics,
+	Compute
+};
