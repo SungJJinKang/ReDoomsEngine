@@ -101,24 +101,24 @@ void FD3D12StateCache::SetBoundShaderSet(const FBoundShaderSet& InBoundShaderSet
 	if (CachedPSOInitializer.DrawDesc.BoundShaderSet.GetCachedHash() != InBoundShaderSet.GetCachedHash())
 	{
 		CachedPSOInitializer.DrawDesc.BoundShaderSet = InBoundShaderSet;
-		SetRootSignature(CachedPSOInitializer.DrawDesc.BoundShaderSet.GetRootSignature());
 		bIsPSODirty = true;
 	}
 	else
 	{
 		CachedPSOInitializer.DrawDesc.BoundShaderSet = InBoundShaderSet; // Different shader instances can have same hash when its ShaderTemplate is same
 	}
+	SetRootSignature(CachedPSOInitializer.DrawDesc.BoundShaderSet.GetRootSignature());
 }
 
 void FD3D12StateCache::SetPSO(const FD3D12PSOInitializer& InPSOInitializer)
 {
 	EA_ASSERT(InPSOInitializer.GetCachedHash() != 0);
-	if (CachedPSOInitializer.GetCachedHash() != InPSOInitializer.GetCachedHash())
+	if (!(CachedPSOInitializer.IsValid()) || (CachedPSOInitializer.GetCachedHash() != InPSOInitializer.GetCachedHash()))
 	{
 		CachedPSOInitializer = InPSOInitializer;
-		SetBoundShaderSet(InPSOInitializer.DrawDesc.BoundShaderSet);
 		bIsPSODirty = true;
 	}
+	SetBoundShaderSet(InPSOInitializer.DrawDesc.BoundShaderSet);
 }
 
 void FD3D12StateCache::SetRenderTargets(const eastl::array<FD3D12Texture2DResource*, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT>& InRenderTargets)
@@ -327,7 +327,7 @@ void FD3D12StateCache::ApplyRootSignature(FD3D12CommandList& InCommandList)
 
 void FD3D12StateCache::ApplyDescriptorHeap(FD3D12CommandList& InCommandList)
 {
-	eastl::vector<ID3D12DescriptorHeap*> D3D12DescriptorHeaps;
+	eastl::fixed_vector<ID3D12DescriptorHeap*, 1> D3D12DescriptorHeaps;
 	D3D12DescriptorHeaps.emplace_back(FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOnlineDescriptorHeapContainer.GetOnlineHeap()->D3DDescriptorHeap.Get());
 	InCommandList.GetD3DCommandList()->SetDescriptorHeaps(D3D12DescriptorHeaps.size(), D3D12DescriptorHeaps.data());
 
@@ -407,6 +407,7 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 					EA_ASSERT(ConstantBufferResource);
 
 					bool bNeedSetGraphicsRootConstantBufferView = false;
+					// @todo doesn't need to copy shadow data if non-dynamic constant buffer
 					if (ConstantBufferResource->IsShadowDataDirty())
 					{
 						ConstantBufferResource->Versioning();
@@ -479,7 +480,7 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipe
 
 	for (uint32_t ShaderFrequencyIndex = 0; ShaderFrequencyIndex < EShaderFrequency::NumShaderFrequency; ++ShaderFrequencyIndex)
 	{
-		FD3D12ShaderInstance*& ShaderInstance = CachedPSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[ShaderFrequencyIndex];
+		FD3D12ShaderInstance* ShaderInstance = CachedPSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[ShaderFrequencyIndex];
 		if (ShaderInstance)
 		{
 			ShaderInstance->ApplyShaderParameter(InCommandContext);
@@ -526,7 +527,7 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipe
 
 void FD3D12StateCache::ResetForNewCommandlist()
 {
-	//CachedPSOInitializer.Reset();
+	MEM_ZERO(CachedPSOInitializer);
 	CachedRootSignature = nullptr;
 
 	bIsPSODirty = true;

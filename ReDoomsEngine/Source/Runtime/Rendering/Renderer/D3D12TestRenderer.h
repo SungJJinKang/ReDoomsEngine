@@ -9,6 +9,12 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
 	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, Offset)
 )
 
+struct FDrone
+{
+	FRenderObject RenderObject;
+	Vector3 OriginalPos;
+};
+
 class D3D12TestRenderer : public FRenderer
 {
 public:
@@ -28,7 +34,7 @@ private:
 
 	eastl::shared_ptr<F3DModel> DroneMesh;
 
-	eastl::vector<FRenderObject> DronwList;
+	eastl::vector<FDrone> DroneList;
 	eastl::vector<FRenderObject> TrinagleList;
 };
 

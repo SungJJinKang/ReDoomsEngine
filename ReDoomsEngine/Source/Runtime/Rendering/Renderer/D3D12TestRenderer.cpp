@@ -2,6 +2,7 @@
 
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "MeshLoader.h"
+#include "RenderScene.h"
 
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
@@ -28,9 +29,7 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 
 DEFINE_SHADER(MeshDrawVS, "MeshDraw.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
-		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ModelMatrix)
-		)
+		ADD_SHADER_CONSTANT_BUFFER(MeshDrawConstantBuffer, MeshDrawConstantBuffer)
 	)
 );
 
@@ -43,6 +42,24 @@ DEFINE_SHADER(MeshDrawPS, "MeshDraw.hlsl", "MainPS", EShaderFrequency::Pixel, ES
 void D3D12TestRenderer::Init()
 {
 	FRenderer::Init();
+
+	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+
+	DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
+
+	{
+		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
+		MEM_ZERO(BasePassPSODesc);
+		BasePassPSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		BasePassPSODesc.SampleMask = UINT_MAX;
+		BasePassPSODesc.NumRenderTargets = 1;
+		BasePassPSODesc.RTVFormats[0] = SwapChain->GetFormat();
+		BasePassPSODesc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
+		BasePassPSODesc.SampleDesc.Count = 1;
+
+		RenderScene.PerPassData[static_cast<uint32_t>(EPass::BasePass)].PassPSODesc = BasePassPSODesc;
+	}
+
 }
 
 
@@ -93,9 +110,6 @@ void D3D12TestRenderer::SceneSetup()
 	VertexBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(CurrentFrameCommandContext, eastl::move(SubresourceContainer), sizeof(Vertex));
 	VertexBuffer->SetDebugNameToResource(EA_WCHAR("TestRenderer VertexBuffer1"));
 	
-	DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
-	
-
 	FD3D12PSOInitializer::FDrawDesc DroneDrawDesc;
 
 	D3D12_INPUT_LAYOUT_DESC InputDesc{ FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
@@ -115,32 +129,58 @@ void D3D12TestRenderer::SceneSetup()
 	MeshDrawArgument.BaseVertexLocation = 0;
 	MeshDrawArgument.StartInstanceLocation = 0;
 
-	for (int32_t IndexA = -10; IndexA < 10; ++IndexA)
+	for (int32_t IndexA = 0; IndexA < 3; ++IndexA)
 	{
-		for (int32_t IndexB = -10; IndexB < 10; ++IndexB)
+		for (int32_t IndexB = 0; IndexB < 3; ++IndexB)
 		{
-			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstanceForCurrentFrame();
-			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstanceForCurrentFrame();
+			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
+			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
+
+			Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+			Matrix ViewMat = View.Get3DViewMatrices();
+			Matrix ProjMat = View.GetPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+			
+			MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewMatrix = ViewMat;
+			MeshDrawVSInstance->Parameter.ViewConstantBuffer->ProjectionMatrix = ProjMat;
+			MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
+			MeshDrawPSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
+			MeshDrawPSInstance->Parameter.TriangleColorTexture = DroneMesh->Material[0].DiffuseTexture->GetSRV();
+
 			eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 			ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
 			ShaderList[EShaderFrequency::Pixel] = MeshDrawPSInstance;
 			FBoundShaderSet BoundShaderSet{ ShaderList };
 			DroneDrawDesc.BoundShaderSet = BoundShaderSet;
 
+// 			Vector3 OrigianlPos{ 300.0f * IndexB, 200.0f * IndexA + 100.0f, -5.0f };
+// 			FRenderObject RenderObject = RenderScene.AddRenderObject(
+// 				true,
+// 				DroneMesh->MeshList[0].AABB,
+// 				OrigianlPos,
+// 				Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f),
+// 				Vector3{ 0.5f, 0.5f, 0.5f },
+// 				2000.0f,
+// 				DroneMesh->MeshList[0].VertexBufferViewList,
+// 				DroneMesh->MeshList[0].IndexBufferView,
+// 				DroneDrawDesc,
+// 				MeshDrawArgument
+// 			);
+
+			Vector3 OrigianlPos{ 1.0f, 1.0f, 1.0f };
 			FRenderObject RenderObject = RenderScene.AddRenderObject(
 				true,
 				DroneMesh->MeshList[0].AABB,
-				Vector3{ 300.0f * IndexB, 200.0f * IndexA, -5.0f },
-				Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f),
-				Vector3{ 0.05f, 0.05f, 0.05f },
+				OrigianlPos,
+				Quaternion{0.0f, 0.0f, 0.0f, 0.0f},
+				Vector3{ 1.0f, 1.0f, 1.0f },
 				2000.0f,
 				DroneMesh->MeshList[0].VertexBufferViewList,
 				DroneMesh->MeshList[0].IndexBufferView,
 				DroneDrawDesc,
 				MeshDrawArgument
 			);
-
-			DronwList.emplace_back(RenderObject);
+			FDrone Drone{ RenderObject, OrigianlPos };
+			DroneList.emplace_back(Drone);
 		}
 	}
 }
@@ -174,6 +214,10 @@ bool D3D12TestRenderer::Draw()
 	CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = TargetRenderTarget->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->OMSetRenderTargets(1, &RTVCPUHandle, FALSE, nullptr);
 
+	CurrentFrameCommandContext.StateCache.SetRenderTargets({ RenderTarget.get() });
+ 	CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
+ 	CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
+
 	// Record commands.
 	const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearRenderTargetView(RTVCPUHandle, clearColor, 0, nullptr);
@@ -194,17 +238,26 @@ bool D3D12TestRenderer::Draw()
 		Offset = -2.0f;
 	}
 
+	for (FDrone& Drone : DroneList)
+	{
+		Drone.RenderObject.SetPosition(Drone.OriginalPos + Vector3{ Offset * 1.0f, 0.0f, 0.0f });
+	}
+
 	RenderScene.PrepareToCreateMeshDrawList();
 
 	// Base Pass
 	{
 		eastl::vector<FMeshDraw> BasePassMeshDrawList = RenderScene.CreateMeshDrawListForPass(EPass::BasePass);
 
+		{
+			SCOPED_GPU_TIMER_DIRECT_QUEUE(CurrentFrameCommandContext, Renderer_BasePassDraw)
+			for (FMeshDraw& MeshDraw : BasePassMeshDrawList)
+			{
+				MeshDraw.Draw(CurrentFrameCommandContext);
+			}
+		}
 	}
 // 
-// 	CurrentFrameCommandContext.StateCache.SetRenderTargets({ RenderTarget.get() });
-// 	CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
-// 	CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
 // 
 // 	//Test Code
 // 

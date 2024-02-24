@@ -50,7 +50,7 @@ void FD3D12ShaderResourceView::UpdateDescriptor()
 	OfflineDescriptorHeapBlock = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOfflineDescriptorHeapContainer.AllocateDescriptorHeapBlock(1);
 	
 	eastl::shared_ptr<FD3D12Resource> LockedResource = Resource.lock();
-	GetD3D12Device()->CreateShaderResourceView(LockedResource->GetResource(), Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
+	GetD3D12Device()->CreateShaderResourceView(LockedResource ? LockedResource->GetResource() : nullptr, Desc.has_value() ? &(Desc.value()) : nullptr, OfflineDescriptorHeapBlock.CPUDescriptorHandle());
 }
 
 FD3D12ShaderResourceView* FD3D12ShaderResourceView::NullSRV()

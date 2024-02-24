@@ -1,6 +1,6 @@
 #include "Common.hlsl"
 
-float4x4 ModelMatrix;
+#include "MeshDrawCommon.hlsl"
 
 struct PSInput
 {

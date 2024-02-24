@@ -4,8 +4,7 @@
 #include "D3D12PSO.h"
 #include "EASTL/segmented_vector.h"
 #include "MeshDraw/MeshDraw.h"
-
-#define SEGMENTED_BLOCK_SIZE_FOR_MESH_DRAW 64
+#include "D3D12Shader.h"
 
 struct FMesh;
 struct FD3D12CommandContext;
@@ -46,7 +45,7 @@ struct FRenderObjectList
 
 struct FRenderObject
 {
-	FRenderObjectList& RenderObjectList;
+	FRenderObjectList* RenderObjectList;
 	uint32_t ObjectIndex; // This value represents index in RenderObjectList
 
 	void SetVisible(const bool bInVisible);
@@ -93,5 +92,10 @@ struct FRenderScene
 	// This function will be called from worker thread
 	void PrepareToCreateMeshDrawList();
 	eastl::vector<FMeshDraw> CreateMeshDrawListForPass(const EPass InPass);
+	void SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList);
 };
 
+DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
+	MeshDrawConstantBuffer, true,
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ModelMatrix)
+)

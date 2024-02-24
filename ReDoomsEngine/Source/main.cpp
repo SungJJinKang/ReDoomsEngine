@@ -70,7 +70,11 @@ int main(int argc, char** argv)
 		++GCurrentFrameIndex;
 	}
 
-	TestRenderer.Destroy();
+	{
+		SCOPED_CPU_TIMER(Renderer_Destroy)
+		SCOPED_MEMORY_TRACE(Renderer_Destroy)
+		TestRenderer.Destroy();
+	}
 
 	return 0;
 }
