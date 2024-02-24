@@ -6,8 +6,9 @@
 
 class FD3D12RootSignature;
 
-struct FD3D12PSOInitializer
+class FD3D12PSOInitializer
 {
+public:
     /// <summary>
     /// This struct should contains states changed frequently per draw
     /// </summary>
@@ -42,20 +43,27 @@ struct FD3D12PSOInitializer
         D3D12_PIPELINE_STATE_FLAGS Flags;
     } PassDesc;
 
-	uint64 CachedHash;
-
+    inline uint64 GetCachedHash() const
+    {
+        EA_ASSERT(IsValid());
+        return CachedHash;
+    }
     bool IsValid() const;
     //void Reset();
     void FinishCreating();
+
+private:
+
+	uint64 CachedHash;
 };
 
 inline bool operator==(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)
 {
-    return (lhs.CachedHash == rhs.CachedHash);
+    return (lhs.GetCachedHash() == rhs.GetCachedHash());
 }
 inline bool operator!=(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)
 {
-    return (lhs.CachedHash != rhs.CachedHash);
+    return (lhs.GetCachedHash() != rhs.GetCachedHash());
 }
 
 struct FD3D12PSO
@@ -71,14 +79,14 @@ namespace eastl
 {
     template <> struct hash<FD3D12PSOInitializer>
     {
-        size_t operator()(FD3D12PSOInitializer val) const { EA_ASSERT(val.CachedHash != 0); return static_cast<size_t>(val.CachedHash); }
+        size_t operator()(FD3D12PSOInitializer val) const { EA_ASSERT(val.GetCachedHash() != 0); return static_cast<size_t>(val.GetCachedHash()); }
     };
 
     template <> struct less<FD3D12PSOInitializer>
     {
-        EA_CPP14_CONSTEXPR bool operator()(const FD3D12PSOInitializer& a, const FD3D12PSOInitializer& b) const
+        bool operator()(const FD3D12PSOInitializer& a, const FD3D12PSOInitializer& b) const
         {
-            return a.CachedHash < b.CachedHash;
+            return a.GetCachedHash() < b.GetCachedHash();
         }
     };
 }

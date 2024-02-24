@@ -34,6 +34,8 @@ struct FMesh
 	uint32_t IndexCount;
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> IndexBuffer;
 
+	BoundingBox AABB;
+
 	uint32_t MaterialIndex;
 
 	eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> VertexBufferViewList;

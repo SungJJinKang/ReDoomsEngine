@@ -124,6 +124,16 @@ namespace DirectX
             : Center(center), Extents(extents) {}
 
         // Methods
+        inline float SquareLengthOfCenterToCorner() const noexcept
+        {
+			return Extents.x * Extents.x + Extents.y * Extents.y + Extents.z * Extents.z;
+        }
+        
+        inline float LengthOfCenterToCorner() const noexcept
+		{
+            return sqrtf(SquareLengthOfCenterToCorner());
+		}
+
         void    XM_CALLCONV     Transform(_Out_ BoundingBox& Out, _In_ FXMMATRIX M) const noexcept;
         void    XM_CALLCONV     Transform(_Out_ BoundingBox& Out, _In_ float Scale, _In_ FXMVECTOR Rotation, _In_ FXMVECTOR Translation) const noexcept;
 
@@ -163,6 +173,8 @@ namespace DirectX
         static void    XM_CALLCONV     CreateFromPoints(_Out_ BoundingBox& Out, _In_ FXMVECTOR pt1, _In_ FXMVECTOR pt2) noexcept;
         static void CreateFromPoints(_Out_ BoundingBox& Out, _In_ size_t Count,
             _In_reads_bytes_(sizeof(XMFLOAT3) + Stride * (Count - 1)) const XMFLOAT3* pPoints, _In_ size_t Stride) noexcept;
+
+        static BoundingBox CreateBoundingBoxFromMinMax(_In_ const XMFLOAT3& min, _In_ const XMFLOAT3& max) noexcept;
     };
 
     //-------------------------------------------------------------------------------------

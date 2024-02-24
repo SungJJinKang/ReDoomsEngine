@@ -14,6 +14,7 @@ class D3D12TestRenderer : public FRenderer
 public:
 
 	virtual void Init();
+	virtual void SceneSetup();
 	virtual void OnStartFrame();
 	virtual bool Draw();
 	virtual void Destroy();
@@ -25,6 +26,9 @@ private:
 	eastl::shared_ptr<FD3D12TextureResource> TestTexture;
 	eastl::shared_ptr<FD3D12TextureResource> SmallTexture;
 
-	eastl::shared_ptr<F3DModel> Mesh;
+	eastl::shared_ptr<F3DModel> DroneMesh;
+
+	eastl::vector<FRenderObject> DronwList;
+	eastl::vector<FRenderObject> TrinagleList;
 };
 

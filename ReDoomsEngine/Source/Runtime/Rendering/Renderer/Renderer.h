@@ -40,6 +40,11 @@ public:
 	FRenderer() = default;
 	virtual ~FRenderer() = default;
 	virtual void Init();
+
+	/// <summary>
+	/// This function is called once just after start scene
+	/// </summary>
+	virtual void SceneSetup();
 	virtual void OnPreStartFrame();
 	virtual void OnStartFrame();
 	virtual bool Draw();
@@ -53,6 +58,8 @@ public:
 	FFrameResourceContainer& GetPreviousFrameResourceContainer();
 	FFrameResourceContainer& GetCurrentFrameResourceContainer();
 	eastl::array<FFrameResourceContainer, GNumBackBufferCount>& GetFrameContainerList();
+
+	void SetUpGlobalConstantBuffer();
 
 	FD3D12Manager D3D12Manager;
 
@@ -69,5 +76,6 @@ protected:
 
 private :
 
+	bool bEverSceneSetup = false;
 	FGPUTimer FrametimeGPUTimer{ "FrameTime" };
 };

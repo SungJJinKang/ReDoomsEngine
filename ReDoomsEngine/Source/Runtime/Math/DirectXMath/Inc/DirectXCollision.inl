@@ -1936,6 +1936,29 @@ inline void BoundingBox::CreateFromPoints(BoundingBox& Out, size_t Count, const 
     XMStoreFloat3(&Out.Extents, XMVectorScale(XMVectorSubtract(vMax, vMin), 0.5f));
 }
 
+_Use_decl_annotations_
+inline BoundingBox BoundingBox::CreateBoundingBoxFromMinMax(const XMFLOAT3& min, const XMFLOAT3& max) noexcept
+{
+	XMFLOAT3 Center;
+	XMFLOAT3 Extents;
+
+	XMVECTOR MinA = XMLoadFloat3(&min);
+	XMVECTOR MaxA = XMLoadFloat3(&max);
+
+	XMVECTOR MinMaxSumA = XMVectorAdd(MinA, MaxA);
+
+	XMVECTOR CenterA = XMVectorScale(MinMaxSumA, 0.5f);
+	Center.x = CenterA.m128_f32[0];
+	Center.y = CenterA.m128_f32[1];
+	Center.z = CenterA.m128_f32[2];
+
+	XMVECTOR ExtentsA = XMVectorSubtract(MaxA, CenterA);
+	Extents.x = ExtentsA.m128_f32[0];
+	Extents.y = ExtentsA.m128_f32[1];
+	Extents.z = ExtentsA.m128_f32[2];
+
+	return BoundingBox{ Center, Extents };
+}
 
 /****************************************************************************
  *
