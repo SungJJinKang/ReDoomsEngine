@@ -65,17 +65,11 @@ void FRenderer::Init()
 
 void FRenderer::SceneSetup()
 {
-	SCOPED_CPU_TIMER(Renderer_SceneSetup)
-	SCOPED_MEMORY_TRACE(Renderer_SceneSetup)
-
 	GCurrentRendererState = ERendererState::SceneSetup;
 }
 
 void FRenderer::OnPreStartFrame()
 {
-	SCOPED_CPU_TIMER(Renderer_OnPreStartFrame)
-	SCOPED_MEMORY_TRACE(Renderer_OnPreStartFrame)
-
 	GCurrentRendererState = ERendererState::OnPreStartFrame;
 
 	D3D12Manager.OnPreStartFrame();
@@ -83,9 +77,6 @@ void FRenderer::OnPreStartFrame()
 
 void FRenderer::OnStartFrame()
 {
-	SCOPED_CPU_TIMER(Renderer_OnStartFrame)
-	SCOPED_MEMORY_TRACE(Renderer_OnStartFrame)
-
 	GCurrentRendererState = ERendererState::OnStartFrame;
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
@@ -117,9 +108,6 @@ void FRenderer::OnStartFrame()
 
 bool FRenderer::Draw()
 {
-	SCOPED_CPU_TIMER(Renderer_Draw)
-	SCOPED_MEMORY_TRACE(Renderer_Draw)
-
 	GCurrentRendererState = ERendererState::Draw;
 
 	FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext);
@@ -134,9 +122,6 @@ bool FRenderer::Draw()
 
 void FRenderer::OnPreEndFrame()
 {
-	SCOPED_CPU_TIMER(Renderer_OnPreEndFrame)
-	SCOPED_MEMORY_TRACE(Renderer_OnPreEndFrame)
-
 	GCurrentRendererState = ERendererState::OnPreEndFrame;
 
 	D3D12Manager.OnPreEndFrame(CurrentFrameCommandContext);
@@ -146,9 +131,6 @@ void FRenderer::OnPreEndFrame()
 
 void FRenderer::OnPostEndFrame()
 {
-	SCOPED_CPU_TIMER(Renderer_OnPostEndFrame)
-	SCOPED_MEMORY_TRACE(Renderer_OnPostEndFrame)
-
 	GCurrentRendererState = ERendererState::OnPostEndFrame;
 
 	D3D12Manager.OnPostEndFrame();
@@ -156,9 +138,6 @@ void FRenderer::OnPostEndFrame()
 
 void FRenderer::OnEndFrame()
 {
-	SCOPED_CPU_TIMER(Renderer_OnEndFrame)
-	SCOPED_MEMORY_TRACE(Renderer_OnEndFrame)
-
 	GCurrentRendererState = ERendererState::OnEndFrame;
 
 	D3D12Manager.OnEndFrame(CurrentFrameCommandContext);
@@ -187,9 +166,6 @@ void FRenderer::OnEndFrame()
 
 void FRenderer::Destroy()
 {
-	SCOPED_CPU_TIMER(Renderer_Destroy)
-	SCOPED_MEMORY_TRACE(Renderer_Destroy)
-
 	GCurrentRendererState = ERendererState::Destroying;
 
 	GetPreviousFrameResourceContainer().FrameWorkEndFence->CPUWaitOnLastSignal();
@@ -203,20 +179,44 @@ void FRenderer::Tick()
 {
 	if (!bEverSceneSetup)
 	{
+		SCOPED_CPU_TIMER(Renderer_SceneSetup)
+		SCOPED_MEMORY_TRACE(Renderer_SceneSetup)
 		SceneSetup();
 		bEverSceneSetup = true;
 	}
 
-	OnPreStartFrame();
-	OnStartFrame();
 	{
+		SCOPED_CPU_TIMER(Renderer_OnPreStartFrame)
+		SCOPED_MEMORY_TRACE(Renderer_OnPreStartFrame)
+		OnPreStartFrame();
+	}
+	{
+		SCOPED_CPU_TIMER(Renderer_OnStartFrame)
+		SCOPED_MEMORY_TRACE(Renderer_OnStartFrame)
+		OnStartFrame();
+	}
+	{
+		SCOPED_CPU_TIMER(Renderer_Draw)
+		SCOPED_MEMORY_TRACE(Renderer_Draw)
 		SCOPED_GPU_TIMER_DIRECT_QUEUE(CurrentFrameCommandContext, Renderer_Draw)
 		Draw();
 	}
-	OnPreEndFrame();
+	{
+		SCOPED_CPU_TIMER(Renderer_OnPreEndFrame)
+		SCOPED_MEMORY_TRACE(Renderer_OnPreEndFrame)
+		OnPreEndFrame();
+	}
+	{
+		SCOPED_CPU_TIMER(Renderer_OnEndFrame)
+		SCOPED_MEMORY_TRACE(Renderer_OnEndFrame)
+		OnEndFrame();
+	}
+	{
+		SCOPED_CPU_TIMER(Renderer_OnPostEndFrame)
+		SCOPED_MEMORY_TRACE(Renderer_OnPostEndFrame)
+		OnPostEndFrame();
+	}
 
-	OnEndFrame();
-	OnPostEndFrame();
 }
 
 FFrameResourceContainer& FRenderer::GetPreviousFrameResourceContainer()
