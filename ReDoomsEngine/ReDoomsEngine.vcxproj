@@ -116,6 +116,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\RenderScene.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.cpp" />
     <ClCompile Include="Source\Runtime\Math\SimpleMath.cpp" />
@@ -186,6 +187,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.h" />
     <ClInclude Include="Source\Runtime\Rendering\RenderScene.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.h" />
     <ClInclude Include="Source\Runtime\Math\SimpleMath.h" />

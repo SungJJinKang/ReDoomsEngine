@@ -147,6 +147,12 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
                 Mesh.IndexCount = AssimpMesh->mNumFaces * 3;
             }
 
+            {
+                XMFLOAT3 Min{ AssimpMesh->mAABB.mMin.x, AssimpMesh->mAABB.mMin.y, AssimpMesh->mAABB.mMin.z };
+                XMFLOAT3 Max{ AssimpMesh->mAABB.mMax.x, AssimpMesh->mAABB.mMax.y, AssimpMesh->mAABB.mMax.z };
+                Mesh.AABB = BoundingBox::CreateBoundingBoxFromMinMax(Min, Max);
+            }
+
             Mesh.MaterialIndex = AssimpMesh->mMaterialIndex;
 
             {

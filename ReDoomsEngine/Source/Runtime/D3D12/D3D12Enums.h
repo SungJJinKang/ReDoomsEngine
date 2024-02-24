@@ -45,6 +45,7 @@ ED3D12QueueType CommandAllocatorTypeTiD3D12QueueType(const ECommandAllocatorType
 enum ERendererState : uint64_t
 {
 	Initializing,
+	SceneSetup,
 	OnPreStartFrame,
 	OnStartFrame,
 	Draw,

@@ -7,14 +7,16 @@
 #include "D3D12CommandContext.h"
 #include "ShaderCompilers/HLSLTypeHelper.h"
 
-FBoundShaderSet::FBoundShaderSet(const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& InShaderList)
+#include "EASTL/algorithm.h"
+
+FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList)
 	: ShaderInstanceList()
 {
 	Set(InShaderList);
 	CacheHash();
 }
 
-void FBoundShaderSet::Set(const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& InShaderList)
+void FBoundShaderSet::Set(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList)
 {
 	ShaderInstanceList = InShaderList;
 	for (uint32_t ShaderIndex = 0; ShaderIndex < EShaderFrequency::NumShaderFrequency; ++ShaderIndex)
@@ -45,7 +47,7 @@ void FBoundShaderSet::Validate()
 {
 	bool bFound = false;
 
-	for (eastl::shared_ptr<FD3D12ShaderInstance>& Shader : ShaderInstanceList)
+	for (FD3D12ShaderInstance*& Shader : ShaderInstanceList)
 	{
 		if (Shader)
 		{
@@ -148,9 +150,9 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 					eastl::hash_map<eastl::string, FConstantBufferMemberVariableTest> TestedMemberVariableMap{};
 
 					// collect possible variables
-					for (auto& MemberVariablePair : ConstantBuffer.GetMemberVariableMap())
+					for (const FShaderParameterConstantBuffer::FMemberVariableContainer& MemberVariablePair : ConstantBuffer.GetMemberVariableMap())
 					{
-						TestedMemberVariableMap.try_emplace(MemberVariablePair.first).first->second.ShaderParameterMemberVariable = &MemberVariablePair.second;
+						TestedMemberVariableMap.try_emplace(MemberVariablePair.VariableName).first->second.ShaderParameterMemberVariable = &MemberVariablePair;
 					}
 					for (const auto& MemberVariablePair : ReflectionData.VariableList)
 					{
@@ -536,6 +538,13 @@ void FD3D12ShaderInstance::ResetForReuse()
 
 }
 
+FD3D12ShaderInstance* FD3D12ShaderInstance::Duplicate() const
+{
+	FD3D12ShaderInstance* const DuplicatedShaderInstance = ShaderTemplate->MakeShaderInstanceForCurrentFrame();
+	DuplicatedShaderInstance->ShaderParameterContainerTemplate->CopyFrom(*ShaderParameterContainerTemplate);
+	return DuplicatedShaderInstance;
+}
+
 void FShaderParameterContainerTemplate::Init()
 {
 	for (FShaderParameterTemplate* ShaderParameter : ShaderParameterList)
@@ -592,11 +601,31 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 
 }
 
+void FShaderParameterContainerTemplate::CopyFrom(const FShaderParameterContainerTemplate& InTemplate)
+{
+	// Validate if this variable and passed one is referencing ShaderParameterContainerTemplate
+	EA_ASSERT(GetD3D12ShaderTemplate() == InTemplate.GetD3D12ShaderTemplate());
+	EA_ASSERT(ShaderParameterList.size() == InTemplate.ShaderParameterList.size());
+	for (uint32_t Index = 0; Index < ShaderParameterList.size(); ++Index)
+	{
+		ShaderParameterList[Index]->CopyFrom(*(InTemplate.ShaderParameterList[Index]));
+	}
+}
+
+void FShaderParameterTemplate::CopyFrom(const FShaderParameterTemplate& InTemplate)
+{
+	// Validate if this variable and passed one is referencing same ShaderParameterTemplate
+	EA_ASSERT(IsConstantBuffer() == InTemplate.IsConstantBuffer());
+	EA_ASSERT(IsSRV() == InTemplate.IsSRV());
+	EA_ASSERT(IsUAV() == InTemplate.IsUAV());
+	EA_ASSERT(IsRTV() == InTemplate.IsRTV());
+	EA_ASSERT(IsCulled() == InTemplate.IsCulled());
+	EA_ASSERT(IsAllowCull() == InTemplate.IsAllowCull());
+	EA_ASSERT(VariableName == InTemplate.VariableName);
+}
+
 void FShaderParameterTemplate::Init()
 {
-	EA_ASSERT(!bInit);
-	bInit = true;
-
 	SetReflectionDataFromShaderReflectionData();
 }
 
@@ -612,17 +641,17 @@ void FShaderParameterConstantBuffer::Init()
 	
 	if (!IsTemplateVariable() && !IsCulled())
 	{
-		const uint32_t ConstantBufferSize = GetReflectionData()->Desc.Size;
+		const uint32_t ConstantBufferSize = GetConstantBufferReflectionData()->Desc.Size;
 		ShadowData.resize(ConstantBufferSize);
 		ConstantBufferResource = eastl::make_unique<FD3D12ConstantBufferResource>(ConstantBufferSize, true, ShadowData.data(), ConstantBufferSize, false);
 		ConstantBufferResource->InitResource();
 
-		for (auto& MemberVariablePair : MemberVariableMap)
+		for (FMemberVariableContainer& MemberVariablePair : MemberVariableMap)
 		{
 			const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBufferReflectionData =
-				ReflectionData->VariableList.find(MemberVariablePair.first)->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
+				ReflectionData->VariableList.find(MemberVariablePair.VariableName)->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
 
-			MemberVariablePair.second.ShaderParameterConstantBufferMemberVariableTemplate->SetOffset(VariableOfConstantBufferReflectionData.Desc.StartOffset);
+			MemberVariablePair.ShaderParameterConstantBufferMemberVariableTemplate->SetOffset(VariableOfConstantBufferReflectionData.Desc.StartOffset);
 		}
 	}
 }
@@ -630,7 +659,13 @@ void FShaderParameterConstantBuffer::Init()
 void FShaderParameterConstantBuffer::AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize,
 	const char* const InVariableName, const std::type_info& VariableTypeInfo)
 {
-	EA_ASSERT(MemberVariableMap.find(InVariableName) == MemberVariableMap.end());
+	EA_ASSERT(eastl::find_if(MemberVariableMap.begin(), MemberVariableMap.end(),
+			[InVariableName](FMemberVariableContainer& lhs) -> bool
+			{
+				return lhs.VariableName == InVariableName; // Just comparing address of literal string is enough
+			}) == MemberVariableMap.end()
+	);
+
 
 	FMemberVariableContainer MemberVariableContainer;
 	MemberVariableContainer.VariableName = InVariableName;
@@ -638,7 +673,38 @@ void FShaderParameterConstantBuffer::AddMemberVariable(FShaderParameterConstantB
 	MemberVariableContainer.ShaderParameterConstantBufferMemberVariableTemplate = InShaderParameterConstantBufferMemberVariable;
 	MemberVariableContainer.VariableTypeInfo = &VariableTypeInfo;
 
-	MemberVariableMap.emplace(InVariableName, MemberVariableContainer);
+	MemberVariableMap.emplace_back(MemberVariableContainer);
+}
+
+void FShaderParameterConstantBuffer::CopyFrom(const FShaderParameterTemplate& InTemplate)
+{
+	FShaderParameterTemplate::CopyFrom(InTemplate);
+
+	const FShaderParameterConstantBuffer& InputTemplateConstantBuffer = static_cast<const FShaderParameterConstantBuffer&>(InTemplate);
+
+	// Validate if this variable and passed one is referencing same constant buffer
+	EA_ASSERT(IsDynamicConstantBuffer() == InputTemplateConstantBuffer.IsDynamicConstantBuffer());
+	EA_ASSERT(IsGlobalConstantBuffer() == InputTemplateConstantBuffer.IsGlobalConstantBuffer());
+	EA_ASSERT(GetConstantBufferReflectionData() == InputTemplateConstantBuffer.GetConstantBufferReflectionData());
+	EA_ASSERT(IsGlobalConstantBuffer() == InputTemplateConstantBuffer.IsGlobalConstantBuffer());
+#if EA_ASSERT_ENABLED
+
+	const eastl::vector<FMemberVariableContainer>& ThisMemberVariableMap = GetMemberVariableMap();
+	const eastl::vector<FMemberVariableContainer>& InputTemplateMemberVariableMap = InputTemplateConstantBuffer.GetMemberVariableMap();
+	EA_ASSERT(ThisMemberVariableMap.size() == InputTemplateMemberVariableMap.size());
+	for (uint32_t Index = 0; Index < ThisMemberVariableMap.size(); ++Index)
+	{
+		EA_ASSERT(ThisMemberVariableMap[Index].VariableName == InputTemplateMemberVariableMap[Index].VariableName);
+		EA_ASSERT(ThisMemberVariableMap[Index].VariableSize == InputTemplateMemberVariableMap[Index].VariableSize);
+		EA_ASSERT(*ThisMemberVariableMap[Index].VariableTypeInfo == *InputTemplateMemberVariableMap[Index].VariableTypeInfo);
+	}
+#endif
+
+	if (!IsCulled())
+	{
+		ShadowData = InputTemplateConstantBuffer.ShadowData;
+		MakeDirty();
+	}
 }
 
 uint8_t* FShaderParameterConstantBuffer::GetShadowData()
@@ -698,6 +764,15 @@ FShaderParameterShaderResourceView& FShaderParameterShaderResourceView::operator
 	return *this;
 }
 
+void FShaderParameterShaderResourceView::CopyFrom(const FShaderParameterTemplate& InTemplate)
+{
+	FShaderParameterResourceView::CopyFrom(InTemplate);
+
+	const FShaderParameterShaderResourceView& TemplateShaderParameterSRV = static_cast<const FShaderParameterShaderResourceView&>(InTemplate);
+
+	*this = TemplateShaderParameterSRV.GetTargetSRV();
+}
+
 void FShaderParameterShaderResourceView::SetReflectionDataFromShaderReflectionData()
 {
 	// @todo : Shader Template should cache this for shader instance
@@ -718,4 +793,9 @@ void FShaderParameterShaderResourceView::SetReflectionDataFromShaderReflectionDa
 			break;
 		}
 	}
+}
+
+void FShaderParameterResourceView::CopyFrom(const FShaderParameterTemplate& InTemplate)
+{
+	FShaderParameterTemplate::CopyFrom(InTemplate);
 }

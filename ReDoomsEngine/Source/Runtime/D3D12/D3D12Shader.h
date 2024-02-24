@@ -30,9 +30,9 @@ class FBoundShaderSet
 {
 public:
 	FBoundShaderSet() = default;
-	FBoundShaderSet(const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& InShaderList);
+	FBoundShaderSet(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList);
 	
-	void Set(const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& InShaderList);
+	void Set(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList);
 	void CacheHash();
 	void Validate();
 	FD3D12RootSignature* GetRootSignature() const;
@@ -44,11 +44,11 @@ public:
 	{
 		return ShaderTemplateList;
 	}
-	inline const eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& GetShaderInstanceList() const
+	inline const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& GetShaderInstanceList() const
 	{
 		return ShaderInstanceList;
 	}
-	inline eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency>& GetShaderInstanceList()
+	inline eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& GetShaderInstanceList()
 	{
 		return ShaderInstanceList;
 	}
@@ -60,9 +60,8 @@ public:
 private:
 
 	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderTemplateList{ nullptr };
-	eastl::array<eastl::shared_ptr<FD3D12ShaderInstance>, EShaderFrequency::NumShaderFrequency> ShaderInstanceList{ nullptr };
+	eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderInstanceList{ nullptr };
 	FShaderHash CachedHash;
-
 };
 
 inline bool operator==(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
@@ -142,6 +141,11 @@ public:
 		const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency,
 		const uint64_t InShaderCompileFlags);
 
+	FD3D12ShaderTemplate(const FD3D12ShaderTemplate&) = delete;
+	FD3D12ShaderTemplate(FD3D12ShaderTemplate&&) = delete;
+	FD3D12ShaderTemplate& operator=(const FD3D12ShaderTemplate&) = delete;
+	FD3D12ShaderTemplate& operator=(FD3D12ShaderTemplate&&) = delete;
+
 	void SetShaderCompileResult(FShaderCompileResult& InShaderCompileResult);
 	void PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection);
 	virtual void OnFinishShaderCompile();
@@ -170,6 +174,8 @@ public:
 
 	void AddShaderParameter(FShaderParameterTemplate* InShaderParameter, const char* const InVariableName);
 	void AddShaderPreprocessorDefine(const FShaderPreprocessorDefine& InShaderPreprocessorDefine);
+
+	virtual FD3D12ShaderInstance* MakeShaderInstanceForCurrentFrame() = 0;
 
 	void ValidateShaderParameter();
 
@@ -203,6 +209,10 @@ public:
 		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(InD3D12ShaderInstance), bIsShaderInstance(true), ShaderParameterList()
 	{
 	}
+	FShaderParameterContainerTemplate(const FShaderParameterContainerTemplate&) = delete;
+	FShaderParameterContainerTemplate(FShaderParameterContainerTemplate&&) = delete;
+	FShaderParameterContainerTemplate& operator=(const FShaderParameterContainerTemplate&) = delete;
+	FShaderParameterContainerTemplate& operator=(FShaderParameterContainerTemplate&&) = delete;
 
 	void Init();
 
@@ -221,6 +231,7 @@ public:
 
 	void AddShaderParamter(FShaderParameterTemplate* const InShaderParameter);
 	void ApplyShaderParameters(FD3D12CommandContext& InCommandContext);
+	void CopyFrom(const FShaderParameterContainerTemplate& InTemplate);
 
 protected:
 
@@ -237,13 +248,13 @@ class FShaderParameterTemplate
 public:
 
 	FShaderParameterTemplate()
-		: ShaderParameterContainerTemplate(nullptr), VariableName(), bInit(false)
+		: ShaderParameterContainerTemplate(nullptr), VariableName()
 	{
 
 	}
 
 	FShaderParameterTemplate(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInAllowCull)
-		: ShaderParameterContainerTemplate(InShaderParameter), VariableName(InVariableName), bInit(false), bAllowCull(bInAllowCull)
+		: ShaderParameterContainerTemplate(InShaderParameter), VariableName(InVariableName), bAllowCull(bInAllowCull)
 	{
 		InShaderParameter->AddShaderParamter(this);
 
@@ -256,12 +267,24 @@ public:
 			InShaderParameter->GetD3D12ShaderTemplate()->AddShaderParameter(this, VariableName);
 		}
 	}
+	FShaderParameterTemplate(const FShaderParameterTemplate&) = delete;
+	FShaderParameterTemplate(FShaderParameterTemplate&&) = delete;
+	FShaderParameterTemplate& operator=(const FShaderParameterTemplate&) = delete;
+	FShaderParameterTemplate& operator=(FShaderParameterTemplate&&) = delete;
+
+	// This function will be used for duplicating shader instance..
+	// 
+	// Do vs Don't in this function
+	// Do : Copy shadow data of constant buffer
+	// Don't : recreate d3d resource or set reflection data again because it's all done when the shader instance is created
+	virtual void CopyFrom(const FShaderParameterTemplate& InTemplate);
 
 	inline FShaderParameterContainerTemplate* GetShaderParameterContainerTemplate() const
 	{
 		return ShaderParameterContainerTemplate;
 	}
 
+	// Copy constructor, assignment operator doesn't require calling this function
 	virtual void Init();
 
 	const char* const GetVariableName() const
@@ -296,7 +319,6 @@ public:
 
 protected:
 
-	bool bInit;
 	bool bAllowCull;
 	FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate;
 	const char* const VariableName;
@@ -325,6 +347,7 @@ public:
 		: FShaderParameterTemplate(InShaderParameter, InVariableName, bInAllowCull), ReflectionData(), ShaderParameterResourceType(InShaderParameterResourceType)
 	{
 	}
+	virtual void CopyFrom(const FShaderParameterTemplate& InTemplate);
 
 	const D3D12_SHADER_INPUT_BIND_DESC& GetReflectionData() const
 	{
@@ -362,6 +385,7 @@ public:
  	: FShaderParameterResourceView(InShaderParameter, InVariableName, InShaderParameterResourceType, bInAllowCull), TargetSRV(nullptr)
 	{
 	}
+	virtual void CopyFrom(const FShaderParameterTemplate& InTemplate);
 
 	virtual bool IsTemplateVariable() const { return false; }
 
@@ -408,6 +432,7 @@ public:
 	virtual void Init();
 	void AddMemberVariable(FShaderParameterConstantBufferMemberVariableTemplate* InShaderParameterConstantBufferMemberVariable, const uint64_t InVariableSize, 
 		const char* const InVariableName, const std::type_info& InTypeId);
+	virtual void CopyFrom(const FShaderParameterTemplate& InTemplate);
 
 	virtual bool IsConstantBuffer() const
 	{
@@ -422,7 +447,7 @@ public:
 	{
 		return bGlobalConstantBuffer;
 	}
-	const eastl::vector_map<eastl::string, FMemberVariableContainer>& GetMemberVariableMap() const
+	const eastl::vector<FMemberVariableContainer>& GetMemberVariableMap() const
 	{
 		return MemberVariableMap;
 	}
@@ -430,13 +455,9 @@ public:
 	{
 		return ReflectionData;
 	}
-	const FD3D12ConstantBufferReflectionData* GetReflectionData() const
-	{
-		return ReflectionData;
-	}
 	virtual bool IsCulled() const
 	{
-		return GetReflectionData() == nullptr;
+		return GetConstantBufferReflectionData() == nullptr;
 	}
 	uint8_t* GetShadowData();
 
@@ -447,7 +468,7 @@ public:
 protected:
 
 	bool bGlobalConstantBuffer;
-	eastl::vector_map<eastl::string, FMemberVariableContainer> MemberVariableMap;
+	eastl::vector<FMemberVariableContainer> MemberVariableMap;
 
 private:
 
@@ -486,6 +507,10 @@ public:
 	{
 		EA_ASSERT(ConstantBuffer);
 	}
+	FShaderParameterConstantBufferMemberVariableTemplate(const FShaderParameterConstantBufferMemberVariableTemplate&) = delete;
+	FShaderParameterConstantBufferMemberVariableTemplate(FShaderParameterConstantBufferMemberVariableTemplate&&) = delete;
+	FShaderParameterConstantBufferMemberVariableTemplate& operator=(const FShaderParameterConstantBufferMemberVariableTemplate&) = delete;
+	FShaderParameterConstantBufferMemberVariableTemplate& operator=(FShaderParameterConstantBufferMemberVariableTemplate&&) = delete;
 
 	void SetOffset(const uint32_t InOffset)
 	{
@@ -588,12 +613,12 @@ public:
 
 	void ApplyShaderParameter(FD3D12CommandContext& InCommandContext);
 	void ResetForReuse();
+	FD3D12ShaderInstance* Duplicate() const;
 
 protected:
 
 	FD3D12ShaderTemplate* const ShaderTemplate;
 	FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate;
-
 };
 
 template <typename ShaderType>
@@ -613,6 +638,8 @@ public:
 	}
 
 	typename ShaderType::FShaderParameterContainer Parameter;
+
+protected:
 
 private:
 
@@ -730,11 +757,11 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 		} \
 		__VA_ARGS__ \
 		virtual void OnFinishShaderCompile() { FD3D12ShaderTemplate::OnFinishShaderCompile(); ShaderParameter.Init(); } \
-		static eastl::shared_ptr<TD3D12ShaderInstance<F##ShaderName>> MakeShaderInstanceForCurrentFrame()  \
+		TD3D12ShaderInstance<F##ShaderName>* MakeTemplatedShaderInstanceForCurrentFrame()  \
 		{ \
-			EA_ASSERT_MSG(GCurrentRendererState == ERendererState::Draw, "\"MakeShaderInstanceForCurrentFrame\" function can be called in ERendererState::Draw"); \
+			EA_ASSERT_MSG(GCurrentRendererState != ERendererState::Initializing && GCurrentRendererState != ERendererState::Destroying, "\"MakeTemplatedShaderInstanceForCurrentFrame\" function can' be't be called in ERendererState::Initializing, Destroying"); \
 			EA_ASSERT(TemplateVariable->IsFinishToCompile()); \
-			eastl::shared_ptr<TD3D12ShaderInstance<F##ShaderName>> ShaderInstance; \
+			TD3D12ShaderInstance<F##ShaderName>* ShaderInstance; \
 			if (UsedShaderInstanceCounts[GCurrentBackbufferIndex] < ShaderInstancePools[GCurrentBackbufferIndex].size()) \
 			{ \
 				ShaderInstance = ShaderInstancePools[GCurrentBackbufferIndex][UsedShaderInstanceCounts[GCurrentBackbufferIndex]]; \
@@ -743,16 +770,17 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 			} \
 			else \
 			{ \
-				ShaderInstance = ShaderInstancePools[GCurrentBackbufferIndex].emplace_back(eastl::make_shared<TD3D12ShaderInstance<F##ShaderName>>(TemplateVariable)); \
+				ShaderInstance = ShaderInstancePools[GCurrentBackbufferIndex].emplace_back(new TD3D12ShaderInstance<F##ShaderName>(TemplateVariable)); \
 				ShaderInstance->Init(); \
 			} \
 			return ShaderInstance;	\
 		} \
+		virtual FD3D12ShaderInstance* MakeShaderInstanceForCurrentFrame() { return static_cast<FD3D12ShaderInstance*>(MakeTemplatedShaderInstanceForCurrentFrame()); } \
 		virtual void ResetUsedShaderInstanceCountForCurrentFrame() { UsedShaderInstanceCounts[GCurrentBackbufferIndex] = 0; } \
 		private: \
 		inline static F##ShaderName* TemplateVariable = nullptr; \
-		inline static eastl::array<uint32_t, GNumBackBufferCount> UsedShaderInstanceCounts{0}; \
-		inline static eastl::array<eastl::vector<eastl::shared_ptr<TD3D12ShaderInstance<F##ShaderName>>>, GNumBackBufferCount> ShaderInstancePools{}; \
+		eastl::array<uint32_t, GNumBackBufferCount> UsedShaderInstanceCounts{0}; \
+		eastl::array<eastl::vector<TD3D12ShaderInstance<F##ShaderName>*>, GNumBackBufferCount> ShaderInstancePools{}; \
 	}; \
 	static F##ShaderName ShaderName{ EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \
 		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags };

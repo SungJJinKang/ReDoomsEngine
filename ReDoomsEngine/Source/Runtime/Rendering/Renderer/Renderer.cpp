@@ -59,6 +59,16 @@ void FRenderer::Init()
 	FImguiHelperSingleton::GetInstance()->Init();
 
 	CurrentFrameCommandContext.StateCache.ResetToDefault();
+
+	RenderScene.RenderObjectList.Reserve(500);
+}
+
+void FRenderer::SceneSetup()
+{
+	SCOPED_CPU_TIMER(Renderer_SceneSetup)
+	SCOPED_MEMORY_TRACE(Renderer_SceneSetup)
+
+	GCurrentRendererState = ERendererState::SceneSetup;
 }
 
 void FRenderer::OnPreStartFrame()
@@ -191,6 +201,12 @@ void FRenderer::Destroy()
 
 void FRenderer::Tick()
 {
+	if (!bEverSceneSetup)
+	{
+		SceneSetup();
+		bEverSceneSetup = true;
+	}
+
 	OnPreStartFrame();
 	OnStartFrame();
 	{
@@ -221,4 +237,10 @@ FFrameResourceContainer& FRenderer::GetCurrentFrameResourceContainer()
 eastl::array<FFrameResourceContainer, GNumBackBufferCount>& FRenderer::GetFrameContainerList()
 {
 	return FrameContainerList;
+}
+
+void FRenderer::SetUpGlobalConstantBuffer()
+{
+	// @todo Setup ViewConstantBuffer for draws
+
 }

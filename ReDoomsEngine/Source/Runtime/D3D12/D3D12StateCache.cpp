@@ -112,8 +112,8 @@ void FD3D12StateCache::SetBoundShaderSet(const FBoundShaderSet& InBoundShaderSet
 
 void FD3D12StateCache::SetPSO(const FD3D12PSOInitializer& InPSOInitializer)
 {
-	EA_ASSERT(InPSOInitializer.CachedHash != 0);
-	if (CachedPSOInitializer.CachedHash != InPSOInitializer.CachedHash)
+	EA_ASSERT(InPSOInitializer.GetCachedHash() != 0);
+	if (CachedPSOInitializer.GetCachedHash() != InPSOInitializer.GetCachedHash())
 	{
 		CachedPSOInitializer = InPSOInitializer;
 		SetBoundShaderSet(InPSOInitializer.DrawDesc.BoundShaderSet);
@@ -423,7 +423,7 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 					if (bNeedSetGraphicsRootConstantBufferView)
 					{
 						EA_ASSERT(IsAligned(GPUVirtualAddress, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
-						EA_ASSERT(ShaderParameterConstantBuffer->GetReflectionData()->ResourceBindingDesc.BindPoint == CBVRegisterIndex);
+						EA_ASSERT(ShaderParameterConstantBuffer->GetConstantBufferReflectionData()->ResourceBindingDesc.BindPoint == CBVRegisterIndex);
 						InCommandList.GetD3DCommandList()->SetGraphicsRootConstantBufferView(BaseIndex + CBVRegisterIndex, GPUVirtualAddress);
 
 						CachedConstantBufferGPUVirtualAddressOfFrequencies[FrequencyIndex][CBVRegisterIndex] = GPUVirtualAddress;
@@ -479,7 +479,7 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipe
 
 	for (uint32_t ShaderFrequencyIndex = 0; ShaderFrequencyIndex < EShaderFrequency::NumShaderFrequency; ++ShaderFrequencyIndex)
 	{
-		eastl::shared_ptr<FD3D12ShaderInstance>& ShaderInstance = CachedPSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[ShaderFrequencyIndex];
+		FD3D12ShaderInstance*& ShaderInstance = CachedPSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[ShaderFrequencyIndex];
 		if (ShaderInstance)
 		{
 			ShaderInstance->ApplyShaderParameter(InCommandContext);
