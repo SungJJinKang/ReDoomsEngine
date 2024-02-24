@@ -1,13 +1,14 @@
 #include "D3D12Shader.h"
 
+#include "EASTL/algorithm.h"
+
 #include "ShaderCompilers/ShaderCompileHelper.h"
 #include "AssetManager.h"
 #include "D3D12RootSignature.h"
 #include "D3D12StateCache.h"
 #include "D3D12CommandContext.h"
 #include "ShaderCompilers/HLSLTypeHelper.h"
-
-#include "EASTL/algorithm.h"
+#include "RenderScene.h"
 
 FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList)
 	: ShaderInstanceList()
@@ -97,6 +98,8 @@ void FD3D12ShaderTemplate::OnFinishShaderCompile()
 void FD3D12ShaderTemplate::AddShaderParameter(FShaderParameterTemplate* InShaderParameter, const char* const InVariableName)
 {
 	ShaderParameterMap.emplace(InVariableName, InShaderParameter);
+
+	// Important : Never call virtual function of InShaderParameter at here because this function is called from constructor of InShaderParameter's base class
 }
 
 void FD3D12ShaderTemplate::AddShaderPreprocessorDefine(const FShaderPreprocessorDefine& InShaderPreprocessorDefine)
@@ -318,7 +321,7 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 	}
 
 	{
-		ShaderReflectionData.ResourceBindingNameList.resize(ShaderReflectionData.ShaderDesc.BoundResources);
+		ShaderReflectionData.ResourceBindingNameList.resize(ShaderReflectionData.ShaderDesc.BoundResources); // Important! : To prevent literal string name variable of resource desc from being dangling pointer
 		for (uint32_t BoundResourceIndex = 0; BoundResourceIndex < ShaderReflectionData.ShaderDesc.BoundResources; ++BoundResourceIndex)
 		{
 			D3D12_SHADER_INPUT_BIND_DESC ResourceBindingDesc;
@@ -349,7 +352,7 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 					FD3D12ConstantBufferReflectionData& ConstantBuffer = bIsGlobalCBuffer ? ShaderReflectionData.GlobalConstantBuffer : ShaderReflectionData.ConstantBufferList.emplace_back();
 					ConstantBuffer.bIsGlobalVariable = bIsGlobalCBuffer;
 					ConstantBuffer.Name = ShaderReflectionData.ResourceBindingNameList[BoundResourceIndex];
-					ConstantBufferDesc.Name = ConstantBuffer.Name.c_str();
+					ConstantBufferDesc.Name = ConstantBuffer.Name.data();
 					ConstantBuffer.ResourceBindingDesc = ResourceBindingDesc;
 					ConstantBuffer.Desc = ConstantBufferDesc;
 
@@ -540,6 +543,8 @@ void FD3D12ShaderInstance::ResetForReuse()
 
 FD3D12ShaderInstance* FD3D12ShaderInstance::Duplicate() const
 {
+	SCOPED_CPU_TIMER(FD3D12ShaderInstance_Duplicate)
+
 	FD3D12ShaderInstance* const DuplicatedShaderInstance = ShaderTemplate->MakeShaderInstanceForCurrentFrame();
 	DuplicatedShaderInstance->ShaderParameterContainerTemplate->CopyFrom(*ShaderParameterContainerTemplate);
 	return DuplicatedShaderInstance;
@@ -547,15 +552,31 @@ FD3D12ShaderInstance* FD3D12ShaderInstance::Duplicate() const
 
 void FShaderParameterContainerTemplate::Init()
 {
-	for (FShaderParameterTemplate* ShaderParameter : ShaderParameterList)
+	for(uint32_t ShaderParameterIndex = 0 ; ShaderParameterIndex < ShaderParameterList.size() ; ++ShaderParameterIndex)
 	{
+		FShaderParameterTemplate* ShaderParameter = ShaderParameterList[ShaderParameterIndex];
 		ShaderParameter->Init();
+
+		if (ShaderParameter->IsConstantBuffer())
+		{
+			FShaderParameterConstantBuffer* const ShaderParameterConstantBuffer = static_cast<FShaderParameterConstantBuffer*>(ShaderParameter);
+			if (!(ShaderParameterConstantBuffer->IsGlobalConstantBuffer()))
+			{
+				if (ShaderParameterConstantBuffer->GetTemplateShaderParameterConstantBuffer() == &MeshDrawConstantBuffer)
+				{
+					// If InShaderParameter is MeshDrawConstantBuffer, cache index
+					MeshDrawConstantBufferIndexInShaderParameterList = ShaderParameterIndex;
+				}
+			}
+		}
 	}
 }
 
 void FShaderParameterContainerTemplate::AddShaderParamter(FShaderParameterTemplate* const InShaderParameter)
 {
 	ShaderParameterList.emplace_back(InShaderParameter);
+
+	// Important : Never call virtual function of InShaderParameter at here because this function is called from constructor of InShaderParameter's base class
 }
 
 void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandContext& InCommandContext)
@@ -635,6 +656,31 @@ void FShaderParameterTemplate::ApplyResource(FD3D12CommandContext& InCommandCont
 
 }
 
+FShaderParameterConstantBuffer::FShaderParameterConstantBuffer() 
+	: 
+	FShaderParameterTemplate(),
+	bGlobalConstantBuffer(false),
+	MemberVariableMap(), 
+	ConstantBufferResource(),
+	ReflectionData(nullptr), 
+	ShadowData()
+{
+
+}
+
+FShaderParameterConstantBuffer::FShaderParameterConstantBuffer(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInGlobalConstantBuffer, const bool bInIsDynamic, const bool bInAllowCull) 
+	: 
+	FShaderParameterTemplate(InShaderParameter, InVariableName, bInAllowCull), 
+	bGlobalConstantBuffer(bInGlobalConstantBuffer),
+	MemberVariableMap(), 
+	ConstantBufferResource(),
+	ReflectionData(nullptr),
+	ShadowData(), 
+	bIsDynamic(bInIsDynamic)
+{
+
+}
+
 void FShaderParameterConstantBuffer::Init()
 {
 	FShaderParameterTemplate::Init();
@@ -666,7 +712,6 @@ void FShaderParameterConstantBuffer::AddMemberVariable(FShaderParameterConstantB
 			}) == MemberVariableMap.end()
 	);
 
-
 	FMemberVariableContainer MemberVariableContainer;
 	MemberVariableContainer.VariableName = InVariableName;
 	MemberVariableContainer.VariableSize = InVariableSize;
@@ -674,6 +719,8 @@ void FShaderParameterConstantBuffer::AddMemberVariable(FShaderParameterConstantB
 	MemberVariableContainer.VariableTypeInfo = &VariableTypeInfo;
 
 	MemberVariableMap.emplace_back(MemberVariableContainer);
+
+	// Important : Never call virtual function of InShaderParameterConstantBufferMemberVariable at here because this function is called from constructor of FShaderParameterConstantBufferMemberVariableTemplate's base class
 }
 
 void FShaderParameterConstantBuffer::CopyFrom(const FShaderParameterTemplate& InTemplate)
@@ -702,6 +749,8 @@ void FShaderParameterConstantBuffer::CopyFrom(const FShaderParameterTemplate& In
 
 	if (!IsCulled())
 	{
+		// @todo doesn't need to copy shadow data if non-dynamic constant buffer
+
 		ShadowData = InputTemplateConstantBuffer.ShadowData;
 		MakeDirty();
 	}

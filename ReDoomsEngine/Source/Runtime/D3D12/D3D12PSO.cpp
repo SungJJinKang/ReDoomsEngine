@@ -31,7 +31,8 @@ void FD3D12PSOInitializer::FinishCreating()
 FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     : PSOInitializer(InPSOInitializer)
 {
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC Desc{};
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC Desc;
+    MEM_ZERO(Desc);
   
     Desc.pRootSignature = PSOInitializer.DrawDesc.BoundShaderSet.GetRootSignature()->RootSignature.Get();
     Desc.VS.pShaderBytecode = PSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[EShaderFrequency::Vertex]->GetShaderTemplate()->GetShaderBlob()->GetBufferPointer();

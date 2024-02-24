@@ -30,7 +30,7 @@ FRenderObject FRenderScene::AddRenderObject(
 	RenderObjectList.TemplateDrawDescList.push_back(InDrawDesc);
 	RenderObjectList.MeshDrawArgumentList.push_back(InMeshDrawArgument);
 
-	FRenderObject NewRenderObject{ RenderObjectList,  RenderObjectList.VisibleFlagsList.size() - 1 };
+	FRenderObject NewRenderObject{ &RenderObjectList,  RenderObjectList.ModelMatrixDirtyList.size() - 1 };
 	return NewRenderObject;
 }
 
@@ -41,11 +41,14 @@ void FRenderScene::PrepareToCreateMeshDrawList()
 
 eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InPass)
 {
+	SCOPED_CPU_TIMER(FRenderScene_CreateMeshDrawListForPass)
+	SCOPED_MEMORY_TRACE(FRenderScene_CreateMeshDrawListForPass)
+
 	eastl::vector<FMeshDraw> MeshDrawList;
 
 	FPass& Pass = PerPassData[static_cast<uint32_t>(InPass)];
 
-	const uint32_t ObjectCount = RenderObjectList.VisibleFlagsList.size();
+	const uint32_t ObjectCount = RenderObjectList.VisibleFlagsList[static_cast<uint32_t>(InPass)].size();
 	MeshDrawList.reserve(ObjectCount);
 
 	FD3D12PSOInitializer PSO;
@@ -72,7 +75,10 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 				DuplicatedShaderInstanceList[ShaderInstanceIndex] = TemplateShaderInstance->Duplicate();
 			}
 		}
+		SetUpShaderInstances(ObjectIndex, DuplicatedShaderInstanceList);
+
 		PSO.DrawDesc.BoundShaderSet = FBoundShaderSet{ DuplicatedShaderInstanceList };
+		PSO.FinishCreating();
 
 		MeshDrawList.emplace_back(FMeshDraw{ PSO , RenderObjectList.VertexBufferViewList[ObjectIndex], RenderObjectList.IndexBufferViewList[ObjectIndex], RenderObjectList.MeshDrawArgumentList[ObjectIndex]});
 	}
@@ -81,87 +87,115 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 	return MeshDrawList;
 }
 
+void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList)
+{
+	for (uint32_t ShaderInstanceIndex = 0; ShaderInstanceIndex < EShaderFrequency::NumShaderFrequency; ++ShaderInstanceIndex)
+	{
+		if (FD3D12ShaderInstance* ShaderInstance = InShaderInstanceList[ShaderInstanceIndex])
+		{
+			EA_ASSERT(!(ShaderInstance->bIsTemplateInstance));
+
+			if (ShaderInstanceIndex == EShaderFrequency::Vertex)
+			{
+				FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate = ShaderInstance->GetShaderParameterContainer();
+				const int32_t MeshDrawConstantBufferIndex = ShaderParameterContainerTemplate->GetMeshDrawConstantBufferIndex();
+				eastl::vector<FShaderParameterTemplate*>& ShaderParameterList = ShaderParameterContainerTemplate->GetShaderParameterList();
+				EA_ASSERT_FORMATTED(
+					MeshDrawConstantBufferIndex >= 0 && MeshDrawConstantBufferIndex < ShaderParameterList.size(),
+					("Invalid MeshDrawConstantBufferIndex. You need to add ConstantBuffer \"%s\" to Shader \"%s\"", ANSI_TO_WCHAR(MeshDrawConstantBuffer.GetVariableName()), ShaderInstance->GetShaderTemplate()->GetShaderDeclaration().ShaderName)
+				);
+
+				static_cast<FConstantBufferTypeMeshDrawConstantBuffer*>(ShaderParameterList[MeshDrawConstantBufferIndex])->MemberVariables.ModelMatrix =
+					RenderObjectList.CachedModelMatrixList[InObjectIndex];
+			}
+		}
+	}
+}
+
 void FRenderObject::SetVisible(const bool bInVisible)
 {
 	for (uint32_t PassIndex = 0; PassIndex < static_cast<uint32_t>(EPass::Num); ++PassIndex)
 	{
-		RenderObjectList.VisibleFlagsList[PassIndex][ObjectIndex] = bInVisible;
+		RenderObjectList->VisibleFlagsList[PassIndex][ObjectIndex] = bInVisible;
 	}
 }
 
 void FRenderObject::SetVisible(const EPass InPass, const bool bInVisible)
 {
-	RenderObjectList.VisibleFlagsList[static_cast<uint32_t>(InPass)][ObjectIndex] = bInVisible;
+	RenderObjectList->VisibleFlagsList[static_cast<uint32_t>(InPass)][ObjectIndex] = bInVisible;
 }
 
 const DirectX::BoundingBox& FRenderObject::GetBoundingBox() const
 {
-	return RenderObjectList.BoundingBoxList[ObjectIndex];
+	return RenderObjectList->BoundingBoxList[ObjectIndex];
 }
 
 void FRenderObject::SetBoundingBox(const BoundingBox& InBoundingBox)
 {
-	RenderObjectList.BoundingBoxList[ObjectIndex] = InBoundingBox;
-	RenderObjectList.PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z = InBoundingBox.LengthOfCenterToCorner();
+	RenderObjectList->BoundingBoxList[ObjectIndex] = InBoundingBox;
+	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z = InBoundingBox.LengthOfCenterToCorner();
 }
 
 const DirectX::SimpleMath::Vector3& FRenderObject::GetPosition() const
 {
-	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(RenderObjectList.PositionAndLocalBoundingSphereRadiusList[ObjectIndex]);
+	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex]);
 }
 
 void FRenderObject::SetPosition(const Vector3& InPosition)
 {
-	RenderObjectList.PositionAndLocalBoundingSphereRadiusList[ObjectIndex].x = InPosition.x;
-	RenderObjectList.PositionAndLocalBoundingSphereRadiusList[ObjectIndex].y = InPosition.y;
-	RenderObjectList.PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z = InPosition.z;
+	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].x = InPosition.x;
+	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].y = InPosition.y;
+	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z = InPosition.z;
 
-	RenderObjectList.ModelMatrixDirtyList.set(ObjectIndex, true);
+	RenderObjectList->ModelMatrixDirtyList.set(ObjectIndex, true);
 }
 
 float FRenderObject::GetLocalBoundingSphereRadius() const
 {
-	return RenderObjectList.PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z;
+	return RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z;
 }
 
 const DirectX::SimpleMath::Quaternion& FRenderObject::GetRotation() const
 {
-	return RenderObjectList.RotationList[ObjectIndex];
+	return RenderObjectList->RotationList[ObjectIndex];
 }
 
 void FRenderObject::SetRotation(const Quaternion& InQuaternion)
 {
-	RenderObjectList.RotationList[ObjectIndex] = InQuaternion;
+	RenderObjectList->RotationList[ObjectIndex] = InQuaternion;
 
-	RenderObjectList.ModelMatrixDirtyList.set(ObjectIndex, true);
+	RenderObjectList->ModelMatrixDirtyList.set(ObjectIndex, true);
 }
 
 const DirectX::SimpleMath::Vector3& FRenderObject::GetScale() const
 {
-	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(RenderObjectList.ScaleAndDrawDistanceList[ObjectIndex]);
+	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex]);
 }
 
 void FRenderObject::SetScale(const Vector3& InScale)
 {
-	RenderObjectList.ScaleAndDrawDistanceList[ObjectIndex].x = InScale.x;
-	RenderObjectList.ScaleAndDrawDistanceList[ObjectIndex].y = InScale.y;
-	RenderObjectList.ScaleAndDrawDistanceList[ObjectIndex].z = InScale.z;
+	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].x = InScale.x;
+	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].y = InScale.y;
+	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].z = InScale.z;
 
-	RenderObjectList.ModelMatrixDirtyList.set(ObjectIndex, true);
+	RenderObjectList->ModelMatrixDirtyList.set(ObjectIndex, true);
 }
 
 float FRenderObject::GetDrawDistance() const
 {
-	return RenderObjectList.ScaleAndDrawDistanceList[ObjectIndex].w;
+	return RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].w;
 }
 
 void FRenderObject::SetDrawDistance(const float InDrawDistance)
 {
-	RenderObjectList.ScaleAndDrawDistanceList[ObjectIndex].w = InDrawDistance;
+	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].w = InDrawDistance;
 }
 
 void FRenderObjectList::CacheModelMatrixs()
 {
+	SCOPED_CPU_TIMER(FRenderObjectList_CacheModelMatrixs)
+	SCOPED_MEMORY_TRACE(FRenderObjectList_CacheModelMatrixs)
+
 	// todo : multithread?
 	for (uint32_t ObjectIndex = 0; ObjectIndex < PositionAndLocalBoundingSphereRadiusList.size(); ++ObjectIndex)
 	{
