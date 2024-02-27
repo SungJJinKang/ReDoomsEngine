@@ -14,7 +14,6 @@ FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderInstance*, EShad
 	: ShaderInstanceList()
 {
 	Set(InShaderList);
-	CacheHash();
 }
 
 void FBoundShaderSet::Set(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList)
@@ -25,12 +24,13 @@ void FBoundShaderSet::Set(const eastl::array<FD3D12ShaderInstance*, EShaderFrequ
 		if (ShaderInstanceList[ShaderIndex])
 		{
 			ShaderTemplateList[ShaderIndex] = ShaderInstanceList[ShaderIndex]->GetShaderTemplate();
-			CachedHash = CombineHash(CachedHash, ShaderInstanceList[ShaderIndex]->GetShaderTemplate()->GetShaderHash());
 		}
 	}
 
 	CacheHash();
+	#if EA_ASSERT_ENABLED
 	Validate();
+	#endif
 }
 
 void FBoundShaderSet::CacheHash()
