@@ -68,6 +68,7 @@ int main(int argc, char** argv)
 		CPUTimerEndFrame();
 
 		++GCurrentFrameIndex;
+		ResetD3D12GlobalVariablesForNewFrame();
 	}
 
 	{
