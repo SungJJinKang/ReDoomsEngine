@@ -222,6 +222,9 @@
     <ClCompile Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Runtime\Utils\ConsoleVariable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
@@ -1359,6 +1362,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Utils\ConsoleVariable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

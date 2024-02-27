@@ -2,6 +2,8 @@
 
 #include "D3D12CommandContext.h"
 
+static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
+
 FRenderObject FRenderScene::AddRenderObject(
 	const bool bInVisible,
 	const BoundingBox& InLocalBoundingBox, 
@@ -31,6 +33,12 @@ FRenderObject FRenderScene::AddRenderObject(
 	RenderObjectList.MeshDrawArgumentList.push_back(InMeshDrawArgument);
 
 	FRenderObject NewRenderObject{ &RenderObjectList,  RenderObjectList.ModelMatrixDirtyList.size() - 1 };
+
+	if (GCacheMeshDraw)
+	{
+
+	}
+
 	return NewRenderObject;
 }
 
