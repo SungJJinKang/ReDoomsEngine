@@ -36,7 +36,6 @@ void FImguiHelper::NewFrame()
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow(); // Show demo window! :)
 
 	for (eastl::function<void()>& imguiDrawEvent : ImguiDrawEventList)
 	{
@@ -46,6 +45,8 @@ void FImguiHelper::NewFrame()
 
 void FImguiHelper::EndDraw(FD3D12CommandContext& InCommandContext)
 {
+	SCOPED_GPU_TIMER_DIRECT_QUEUE(InCommandContext, Imgui)
+
 	// Rendering
 	// (Your code clears your framebuffer, renders your other stuff etc.)
 	ImGui::Render();

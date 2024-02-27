@@ -6,43 +6,64 @@
 
 class FD3D12RootSignature;
 
-struct FD3D12PSOInitializer
+class FD3D12PSOInitializer
 {
-	FBoundShaderSet BoundShaderSet;
+public:
+    /// <summary>
+    /// This struct should contains states changed frequently per draw
+    /// </summary>
+    struct FDrawDesc
+    {
+        FBoundShaderSet BoundShaderSet;
 
-    struct FDesc
+        struct FPSODesc
+        {
+            D3D12_INPUT_LAYOUT_DESC InputLayout;
+            CD3DX12_BLEND_DESC BlendState;
+            CD3DX12_RASTERIZER_DESC RasterizerState;
+            CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
+            D3D12_CACHED_PIPELINE_STATE CachedPSO;
+            D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
+        } PSODesc;
+    } DrawDesc;
+
+    /// <summary>
+    /// This struct should contains states never changed during a pass
+    /// </summary>
+    struct FPassDesc
     {
         D3D12_STREAM_OUTPUT_DESC StreamOutput;
-        D3D12_BLEND_DESC BlendState;
         UINT SampleMask;
-        D3D12_RASTERIZER_DESC RasterizerState;
-        D3D12_DEPTH_STENCIL_DESC DepthStencilState;
-        D3D12_INPUT_LAYOUT_DESC InputLayout;
         D3D12_INDEX_BUFFER_STRIP_CUT_VALUE IBStripCutValue;
-        D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
         UINT NumRenderTargets;
         DXGI_FORMAT RTVFormats[8];
         DXGI_FORMAT DSVFormat;
         DXGI_SAMPLE_DESC SampleDesc;
         UINT NodeMask;
-        D3D12_CACHED_PIPELINE_STATE CachedPSO;
         D3D12_PIPELINE_STATE_FLAGS Flags;
-    } Desc;
+    } PassDesc;
+
+    inline uint64 GetCachedHash() const
+    {
+        EA_ASSERT(IsValid());
+        return CachedHash;
+    }
+    bool IsValid() const;
+    //void Reset();
+    void FinishCreating();
+
+private:
 
 	uint64 CachedHash;
-
-    bool IsValid() const;
-    void Reset();
-    void FinishCreating();
 };
 
 inline bool operator==(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)
 {
-    return lhs.CachedHash == rhs.CachedHash;
+    return (lhs.GetCachedHash() == rhs.GetCachedHash());
 }
 inline bool operator!=(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)
 {
-    return lhs.CachedHash != rhs.CachedHash;
+    return (lhs.GetCachedHash() != rhs.GetCachedHash());
 }
 
 struct FD3D12PSO
@@ -58,14 +79,14 @@ namespace eastl
 {
     template <> struct hash<FD3D12PSOInitializer>
     {
-        size_t operator()(FD3D12PSOInitializer val) const { EA_ASSERT(val.CachedHash != 0); return static_cast<size_t>(val.CachedHash); }
+        size_t operator()(FD3D12PSOInitializer val) const { EA_ASSERT(val.GetCachedHash() != 0); return static_cast<size_t>(val.GetCachedHash()); }
     };
 
     template <> struct less<FD3D12PSOInitializer>
     {
-        EA_CPP14_CONSTEXPR bool operator()(const FD3D12PSOInitializer& a, const FD3D12PSOInitializer& b) const
+        bool operator()(const FD3D12PSOInitializer& a, const FD3D12PSOInitializer& b) const
         {
-            return a.CachedHash < b.CachedHash;
+            return a.GetCachedHash() < b.GetCachedHash();
         }
     };
 }

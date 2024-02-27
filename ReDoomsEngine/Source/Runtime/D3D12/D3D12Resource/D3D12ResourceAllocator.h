@@ -19,20 +19,44 @@ public:
 	void Init();
 
 	eastl::shared_ptr<FD3D12Texture2DResource> AllocateTexture2D(
+		const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties,
+		CD3DX12_RESOURCE_DESC InD3DResourceDesc);
+
+	eastl::shared_ptr<FD3D12Texture2DResource> AllocateTexture2D(
 		FD3D12CommandContext& InCommandContext,
 		eastl::vector<eastl::unique_ptr<FD3D12SubresourceContainer>>&& SubresourceDataList,
 		const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties,
 		CD3DX12_RESOURCE_DESC InD3DResourceDesc, const eastl::optional<D3D12_RESOURCE_STATES>& InResourceStateAfterUpload);
+
+	eastl::shared_ptr<FD3D12Texture2DResource> AllocateRenderTarget(
+		const uint32_t InWidth,
+		const uint32_t InHeight
+	);
+	eastl::shared_ptr<FD3D12Texture2DResource> AllocateDepthTarget(
+		const uint32_t InWidth,
+		const uint32_t InHeight,
+		const float InDepthClearValue = 1.0f,
+		const DXGI_FORMAT InTextureFormat = DXGI_FORMAT_R16_TYPELESS,
+		const DXGI_FORMAT InClearFormat = DXGI_FORMAT_D16_UNORM
+	);
+	eastl::shared_ptr<FD3D12Texture2DResource> AllocateDepthStencilTarget(
+		const uint32_t InWidth,
+		const uint32_t InHeight,
+		const float InDepthClearValue = 1.0f,
+		const float InStencilClearValue = 0.0f,
+		const DXGI_FORMAT InTextureFormat = DXGI_FORMAT_R32G8X24_TYPELESS,
+		const DXGI_FORMAT InClearFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT
+	);
 
 	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
 	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
 
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> AllocateStaticVertexBuffer(
 		FD3D12CommandContext& InCommandContext,
-		const uint8_t* const Data, const size_t InSizem, const uint32_t InDefaultStrideInBytes);
+		const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes, eastl::shared_ptr<Assimp::Importer> Importer = {});
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> AllocateStaticIndexBuffer(
 		FD3D12CommandContext& InCommandContext,
-		const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes);
+		const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes, eastl::shared_ptr<Assimp::Importer> Importer = {});
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> AllocateStaticVertexBuffer(
 		FD3D12CommandContext& InCommandContext,
 		eastl::unique_ptr<FD3D12SubresourceContainer>&& SubresourceDataList, const uint32_t InDefaultStrideInBytes);

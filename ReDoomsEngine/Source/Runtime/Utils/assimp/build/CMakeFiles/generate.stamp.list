@@ -1,0 +1,5 @@
+$(SolutionDir)Source/Runtime/Utils/assimp/build/CMakeFiles/generate.stamp
+$(SolutionDir)Source/Runtime/Utils/assimp/build/contrib/zlib/CMakeFiles/generate.stamp
+$(SolutionDir)Source/Runtime/Utils/assimp/build/code/CMakeFiles/generate.stamp
+$(SolutionDir)Source/Runtime/Utils/assimp/build/test/CMakeFiles/generate.stamp
+$(SolutionDir)Source/Runtime/Utils/assimp/build/test/headercheck/CMakeFiles/generate.stamp

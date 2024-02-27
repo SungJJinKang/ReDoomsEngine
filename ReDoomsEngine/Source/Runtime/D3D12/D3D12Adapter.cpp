@@ -48,6 +48,7 @@ void FD3D12Adapter::Init()
                 // actual device yet.
                 if (SUCCEEDED(D3D12CreateDevice(LocalAdapter.Get(), D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr)))
                 {
+                    RD_LOG(ELogVerbosity::Log, EA_WCHAR("D3D12 Device is created. Adapter : %s"), AdapterDesc.Description);
                     break;
                 }
             }

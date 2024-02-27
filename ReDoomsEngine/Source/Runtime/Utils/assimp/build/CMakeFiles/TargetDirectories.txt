@@ -1,0 +1,13 @@
+$(SolutionDir)Source/Runtime/Utils/assimp/build/CMakeFiles/uninstall.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/CMakeFiles/UpdateAssimpLibsDebugSymbolsAndDLLs.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/CMakeFiles/INSTALL.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/CMakeFiles/ALL_BUILD.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/CMakeFiles/ZERO_CHECK.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/contrib/zlib/CMakeFiles/zlibstatic.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/contrib/zlib/CMakeFiles/INSTALL.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/contrib/zlib/CMakeFiles/ALL_BUILD.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/code/CMakeFiles/assimp.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/code/CMakeFiles/INSTALL.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/test/CMakeFiles/unit.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/test/CMakeFiles/INSTALL.dir
+$(SolutionDir)Source/Runtime/Utils/assimp/build/test/headercheck/CMakeFiles/INSTALL.dir

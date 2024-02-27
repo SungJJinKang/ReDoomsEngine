@@ -14,7 +14,7 @@ static uint32_t GetNumDescriptorsForOfflineHeap(const D3D12_DESCRIPTOR_HEAP_TYPE
         EA_ASSERT_MSG(false, "Only static sampler is supported");
         return 0;
     }
-    default: EA_ASSUME(0);
+    default: RD_ASSUME(0);
     }
 }
 

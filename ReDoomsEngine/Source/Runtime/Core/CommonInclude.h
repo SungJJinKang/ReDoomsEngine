@@ -23,6 +23,7 @@ using Microsoft::WRL::ComPtr;
 #include "EASTL/array.h"
 #include "EASTL/string.h"
 #include "EASTL/fixed_string.h"
+#include "EASTL/fixed_vector.h"
 #include "EASTL/vector.h"
 #include "EASTL/vector_map.h"
 #include "EASTL/vector_set.h"
@@ -40,7 +41,9 @@ using Microsoft::WRL::ComPtr;
 #include "DirectXCollision.h"
 #include "DirectXColors.h"
 #include "DirectXPackedVector.h"
+#include "Math/SimpleMath.h"
 #include "Math/MathUtils.h"
+using namespace DirectX::SimpleMath;
 using namespace DirectX;
 
 #include "Log.h"

@@ -3,9 +3,18 @@
 #include "D3D12CommandQueue.h"
 #include "D3D12Window.h"
 #include "D3D12Resource/D3D12Resource.h"
-#include "Renderer.h"
+#include "Renderer/Renderer.h"
 
-FD3D12Swapchain::FD3D12Swapchain(FD3D12CommandQueue* const InCommandQueue, FD3D12Window* const InWindow, const uint32_t InNumBuffer, const uint32_t InWidth, const uint32_t InHeight, const DXGI_FORMAT InFormat)
+FD3D12Swapchain::FD3D12Swapchain(
+    FD3D12CommandQueue* const InCommandQueue, 
+    FD3D12Window* const InWindow, 
+    const uint32_t InNumBuffer, 
+    const uint32_t InWidth,
+    const uint32_t InHeight,
+    const DXGI_FORMAT InFormat,
+    const uint32_t InSampleCount,
+    const uint32_t InSampleQuality
+)
     :
     D3DSwapchain(),
     CommandQueue(InCommandQueue),
@@ -15,7 +24,9 @@ FD3D12Swapchain::FD3D12Swapchain(FD3D12CommandQueue* const InCommandQueue, FD3D1
     Height(InHeight),
     ResizedWidth(InWidth),
     ResizedHeight(InHeight),
-    Format(InFormat)
+    Format(InFormat),
+    SampleCount(InSampleCount),
+    SampleQuality(InSampleQuality)
 {
 }
 
@@ -31,8 +42,8 @@ void FD3D12Swapchain::Init()
         Desc.Format = Format;
         Desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
         Desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-        Desc.SampleDesc.Count = 1;
-        Desc.SampleDesc.Quality = 0;
+        Desc.SampleDesc.Count = SampleCount;
+        Desc.SampleDesc.Quality = SampleQuality;
 
         ComPtr<IDXGISwapChain1> TempD3DSwapchain;
 
@@ -67,7 +78,9 @@ void FD3D12Swapchain::CreateRenderTargets()
 		ComPtr<ID3D12Resource> SwapChainBuffer{};
 
 		VERIFYD3D12RESULT(D3DSwapchain->GetBuffer(BufferIndex, IID_PPV_ARGS(&SwapChainBuffer)));
-		RenderTargets.emplace_back(eastl::make_shared<FD3D12RenderTargetResource>(SwapChainBuffer))->InitResource();
+		RenderTargets.emplace_back(
+            eastl::make_shared<FD3D12Texture2DResource>(SwapChainBuffer, Width, Height, Format, SampleCount, SampleQuality)
+        )->InitResource();
 	}
 }
 
@@ -116,6 +129,7 @@ void FD3D12Swapchain::Present(const int32_t SyncInterval)
 {
     SCOPED_CPU_TIMER(Swapchain_Present)
     VERIFYD3D12RESULT(GetD3DSwapchain()->Present(SyncInterval, 0));
+    UpdateCurrentBackbufferIndex();
 }
 
 void FD3D12Swapchain::UpdateCurrentBackbufferIndex()
