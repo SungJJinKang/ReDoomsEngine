@@ -44,21 +44,6 @@ void D3D12TestRenderer::Init()
 	FRenderer::Init();
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
-
-	DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
-
-	{
-		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
-		MEM_ZERO(BasePassPSODesc);
-		BasePassPSODesc.SampleMask = UINT_MAX;
-		BasePassPSODesc.NumRenderTargets = 1;
-		BasePassPSODesc.RTVFormats[0] = SwapChain->GetFormat();
-		BasePassPSODesc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
-		BasePassPSODesc.SampleDesc.Count = 1;
-
-		RenderScene.PerPassData[static_cast<uint32_t>(EPass::BasePass)].PassPSODesc = BasePassPSODesc;
-	}
-
 }
 
 
@@ -130,9 +115,9 @@ void D3D12TestRenderer::SceneSetup()
 	MeshDrawArgument.BaseVertexLocation = 0;
 	MeshDrawArgument.StartInstanceLocation = 0;
 
-	for (int32_t IndexA = -10; IndexA < 10; ++IndexA)
+	for (int32_t IndexA = -20; IndexA < 20; ++IndexA)
 	{
-		for (int32_t IndexB = -10; IndexB < 10; ++IndexB)
+		for (int32_t IndexB = -20; IndexB < 20; ++IndexB)
 		{
 			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
@@ -158,6 +143,7 @@ void D3D12TestRenderer::SceneSetup()
 				DroneDrawDesc,
 				MeshDrawArgument
 			);
+			DroneList.emplace_back(FDrone{ RenderObject,OrigianlPos });
 		}
 	}
 }
@@ -168,6 +154,22 @@ void D3D12TestRenderer::OnStartFrame()
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
+	if (DepthStencilTarget == nullptr ||
+		((DepthStencilTarget->GetDesc().Width != SwapChain->GetWidth()) || (DepthStencilTarget->GetDesc().Height != SwapChain->GetHeight()))
+		)
+	{
+		DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
+
+		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
+		MEM_ZERO(BasePassPSODesc);
+		BasePassPSODesc.SampleMask = UINT_MAX;
+		BasePassPSODesc.NumRenderTargets = 1;
+		BasePassPSODesc.RTVFormats[0] = SwapChain->GetFormat();
+		BasePassPSODesc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
+		BasePassPSODesc.SampleDesc.Count = 1;
+
+		RenderScene.PerPassData[static_cast<uint32_t>(EPass::BasePass)].PassPSODesc = BasePassPSODesc;
+	}
 
 	{
 		float Speed = GTimeDelta * 3.0f;
@@ -260,14 +262,14 @@ bool D3D12TestRenderer::Draw()
 	);
 
 	Offset += GTimeDelta;
-	if (Offset > 2.0f)
+	if (Offset > 5.0f)
 	{
-		Offset = -2.0f;
+		Offset = -5.0f;
 	}
 
 	for (FDrone& Drone : DroneList)
 	{
-		Drone.RenderObject.SetPosition(Drone.OriginalPos + Vector3{ Offset * 1.0f, 0.0f, 0.0f });
+		Drone.RenderObject.SetPosition(Drone.OriginalPos + Vector3{ Offset * 80.0f, 0.0f, 0.0f });
 	}
 
 	RenderScene.PrepareToCreateMeshDrawList();
@@ -284,171 +286,6 @@ bool D3D12TestRenderer::Draw()
 			}
 		}
 	}
-// 
-// 
-// 	//Test Code
-// 
-// 	{
-// 		auto TestVSInstance = FTestVS::MakeTemplatedShaderInstanceForCurrentFrame();
-// 		auto TestPSInstance = FTestPS::MakeTemplatedShaderInstanceForCurrentFrame();
-// 
-// 		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
-// 		ShaderList[EShaderFrequency::Vertex] = TestVSInstance;
-// 		ShaderList[EShaderFrequency::Pixel] = TestPSInstance;
-// 
-// 		{
-// 			FBoundShaderSet BoundShaderSet{ ShaderList };
-// 			CurrentFrameCommandContext.StateCache.SetBoundShaderSet(BoundShaderSet);
-// 		}
-// 
-// 		// Define the vertex input layout.
-// 		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
-// 		{
-// 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-// 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-// 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-// 		};
-// 		{
-// 			D3D12_INPUT_LAYOUT_DESC InputDesc{ inputElementDescs, _countof(inputElementDescs) };
-// 			CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
-// 
-// 		}
-// 
-// 		TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ 0.4f };
-// 		TestVSInstance->Parameter.GlobalConstantBuffer->AddOffset = true;
-// 		TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 10.0f };
-// 		TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 11.0f };
-// 
-// 		TestPSInstance->Parameter.TestTexture = TestTexture->GetSRV();
-// 		TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset1 = XMVECTOR{ 12.0f };
-// 		TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 13.0f };
-// 		TestPSInstance->Parameter.GlobalConstantBuffer->ColorOffset3 = XMVECTOR{ 14.0f };
-// 
-// 		D3D12_VERTEX_BUFFER_VIEW VertexBufferView = VertexBuffer->GetVertexBufferView();
-// 		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList({ VertexBufferView });
-// 
-// 		CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
-// 
-// 		TestVSInstance->Parameter.VertexOffset->Offset = XMVECTOR{ -0.4f };
-// 		TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
-// 
-// 		CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
-// 		TestVSInstance->Parameter.GlobalConstantBuffer->ColorOffset2 = XMVECTOR{ 15.0f };
-// 
-// 		XMVECTOR OriginalOffset = TestVSInstance->Parameter.VertexOffset->Offset;
-// 
-// 		for (uint32_t i = 0; i < 100; ++i)
-// 		{
-// 			if (i >= 50)
-// 			{
-// 				TestPSInstance->Parameter.TestTexture = SmallTexture->GetSRV();
-// 				TestVSInstance->Parameter.VertexOffset->Offset = OriginalOffset + XMVECTOR{ 0.0f, 0.5f, 0.0f, 0.0f } + XMVECTOR{ Offset, 0.0f, 0.0f, 0.0f } + XMVECTOR{ 0.1f, 0.0f, 0.0f, 0.0f } *(i - 50);
-// 			}
-// 			else
-// 			{
-// 				TestVSInstance->Parameter.VertexOffset->Offset = OriginalOffset + XMVECTOR{ Offset, 0.0f, 0.0f, 0.0f } + XMVECTOR{ 0.1f, 0.0f, 0.0f, 0.0f }*i;
-// 			}
-// 			CurrentFrameCommandContext.DrawInstanced(3, 1, 0, 0);
-// 		}
-// 	}
-// 
-// 	{
-// 		auto MeshDrawVSInstance = FMeshDrawVS::MakeTemplatedShaderInstanceForCurrentFrame();
-// 		auto MeshDrawPSInstance = FMeshDrawPS::MakeTemplatedShaderInstanceForCurrentFrame();
-// 
-// 		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
-// 		ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
-// 		ShaderList[EShaderFrequency::Pixel] = MeshDrawPSInstance;
-// 
-// 		{
-// 			FBoundShaderSet BoundShaderSet{ ShaderList };
-// 			CurrentFrameCommandContext.StateCache.SetBoundShaderSet(BoundShaderSet);
-// 			D3D12_INPUT_LAYOUT_DESC InputDesc{ FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
-// 			CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
-// 		}
-// 		
-// 		float Speed = GTimeDelta * 10.0f;
-// 
-// 		if (FD3D12Window::LeftArrowKeyPressed)
-// 		{
-// 			View.Transform.RotateYaw(Speed, ESpace::Self);
-// 		}
-// 		else if (FD3D12Window::RIghtArrowKeyPressed)
-// 		{
-// 			View.Transform.RotateYaw(-Speed, ESpace::Self);
-// 		}
-// 		
-// 		if (FD3D12Window::UpArrowKeyPressed)
-// 		{
-// 			View.Transform.RotatePitch(Speed, ESpace::Self);
-// 		}
-// 		else if (FD3D12Window::DownArrowKeyPressed)
-// 		{
-// 			View.Transform.RotatePitch(-Speed, ESpace::Self);
-// 		}
-// 
-// 		if (FD3D12Window::WKeyPressed)
-// 		{
-// 			View.Transform.Translate(Vector3{0.0f, 0.0f, -1.0f} * Speed, ESpace::Self);
-// 		}
-// 		else if (FD3D12Window::SKeyPressed)
-// 		{
-// 			View.Transform.Translate(Vector3{ 0.0f, 0.0f, 1.0f } *Speed, ESpace::Self);
-// 		}
-// 
-// 		if (FD3D12Window::AKeyPressed)
-// 		{
-// 			View.Transform.Translate(Vector3{ -1.0f , 0.0f, 0.0f} *Speed, ESpace::Self);
-// 		}
-// 		else if (FD3D12Window::DKeyPressed)
-// 		{
-// 			View.Transform.Translate(Vector3{ 1.0f, 0.0f, 0.0f} *Speed, ESpace::Self);
-// 		}
-// 
-// 		Matrix ModelMatrix = Matrix::CreateTranslation(0.0f, -200.0f, -5.0f) * Matrix::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f) * Matrix::CreateScale(0.05f, 0.05f, 0.05f);
-// 
-// 		Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
-// 		Matrix ViewMat = View.Get3DViewMatrices();
-// 		Matrix ProjMat = View.GetPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
-// 
-// 		MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
-// 		MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewMatrix = ViewMat;
-// 		MeshDrawVSInstance->Parameter.ViewConstantBuffer->ProjectionMatrix = ProjMat;
-// 		MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
-// 		MeshDrawPSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
-// 		MeshDrawPSInstance->Parameter.TriangleColorTexture = DroneMesh->Material[0].DiffuseTexture->GetSRV();
-// 
-// 		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(DroneMesh->MeshList[0].VertexBufferViewList);
-// 		CurrentFrameCommandContext.StateCache.SetIndexBufferView(DroneMesh->MeshList[0].IndexBufferView);
-// 
-
-// 
-// 		CurrentFrameCommandContext.DrawIndexedInstanced(DroneMesh->MeshList[0].IndexCount, 1, 0, 0, 0);
-// 		
-// 		for (int32_t IndexA = -10; IndexA < 10; ++IndexA)
-// 		{
-// 			for (uint32_t IndexB = 1; IndexB < 10; ++IndexB)
-// 			{
-// 				ModelMatrix = Matrix::CreateTranslation(300.0f * IndexB, 200.0f * IndexA, -5.0f) * Matrix::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f) * Matrix::CreateScale(0.05f, 0.05f, 0.05f);
-// 				MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
-// 				CurrentFrameCommandContext.DrawIndexedInstanced(DroneMesh->MeshList[0].IndexCount, 1, 0, 0, 0);
-// 			}
-// 
-// 			for (uint32_t IndexB = 1; IndexB < 10; ++IndexB)
-// 			{
-// 				CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(DroneMesh->MeshList[0].VertexBufferViewList);
-// 				CurrentFrameCommandContext.StateCache.SetIndexBufferView(DroneMesh->MeshList[0].IndexBufferView);
-// 				CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
-// 				CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
-// 				ModelMatrix = Matrix::CreateTranslation(-300.0f * IndexB, 200.0f * IndexA, -5.0f) * Matrix::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f) * Matrix::CreateScale(0.05f, 0.05f, 0.05f);
-// 				MeshDrawVSInstance->Parameter.GlobalConstantBuffer->ModelMatrix = ModelMatrix;
-// 				CurrentFrameCommandContext.DrawIndexedInstanced(DroneMesh->MeshList[0].IndexCount, 1, 0, 0, 0);
-// 			}
-// 		}
-// 	}
-
-
-
 	return true;
 }
 

@@ -2,6 +2,8 @@
 
 #include "D3D12CommandContext.h"
 
+static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
+
 FRenderObject FRenderScene::AddRenderObject(
 	const bool bInVisible,
 	const BoundingBox& InLocalBoundingBox, 
@@ -31,6 +33,12 @@ FRenderObject FRenderScene::AddRenderObject(
 	RenderObjectList.MeshDrawArgumentList.push_back(InMeshDrawArgument);
 
 	FRenderObject NewRenderObject{ &RenderObjectList,  RenderObjectList.ModelMatrixDirtyList.size() - 1 };
+
+	if (GCacheMeshDraw)
+	{
+
+	}
+
 	return NewRenderObject;
 }
 
@@ -77,8 +85,11 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 		}
 		SetUpShaderInstances(ObjectIndex, DuplicatedShaderInstanceList);
 
-		PSO.DrawDesc.BoundShaderSet = FBoundShaderSet{ DuplicatedShaderInstanceList };
-		PSO.FinishCreating();
+		{
+			SCOPED_CPU_TIMER(FRenderScene_CreateMeshDrawListForPass_PSOSetup)
+			PSO.DrawDesc.BoundShaderSet = FBoundShaderSet{ DuplicatedShaderInstanceList };
+			PSO.FinishCreating();
+		}
 
 		MeshDrawList.emplace_back(FMeshDraw{ PSO , RenderObjectList.VertexBufferViewList[ObjectIndex], RenderObjectList.IndexBufferViewList[ObjectIndex], RenderObjectList.MeshDrawArgumentList[ObjectIndex]});
 	}
@@ -89,6 +100,8 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 
 void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList)
 {
+	SCOPED_CPU_TIMER(FRenderScene_SetUpShaderInstances)
+
 	for (uint32_t ShaderInstanceIndex = 0; ShaderInstanceIndex < EShaderFrequency::NumShaderFrequency; ++ShaderInstanceIndex)
 	{
 		if (FD3D12ShaderInstance* ShaderInstance = InShaderInstanceList[ShaderInstanceIndex])
