@@ -36,6 +36,20 @@ struct FD3D12VertexIndexBufferSubresourceContainer : public FD3D12SubresourceCon
 	const eastl::shared_ptr<Assimp::Importer> AssimpImporter;
 };
 
+struct FD3D12ConstantBufferSubresourceContainer : public FD3D12SubresourceContainer
+{
+	FD3D12ConstantBufferSubresourceContainer() = delete;
+	FD3D12ConstantBufferSubresourceContainer(const uint8_t* const InData, const size_t InSize);
+	FD3D12ConstantBufferSubresourceContainer(const eastl::vector<uint8_t>& InCopiedData);
+	FD3D12ConstantBufferSubresourceContainer(eastl::vector<uint8_t>&& InCopiedData);
+
+	void InitSubresourceData();
+
+	const eastl::vector<uint8_t> ShadowDataStorage;
+	const uint8_t* const Data;
+	const size_t Size;
+};
+
 struct FD3D12TextureSubresourceContainer : public FD3D12SubresourceContainer
 {
 	DirectX::ScratchImage ScreatchImage;
@@ -43,7 +57,7 @@ struct FD3D12TextureSubresourceContainer : public FD3D12SubresourceContainer
 
 struct FD3D12ResourceUpload
 {
-	eastl::shared_ptr<FD3D12Resource> Resource;
+	ID3D12Resource* Resource;
 	eastl::vector<eastl::unique_ptr<FD3D12SubresourceContainer>> SubresourceContainers;
 
 	eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersBeforeUpload;
@@ -78,7 +92,7 @@ public:
 
 private:
 
-	FD3D12UploadBufferContainer* AllocateUploadBuffer(const FD3D12Resource* const InUploadedResource);
+	FD3D12UploadBufferContainer* AllocateUploadBuffer(ID3D12Resource* const InUploadedResource);
 	
 	static ED3D12UploadBufferSizeType ConvertSizeToUploadBufferSizeType(const uint64_t InSize);
 	static uint64_t ConvertUploadBufferSizeTypeToSize(const ED3D12UploadBufferSizeType InUploadBufferSizeType);

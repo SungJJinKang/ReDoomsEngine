@@ -290,7 +290,7 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 
 	FD3D12ResourceUpload ResourceUpload{};
 
-	ResourceUpload.Resource = D3D12TextureResource;
+	ResourceUpload.Resource = D3D12TextureResource->GetResource();
 	EA_ASSERT(SubresourceDataList.size() == 1); // @todo : support mips
 	ResourceUpload.SubresourceContainers = eastl::move(SubresourceDataList);
 	if (InResourceStateAfterUpload.has_value())
@@ -415,12 +415,14 @@ eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::Allo
 {
     // @todo implment vertex/index buffer pool. currently a lot of unused memory is wasted because of d3d12 64kb alignment limitation.
     // Create large heap and sub-allocate vertex/index buffer resource on it
-	eastl::shared_ptr<FD3D12VertexIndexBufferResource> VertexIndexBufferResource =  eastl::make_shared<FD3D12VertexIndexBufferResource>(SubresourceDataList->SubresourceData.RowPitch, InDefaultStrideInBytes, false);
+	eastl::shared_ptr<FD3D12VertexIndexBufferResource> VertexIndexBufferResource =  eastl::make_shared<FD3D12VertexIndexBufferResource>(SubresourceDataList->SubresourceData.RowPitch, InDefaultStrideInBytes, bVertexBuffer, false);
 	VertexIndexBufferResource->InitResource();
 
 	FD3D12ResourceUpload ResourceUpload{};
-	ResourceUpload.Resource = VertexIndexBufferResource;
+	ResourceUpload.Resource = VertexIndexBufferResource->GetResource();
 	ResourceUpload.SubresourceContainers.emplace_back(eastl::move(SubresourceDataList));
+    ResourceUpload.ResourceBarriersBeforeUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(VertexIndexBufferResource->GetResource(),
+        bVertexBuffer ? D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER : D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_INDEX_BUFFER, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST));
 	ResourceUpload.ResourceBarriersAfterUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(VertexIndexBufferResource->GetResource(), D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST,
 		bVertexBuffer ? D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER : D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_INDEX_BUFFER));
 

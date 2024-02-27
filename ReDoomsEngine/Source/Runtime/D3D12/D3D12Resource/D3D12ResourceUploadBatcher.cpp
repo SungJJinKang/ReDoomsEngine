@@ -60,13 +60,13 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 
 			for (FD3D12ResourceUpload& PendingResourceUpload : PendingResourceUploadList)
 			{
-				FD3D12UploadBufferContainer* UploadBufferContainer = AllocateUploadBuffer(PendingResourceUpload.Resource.get());
+				FD3D12UploadBufferContainer* UploadBufferContainer = AllocateUploadBuffer(PendingResourceUpload.Resource);
 				const uint32_t SubresourceCount = PendingResourceUpload.SubresourceContainers.size();
 				for (uint32_t SubresourceIndex = 0; SubresourceIndex < SubresourceCount; ++SubresourceIndex)
 				{
 					// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-updatesubresource
 					// @todo : support mips. change UpdateSubresources's template paramter value
-					UpdateSubresources<1>(CommandListForUploadBatcher->GetD3DCommandList(), PendingResourceUpload.Resource->GetResource(), UploadBufferContainer->UploadBuffer->GetResource(),
+					UpdateSubresources<1>(CommandListForUploadBatcher->GetD3DCommandList(), PendingResourceUpload.Resource, UploadBufferContainer->UploadBuffer->GetResource(),
 						0, SubresourceIndex, SubresourceCount, &PendingResourceUpload.SubresourceContainers[SubresourceIndex]->SubresourceData);
 				}
 				UploadBufferContainer->Fence = InCommandContext.FrameResourceCounter->FrameWorkEndFence;
@@ -83,11 +83,11 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 	}
 }
 
-FD3D12UploadBufferContainer* FD3D12ResourceUploadBatcher::AllocateUploadBuffer(const FD3D12Resource* const InUploadedResource)
+FD3D12UploadBufferContainer* FD3D12ResourceUploadBatcher::AllocateUploadBuffer(ID3D12Resource* const InUploadedResource)
 {
 	FD3D12UploadBufferContainer* UploadBufferContainer = nullptr;
 
-	const UINT64 UploadBufferSize = Align(GetRequiredIntermediateSize(InUploadedResource->GetResource(), 0, 1), D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+	const UINT64 UploadBufferSize = Align(GetRequiredIntermediateSize(InUploadedResource, 0, 1), D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
 	const ED3D12UploadBufferSizeType BufferSizeType = ConvertSizeToUploadBufferSizeType(UploadBufferSize);
 	eastl::queue<eastl::unique_ptr<FD3D12UploadBufferContainer>>& TargetBufferQueue = UploadBufferQueue[static_cast<uint32_t>(BufferSizeType)];
 
@@ -101,7 +101,7 @@ FD3D12UploadBufferContainer* FD3D12ResourceUploadBatcher::AllocateUploadBuffer(c
 	else
 	{
 		eastl::unique_ptr<FD3D12UploadBufferContainer> NewUploadBufferContainer = eastl::make_unique<FD3D12UploadBufferContainer>();
-		NewUploadBufferContainer->UploadBuffer = eastl::make_unique<FD3D12BufferResource>(ConvertUploadBufferSizeTypeToSize(BufferSizeType), D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, 0, true);
+		NewUploadBufferContainer->UploadBuffer = eastl::make_unique<FD3D12BufferResource>(ConvertUploadBufferSizeTypeToSize(BufferSizeType), D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE, 0, true, D3D12_RESOURCE_STATE_GENERIC_READ);
 		NewUploadBufferContainer->UploadBuffer->InitResource();
 		NewUploadBufferContainer->UploadBuffer->SetDebugNameToResource(EA_WCHAR("Upload Buffer"));
 		UploadBufferContainer = NewUploadBufferContainer.get();
@@ -160,4 +160,29 @@ uint64_t FD3D12ResourceUploadBatcher::ConvertUploadBufferSizeTypeToSize(const ED
 bool FD3D12UploadBufferContainer::CanFree() const
 {
 	return (UploadedFrameIndex != GCurrentFrameIndex) && (!(Fence.expired()) ? Fence.lock()->IsCompleteLastSignal() : true);
+}
+
+FD3D12ConstantBufferSubresourceContainer::FD3D12ConstantBufferSubresourceContainer(const uint8_t* const InData, const size_t InSize)
+	: ShadowDataStorage(), Data(InData), Size(InSize)
+{
+	InitSubresourceData();
+}
+
+FD3D12ConstantBufferSubresourceContainer::FD3D12ConstantBufferSubresourceContainer(const eastl::vector<uint8_t>& InCopiedData)
+	: ShadowDataStorage(eastl::move(InCopiedData)), Data(ShadowDataStorage.data()), Size(ShadowDataStorage.size())
+{
+	InitSubresourceData();
+}
+
+FD3D12ConstantBufferSubresourceContainer::FD3D12ConstantBufferSubresourceContainer(eastl::vector<uint8_t>&& InCopiedData)
+	: ShadowDataStorage(eastl::move(InCopiedData)), Data(ShadowDataStorage.data()), Size(ShadowDataStorage.size())
+{
+	InitSubresourceData();
+}
+
+void FD3D12ConstantBufferSubresourceContainer::InitSubresourceData()
+{
+	SubresourceData.pData = Data;
+	SubresourceData.RowPitch = Size;
+	SubresourceData.SlicePitch = SubresourceData.RowPitch;
 }

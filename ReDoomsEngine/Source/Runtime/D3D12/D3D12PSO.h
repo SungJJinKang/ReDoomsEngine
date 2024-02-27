@@ -22,6 +22,8 @@ public:
             CD3DX12_BLEND_DESC BlendState;
             CD3DX12_RASTERIZER_DESC RasterizerState;
             CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
+            D3D12_CACHED_PIPELINE_STATE CachedPSO;
+            D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
         } PSODesc;
     } DrawDesc;
 
@@ -33,13 +35,11 @@ public:
         D3D12_STREAM_OUTPUT_DESC StreamOutput;
         UINT SampleMask;
         D3D12_INDEX_BUFFER_STRIP_CUT_VALUE IBStripCutValue;
-        D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
         UINT NumRenderTargets;
         DXGI_FORMAT RTVFormats[8];
         DXGI_FORMAT DSVFormat;
         DXGI_SAMPLE_DESC SampleDesc;
         UINT NodeMask;
-        D3D12_CACHED_PIPELINE_STATE CachedPSO;
         D3D12_PIPELINE_STATE_FLAGS Flags;
     } PassDesc;
 

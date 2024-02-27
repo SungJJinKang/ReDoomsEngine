@@ -21,7 +21,7 @@ public:
 private:
 
 	float NearPlane = 0.01f;
-	float FarPlane = 1000.0f;
+	float FarPlane = 12000.0f;
 
 };
 

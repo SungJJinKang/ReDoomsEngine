@@ -50,7 +50,6 @@ void D3D12TestRenderer::Init()
 	{
 		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
 		MEM_ZERO(BasePassPSODesc);
-		BasePassPSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		BasePassPSODesc.SampleMask = UINT_MAX;
 		BasePassPSODesc.NumRenderTargets = 1;
 		BasePassPSODesc.RTVFormats[0] = SwapChain->GetFormat();
@@ -111,6 +110,7 @@ void D3D12TestRenderer::SceneSetup()
 	VertexBuffer->SetDebugNameToResource(EA_WCHAR("TestRenderer VertexBuffer1"));
 	
 	FD3D12PSOInitializer::FDrawDesc DroneDrawDesc;
+	MEM_ZERO(DroneDrawDesc);
 
 	D3D12_INPUT_LAYOUT_DESC InputDesc{ FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
 	CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
@@ -121,6 +121,7 @@ void D3D12TestRenderer::SceneSetup()
 	DroneDrawDesc.PSODesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
 	DroneDrawDesc.PSODesc.DepthStencilState.DepthEnable = true;
 	DroneDrawDesc.PSODesc.DepthStencilState.StencilEnable = false;
+	DroneDrawDesc.PSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 	FMeshDrawArgument MeshDrawArgument;
 	MeshDrawArgument.IndexCountPerInstance = DroneMesh->MeshList[0].IndexCount;
@@ -129,21 +130,13 @@ void D3D12TestRenderer::SceneSetup()
 	MeshDrawArgument.BaseVertexLocation = 0;
 	MeshDrawArgument.StartInstanceLocation = 0;
 
-	for (int32_t IndexA = 0; IndexA < 3; ++IndexA)
+	for (int32_t IndexA = -10; IndexA < 10; ++IndexA)
 	{
-		for (int32_t IndexB = 0; IndexB < 3; ++IndexB)
+		for (int32_t IndexB = -10; IndexB < 10; ++IndexB)
 		{
 			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
 
-			Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
-			Matrix ViewMat = View.Get3DViewMatrices();
-			Matrix ProjMat = View.GetPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
-			
-			MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewMatrix = ViewMat;
-			MeshDrawVSInstance->Parameter.ViewConstantBuffer->ProjectionMatrix = ProjMat;
-			MeshDrawVSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
-			MeshDrawPSInstance->Parameter.ViewConstantBuffer->ViewProjectionMatrix = ViewProjMat;
 			MeshDrawPSInstance->Parameter.TriangleColorTexture = DroneMesh->Material[0].DiffuseTexture->GetSRV();
 
 			eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
@@ -152,35 +145,19 @@ void D3D12TestRenderer::SceneSetup()
 			FBoundShaderSet BoundShaderSet{ ShaderList };
 			DroneDrawDesc.BoundShaderSet = BoundShaderSet;
 
-// 			Vector3 OrigianlPos{ 300.0f * IndexB, 200.0f * IndexA + 100.0f, -5.0f };
-// 			FRenderObject RenderObject = RenderScene.AddRenderObject(
-// 				true,
-// 				DroneMesh->MeshList[0].AABB,
-// 				OrigianlPos,
-// 				Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f),
-// 				Vector3{ 0.5f, 0.5f, 0.5f },
-// 				2000.0f,
-// 				DroneMesh->MeshList[0].VertexBufferViewList,
-// 				DroneMesh->MeshList[0].IndexBufferView,
-// 				DroneDrawDesc,
-// 				MeshDrawArgument
-// 			);
-
-			Vector3 OrigianlPos{ 1.0f, 1.0f, 1.0f };
+			Vector3 OrigianlPos{ 250.0f * IndexB, 250.0f * IndexA + 10.0f, -5.0f };
 			FRenderObject RenderObject = RenderScene.AddRenderObject(
 				true,
 				DroneMesh->MeshList[0].AABB,
 				OrigianlPos,
-				Quaternion{0.0f, 0.0f, 0.0f, 0.0f},
-				Vector3{ 1.0f, 1.0f, 1.0f },
+				Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f),
+				Vector3{ 0.05f, 0.05f, 0.05f },
 				2000.0f,
 				DroneMesh->MeshList[0].VertexBufferViewList,
 				DroneMesh->MeshList[0].IndexBufferView,
 				DroneDrawDesc,
 				MeshDrawArgument
 			);
-			FDrone Drone{ RenderObject, OrigianlPos };
-			DroneList.emplace_back(Drone);
 		}
 	}
 }
@@ -189,6 +166,56 @@ void D3D12TestRenderer::OnStartFrame()
 {
 	FRenderer::OnStartFrame();
 
+	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+
+
+	{
+		float Speed = GTimeDelta * 3.0f;
+
+		if (FD3D12Window::LeftArrowKeyPressed)
+		{
+			View.Transform.RotateYaw(Speed, ESpace::Self);
+		}
+		else if (FD3D12Window::RIghtArrowKeyPressed)
+		{
+			View.Transform.RotateYaw(-Speed, ESpace::Self);
+		}
+
+		if (FD3D12Window::UpArrowKeyPressed)
+		{
+			View.Transform.RotatePitch(Speed, ESpace::Self);
+		}
+		else if (FD3D12Window::DownArrowKeyPressed)
+		{
+			View.Transform.RotatePitch(-Speed, ESpace::Self);
+		}
+
+		if (FD3D12Window::WKeyPressed)
+		{
+			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed*50.0f, ESpace::Self);
+		}
+		else if (FD3D12Window::SKeyPressed)
+		{
+			View.Transform.Translate(Vector3{ 0.0f, 0.0f, 1.0f } *Speed * 50.0f, ESpace::Self);
+		}
+
+		if (FD3D12Window::AKeyPressed)
+		{
+			View.Transform.Translate(Vector3{ -1.0f , 0.0f, 0.0f } *Speed * 50.0f, ESpace::Self);
+		}
+		else if (FD3D12Window::DKeyPressed)
+		{
+			View.Transform.Translate(Vector3{ 1.0f, 0.0f, 0.0f } *Speed * 50.0f, ESpace::Self);
+		}
+		Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+		Matrix ViewMat = View.Get3DViewMatrices();
+		Matrix ProjMat = View.GetPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+		ViewConstantBuffer.MemberVariables.ViewMatrix = ViewMat;
+		ViewConstantBuffer.MemberVariables.ProjectionMatrix = ProjMat;
+		ViewConstantBuffer.MemberVariables.ViewProjectionMatrix = ViewProjMat;
+		ViewConstantBuffer.MemberVariables.ViewProjectionMatrix = ViewProjMat;
+		ViewConstantBuffer.FlushShadowDataIfDirty();
+	}
 }
 
 bool D3D12TestRenderer::Draw()

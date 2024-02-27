@@ -50,13 +50,13 @@ FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     COPY_DRAW_DESC_MEMBER(DepthStencilState)
     COPY_DRAW_DESC_MEMBER(InputLayout)
     COPY_PASS_DESC_MEMBER(IBStripCutValue)
-    COPY_PASS_DESC_MEMBER(PrimitiveTopologyType)
+    COPY_DRAW_DESC_MEMBER(PrimitiveTopologyType)
     COPY_PASS_DESC_MEMBER(NumRenderTargets)
     EA::StdC::Memcpy(&(Desc.RTVFormats), &(PSOInitializer.PassDesc.RTVFormats), sizeof(DXGI_FORMAT) * ARRAY_LENGTH(PSOInitializer.PassDesc.RTVFormats));
     COPY_PASS_DESC_MEMBER(DSVFormat)
     COPY_PASS_DESC_MEMBER(SampleDesc)
     COPY_PASS_DESC_MEMBER(NodeMask)
-    COPY_PASS_DESC_MEMBER(CachedPSO)
+    COPY_DRAW_DESC_MEMBER(CachedPSO)
     COPY_PASS_DESC_MEMBER(Flags)
 
     // error fix #1

@@ -401,6 +401,7 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 			if (CBVRegisterMask & (1 << CBVRegisterIndex))
 			{
 				FShaderParameterConstantBuffer* ShaderParameterConstantBuffer = CachedConstantBufferBindPointInfosOfFrequencies[FrequencyIndex][CBVRegisterIndex];
+				EA_ASSERT(!(ShaderParameterConstantBuffer->IsCulled()));
 				if (ShaderParameterConstantBuffer)
 				{
 					FD3D12ConstantBufferResource* const ConstantBufferResource = ShaderParameterConstantBuffer->GetConstantBufferResource();
@@ -408,7 +409,10 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 
 					bool bNeedSetGraphicsRootConstantBufferView = false;
 					// @todo doesn't need to copy shadow data if non-dynamic constant buffer
-					if (ConstantBufferResource->IsShadowDataDirty())
+					EA_ASSERT_FORMATTED(!(ConstantBufferResource->IsDynamicBuffer()) ? !(ConstantBufferResource->IsShadowDataDirty()) : true,
+						("ConstantBuffer(\"%s\")'s shadow data shouldn't be dirty at here, You should flush it directly before draw", ShaderParameterConstantBuffer->GetVariableName())
+					);
+					if (ConstantBufferResource->IsShadowDataDirty() && ConstantBufferResource->IsDynamicBuffer())
 					{
 						ConstantBufferResource->Versioning();
 						ShaderParameterConstantBuffer->FlushShadowData();
@@ -556,7 +560,7 @@ void FD3D12StateCache::ResetToDefault()
 	CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.DepthEnable = false;
 	CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.StencilEnable = false;
 	CachedPSOInitializer.PassDesc.SampleMask = UINT_MAX;
-	CachedPSOInitializer.PassDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	CachedPSOInitializer.DrawDesc.PSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	CachedPSOInitializer.PassDesc.NumRenderTargets = 1;
 	CachedPSOInitializer.PassDesc.SampleDesc.Count = 1;
 }
