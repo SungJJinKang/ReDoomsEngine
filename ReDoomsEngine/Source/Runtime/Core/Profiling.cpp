@@ -431,6 +431,8 @@ static struct FRegisterProfilerImguiCallback
 				// e.g. Leave a fixed amount of width for labels (by passing a negative Delta), the rest goes to widgets.
 				ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 
+				ImGui::Text("DrawCall : %u", GPreviousFrameDrawCallCount);
+
 				const eastl::hash_map<const char* /*Timer name. Literal string*/, FTimerData /*Elapsed Seconds*/>& CPUTimerElapsedSecondsMap
 					= CPUTimerManager.GetCPUTimerElapsedSecondsMap();
 
