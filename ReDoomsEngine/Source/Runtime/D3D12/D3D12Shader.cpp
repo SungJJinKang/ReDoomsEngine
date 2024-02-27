@@ -656,9 +656,9 @@ void FShaderParameterTemplate::ApplyResource(FD3D12CommandContext& InCommandCont
 
 }
 
-FShaderParameterConstantBuffer::FShaderParameterConstantBuffer() 
+FShaderParameterConstantBuffer::FShaderParameterConstantBuffer(const char* const InVariableName)
 	: 
-	FShaderParameterTemplate(),
+	FShaderParameterTemplate(InVariableName),
 	bGlobalConstantBuffer(false),
 	MemberVariableMap(), 
 	ConstantBufferResource(),
@@ -684,20 +684,51 @@ FShaderParameterConstantBuffer::FShaderParameterConstantBuffer(FShaderParameterC
 void FShaderParameterConstantBuffer::Init()
 {
 	FShaderParameterTemplate::Init();
-	
-	if (!IsTemplateVariable() && !IsCulled())
+
+	if (!IsCulled())
 	{
 		const uint32_t ConstantBufferSize = GetConstantBufferReflectionData()->Desc.Size;
-		ShadowData.resize(ConstantBufferSize);
-		ConstantBufferResource = eastl::make_unique<FD3D12ConstantBufferResource>(ConstantBufferSize, true, ShadowData.data(), ConstantBufferSize, false);
-		ConstantBufferResource->InitResource();
-
-		for (FMemberVariableContainer& MemberVariablePair : MemberVariableMap)
+		if (!IsDynamicConstantBuffer())
 		{
-			const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBufferReflectionData =
-				ReflectionData->VariableList.find(MemberVariablePair.VariableName)->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
+			const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
+			FShaderParameterConstantBuffer* const TemplateShaderParameterConstantBuffer = GetTemplateShaderParameterConstantBuffer();
+			const bool bFoundReflectionData = TemplateShaderParameterConstantBuffer->SetReflectionDataFromShaderReflectionData(ShaderReflection);
 
-			MemberVariablePair.ShaderParameterConstantBufferMemberVariableTemplate->SetOffset(VariableOfConstantBufferReflectionData.Desc.StartOffset);
+			if (bFoundReflectionData && TemplateShaderParameterConstantBuffer->ConstantBufferResource == nullptr)
+			{
+				TemplateShaderParameterConstantBuffer->ShadowData.resize(ConstantBufferSize);
+				eastl::unique_ptr<FD3D12ConstantBufferResource> TemplateConstantBufferResource = 
+					eastl::make_unique<FD3D12ConstantBufferResource>(ConstantBufferSize, false, TemplateShaderParameterConstantBuffer->ShadowData.data(), ConstantBufferSize, false, true);
+				TemplateConstantBufferResource->InitResource();
+				TemplateConstantBufferResource->CreateD3D12Resource();
+				TemplateConstantBufferResource->SetDebugNameToResource(ANSI_TO_WCHAR(GetVariableName()));
+				TemplateShaderParameterConstantBuffer->ConstantBufferResource = eastl::move(TemplateConstantBufferResource);
+
+				for (FMemberVariableContainer& MemberVariablePair : TemplateShaderParameterConstantBuffer->MemberVariableMap)
+				{
+					const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBufferReflectionData =
+						TemplateShaderParameterConstantBuffer->ReflectionData->VariableList.find(MemberVariablePair.VariableName)->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
+
+					MemberVariablePair.ShaderParameterConstantBufferMemberVariableTemplate->SetOffset(VariableOfConstantBufferReflectionData.Desc.StartOffset);
+				}
+			}
+		}
+		else
+		{
+			if (!IsTemplateVariable())
+			{
+				ShadowData.resize(ConstantBufferSize);
+				ConstantBufferResource = eastl::make_unique<FD3D12ConstantBufferResource>(ConstantBufferSize, true, ShadowData.data(), ConstantBufferSize, false);
+				ConstantBufferResource->InitResource();
+
+				for (FMemberVariableContainer& MemberVariablePair : MemberVariableMap)
+				{
+					const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBufferReflectionData =
+						ReflectionData->VariableList.find(MemberVariablePair.VariableName)->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
+
+					MemberVariablePair.ShaderParameterConstantBufferMemberVariableTemplate->SetOffset(VariableOfConstantBufferReflectionData.Desc.StartOffset);
+				}
+			}
 		}
 	}
 }
@@ -749,52 +780,73 @@ void FShaderParameterConstantBuffer::CopyFrom(const FShaderParameterTemplate& In
 
 	if (!IsCulled())
 	{
-		// @todo doesn't need to copy shadow data if non-dynamic constant buffer
-
-		ShadowData = InputTemplateConstantBuffer.ShadowData;
-		MakeDirty();
+		if (IsDynamicConstantBuffer())
+		{
+			ShadowData = InputTemplateConstantBuffer.ShadowData;
+			MakeDirty();
+		}
 	}
 }
 
 uint8_t* FShaderParameterConstantBuffer::GetShadowData()
 {
-	EA_ASSERT(!IsCulled());
-	return reinterpret_cast<uint8_t*>(ShadowData.data());
+	if (!IsDynamicConstantBuffer())
+	{
+		// If non-dynamic constant buffer, return template FShaderParameterConstantBuffer's shadow data
+		return  reinterpret_cast<uint8_t*>(GetTemplateShaderParameterConstantBuffer()->ShadowData.data());
+	}
+	else
+	{
+		EA_ASSERT(!IsCulled());
+		return reinterpret_cast<uint8_t*>(ShadowData.data());
+	}
 }
 
 FD3D12ConstantBufferResource* FShaderParameterConstantBuffer::GetConstantBufferResource()
 {
-	EA_ASSERT(!IsCulled());
-	return ConstantBufferResource.get();
+	if (!IsDynamicConstantBuffer())
+	{
+		return GetTemplateShaderParameterConstantBuffer()->ConstantBufferResource.get();
+	}
+	else
+	{
+		EA_ASSERT(!IsCulled());
+		return ConstantBufferResource.get();
+	}
 }
 
 void FShaderParameterConstantBuffer::FlushShadowData()
 {
-	EA_ASSERT(!IsCulled());
-	ConstantBufferResource->FlushShadowData();
+	EA_ASSERT(IsDynamicConstantBuffer() ? !IsCulled() : true);
+	GetConstantBufferResource()->FlushShadowData();
+}
+
+void FShaderParameterConstantBuffer::FlushShadowDataIfDirty()
+{
+	if (GetConstantBufferResource()->IsShadowDataDirty())
+	{
+		GetConstantBufferResource()->FlushShadowData();
+	}
 }
 
 void FShaderParameterConstantBuffer::MakeDirty()
 {
-	EA_ASSERT(!IsCulled());
-	ConstantBufferResource->MakeDirty();
+	EA_ASSERT(IsDynamicConstantBuffer() ? !IsCulled() : true);
+	GetConstantBufferResource()->MakeDirty();
 }
 
-void FShaderParameterConstantBuffer::SetReflectionDataFromShaderReflectionData()
+bool FShaderParameterConstantBuffer::SetReflectionDataFromShaderReflectionData(const FD3D12ShaderReflectionData& InShaderReflection)
 {
-	// @todo : Shader Template should cache this for shader instance
-	 
 	bool bFoundReflectionData = false;
 
-	const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
 	if (IsGlobalConstantBuffer())
 	{
-		ReflectionData = &ShaderReflection.GlobalConstantBuffer;
+		ReflectionData = &InShaderReflection.GlobalConstantBuffer;
 		bFoundReflectionData = true;
 	}
 	else
 	{
-		for (const FD3D12ConstantBufferReflectionData& ConstantBufferReflectionData : ShaderReflection.ConstantBufferList)
+		for (const FD3D12ConstantBufferReflectionData& ConstantBufferReflectionData : InShaderReflection.ConstantBufferList)
 		{
 			if (ConstantBufferReflectionData.Name == GetVariableName())
 			{
@@ -804,6 +856,18 @@ void FShaderParameterConstantBuffer::SetReflectionDataFromShaderReflectionData()
 			}
 		}
 	}
+
+	return bFoundReflectionData;
+}
+
+void FShaderParameterConstantBuffer::SetReflectionDataFromShaderReflectionData()
+{
+	// @todo : Shader Template should cache this for shader instance
+	 
+	bool bFoundReflectionData = false;
+
+	const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
+	SetReflectionDataFromShaderReflectionData(ShaderReflection);
 }
 
 FShaderParameterShaderResourceView& FShaderParameterShaderResourceView::operator=(FD3D12ShaderResourceView* const InSRV)

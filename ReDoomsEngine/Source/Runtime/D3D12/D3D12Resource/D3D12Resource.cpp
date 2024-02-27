@@ -3,36 +3,39 @@
 #include "D3D12Device.h"
 #include "D3D12ConstantBufferRingBuffer.h"
 #include "Renderer/Renderer.h"
+#include "D3D12Resource/D3D12ResourceAllocator.h"
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
-	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resource(),
+	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resources(),
 	DefaultCBV(), DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
 	ValidateResourceProperties();
 }
 
 FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource>& InResource)
-	: Fence(), ResourceCreateProperties(), bInit(false), Resource(InResource),
+	: Fence(), ResourceCreateProperties(), bInit(false),
 	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
-	Desc = CD3DX12_RESOURCE_DESC{ Resource->GetDesc() };
+	Resources[0] = InResource;
+	Desc = CD3DX12_RESOURCE_DESC{ Resources[0]->GetDesc() };
 
-	Resource->GetHeapProperties(&ResourceCreateProperties.HeapProperties, &ResourceCreateProperties.HeapFlags);
+	Resources[0]->GetHeapProperties(&ResourceCreateProperties.HeapProperties, &ResourceCreateProperties.HeapFlags);
 
 	ValidateResourceProperties();
 }
 
 FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
-	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resource(InResource),
+	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false),
 	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
+	Resources[0] = InResource;
 }
 
 void FD3D12Resource::InitResource()
 {
 	bInit = true;
 
-	if (IsCreateD3D12ResourceOnInitResource() && !Resource)
+	if (IsCreateD3D12ResourceOnInitResource() && !Resources[0])
 	{
 		CreateD3D12Resource();
 	}
@@ -46,30 +49,38 @@ void FD3D12Resource::DeferredRelease()
 void FD3D12Resource::CreateD3D12Resource()
 {
 	EA_ASSERT(bInit);
-	EA_ASSERT(Resource == nullptr);
+	EA_ASSERT(Resources[0] == nullptr);
 
-	// todo : use placed resource
 	VERIFYD3D12RESULT(GetD3D12Device()->CreateCommittedResource(
 		&ResourceCreateProperties.HeapProperties,
 		ResourceCreateProperties.HeapFlags,
 		&Desc,
 		ResourceCreateProperties.InitialResourceStates,
 		ResourceCreateProperties.ClearValue.has_value() ? &(ResourceCreateProperties.ClearValue.value()) : nullptr,
-		IID_PPV_ARGS(&Resource)));
+		IID_PPV_ARGS(&Resources[0])));
 }
 
 void FD3D12Resource::ReleaseResource()
 {
-	Resource.Reset();
+	for (ComPtr<ID3D12Resource>& Resource : Resources)
+	{
+		Resource.Reset();
+	}
 }
 
 #if D3D_NAME_OBJECT
 void FD3D12Resource::SetDebugNameToResource(const wchar_t* const InDebugName)
 {
-	if (Resource)
+	bool bAny = false;
+	for (uint32_t Index = 0; Index < Resources.size(); ++Index)
 	{
-		Resource->SetName(InDebugName);
+		if (Resources[Index])
+		{
+			Resources[Index]->SetName(InDebugName);
+			bAny = true;
+		}
 	}
+	EA_ASSERT(bAny);
 }
 #endif
 
@@ -240,10 +251,11 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource> InRender
 
 
 FD3D12BufferResource::FD3D12BufferResource(
-	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, uint8_t* const InShadowDataAddress, const uint32_t InShadowDataSize, const bool bNeverCreateShadowData)
+	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, const D3D12_RESOURCE_STATES InInitialResourceState,
+	 uint8_t* const InShadowDataAddress, const uint32_t InShadowDataSize, const bool bNeverCreateShadowData)
 	: 
-	FD3D12Resource(MakeResourceCreateProperties(bInDynamic), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
-	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress), ShadowDataSize(InShadowDataSize), bIsShadowDataDirty(true)
+	FD3D12Resource(MakeResourceCreateProperties(bInDynamic, InInitialResourceState), CD3DX12_RESOURCE_DESC::Buffer(InSize, InFlags, InAlignment)),
+	bDynamic(bInDynamic), MappedAddress(nullptr), ShadowDataAddress(InShadowDataAddress), ShadowDataSize(InShadowDataSize), bIsShadowDataDirtyPerFrame{ true }
 {
 	if (ShadowDataAddress)
 	{
@@ -263,20 +275,28 @@ FD3D12BufferResource::FD3D12BufferResource(
 	}
 }
 
-FD3D12BufferResource::FResourceCreateProperties FD3D12BufferResource::MakeResourceCreateProperties(const bool bDynamic) const
+FD3D12BufferResource::FResourceCreateProperties FD3D12BufferResource::MakeResourceCreateProperties(const bool bDynamic, const D3D12_RESOURCE_STATES InInitialResourceState) const
 {
 	FResourceCreateProperties ResourceCreateProperties{};
 
 	// if dynamic, use upload heap for gpu
 	ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(bDynamic ? D3D12_HEAP_TYPE_UPLOAD : D3D12_HEAP_TYPE_DEFAULT);
 	ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
-	ResourceCreateProperties.InitialResourceStates = bDynamic ? D3D12_RESOURCE_STATE_GENERIC_READ : D3D12_RESOURCE_STATE_COPY_DEST; // if not dynamic, set D3D12_RESOURCE_STATE_COPY_DEST to initial state for upload
+	ResourceCreateProperties.InitialResourceStates = InInitialResourceState; // if not dynamic, set D3D12_RESOURCE_STATE_COPY_DEST to initial state for upload
 
 	return ResourceCreateProperties;
 }
 
-FD3D12VertexIndexBufferResource::FD3D12VertexIndexBufferResource(const uint64_t InSize, const uint32_t InDefaultStrideInBytes, const bool bInDynamic /*= false*/)
-	: FD3D12BufferResource(InSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE, 0, bInDynamic, nullptr, true), DefaultStrideInBytes(InDefaultStrideInBytes)
+FD3D12VertexIndexBufferResource::FD3D12VertexIndexBufferResource(const uint64_t InSize, const uint32_t InDefaultStrideInBytes, const bool bInVertexBuffer, const bool bInDynamic /*= false*/)
+	: FD3D12BufferResource(
+		InSize, D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE,
+		0,
+		bInDynamic, 
+		bInDynamic ? D3D12_RESOURCE_STATE_GENERIC_READ : (bInVertexBuffer ? D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER : D3D12_RESOURCE_STATE_INDEX_BUFFER),
+		nullptr, 
+		true
+	), 
+	DefaultStrideInBytes(InDefaultStrideInBytes)
 {
 
 }
@@ -386,9 +406,14 @@ uint8_t* FD3D12BufferResource::GetShadowDataAddress()
 	return ShadowDataAddress;
 }
 
+uint32_t FD3D12BufferResource::GetShadowDataSize() const
+{
+	return ShadowDataSize;
+}
+
 void FD3D12BufferResource::FlushShadowData()
 {
-	if (bDynamic)
+	if (IsDynamicBuffer())
 	{
 		// memcpy is recommended to write on write combined type page. it's for preventing from flushing write combined buffer before fill up it
 		EA_ASSERT(ShadowDataSize > 0);
@@ -396,10 +421,19 @@ void FD3D12BufferResource::FlushShadowData()
 	}
 	else
 	{
-		// @todo : upload to gpu
+		FD3D12ResourceUpload ResourceUpload{};
+		ResourceUpload.Resource = GetResource(GCurrentBackbufferIndex);
+		EA_ASSERT(ResourceUpload.Resource);
+		ResourceUpload.SubresourceContainers.emplace_back(eastl::make_unique<FD3D12ConstantBufferSubresourceContainer>(GetShadowDataAddress(), GetShadowDataSize()));
+		ResourceUpload.ResourceBarriersBeforeUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(ResourceUpload.Resource, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST));
+		ResourceUpload.ResourceBarriersAfterUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(ResourceUpload.Resource, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
+
+		FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.AddPendingResourceUpload(eastl::move(ResourceUpload));
 	}
 
-	bIsShadowDataDirty = false;
+	bIsShadowDataDirtyPerFrame[GCurrentBackbufferIndex] = false;
 }
 
 void FD3D12ConstantBufferResource::InitResource()
@@ -407,29 +441,64 @@ void FD3D12ConstantBufferResource::InitResource()
 	FD3D12BufferResource::InitResource();
 }
 
+void FD3D12ConstantBufferResource::CreateD3D12Resource()
+{
+	EA_ASSERT(bInit);
+	for (uint32_t Index = 0; Index < (bNeedVersioning ? Resources.size() : 1); ++Index)
+	{
+		EA_ASSERT(Resources[Index] == nullptr);
+
+		VERIFYD3D12RESULT(GetD3D12Device()->CreateCommittedResource(
+			&ResourceCreateProperties.HeapProperties,
+			ResourceCreateProperties.HeapFlags,
+			&Desc,
+			ResourceCreateProperties.InitialResourceStates,
+			ResourceCreateProperties.ClearValue.has_value() ? &(ResourceCreateProperties.ClearValue.value()) : nullptr,
+			IID_PPV_ARGS(&Resources[Index])));
+	}
+
+	if (bDynamic)
+	{
+		Map();
+	}
+}
+
 void FD3D12ConstantBufferResource::MakeDirty()
 {
-	bIsShadowDataDirty = true;
+	for (bool& bIsShadowDataDirty : bIsShadowDataDirtyPerFrame)
+	{
+		// make dirty for all frame
+		bIsShadowDataDirty = true;
+	}
 }
 
 void FD3D12ConstantBufferResource::Versioning()
 {
-	EA_ASSERT(IsDynamicBuffer()); // todo : support no-dynamic buffer
+	EA_ASSERT(bNeedVersioning);
+	if (IsDynamicBuffer())
+	{
+		ConstantBufferRingBufferBlock = FD3D12ConstantBufferRingBuffer::GetInstance()->Allocate(GetBufferSize());
 
-	ConstantBufferBlock = FD3D12ConstantBufferRingBuffer::GetInstance()->Allocate(GetBufferSize());
-
-	MappedAddress = ConstantBufferBlock.MappedAddress;
+		MappedAddress = ConstantBufferRingBufferBlock.MappedAddress;
+	}
+	else
+	{
+		EA_ASSERT(false);
+	}
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS FD3D12ConstantBufferResource::GPUVirtualAddress() const
 {
-	if (GetResource())
+	ID3D12Resource* const TargetResource = bNeedVersioning ? GetResource(GCurrentBackbufferIndex) : GetResource(0);
+
+	if (TargetResource)
 	{
-		return GetResource()->GetGPUVirtualAddress();
+		return TargetResource->GetGPUVirtualAddress();
 	}
 	else
 	{
-		EA_ASSERT(ConstantBufferBlock.GPUVirtualAddress != 0);
-		return ConstantBufferBlock.GPUVirtualAddress;
+		EA_ASSERT(IsDynamicBuffer());
+		EA_ASSERT(ConstantBufferRingBufferBlock.GPUVirtualAddress != 0);
+		return ConstantBufferRingBufferBlock.GPUVirtualAddress;
 	}
 }

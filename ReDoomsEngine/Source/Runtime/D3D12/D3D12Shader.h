@@ -260,8 +260,8 @@ class FShaderParameterTemplate
 {
 public:
 
-	FShaderParameterTemplate()
-		: ShaderParameterContainerTemplate(nullptr), VariableName()
+	FShaderParameterTemplate(const char* const InVariableName)
+		: ShaderParameterContainerTemplate(nullptr), VariableName(InVariableName)
 	{
 
 	}
@@ -351,8 +351,8 @@ class FShaderParameterResourceView : public FShaderParameterTemplate
 {
 public:
 
-	FShaderParameterResourceView()
-		: FShaderParameterTemplate(), ReflectionData()
+	FShaderParameterResourceView(const char* const InVariableName)
+		: FShaderParameterTemplate(InVariableName), ReflectionData()
 	{
 	}
 
@@ -389,8 +389,8 @@ class FShaderParameterShaderResourceView : public FShaderParameterResourceView
 {
 public:
  
-	FShaderParameterShaderResourceView()
- 		: FShaderParameterResourceView(), TargetSRV(nullptr)
+	FShaderParameterShaderResourceView(const char* const InVariableName)
+ 		: FShaderParameterResourceView(InVariableName), TargetSRV(nullptr)
 	{
 	}
  
@@ -432,7 +432,7 @@ public:
 		const std::type_info* VariableTypeInfo;
 	};
 
-	FShaderParameterConstantBuffer();
+	FShaderParameterConstantBuffer(const char* const InVariableName);
 	FShaderParameterConstantBuffer(FShaderParameterContainerTemplate* InShaderParameter, const char* const InVariableName, const bool bInGlobalConstantBuffer, const bool bInIsDynamic, const bool bInAllowCull);
 
 	virtual FShaderParameterConstantBuffer* GetTemplateShaderParameterConstantBuffer() = 0;
@@ -472,7 +472,10 @@ public:
 
 	FD3D12ConstantBufferResource* GetConstantBufferResource();
 	void FlushShadowData();
+	void FlushShadowDataIfDirty();
 	void MakeDirty();
+
+	bool SetReflectionDataFromShaderReflectionData(const FD3D12ShaderReflectionData& InShaderReflection);
 
 protected:
 
@@ -568,7 +571,10 @@ public:
 
 	TShaderParameterConstantBufferMemberVariable& operator=(const VariableType& InValue)
 	{
-		if (!(ConstantBuffer->IsCulled()))
+		if (
+			!(ConstantBuffer->IsCulled()) || 
+			(!(ConstantBuffer->IsDynamicConstantBuffer()))
+		)
 		{
 			if (EA::StdC::Memcmp(GetShadowDataAddress(), &InValue, sizeof(VariableType)) != 0)
 			{
@@ -676,8 +682,8 @@ private:
 #define SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, bInIsDynamic, bInAllowCull, ...) \
 	class FConstantBufferType##ConstantBufferTypeName : public FShaderParameterConstantBuffer { \
 		public: \
-		FConstantBufferType##ConstantBufferTypeName() \
-		: FShaderParameterConstantBuffer(), SetConstructingVariable(this) \
+		FConstantBufferType##ConstantBufferTypeName(const char* const InVariableName) \
+		: FShaderParameterConstantBuffer(InVariableName), SetConstructingVariable(this) \
 		{ \
 			EA_ASSERT(TemplateVariable == nullptr); \
 			TemplateVariable = this; \
@@ -712,7 +718,7 @@ private:
 	}  
 
 #define DEFINE_SHADER_CONSTANT_BUFFER_TYPE_INTERNAL(ConstantBufferTypeName, bInIsDynamic, bInAllowCull, ...) \
-	inline const SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, bInIsDynamic, bInAllowCull, __VA_ARGS__) ConstantBufferTypeName{};
+	inline SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, bInIsDynamic, bInAllowCull, __VA_ARGS__) ConstantBufferTypeName{#ConstantBufferTypeName};
 
 #define DEFINE_SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, bInIsDynamic, ...) DEFINE_SHADER_CONSTANT_BUFFER_TYPE_INTERNAL(ConstantBufferTypeName, bInIsDynamic, false, __VA_ARGS__)
 

@@ -6,9 +6,10 @@ static uint64_t GRingBufferSize = D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT
 
 void FD3D12ConstantBufferRingBuffer::Init()
 {
-	ConstantBufferRingBuffer.ConstantBufferResource = eastl::make_shared<FD3D12ConstantBufferResource>(GRingBufferSize, true, nullptr, true);
+	ConstantBufferRingBuffer.ConstantBufferResource = eastl::make_shared<FD3D12ConstantBufferResource>(GRingBufferSize, true, nullptr, true, false, false);
 	ConstantBufferRingBuffer.ConstantBufferResource->InitResource();
 	ConstantBufferRingBuffer.ConstantBufferResource->CreateD3D12Resource();
+	ConstantBufferRingBuffer.ConstantBufferResource->SetDebugNameToResource(EA_WCHAR("ConstantBuffer Dynamic RingBuffer"));
 	
 	for (uint32_t BackBufferIndex = 0; BackBufferIndex < GNumBackBufferCount; ++BackBufferIndex)
 	{
