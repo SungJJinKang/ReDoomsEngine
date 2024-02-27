@@ -1,4 +1,7 @@
 #include "TextureLoader.h"
+
+#include <filesystem>
+
 #include "AssetManager.h"
 #include "D3D12Device.h"
 #include "D3D12CommandContext.h"
@@ -6,7 +9,7 @@
 #include "D3D12Resource/D3D12Resource.h"
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 
-eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromDDSFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder, 
+eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder, 
 	const D3D12_RESOURCE_FLAGS InD3DResourceFlags, const DirectX::CREATETEX_FLAGS InCreateTexFlag, const eastl::optional<D3D12_RESOURCE_STATES>& InResourceStateAfterUpload)
 {
 	EA_ASSERT(!(InD3DResourceFlags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET));
@@ -14,12 +17,22 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromDDSFile(FD3D1
 
 	eastl::shared_ptr<FD3D12Texture2DResource> D3D12TextureResource{};
 
-	const eastl::wstring AbsoluePath = FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePathToAssetFolder);
+	std::filesystem::path AbsoluePath{ FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePathToAssetFolder).c_str() };
 
 	DirectX::TexMetadata Metadata{};
 	DirectX::ScratchImage ScreatchImage{};
 
-	HRESULT HR = DirectX::LoadFromDDSFile(AbsoluePath.data(), DDS_FLAGS::DDS_FLAGS_NONE, &Metadata, ScreatchImage);
+	//DirectX::LoadFromWICFile()
+	HRESULT HR;
+	if (AbsoluePath.extension().string() == ".dds")
+	{
+		HR = DirectX::LoadFromDDSFile(AbsoluePath.c_str(), DDS_FLAGS::DDS_FLAGS_NONE, &Metadata, ScreatchImage);
+	}
+	else
+	{
+		HR = DirectX::LoadFromWICFile(AbsoluePath.c_str(), WIC_FLAGS::WIC_FLAGS_NONE, &Metadata, ScreatchImage);
+	}
+
 	if (!FAILED(HR))
 	{
 		// Get the first image from the scratch image

@@ -7,3 +7,11 @@ SamplerState StaticLinearWrapSampler;
 SamplerState StaticLinearClampSampler;
 SamplerState StaticAnisotropicWrapSampler;
 SamplerState StaticAnisotropicClampSampler;
+
+cbuffer ViewConstantBuffer : register(b0)
+{
+	float4x4 ViewMatrix;
+	float4x4 ProjectionMatrix;
+	float4x4 ViewProjectionMatrix;
+	float4x4 PrevViewProjectionMatrix;
+};

@@ -9,16 +9,184 @@
 #include "D3D12Shader.h"
 #include "D3D12Resource/D3D12Resource.h"
 #include "D3D12CommandList.h"
-#include "Renderer.h"
+#include "Renderer/Renderer.h"
 #include "EASTL/sort.h"
+
+void FD3D12StateCache::SetPSOInputLayout(const D3D12_INPUT_LAYOUT_DESC& InputLayoutDesc)
+{
+	bool bIsSame = false;
+
+	if (CachedPSOInitializer.DrawDesc.PSODesc.InputLayout.NumElements == InputLayoutDesc.NumElements)
+	{
+		if (EA::StdC::Memcmp(CachedPSOInitializer.DrawDesc.PSODesc.InputLayout.pInputElementDescs, InputLayoutDesc.pInputElementDescs, sizeof(D3D12_INPUT_ELEMENT_DESC) * InputLayoutDesc.NumElements) == 0)
+		{
+			bIsSame = true;
+		}
+	}
+	
+	if (!bIsSame)
+	{
+		CachedPSOInitializer.DrawDesc.PSODesc.InputLayout = InputLayoutDesc;
+;		bIsPSODirty = true;
+	}
+}
+
+void FD3D12StateCache::SetRasterizeDesc(const CD3DX12_RASTERIZER_DESC& RasterizeDesc)
+{
+	bool bIsSame = false;
+
+	if (EA::StdC::Memcmp(&(CachedPSOInitializer.DrawDesc.PSODesc.RasterizerState), &RasterizeDesc, sizeof(CD3DX12_RASTERIZER_DESC)) == 0)
+	{
+		bIsSame = true;
+	}
+
+	if (!bIsSame)
+	{
+		CachedPSOInitializer.DrawDesc.PSODesc.RasterizerState = RasterizeDesc;
+		bIsPSODirty = true;
+	}
+}
+
+void FD3D12StateCache::SetBlendDesc(const CD3DX12_BLEND_DESC& BlendDesc)
+{
+	bool bIsSame = false;
+
+	if (EA::StdC::Memcmp(&(CachedPSOInitializer.DrawDesc.PSODesc.BlendState), &BlendDesc, sizeof(CD3DX12_BLEND_DESC)) == 0)
+	{
+		bIsSame = true;
+	}
+
+	if (!bIsSame)
+	{
+		CachedPSOInitializer.DrawDesc.PSODesc.BlendState = BlendDesc;
+		bIsPSODirty = true;
+	}
+}
+
+void FD3D12StateCache::SetDepthEnable(const bool bInEnable)
+{
+	bool bIsSame = false;
+
+	if (CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.DepthEnable == bInEnable)
+	{
+		bIsSame = true;
+	}
+
+	if (!bIsSame)
+	{
+		CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.DepthEnable = bInEnable;
+		bIsPSODirty = true;
+	}
+}
+
+void FD3D12StateCache::SetStencilEnable(const bool bInEnable)
+{
+	bool bIsSame = false;
+
+	if (CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.StencilEnable == bInEnable)
+	{
+		bIsSame = true;
+	}
+
+	if (!bIsSame)
+	{
+		CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.StencilEnable = bInEnable;
+		bIsPSODirty = true;
+	}
+}
+
+void FD3D12StateCache::SetBoundShaderSet(const FBoundShaderSet& InBoundShaderSet)
+{
+	EA_ASSERT(InBoundShaderSet.GetCachedHash().IsValid());
+	if (CachedPSOInitializer.DrawDesc.BoundShaderSet.GetCachedHash() != InBoundShaderSet.GetCachedHash())
+	{
+		CachedPSOInitializer.DrawDesc.BoundShaderSet = InBoundShaderSet;
+		bIsPSODirty = true;
+	}
+	else
+	{
+		CachedPSOInitializer.DrawDesc.BoundShaderSet = InBoundShaderSet; // Different shader instances can have same hash when its ShaderTemplate is same
+	}
+	SetRootSignature(CachedPSOInitializer.DrawDesc.BoundShaderSet.GetRootSignature());
+}
 
 void FD3D12StateCache::SetPSO(const FD3D12PSOInitializer& InPSOInitializer)
 {
-	EA_ASSERT(InPSOInitializer.CachedHash != 0);
-	if (CachedPSOInitializer.CachedHash != InPSOInitializer.CachedHash)
+	EA_ASSERT(InPSOInitializer.GetCachedHash() != 0);
+	if (!(CachedPSOInitializer.IsValid()) || (CachedPSOInitializer.GetCachedHash() != InPSOInitializer.GetCachedHash()))
 	{
 		CachedPSOInitializer = InPSOInitializer;
-		SetRootSignature(CachedPSOInitializer.BoundShaderSet.GetRootSignature());
+		bIsPSODirty = true;
+	}
+	SetBoundShaderSet(InPSOInitializer.DrawDesc.BoundShaderSet);
+}
+
+void FD3D12StateCache::SetRenderTargets(const eastl::array<FD3D12Texture2DResource*, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT>& InRenderTargets)
+{
+	CachedRTVCount = 0;
+	for (uint32_t RenderTargetIndex = 0; RenderTargetIndex < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++RenderTargetIndex)
+	{
+		CD3DX12_CPU_DESCRIPTOR_HANDLE InputRTVCPUHandle = InRenderTargets[RenderTargetIndex] ? InRenderTargets[RenderTargetIndex]->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
+		if (CachedRTVCPUHandleList[RenderTargetIndex] != InputRTVCPUHandle)
+		{
+			CachedRTVCPUHandleList[RenderTargetIndex] = InputRTVCPUHandle;
+			bNeedToSetRTVAndDSV = true;
+		}
+
+		DXGI_FORMAT RTVFormat = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
+		if (InRenderTargets[RenderTargetIndex])
+		{
+			const eastl::optional<D3D12_RENDER_TARGET_VIEW_DESC> RTVDesc = InRenderTargets[RenderTargetIndex]->GetRTV()->GetDesc();
+			if (RTVDesc.has_value())
+			{
+				RTVFormat = RTVDesc->Format;
+			}
+			else
+			{
+				RTVFormat = InRenderTargets[RenderTargetIndex]->GetDesc().Format;
+			}
+		}
+
+		if (CachedPSOInitializer.PassDesc.RTVFormats[RenderTargetIndex] != RTVFormat)
+		{
+			CachedPSOInitializer.PassDesc.RTVFormats[RenderTargetIndex] = RTVFormat;
+			CachedPSOInitializer.PassDesc.NumRenderTargets = RenderTargetIndex + 1;
+			bIsPSODirty = true;
+		}
+		
+		if (InputRTVCPUHandle.ptr)
+		{
+			CachedRTVCount = RenderTargetIndex + 1;
+		}
+	}
+}
+
+void FD3D12StateCache::SetDepthStencilTarget(FD3D12Texture2DResource* const InDepthStencilTarget)
+{
+	CD3DX12_CPU_DESCRIPTOR_HANDLE InputDSVCPUHandle = InDepthStencilTarget ? InDepthStencilTarget->GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
+	if (CachedDSVCPUHandle != InputDSVCPUHandle)
+	{
+		CachedDSVCPUHandle = InputDSVCPUHandle;
+		bNeedToSetRTVAndDSV = true;
+	}
+
+	DXGI_FORMAT DSVFormat = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
+	if (InDepthStencilTarget)
+	{
+		const eastl::optional<D3D12_DEPTH_STENCIL_VIEW_DESC> DSVDesc = InDepthStencilTarget->GetDSV()->GetDesc();
+		if (DSVDesc.has_value())
+		{
+			DSVFormat = DSVDesc->Format;
+		}
+		else
+		{
+			DSVFormat = InDepthStencilTarget->GetDesc().Format;
+		}
+	}
+
+	if (CachedPSOInitializer.PassDesc.DSVFormat != DSVFormat)
+	{
+		CachedPSOInitializer.PassDesc.DSVFormat = DSVFormat;
 		bIsPSODirty = true;
 	}
 }
@@ -90,23 +258,76 @@ void FD3D12StateCache::SetConstantBuffer(const EShaderFrequency InShaderFrequenc
 	bIsRootCBVDirty = true;
 }
 
+void FD3D12StateCache::SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)>& InVertexBufferViewList)
+{
+	bool bNeedToSet = false;
+
+	if (CachedVertexBufferViewList.size() == InVertexBufferViewList.size())
+	{
+		for (uint32_t VertexBufferViewIndex = 0; VertexBufferViewIndex < InVertexBufferViewList.size(); ++VertexBufferViewIndex)
+		{
+			if (
+				(CachedVertexBufferViewList[VertexBufferViewIndex].BufferLocation != InVertexBufferViewList[VertexBufferViewIndex].BufferLocation) ||
+				(CachedVertexBufferViewList[VertexBufferViewIndex].SizeInBytes != InVertexBufferViewList[VertexBufferViewIndex].SizeInBytes) ||
+				(CachedVertexBufferViewList[VertexBufferViewIndex].StrideInBytes != InVertexBufferViewList[VertexBufferViewIndex].StrideInBytes)
+			)
+			{
+				bNeedToSet = true;
+				break;
+			}
+		}
+	}
+	else
+	{
+		bNeedToSet = true;
+	}
+
+	if (bNeedToSet)
+	{
+		CachedVertexBufferViewList = InVertexBufferViewList;
+		bNeedToSetVertexBufferView = true;
+	}
+}
+
+void FD3D12StateCache::SetIndexBufferView(const D3D12_INDEX_BUFFER_VIEW InIndexBufferView)
+{
+	if (
+		(CachedIndexBufferView.BufferLocation != InIndexBufferView.BufferLocation) ||
+		(CachedIndexBufferView.SizeInBytes != InIndexBufferView.SizeInBytes) ||
+		(CachedIndexBufferView.Format != InIndexBufferView.Format)
+		)
+	{
+		CachedIndexBufferView = InIndexBufferView;
+		bNeedToSetIndexBufferView = true;
+	}
+}
+
 void FD3D12StateCache::ApplyPSO(FD3D12CommandList& InCommandList)
 {
+	CachedPSOInitializer.FinishCreating();
 	InCommandList.GetD3DCommandList()->SetPipelineState(FD3D12PSOManager::GetInstance()->GetOrCreatePSO(CachedPSOInitializer)->PSOObject.Get());
 
 	bIsPSODirty = false;
 }
 
+void FD3D12StateCache::ApplyRTVAndDSV(FD3D12CommandList& InCommandList)
+{
+	EA_ASSERT(CachedRTVCount != UINT32_MAX);
+	InCommandList.GetD3DCommandList()->OMSetRenderTargets(CachedRTVCount, CachedRTVCPUHandleList.data(), false, CachedDSVCPUHandle.ptr ? &CachedDSVCPUHandle : nullptr);
+
+	bNeedToSetRTVAndDSV = false;
+}
+
 void FD3D12StateCache::ApplyRootSignature(FD3D12CommandList& InCommandList)
 {
-	InCommandList.GetD3DCommandList()->SetGraphicsRootSignature(CachedPSOInitializer.BoundShaderSet.GetRootSignature()->RootSignature.Get());
+	InCommandList.GetD3DCommandList()->SetGraphicsRootSignature(CachedPSOInitializer.DrawDesc.BoundShaderSet.GetRootSignature()->RootSignature.Get());
 
 	bIsRootSignatureDirty = false;
 }
 
 void FD3D12StateCache::ApplyDescriptorHeap(FD3D12CommandList& InCommandList)
 {
-	eastl::vector<ID3D12DescriptorHeap*> D3D12DescriptorHeaps;
+	eastl::fixed_vector<ID3D12DescriptorHeap*, 1> D3D12DescriptorHeaps;
 	D3D12DescriptorHeaps.emplace_back(FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOnlineDescriptorHeapContainer.GetOnlineHeap()->D3DDescriptorHeap.Get());
 	InCommandList.GetD3DCommandList()->SetDescriptorHeaps(D3D12DescriptorHeaps.size(), D3D12DescriptorHeaps.data());
 
@@ -180,13 +401,18 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 			if (CBVRegisterMask & (1 << CBVRegisterIndex))
 			{
 				FShaderParameterConstantBuffer* ShaderParameterConstantBuffer = CachedConstantBufferBindPointInfosOfFrequencies[FrequencyIndex][CBVRegisterIndex];
+				EA_ASSERT(!(ShaderParameterConstantBuffer->IsCulled()));
 				if (ShaderParameterConstantBuffer)
 				{
 					FD3D12ConstantBufferResource* const ConstantBufferResource = ShaderParameterConstantBuffer->GetConstantBufferResource();
 					EA_ASSERT(ConstantBufferResource);
 
 					bool bNeedSetGraphicsRootConstantBufferView = false;
-					if (ConstantBufferResource->IsShadowDataDirty())
+					// @todo doesn't need to copy shadow data if non-dynamic constant buffer
+					EA_ASSERT_FORMATTED(!(ConstantBufferResource->IsDynamicBuffer()) ? !(ConstantBufferResource->IsShadowDataDirty()) : true,
+						("ConstantBuffer(\"%s\")'s shadow data shouldn't be dirty at here, You should flush it directly before draw", ShaderParameterConstantBuffer->GetVariableName())
+					);
+					if (ConstantBufferResource->IsShadowDataDirty() && ConstantBufferResource->IsDynamicBuffer())
 					{
 						ConstantBufferResource->Versioning();
 						ShaderParameterConstantBuffer->FlushShadowData();
@@ -202,7 +428,7 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 					if (bNeedSetGraphicsRootConstantBufferView)
 					{
 						EA_ASSERT(IsAligned(GPUVirtualAddress, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT));
-						EA_ASSERT(ShaderParameterConstantBuffer->GetReflectionData()->ResourceBindingDesc.BindPoint == CBVRegisterIndex);
+						EA_ASSERT(ShaderParameterConstantBuffer->GetConstantBufferReflectionData()->ResourceBindingDesc.BindPoint == CBVRegisterIndex);
 						InCommandList.GetD3DCommandList()->SetGraphicsRootConstantBufferView(BaseIndex + CBVRegisterIndex, GPUVirtualAddress);
 
 						CachedConstantBufferGPUVirtualAddressOfFrequencies[FrequencyIndex][CBVRegisterIndex] = GPUVirtualAddress;
@@ -219,7 +445,20 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 }
 
 
-void FD3D12StateCache::Flush(FD3D12CommandList& InCommandList)
+void FD3D12StateCache::ApplyVertexBufferViewList(FD3D12CommandList& InCommandList)
+{
+	EA_ASSERT(CachedVertexBufferViewList.size() > 0);
+	InCommandList.GetD3DCommandList()->IASetVertexBuffers(0, CachedVertexBufferViewList.size(), CachedVertexBufferViewList.data());
+	bNeedToSetVertexBufferView = false;
+}
+
+void FD3D12StateCache::ApplyIndexBufferView(FD3D12CommandList& InCommandList)
+{
+	InCommandList.GetD3DCommandList()->IASetIndexBuffer(&CachedIndexBufferView);
+	bNeedToSetIndexBufferView = false;
+}
+
+void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipeline InPipeline)
 {
 	FD3D12DescriptorHeapBlock BaseHeapBlcok;
 
@@ -243,41 +482,66 @@ void FD3D12StateCache::Flush(FD3D12CommandList& InCommandList)
 
 	uint32_t OutUsedBlockCount = 0;
 
+	for (uint32_t ShaderFrequencyIndex = 0; ShaderFrequencyIndex < EShaderFrequency::NumShaderFrequency; ++ShaderFrequencyIndex)
+	{
+		FD3D12ShaderInstance* ShaderInstance = CachedPSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[ShaderFrequencyIndex];
+		if (ShaderInstance)
+		{
+			ShaderInstance->ApplyShaderParameter(InCommandContext);
+		}
+	}
+
 	if (bIsPSODirty)
 	{
-		ApplyPSO(InCommandList);
+		ApplyPSO(*(InCommandContext.GraphicsCommandList));
+	}
+	if ((InPipeline == EPipeline::Graphics) && bNeedToSetRTVAndDSV)
+	{
+		ApplyRTVAndDSV(*(InCommandContext.GraphicsCommandList));
 	}
 	if (bIsRootSignatureDirty)
 	{
-		ApplyRootSignature(InCommandList);
+		ApplyRootSignature(*(InCommandContext.GraphicsCommandList));
 	}
 	if (bNeedToSetDescriptorHeaps)
 	{
-		ApplyDescriptorHeap(InCommandList);
+		ApplyDescriptorHeap(*(InCommandContext.GraphicsCommandList));
 	}
 	if (DirtyFlagsOfSRVs.any())
 	{
-		ApplySRVs(InCommandList, BaseHeapBlcok, OutUsedBlockCount);
+		ApplySRVs(*(InCommandContext.GraphicsCommandList), BaseHeapBlcok, OutUsedBlockCount);
 	}
 	if (DirtyFlagsOfUAVs.any())
 	{
-		ApplyUAVs(InCommandList, BaseHeapBlcok, OutUsedBlockCount);
+		ApplyUAVs(*(InCommandContext.GraphicsCommandList), BaseHeapBlcok, OutUsedBlockCount);
 	}
 	if (bIsRootCBVDirty)
 	{
-		ApplyConstantBuffers(InCommandList);
+		ApplyConstantBuffers(*(InCommandContext.GraphicsCommandList));
+	}
+	if ((InPipeline == EPipeline::Graphics) && bNeedToSetVertexBufferView)
+	{
+		ApplyVertexBufferViewList(*(InCommandContext.GraphicsCommandList));
+	}
+	if ((InPipeline == EPipeline::Graphics) && bNeedToSetIndexBufferView && CachedIndexBufferView.BufferLocation)
+	{
+		ApplyIndexBufferView(*(InCommandContext.GraphicsCommandList));
 	}
 }
 
 void FD3D12StateCache::ResetForNewCommandlist()
 {
-	CachedPSOInitializer.Reset();
+	MEM_ZERO(CachedPSOInitializer);
 	CachedRootSignature = nullptr;
 
 	bIsPSODirty = true;
 	bIsRootSignatureDirty = true;
-	bNeedToSetDescriptorHeaps = true;
 	bIsRootCBVDirty = true;
+	bNeedToSetDescriptorHeaps = true;
+	bNeedToSetRTVAndDSV = true;
+
+	bNeedToSetVertexBufferView = true;
+	bNeedToSetIndexBufferView = true;
 
 	DirtyFlagsOfSRVs.set();
 	DirtyFlagsOfUAVs.set();
@@ -285,4 +549,18 @@ void FD3D12StateCache::ResetForNewCommandlist()
 	MEM_ZERO(CachedUAVs);
 	MEM_ZERO(CachedConstantBufferGPUVirtualAddressOfFrequencies); // always set constant buffer view at first flush of new frame
 	MEM_ZERO(CachedConstantBufferBindPointInfosOfFrequencies);
+}
+
+void FD3D12StateCache::ResetToDefault()
+{
+	CachedPSOInitializer.DrawDesc.PSODesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	CachedPSOInitializer.DrawDesc.PSODesc.RasterizerState.FrontCounterClockwise = true;
+	CachedPSOInitializer.DrawDesc.PSODesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.DepthEnable = false;
+	CachedPSOInitializer.DrawDesc.PSODesc.DepthStencilState.StencilEnable = false;
+	CachedPSOInitializer.PassDesc.SampleMask = UINT_MAX;
+	CachedPSOInitializer.DrawDesc.PSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	CachedPSOInitializer.PassDesc.NumRenderTargets = 1;
+	CachedPSOInitializer.PassDesc.SampleDesc.Count = 1;
 }

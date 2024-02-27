@@ -14,7 +14,7 @@ const wchar_t* redooms::log::LogVerbosityToString(const ELogVerbosity LogVerbosi
 	case ELogVerbosity::Fatal:
 		return EA_WCHAR("Fatal");
 	default:
-		EA_ASSUME(0);
+		RD_ASSUME(0);
 	}
 }
 
@@ -22,15 +22,23 @@ const wchar_t* redooms::log::LogVerbosityToString(const ELogVerbosity LogVerbosi
 
 void redooms::log::LogInternal(const ELogVerbosity LogVerbosity, const wchar_t* const FilePath, const unsigned int CodeLine, const wchar_t* const Format, ...)
 {
+	wchar_t Buffer[LOG_STRING_BUFFER_LENGTH];
+	va_list Args;
+	va_start(Args, Format);
+	const int CharCount = EA::StdC::Vsnprintf(Buffer, LOG_STRING_BUFFER_LENGTH, Format, Args);
+	EA_ASSERT(CharCount + 1<= LOG_STRING_BUFFER_LENGTH);
+	Buffer[CharCount] = '\n';
+	Buffer[CharCount + 1] = 0;
+
+	va_end(Args);
+
 	if (IsDebuggerPresent())
 	{
-		va_list Args;
-		va_start(Args, Format);
-
-		EA::StdC::Vprintf(Format, Args);
-		EA::StdC::Printf(EA_WCHAR("\n"));
-
-		va_end(Args);
+		OutputDebugStringW(Buffer);
+	}
+	else
+	{
+		EA::StdC::Printf(Buffer);
 	}
 
 	if (LogVerbosity == ELogVerbosity::Error)

@@ -3,60 +3,61 @@
 #include "D3D12RootSignature.h"
 #include "ShaderCompilers/DirectXShaderCompiler/include/dxc/dxcapi.h"
 
-static_assert(std::is_pod<FD3D12PSOInitializer::FDesc>::value);
-
 bool FD3D12PSOInitializer::IsValid() const
 {
-    return (CachedHash != 0) && (BoundShaderSet.CachedHash.Value[0] != 0) && (BoundShaderSet.CachedHash.Value[1] != 0);
+    return (CachedHash != 0) &&
+        (DrawDesc.BoundShaderSet.GetCachedHash().Value[0] != 0) && (DrawDesc.BoundShaderSet.GetCachedHash().Value[1] != 0);
 }
 
-void FD3D12PSOInitializer::Reset()
-{
-    MEM_ZERO(BoundShaderSet);
-    MEM_ZERO(Desc);
-    MEM_ZERO(CachedHash);
-}
+// void FD3D12PSOInitializer::Reset()
+// {
+//     MEM_ZERO(BoundShaderSet);
+//     MEM_ZERO(Desc);
+//     MEM_ZERO(CachedHash);
+// }
 
 void FD3D12PSOInitializer::FinishCreating()
 {
-    EA_ASSERT(CachedHash == 0);
-
     uint128 BoundShaderSetHash;
-    BoundShaderSetHash.first = BoundShaderSet.CachedHash.Value[0];
-    BoundShaderSetHash.second = BoundShaderSet.CachedHash.Value[1];
+    BoundShaderSetHash.first = DrawDesc.BoundShaderSet.GetCachedHash().Value[0];
+    BoundShaderSetHash.second = DrawDesc.BoundShaderSet.GetCachedHash().Value[1];
     const uint64 BoundShaderSetHash64 = Hash128to64(BoundShaderSetHash);
-    const uint64 DescHash = CityHash64(reinterpret_cast<const char*>(&Desc), sizeof(BoundShaderSetHash));
+    const uint64 PassDescHash = CityHash64(reinterpret_cast<const char*>(&PassDesc), sizeof(PassDesc));
+    const uint64 DrawDescHash = CityHash64(reinterpret_cast<const char*>(&DrawDesc.PSODesc), sizeof(DrawDesc.PSODesc));
 
-    CachedHash = BoundShaderSetHash64 ^ DescHash;
+    CachedHash = BoundShaderSetHash64 ^ PassDescHash ^ DrawDescHash;
 }
 
 FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     : PSOInitializer(InPSOInitializer)
 {
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC Desc{};
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC Desc;
+    MEM_ZERO(Desc);
   
-    Desc.pRootSignature = PSOInitializer.BoundShaderSet.GetRootSignature()->RootSignature.Get();
-    Desc.VS.pShaderBytecode = PSOInitializer.BoundShaderSet.ShaderList[EShaderFrequency::Vertex]->GetShaderBlob()->GetBufferPointer();
-    Desc.VS.BytecodeLength = PSOInitializer.BoundShaderSet.ShaderList[EShaderFrequency::Vertex]->GetShaderBlob()->GetBufferSize();
-    Desc.PS.pShaderBytecode = PSOInitializer.BoundShaderSet.ShaderList[EShaderFrequency::Pixel]->GetShaderBlob()->GetBufferPointer();
-    Desc.PS.BytecodeLength = PSOInitializer.BoundShaderSet.ShaderList[EShaderFrequency::Pixel]->GetShaderBlob()->GetBufferSize();
+    Desc.pRootSignature = PSOInitializer.DrawDesc.BoundShaderSet.GetRootSignature()->RootSignature.Get();
+    Desc.VS.pShaderBytecode = PSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[EShaderFrequency::Vertex]->GetShaderTemplate()->GetShaderBlob()->GetBufferPointer();
+    Desc.VS.BytecodeLength = PSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[EShaderFrequency::Vertex]->GetShaderTemplate()->GetShaderBlob()->GetBufferSize();
+    Desc.PS.pShaderBytecode = PSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[EShaderFrequency::Pixel]->GetShaderTemplate()->GetShaderBlob()->GetBufferPointer();
+    Desc.PS.BytecodeLength = PSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[EShaderFrequency::Pixel]->GetShaderTemplate()->GetShaderBlob()->GetBufferSize();
 
-    #define COPY_DESC_MEMBER(MemberName) Desc.MemberName = PSOInitializer.Desc.MemberName;
-    COPY_DESC_MEMBER(StreamOutput)
-    COPY_DESC_MEMBER(BlendState)
-    COPY_DESC_MEMBER(SampleMask)
-    COPY_DESC_MEMBER(RasterizerState)
-    COPY_DESC_MEMBER(DepthStencilState)
-    COPY_DESC_MEMBER(InputLayout)
-    COPY_DESC_MEMBER(IBStripCutValue)
-    COPY_DESC_MEMBER(PrimitiveTopologyType)
-    COPY_DESC_MEMBER(NumRenderTargets)
-    EA::StdC::Memcpy(&(Desc.RTVFormats), &(PSOInitializer.Desc.RTVFormats), sizeof(DXGI_FORMAT) * ARRAY_LENGTH(PSOInitializer.Desc.RTVFormats));
-    COPY_DESC_MEMBER(DSVFormat)
-    COPY_DESC_MEMBER(SampleDesc)
-    COPY_DESC_MEMBER(NodeMask)
-    COPY_DESC_MEMBER(CachedPSO)
-    COPY_DESC_MEMBER(Flags)
+    #define COPY_DRAW_DESC_MEMBER(MemberName) Desc.MemberName = PSOInitializer.DrawDesc.PSODesc.MemberName;
+    #define COPY_PASS_DESC_MEMBER(MemberName) Desc.MemberName = PSOInitializer.PassDesc.MemberName;
+
+    COPY_PASS_DESC_MEMBER(StreamOutput)
+    COPY_DRAW_DESC_MEMBER(BlendState)
+    COPY_PASS_DESC_MEMBER(SampleMask)
+    COPY_DRAW_DESC_MEMBER(RasterizerState)
+    COPY_DRAW_DESC_MEMBER(DepthStencilState)
+    COPY_DRAW_DESC_MEMBER(InputLayout)
+    COPY_PASS_DESC_MEMBER(IBStripCutValue)
+    COPY_DRAW_DESC_MEMBER(PrimitiveTopologyType)
+    COPY_PASS_DESC_MEMBER(NumRenderTargets)
+    EA::StdC::Memcpy(&(Desc.RTVFormats), &(PSOInitializer.PassDesc.RTVFormats), sizeof(DXGI_FORMAT) * ARRAY_LENGTH(PSOInitializer.PassDesc.RTVFormats));
+    COPY_PASS_DESC_MEMBER(DSVFormat)
+    COPY_PASS_DESC_MEMBER(SampleDesc)
+    COPY_PASS_DESC_MEMBER(NodeMask)
+    COPY_DRAW_DESC_MEMBER(CachedPSO)
+    COPY_PASS_DESC_MEMBER(Flags)
 
     // error fix #1
     // D3D12 ERROR : ID3D12Device::CreateInputLayout : Input Signature in bytecode could not be parsed.Data may be corrupt or in an unrecognizable format.[STATE_CREATION ERROR #63: CREATEINPUTLAYOUT_UNPARSEABLEINPUTSIGNATURE]

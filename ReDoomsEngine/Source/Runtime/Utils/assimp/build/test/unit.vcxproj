@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{475E0956-0C83-30F9-9C92-1EC53096CDF0}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>unit</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Source\Runtime\Utils\assimp\build\bin\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">unit.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">unit</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Source\Runtime\Utils\assimp\build\bin\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">unit.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">unit</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\test\unit;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest\include;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\pugixml\src;$(SolutionDir)Source\Runtime\Utils\assimp\test\..\contrib\rapidjson\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\build\code\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;_DEBUG;ASSIMP_BUILD_NO_M3D_IMPORTER;ASSIMP_BUILD_NO_M3D_EXPORTER;WIN32_LEAN_AND_MEAN;UNICODE;_UNICODE;ASSIMP_BUILD_NO_C4D_IMPORTER;RAPIDJSON_HAS_STDSTRING=1;RAPIDJSON_NOMEMBERITERATORCLASS;ASSIMP_TEST_MODELS_DIR="$(SolutionDir)Source/Runtime/Utils/assimp/test/models";ASSIMP_TEST_MODELS_NONBSD_DIR="$(SolutionDir)Source/Runtime/Utils/assimp/test/models-nonbsd";_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;ASSIMP_BUILD_NO_M3D_IMPORTER;ASSIMP_BUILD_NO_M3D_EXPORTER;WIN32_LEAN_AND_MEAN;UNICODE;_UNICODE;ASSIMP_BUILD_NO_C4D_IMPORTER;RAPIDJSON_HAS_STDSTRING=1;RAPIDJSON_NOMEMBERITERATORCLASS;ASSIMP_TEST_MODELS_DIR=\"$(SolutionDir)Source/Runtime/Utils/assimp/test/models\";ASSIMP_TEST_MODELS_NONBSD_DIR=\"$(SolutionDir)Source/Runtime/Utils/assimp/test/models-nonbsd\";_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\test\unit;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest\include;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\pugixml\src;$(SolutionDir)Source\Runtime\Utils\assimp\test\..\contrib\rapidjson\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\build\code\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\test\unit;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest\include;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\pugixml\src;$(SolutionDir)Source\Runtime\Utils\assimp\test\..\contrib\rapidjson\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\build\code\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\lib\Debug\assimp-vc143-mtd.lib;..\contrib\zlib\Debug\zlibstaticd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source/Runtime/Utils/assimp/build;$(SolutionDir)Source/Runtime/Utils/assimp/build/$(Configuration);/lib;/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(SolutionDir)Source/Runtime/Utils/assimp/build/lib/Debug/unit.lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)Source/Runtime/Utils/assimp/build/bin/Debug/unit.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\test\unit;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest\include;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\pugixml\src;$(SolutionDir)Source\Runtime\Utils\assimp\test\..\contrib\rapidjson\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\build\code\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;NDEBUG;ASSIMP_BUILD_NO_M3D_IMPORTER;ASSIMP_BUILD_NO_M3D_EXPORTER;WIN32_LEAN_AND_MEAN;UNICODE;_UNICODE;ASSIMP_BUILD_NO_C4D_IMPORTER;RAPIDJSON_HAS_STDSTRING=1;RAPIDJSON_NOMEMBERITERATORCLASS;ASSIMP_TEST_MODELS_DIR="$(SolutionDir)Source/Runtime/Utils/assimp/test/models";ASSIMP_TEST_MODELS_NONBSD_DIR="$(SolutionDir)Source/Runtime/Utils/assimp/test/models-nonbsd";_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING;NDEBUG;ASSIMP_BUILD_NO_M3D_IMPORTER;ASSIMP_BUILD_NO_M3D_EXPORTER;WIN32_LEAN_AND_MEAN;UNICODE;_UNICODE;ASSIMP_BUILD_NO_C4D_IMPORTER;RAPIDJSON_HAS_STDSTRING=1;RAPIDJSON_NOMEMBERITERATORCLASS;ASSIMP_TEST_MODELS_DIR=\"$(SolutionDir)Source/Runtime/Utils/assimp/test/models\";ASSIMP_TEST_MODELS_NONBSD_DIR=\"$(SolutionDir)Source/Runtime/Utils/assimp/test/models-nonbsd\";_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\test\unit;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest\include;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\pugixml\src;$(SolutionDir)Source\Runtime\Utils\assimp\test\..\contrib\rapidjson\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\build\code\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\test\unit;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest\include;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\pugixml\src;$(SolutionDir)Source\Runtime\Utils\assimp\test\..\contrib\rapidjson\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\build\code\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\lib\Release\assimp-vc143-mt.lib;..\contrib\zlib\Release\zlibstatic.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source/Runtime/Utils/assimp/build;$(SolutionDir)Source/Runtime/Utils/assimp/build/$(Configuration);/lib;/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(SolutionDir)Source/Runtime/Utils/assimp/build/lib/Release/unit.lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)Source/Runtime/Utils/assimp/build/bin/Release/unit.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule $(SolutionDir)Source/Runtime/Utils/assimp/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -S$(SolutionDir)Source/Runtime/Utils/assimp -B$(SolutionDir)Source/Runtime/Utils/assimp/build --check-stamp-file $(SolutionDir)Source/Runtime/Utils/assimp/build/test/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Source\Runtime\Utils\assimp\build\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule $(SolutionDir)Source/Runtime/Utils/assimp/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -S$(SolutionDir)Source/Runtime/Utils/assimp -B$(SolutionDir)Source/Runtime/Utils/assimp/build --check-stamp-file $(SolutionDir)Source/Runtime/Utils/assimp/build/test/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Source\Runtime\Utils\assimp\build\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\CCompilerTest.c" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Main.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\code\Common\Version.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\code\Common\Base64.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utSimd.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utIOSystem.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utIOStreamBuffer.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utIssues.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utAnim.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\AssimpAPITest.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\AssimpAPITest_aiMatrix3x3.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\AssimpAPITest_aiMatrix4x4.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\AssimpAPITest_aiQuaternion.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\AssimpAPITest_aiVector2D.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\AssimpAPITest_aiVector3D.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\MathTest.cpp" />
+    <ClInclude Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\MathTest.h" />
+    <ClInclude Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\RandomNumberGeneration.h" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utBatchLoader.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utDefaultIOStream.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utFastAtof.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utMetadata.cpp" />
+    <ClInclude Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\SceneDiffer.h" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\SceneDiffer.cpp" />
+    <ClInclude Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\UTLogStream.h" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\AbstractImportExportBase.cpp" />
+    <ClInclude Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\TestIOSystem.h" />
+    <ClInclude Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\TestModelFactory.h" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utTypes.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utVersion.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utProfiler.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utSharedPPData.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utStringUtils.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\utMaybe.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\utMesh.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\utStandardShapes.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\uiScene.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\utLineSplitter.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\utSpatialSort.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\utAssertHandler.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\utXmlParser.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\utBase64.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\utHash.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Common\utBaseProcess.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\Geometry\utGeometryUtils.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\Assxml\utAssxmlImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utLWSImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utLWOImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utSMDImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utglTFImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utglTF2ImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utHMPImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utIFCImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utFBXImporterExporter.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utImporter.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utExporter.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ut3DImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ut3DSImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utACImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utAMFImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utASEImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utD3MFImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utQ3DImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utSTLImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utXImporterExporter.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utX3DImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utDXFImporterExporter.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utPMXImporter.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utPLYImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utObjImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utObjTools.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utOpenGEXImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utSIBImporter.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utBlenderIntermediate.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utBlendImportAreaLight.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utBlenderImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utBlendImportMaterials.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utBlenderWork.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utBVHImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utColladaExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utColladaImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utCSMImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utB3DImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utMDCImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utAssbinImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utAssjsonImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utCOBImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utOgreImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utQ3BSPFileImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utOFFImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utNFFImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utXGLImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utMD2Importer.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utMD5Importer.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\utMDLImporter.cpp" />
+    <ClInclude Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\MDL\MDLHL1TestFiles.h" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\MDL\utMDLImporter_HL1_ImportSettings.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\MDL\utMDLImporter_HL1_Materials.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\MDL\utMDLImporter_HL1_Nodes.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\RAW\utRAWImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\ImportExport\Terragen\utTerragenImportExport.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utMaterialSystem.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utMatrix3x3.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utMatrix4x4.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utVector3.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utImproveCacheLocality.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utFixInfacingNormals.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utGenNormals.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utTriangulate.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utTextureTransform.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utRemoveRedundantMaterials.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utRemoveVCProcess.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utScaleProcess.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utArmaturePopulate.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utJoinVertices.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utRemoveComments.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utRemoveComponent.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utVertexTriangleAdjacency.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utSplitLargeMeshes.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utFindDegenerates.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utFindInvalidData.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utLimitBoneWeights.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utPretransformVertices.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utScenePreprocessor.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utTargetAnimation.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utSortByPType.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utSceneCombiner.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\test\unit\utGenBoundingBoxesProcess.cpp" />
+    <ClCompile Include="$(SolutionDir)Source\Runtime\Utils\assimp\contrib\googletest\googletest\src\gtest-all.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)Source\Runtime\Utils\assimp\build\ZERO_CHECK.vcxproj">
+      <Project>{4402874F-503F-3615-BB58-DD94FBDF9E62}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="$(SolutionDir)Source\Runtime\Utils\assimp\build\code\assimp.vcxproj">
+      <Project>{C3B55D19-51EB-38C1-A2DE-39BF532785C4}</Project>
+      <Name>assimp</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib\zlibstatic.vcxproj">
+      <Project>{1E24AADE-E489-3A46-AB83-AA48D6966944}</Project>
+      <Name>zlibstatic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

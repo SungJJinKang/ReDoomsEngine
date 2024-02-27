@@ -1,6 +1,6 @@
 #include "D3D12Window.h"
 #include "WindowsApplication.h"
-#include "Renderer.h"
+#include "Renderer/Renderer.h"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -77,6 +77,67 @@ LRESULT FD3D12Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
             FD3D12Manager::GetInstance()->GetSwapchain()->QueueResize((UINT)LOWORD(lParam), (UINT)HIWORD(lParam));
 		}
 		return 0;
+    case WM_KEYDOWN:
+        switch (static_cast<UINT8>(wParam))
+        {
+        case VK_LEFT:
+            LeftArrowKeyPressed = true;
+            break;
+        case VK_RIGHT:
+            RIghtArrowKeyPressed = true;
+			break;
+		case VK_UP:
+            UpArrowKeyPressed = true;
+			break;
+		case VK_DOWN:
+            DownArrowKeyPressed = true;
+			break;
+        case 0x57:
+            WKeyPressed = true;
+            break;
+        case 0x41:
+            AKeyPressed = true;
+            break;
+        case 0x53:
+            SKeyPressed = true;
+            break;
+        case 0x44:
+            DKeyPressed = true;
+			break;
+        case VK_ESCAPE:
+            ::PostQuitMessage(0);
+            break;
+        }
+        return 0;
+    case WM_KEYUP:
+        switch (static_cast<UINT8>(wParam))
+        {
+        case VK_LEFT:
+            LeftArrowKeyPressed = false;
+            break;
+        case VK_RIGHT:
+            RIghtArrowKeyPressed = false;
+			break;
+		case VK_UP:
+			UpArrowKeyPressed = false;
+			break;
+		case VK_DOWN:
+			DownArrowKeyPressed = false;
+			break;
+        case 0x57:
+            WKeyPressed = false;
+            break;
+        case 0x41:
+            AKeyPressed = false;
+            break;
+        case 0x53:
+            SKeyPressed = false;
+            break;
+        case 0x44:
+            DKeyPressed = false;
+            break;
+        }
+        return 0;
 	case WM_SYSCOMMAND:
 		if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
 			return 0;

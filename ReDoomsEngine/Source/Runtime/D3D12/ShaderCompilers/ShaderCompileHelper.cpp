@@ -157,8 +157,8 @@ FShaderCompileResult FShaderCompileHelper::CompileShader(FShaderCompileArguments
 			VERIFYD3D12RESULT(GetDxcLibrary()->GetBlobAsUtf8(RewrittenShaderTextBlob.Get(), ShaderTextBlob.GetAddressOf()));
 
 			// print rewritten shader text
- 			//eastl::string8 RewrittenShaderText{ reinterpret_cast<const char8_t*>(ShaderTextBlob->GetBufferPointer()), ShaderTextBlob->GetBufferSize() };
- 			//RD_LOG(ELogVerbosity::Log, EA_WCHAR("%s"), RewrittenShaderText);
+ 			eastl::string8 RewrittenShaderText{ reinterpret_cast<const char8_t*>(ShaderTextBlob->GetBufferPointer()), ShaderTextBlob->GetBufferSize() };
+ 			RD_LOG(ELogVerbosity::Log, EA_WCHAR("%s"), RewrittenShaderText);
 		}
 		else
 		{

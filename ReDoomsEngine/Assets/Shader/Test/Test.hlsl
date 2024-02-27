@@ -28,6 +28,7 @@ cbuffer VertexOffset
 }
 
 float4 ColorOffset3;
+float4 ColorOffset4;
 
 PSInput VSMain(float4 position : POSITION, float4 color : COLOR, float4 uv : TEXCOORD)
 {

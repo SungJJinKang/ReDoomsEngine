@@ -3,7 +3,7 @@
 #include "Commandline.h"
 #include "WindowsApplication.h"
 #include "D3D12Window.h"
-#include "D3D12TestRenderer.h"
+#include "Renderer/D3D12TestRenderer.h"
 #include <windows.h>
 
 int main(int argc, char** argv)
@@ -70,7 +70,11 @@ int main(int argc, char** argv)
 		++GCurrentFrameIndex;
 	}
 
-	TestRenderer.Destroy();
+	{
+		SCOPED_CPU_TIMER(Renderer_Destroy)
+		SCOPED_MEMORY_TRACE(Renderer_Destroy)
+		TestRenderer.Destroy();
+	}
 
 	return 0;
 }

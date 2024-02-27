@@ -204,37 +204,34 @@ void FD3D12ResourceAllocator::Init()
 	}
 }
 
-eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateTexture2D(FD3D12CommandContext& InCommandContext, eastl::vector<eastl::unique_ptr<FD3D12SubresourceContainer>>&& SubresourceDataList,
-	const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties, CD3DX12_RESOURCE_DESC InD3DResourceDesc, const eastl::optional<D3D12_RESOURCE_STATES>& InResourceStateAfterUpload)
+eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateTexture2D(const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties, CD3DX12_RESOURCE_DESC InD3DResourceDesc)
 {
-	EA_ASSERT(InD3DResourceDesc.SampleDesc.Count == 1); // doesn't support msaa for now
-	EA_ASSERT(InResourceCreateProperties.InitialResourceStates == D3D12_RESOURCE_STATE_COPY_DEST);
+    EA_ASSERT(InD3DResourceDesc.SampleDesc.Count == 1); // doesn't support msaa for now
 
-	eastl::shared_ptr<FD3D12Texture2DResource> D3D12TextureResource{};
+    eastl::shared_ptr<FD3D12Texture2DResource> D3D12TextureResource{};
 
-	FD3D12ResourceUpload ResourceUpload{};
+    FD3D12ResourceUpload ResourceUpload{};
 
-	if (!(InD3DResourceDesc.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS)))
-	{
-		// https://learn.microsoft.com/en-us/windows/win32/direct3d12/upload-and-readback-of-texture-data
+    if (!(InD3DResourceDesc.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS)))
+    {
+        // https://learn.microsoft.com/en-us/windows/win32/direct3d12/upload-and-readback-of-texture-data
 
+        FD3D12ResourcePool::EResourcePoolType TargetTexturePoolType = FD3D12ResourcePool::EResourcePoolType::ReadOnlyTexture;
 
-		FD3D12ResourcePool::EResourcePoolType TargetTexturePoolType = FD3D12ResourcePool::EResourcePoolType::ReadOnlyTexture;
+        D3D12_RESOURCE_ALLOCATION_INFO AllocInfo;
 
-		D3D12_RESOURCE_ALLOCATION_INFO AllocInfo;
-
-		if (CanUseSmallAlignment(InD3DResourceDesc))
-		{
+        if (CanUseSmallAlignment(InD3DResourceDesc))
+        {
             InD3DResourceDesc.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
-		}
+        }
         else
         {
             InD3DResourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
         }
-		AllocInfo = GetD3D12Device()->GetResourceAllocationInfo(0, 1, &InD3DResourceDesc);
+        AllocInfo = GetD3D12Device()->GetResourceAllocationInfo(0, 1, &InD3DResourceDesc);
 
-		// Below code doesn't work for now.. Debug layer complains about invalid alignment
-		// https://www.asawicki.info/news_1726_secrets_of_direct3d_12_resource_alignment
+        // Below code doesn't work for now.. Debug layer complains about invalid alignment
+        // https://www.asawicki.info/news_1726_secrets_of_direct3d_12_resource_alignment
 // 		InD3DResourceDesc.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
 // 		AllocInfo = GetD3D12Device()->GetResourceAllocationInfo(0, 1, &InD3DResourceDesc);
 // 
@@ -246,39 +243,54 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 // 			AllocInfo = GetD3D12Device()->GetResourceAllocationInfo(0, 1, &InD3DResourceDesc);
 // 		}
 
-		ComPtr<ID3D12Resource> TextureResource;
+        ComPtr<ID3D12Resource> TextureResource;
 
-		FD3D12ResourcePool& TargetPool = TexturePoolList[TargetTexturePoolType];
-		FD3D12ResourcePoolBlock OutAllocatedBlock{};
-		const bool bIsSuccess = TargetPool.AllocateBlock(AllocInfo.SizeInBytes, AllocInfo.Alignment, OutAllocatedBlock);
-		EA_ASSERT(bIsSuccess);
+        FD3D12ResourcePool& TargetPool = TexturePoolList[TargetTexturePoolType];
+        FD3D12ResourcePoolBlock OutAllocatedBlock{};
+        const bool bIsSuccess = TargetPool.AllocateBlock(AllocInfo.SizeInBytes, AllocInfo.Alignment, OutAllocatedBlock);
+        EA_ASSERT(bIsSuccess);
 
-		InD3DResourceDesc.Alignment = TargetPool.HeapDesc.Alignment; // Follow heap's alignment
+        InD3DResourceDesc.Alignment = TargetPool.HeapDesc.Alignment; // Follow heap's alignment
+        EA_ASSERT(IsAligned(OutAllocatedBlock.OffsetFromBase, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT));
 
-		VERIFYD3D12RESULT(GetD3D12Device()->CreatePlacedResource(
-			OutAllocatedBlock.OwnerResourcePoolHeapContainer.lock()->Heap.Get(),
-			OutAllocatedBlock.OffsetFromBase, // Offset in bytes from the beginning of the heap
-			&InD3DResourceDesc,
-			D3D12_RESOURCE_STATE_COPY_DEST,
-			nullptr,
-			IID_PPV_ARGS(&TextureResource)
-		));
+        VERIFYD3D12RESULT(GetD3D12Device()->CreatePlacedResource(
+            OutAllocatedBlock.OwnerResourcePoolHeapContainer.lock()->Heap.Get(),
+            OutAllocatedBlock.OffsetFromBase, // Offset in bytes from the beginning of the heap
+            &InD3DResourceDesc,
+            D3D12_RESOURCE_STATE_COPY_DEST,
+            nullptr,
+            IID_PPV_ARGS(&TextureResource)
+        ));
 
-		D3D12TextureResource = eastl::make_shared<FD3D12Texture2DResource>(TextureResource, OutAllocatedBlock, InResourceCreateProperties, InD3DResourceDesc);
-		D3D12TextureResource->InitResource();
+        D3D12TextureResource = eastl::make_shared<FD3D12Texture2DResource>(TextureResource, OutAllocatedBlock, InResourceCreateProperties, InD3DResourceDesc);
+        D3D12TextureResource->InitResource();
 
-		// Why providing pResourceBefore is faster? : https://www.gamedev.net/forums/topic/691943-resource-aliasing-barriers/5357916/
+        // Why providing pResourceBefore is faster? : https://www.gamedev.net/forums/topic/691943-resource-aliasing-barriers/5357916/
 
-		// Even if doesn't issue aliasing barrier, it works well and deubg layter doesn't complain
-		ResourceUpload.ResourceBarriersBeforeUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Aliasing(nullptr, TextureResource.Get()));
-	}
-	else
-	{
-		// create committed resource
-		D3D12TextureResource = eastl::make_shared<FD3D12Texture2DResource>(InResourceCreateProperties, InD3DResourceDesc);
-	}
+        // Even if doesn't issue aliasing barrier, it works well and deubg layter doesn't complain
+        ResourceUpload.ResourceBarriersBeforeUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Aliasing(nullptr, TextureResource.Get()));
+    }
+    else
+    {
+        // create committed resource
+        D3D12TextureResource = eastl::make_shared<FD3D12Texture2DResource>(InResourceCreateProperties, InD3DResourceDesc);
+        D3D12TextureResource->InitResource();
+    }
 
-	ResourceUpload.Resource = D3D12TextureResource;
+    return D3D12TextureResource;
+}
+
+eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateTexture2D(FD3D12CommandContext& InCommandContext, eastl::vector<eastl::unique_ptr<FD3D12SubresourceContainer>>&& SubresourceDataList,
+	const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties, CD3DX12_RESOURCE_DESC InD3DResourceDesc, const eastl::optional<D3D12_RESOURCE_STATES>& InResourceStateAfterUpload)
+{
+	EA_ASSERT(InD3DResourceDesc.SampleDesc.Count == 1); // doesn't support msaa for now
+	EA_ASSERT(InResourceCreateProperties.InitialResourceStates == D3D12_RESOURCE_STATE_COPY_DEST);
+
+    eastl::shared_ptr<FD3D12Texture2DResource> D3D12TextureResource = AllocateTexture2D(InResourceCreateProperties, InD3DResourceDesc);
+
+	FD3D12ResourceUpload ResourceUpload{};
+
+	ResourceUpload.Resource = D3D12TextureResource->GetResource();
 	EA_ASSERT(SubresourceDataList.size() == 1); // @todo : support mips
 	ResourceUpload.SubresourceContainers = eastl::move(SubresourceDataList);
 	if (InResourceStateAfterUpload.has_value())
@@ -293,14 +305,97 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 	return D3D12TextureResource;
 }
 
+eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateRenderTarget(const uint32_t InWidth, const uint32_t InHeight)
+{
+    FD3D12Resource::FResourceCreateProperties ResourceCreateProperties{};
+    ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+    ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
+    ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+    CD3DX12_RESOURCE_DESC ResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+        DXGI_FORMAT_R32_FLOAT,
+        InWidth,
+        InHeight,
+        1, // @todo : support mips
+        0,
+        1, // @todo : support msaa
+        0,
+        D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
+    );
+
+    return AllocateTexture2D(ResourceCreateProperties, ResourceDesc);
+}
+
+eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateDepthTarget(
+    const uint32_t InWidth,
+    const uint32_t InHeight,
+    const float InDepthClearValue,
+    const DXGI_FORMAT InTextureFormat,
+    const DXGI_FORMAT InClearFormat
+)
+{
+    FD3D12Resource::FResourceCreateProperties ResourceCreateProperties{};
+    ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+    ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
+    ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+    ResourceCreateProperties.ClearValue.emplace();
+    ResourceCreateProperties.ClearValue->Format = InClearFormat;
+    ResourceCreateProperties.ClearValue->DepthStencil.Depth = InDepthClearValue;
+
+        CD3DX12_RESOURCE_DESC ResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+            InTextureFormat,
+            InWidth,
+            InHeight,
+            1, // @todo : support mips
+            0,
+            1, // @todo : support msaa
+            0,
+            D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
+        );
+
+    return AllocateTexture2D(ResourceCreateProperties, ResourceDesc);
+}
+
+eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateDepthStencilTarget(
+    const uint32_t InWidth, 
+    const uint32_t InHeight, 
+    const float InDepthClearValue,
+    const float InStencilClearValue, 
+    const DXGI_FORMAT InTextureFormat, /*= DXGI_FORMAT_R24G8_TYPELESS */
+    const DXGI_FORMAT InClearFormat
+)
+{
+    FD3D12Resource::FResourceCreateProperties ResourceCreateProperties{};
+    ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+    ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
+    ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+    ResourceCreateProperties.ClearValue.emplace();
+    ResourceCreateProperties.ClearValue->Format = InClearFormat;
+    ResourceCreateProperties.ClearValue->DepthStencil.Depth = InDepthClearValue;
+    ResourceCreateProperties.ClearValue->DepthStencil.Stencil = InStencilClearValue;
+
+    CD3DX12_RESOURCE_DESC ResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+        InTextureFormat,
+        InWidth,
+        InHeight,
+        1, // @todo : support mips
+        0,
+        1, // @todo : support msaa
+        0,
+        D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
+    );
+
+    return AllocateTexture2D(ResourceCreateProperties, ResourceDesc);
+}
+
 eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::AllocateStaticVertexBuffer(FD3D12CommandContext& InCommandContext, eastl::unique_ptr<FD3D12SubresourceContainer>&& SubresourceDataList, const uint32_t InDefaultStrideInBytes)
 {
 	return AllocateStaticVertexIndexBuffer(InCommandContext, eastl::move(SubresourceDataList), InDefaultStrideInBytes, true);
 }
 
-eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::AllocateStaticVertexBuffer(FD3D12CommandContext& InCommandContext, const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes)
+eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::AllocateStaticVertexBuffer(FD3D12CommandContext& InCommandContext, const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes, eastl::shared_ptr<Assimp::Importer> Importer)
 {
-	eastl::unique_ptr<FD3D12VertexIndexBufferSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(Data, InSize);
+	eastl::unique_ptr<FD3D12VertexIndexBufferSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(Data, InSize, Importer);
 	return AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), InDefaultStrideInBytes);
 }
 
@@ -309,9 +404,9 @@ eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::Allo
 	return AllocateStaticVertexIndexBuffer(InCommandContext, eastl::move(SubresourceDataList), InDefaultStrideInBytes, false);
 }
 
-eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::AllocateStaticIndexBuffer(FD3D12CommandContext& InCommandContext, const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes)
+eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::AllocateStaticIndexBuffer(FD3D12CommandContext& InCommandContext, const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes, eastl::shared_ptr<Assimp::Importer> Importer)
 {
-	eastl::unique_ptr<FD3D12VertexIndexBufferSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(Data, InSize);
+	eastl::unique_ptr<FD3D12VertexIndexBufferSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(Data, InSize, Importer);
 	return AllocateStaticIndexBuffer(InCommandContext, eastl::move(SubresourceContainer), InDefaultStrideInBytes);
 }
 
@@ -320,12 +415,14 @@ eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::Allo
 {
     // @todo implment vertex/index buffer pool. currently a lot of unused memory is wasted because of d3d12 64kb alignment limitation.
     // Create large heap and sub-allocate vertex/index buffer resource on it
-	eastl::shared_ptr<FD3D12VertexIndexBufferResource> VertexIndexBufferResource =  eastl::make_shared<FD3D12VertexIndexBufferResource>(SubresourceDataList->SubresourceData.RowPitch, InDefaultStrideInBytes, false);
+	eastl::shared_ptr<FD3D12VertexIndexBufferResource> VertexIndexBufferResource =  eastl::make_shared<FD3D12VertexIndexBufferResource>(SubresourceDataList->SubresourceData.RowPitch, InDefaultStrideInBytes, bVertexBuffer, false);
 	VertexIndexBufferResource->InitResource();
 
 	FD3D12ResourceUpload ResourceUpload{};
-	ResourceUpload.Resource = VertexIndexBufferResource;
+	ResourceUpload.Resource = VertexIndexBufferResource->GetResource();
 	ResourceUpload.SubresourceContainers.emplace_back(eastl::move(SubresourceDataList));
+    ResourceUpload.ResourceBarriersBeforeUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(VertexIndexBufferResource->GetResource(),
+        bVertexBuffer ? D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER : D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_INDEX_BUFFER, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST));
 	ResourceUpload.ResourceBarriersAfterUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(VertexIndexBufferResource->GetResource(), D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST,
 		bVertexBuffer ? D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER : D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_INDEX_BUFFER));
 
@@ -347,16 +444,7 @@ void FD3D12ResourceAllocator::OnEndFrame(FD3D12CommandContext& InCommandContext)
 FD3D12ResourcePool FD3D12ResourceAllocator::AllocateNewPool(const D3D12_HEAP_DESC InHeapDesc)
 {
 	FD3D12ResourcePool Pool{};
+    Pool.HeapDesc = InHeapDesc;
 
-	EA_ASSERT(InHeapDesc.SizeInBytes > 0);
-	eastl::shared_ptr<FD3D12ResourcePoolHeapContainer>& NewResourcePoolHeapContainer = Pool.ResourcePoolHeapContainerList.emplace_back(eastl::make_shared<FD3D12ResourcePoolHeapContainer>());
-	VERIFYD3D12RESULT(GetD3D12Device()->CreateHeap(&(InHeapDesc), IID_PPV_ARGS(&(NewResourcePoolHeapContainer->Heap))));
-
-	FD3D12ResourcePoolBlock FreeBlock{};
-	FreeBlock.Size = InHeapDesc.SizeInBytes;
-	FreeBlock.OffsetFromBase = 0;
-
-	NewResourcePoolHeapContainer->FreeBlockList.emplace_back(FreeBlock);
-	
 	return Pool;
 }

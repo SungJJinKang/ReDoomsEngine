@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B4110F2D-A39C-30EC-8955-C44B76E7E257}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>UpdateAssimpLibsDebugSymbolsAndDLLs</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PostBuildEvent>
+      <Message>							</Message>
+      <Command>setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Release/assimp-vc143-mt.dll $(SolutionDir)Source/Runtime/Utils/assimp/bin64/assimp-vc143-mt.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Release/assimp-vc143-mt.exp $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mt.exp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Release/assimp-vc143-mt.lib $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mt.lib
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Debug/assimp-vc143-mtd.dll $(SolutionDir)Source/Runtime/Utils/assimp/bin64/assimp-vc143-mtd.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Debug/assimp-vc143-mtd.exp $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mtd.exp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Debug/assimp-vc143-mtd.ilk $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mtd.ilk
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Debug/assimp-vc143-mtd.lib $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mtd.lib
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Debug/assimp-vc143-mtd.pdb $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mtd.pdb
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PostBuildEvent>
+      <Message>							</Message>
+      <Command>setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Release/assimp-vc143-mt.dll $(SolutionDir)Source/Runtime/Utils/assimp/bin64/assimp-vc143-mt.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Release/assimp-vc143-mt.exp $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mt.exp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Release/assimp-vc143-mt.lib $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mt.lib
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Debug/assimp-vc143-mtd.dll $(SolutionDir)Source/Runtime/Utils/assimp/bin64/assimp-vc143-mtd.dll
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Debug/assimp-vc143-mtd.exp $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mtd.exp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Debug/assimp-vc143-mtd.ilk $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mtd.ilk
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Debug/assimp-vc143-mtd.lib $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mtd.lib
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy $(SolutionDir)Source/Runtime/Utils/assimp/build/code/Debug/assimp-vc143-mtd.pdb $(SolutionDir)Source/Runtime/Utils/assimp/lib64/assimp-vc143-mtd.pdb
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)Source\Runtime\Utils\assimp\build\ZERO_CHECK.vcxproj">
+      <Project>{4402874F-503F-3615-BB58-DD94FBDF9E62}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

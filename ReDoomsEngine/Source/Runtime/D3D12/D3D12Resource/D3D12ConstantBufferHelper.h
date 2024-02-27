@@ -56,39 +56,39 @@ struct FD3D12ConstantBufferMemberVariableHelper<double>
 };
 
 template <>
-struct FD3D12ConstantBufferMemberVariableHelper<XMFLOAT2>
+struct FD3D12ConstantBufferMemberVariableHelper<Vector2>
 {
 	static constexpr bool CanBeMemberOfConstantBuffer = true;
 	static constexpr size_t Alignment = 8;
 
-	using AlignedType = eastl::aligned_storage_t<sizeof(XMFLOAT2), Alignment>;
+	using AlignedType = eastl::aligned_storage_t<sizeof(Vector2), Alignment>;
 };
 
 template <>
-struct FD3D12ConstantBufferMemberVariableHelper<XMFLOAT3>
+struct FD3D12ConstantBufferMemberVariableHelper<Vector3>
 {
 	static constexpr bool CanBeMemberOfConstantBuffer = true;
 	static constexpr size_t Alignment = 16;
 
-	using AlignedType = eastl::aligned_storage_t<sizeof(XMFLOAT3), Alignment>;
+	using AlignedType = eastl::aligned_storage_t<sizeof(Vector3), Alignment>;
 };
 
 template <>
-struct FD3D12ConstantBufferMemberVariableHelper<XMVECTOR>
+struct FD3D12ConstantBufferMemberVariableHelper<Vector4>
 {
 	static constexpr bool CanBeMemberOfConstantBuffer = true;
 	static constexpr size_t Alignment = 16;
 
-	using AlignedType = eastl::aligned_storage_t<sizeof(XMVECTOR), Alignment>;
+	using AlignedType = eastl::aligned_storage_t<sizeof(Vector4), Alignment>;
 };
 
 template <>
-struct FD3D12ConstantBufferMemberVariableHelper<XMFLOAT4X4>
+struct FD3D12ConstantBufferMemberVariableHelper<Matrix>
 {
 	static constexpr bool CanBeMemberOfConstantBuffer = true;
 	static constexpr size_t Alignment = 16;
 
-	using AlignedType = eastl::aligned_storage_t<sizeof(XMFLOAT4X4), Alignment>;
+	using AlignedType = eastl::aligned_storage_t<sizeof(Matrix), Alignment>;
 };
 
 #define START_DEFINE_CONSTANT_BUFFER(ConstantBufferTypeName)

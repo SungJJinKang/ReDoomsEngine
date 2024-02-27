@@ -1,7 +1,7 @@
 #pragma once
 #include "CommonInclude.h"
 
-#include "D3D12Include.h"
+#include "d3d12.h"
 
 enum EShaderFrequency : uint8_t
 {
@@ -16,47 +16,11 @@ constexpr D3D12_SHADER_VISIBILITY D3D12_SHADER_VISIBILITY_START = D3D12_SHADER_V
 constexpr D3D12_SHADER_VISIBILITY D3D12_SHADER_VISIBILITY_END = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL;
 constexpr D3D12_SHADER_VISIBILITY D3D12_SHADER_VISIBILITY_NUM = D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_AMPLIFICATION;
 
-inline bool IsSupportedShaderFrequency(const EShaderFrequency InShaderFrequency)
-{
-	switch (InShaderFrequency)
-	{
-	case EShaderFrequency::Vertex:
-	case EShaderFrequency::Pixel:
-		return true;
-	default:
-		return false;
-	}
-}
+bool IsSupportedShaderFrequency(const EShaderFrequency InShaderFrequency);
 
-inline EShaderFrequency D3D12ShaderVisibilityToShaderFrequency(const D3D12_SHADER_VISIBILITY D3D12ShaderVisibility)
-{
-	switch (D3D12ShaderVisibility)
-	{
-	case D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX:
-	{
-		return EShaderFrequency::Vertex;
-	}
-	case D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL:
-	{
-		return EShaderFrequency::Pixel;
-	}
-	default:
-		EA_ASSUME(0);
-	}
-}
+EShaderFrequency D3D12ShaderVisibilityToShaderFrequency(const D3D12_SHADER_VISIBILITY D3D12ShaderVisibility);
 
-inline D3D12_SHADER_VISIBILITY ShaderFrequencyToD3D12ShaderVisibility(const EShaderFrequency ShaderFrequency)
-{
-	switch (ShaderFrequency)
-	{
-	case EShaderFrequency::Vertex:
-		return D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_VERTEX;
-	case EShaderFrequency::Pixel:
-		return D3D12_SHADER_VISIBILITY::D3D12_SHADER_VISIBILITY_PIXEL;
-	default:
-		EA_ASSUME(0);
-	}
-}
+D3D12_SHADER_VISIBILITY ShaderFrequencyToD3D12ShaderVisibility(const EShaderFrequency ShaderFrequency);
 
 const wchar_t* GetShaderFrequencyString(const EShaderFrequency ShaderFrequency);
 
@@ -76,22 +40,12 @@ enum ED3D12QueueType : uint32_t
 	NumD3D12QueueType
 };
 
-inline ED3D12QueueType CommandAllocatorTypeTiD3D12QueueType(const ECommandAllocatorType InCommandAllocatorType)
-{
-	switch (InCommandAllocatorType)
-	{
-	case ECommandAllocatorType::Graphics:
-		return ED3D12QueueType::Direct;
-// 	case ECommandAllocatorType::ResourceUploadBatcher:
-// 		return ED3D12QueueType::Direct; // @todo : use copy queue
-	default:
-		EA_ASSUME(false);
-	}
-}
+ED3D12QueueType CommandAllocatorTypeTiD3D12QueueType(const ECommandAllocatorType InCommandAllocatorType);
 
 enum ERendererState : uint64_t
 {
 	Initializing,
+	SceneSetup,
 	OnPreStartFrame,
 	OnStartFrame,
 	Draw,
@@ -99,4 +53,24 @@ enum ERendererState : uint64_t
 	OnEndFrame,
 	OnPostEndFrame,
 	Destroying
+};
+
+enum EStaticSamplerType
+{
+	StaticPointWrapSampler = 0,
+	StaticPointClampSampler,
+	StaticLinearWrapSampler,
+	StaticLinearClampSampler,
+	StaticAnisotropicWrapSampler,
+	StaticAnisotropicClampSampler,
+	NumStaticSamplerType,
+	UnknownStaticSamplerType,
+};
+
+EStaticSamplerType NameToEStaticSamplerType(const char* const InName);
+
+enum class EPipeline
+{
+	Graphics,
+	Compute
 };

@@ -60,9 +60,9 @@ public:
 		return ResourceCreateProperties.ClearValue.value();
 	}
 
-	inline ID3D12Resource* GetResource() const 
+	inline ID3D12Resource* GetResource(const uint32_t Index = 0) const 
 	{
-		return Resource.Get();
+		return Resources[Index].Get();
 	}
 	virtual D3D12_GPU_VIRTUAL_ADDRESS GPUVirtualAddress() const;
 
@@ -84,14 +84,14 @@ protected:
 	FD3D12Resource(ComPtr<ID3D12Resource>& InResource);
 	FD3D12Resource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 
+	bool bInit;
+
+	// Why does require multiple d3d resource? : To prevent previous frame's static(non-dynamic) constant buffer data from being overwritten 
+	eastl::array<ComPtr<ID3D12Resource>, GNumBackBufferCount> Resources{};
 	FResourceCreateProperties ResourceCreateProperties;
 	CD3DX12_RESOURCE_DESC Desc;
 
 private:
-
-	bool bInit;
-
-	ComPtr<ID3D12Resource> Resource;
 
 	eastl::shared_ptr<FD3D12ConstantBufferView> DefaultCBV;
 	eastl::shared_ptr<FD3D12ShaderResourceView> DefaultSRV;
@@ -108,6 +108,10 @@ protected:
 	FD3D12TextureResource(ComPtr<ID3D12Resource>& InResource, const FD3D12ResourcePoolBlock& InResourcePoolBlock, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12TextureResource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12TextureResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+
+	// This constructor is for swap chain
+	FD3D12TextureResource(ComPtr<ID3D12Resource> InRenderTargetResource);
+
 	virtual ~FD3D12TextureResource();
 
 	virtual bool IsBuffer() const
@@ -129,6 +133,10 @@ public:
 	FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResource, const FD3D12ResourcePoolBlock& InResourcePoolBlock, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12Texture2DResource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
 	FD3D12Texture2DResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+
+	// This constructor is for swap chain
+	FD3D12Texture2DResource(ComPtr<ID3D12Resource> InRenderTargetResource, const uint32_t InWidth, const uint32_t InHeight, const DXGI_FORMAT InFormat, const uint32_t InSampleCount, const uint32_t InSampleQuality);
+
 	FD3D12Texture2DResource(
 		const FResourceCreateProperties& InResourceCreateProperties,
 		const DXGI_FORMAT InFormat,
@@ -154,7 +162,8 @@ class FD3D12BufferResource : public FD3D12Resource
 {
 public:
 
-	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowDataAddress = nullptr, const bool bNeverCreateShadowData = false);
+	FD3D12BufferResource(const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, const D3D12_RESOURCE_STATES InInitialResourceState, uint8_t* const InShadowDataAddress = nullptr,
+		const uint32_t InShadowDataSize = 0, const bool bNeverCreateShadowData = false);
 	
 	virtual bool IsBuffer() const
 	{
@@ -184,7 +193,7 @@ public:
 	}
 
 	/// <summary>
-	/// Mapped address is write-combined type so it's recommended to copy data using memcpy style copy and not to read it
+	/// Mapped address is on write-combined page so it's recommended to copy data using memcpy style copy and not to read it
 	/// </summary>
 	/// <returns></returns>
 	virtual uint8_t* GetMappedAddress() const;
@@ -192,24 +201,32 @@ public:
 	void Unmap();
 
 	uint8_t* GetShadowDataAddress();
+	uint32_t GetShadowDataSize() const;
 	void FlushShadowData();
 
 	inline bool IsShadowDataDirty() const
 	{
-		return bIsShadowDataDirty;
+		return bIsShadowDataDirtyPerFrame[GCurrentBackbufferIndex];
+	}
+	inline bool IsShadowDataDirty(const uint32_t InFrameIndex) const
+	{
+		return bIsShadowDataDirtyPerFrame[InFrameIndex];
 	}
 
 protected:
 
-	FResourceCreateProperties MakeResourceCreateProperties(const bool bDynamic) const;
+	FResourceCreateProperties MakeResourceCreateProperties(const bool bDynamic, const D3D12_RESOURCE_STATES InInitialResourceState) const;
 
 	bool bDynamic;
 	uint8_t* MappedAddress = nullptr;
 
 	bool bShadowDataCreatedFromThisInstance;
 	uint8_t* ShadowDataAddress;
+	uint32_t ShadowDataSize;
 
-	bool bIsShadowDataDirty;
+	// if dynamic buffer, first element may be used.
+	eastl::array<bool, GNumBackBufferCount> bIsShadowDataDirtyPerFrame;
+
 	eastl::vector<uint8_t> ShadowData;
 };
 
@@ -217,11 +234,12 @@ class FD3D12VertexIndexBufferResource : public FD3D12BufferResource
 {
 public:
 
-	FD3D12VertexIndexBufferResource(const uint64_t InSize, const uint32_t InDefaultStrideInBytes, const bool bInDynamic = false);
+	FD3D12VertexIndexBufferResource(const uint64_t InSize, const uint32_t InDefaultStrideInBytes, const bool bInVertexBuffer, const bool bInDynamic = false);
 
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint32_t InStrideInBytes) const;
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint64_t InBaseOffsetInBytes, const uint32_t InSizeInBytes, const uint32_t InStrideInBytes) const;
+	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView(const uint64_t InBaseOffsetInBytes, const DXGI_FORMAT InFormat, const uint32_t InSizeInBytes) const;
 
 private:
@@ -229,24 +247,24 @@ private:
 	uint32_t DefaultStrideInBytes;
 };
 
-template <typename BufferDataType>
-class TD3D12BufferResource : public FD3D12BufferResource
-{
-public:
-	
-	TD3D12BufferResource(const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowDataAddress = nullptr)
-		: FD3D12BufferResource(sizeof(BufferDataType), InFlags, InAlignment, bInDynamic, InShadowDataAddress)
-	{
-	}
-
-	BufferDataType& GetShadowData()
-	{
-		return reinterpret_cast<BufferDataType&>(*GetShadowDataAddress());
-	}
-
-private:
-
-};
+// template <typename BufferDataType>
+// class TD3D12BufferResource : public FD3D12BufferResource
+// {
+// public:
+// 	
+// 	TD3D12BufferResource(const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment = 0, const bool bInDynamic = false, uint8_t* const InShadowDataAddress = nullptr, const uint32_t InShadowDataSize = 0)
+// 		: FD3D12BufferResource(sizeof(BufferDataType), InFlags, InAlignment, bInDynamic, InShadowDataAddress, InShadowDataSize)
+// 	{
+// 	}
+// 
+// 	BufferDataType& GetShadowData()
+// 	{
+// 		return reinterpret_cast<BufferDataType&>(*GetShadowDataAddress());
+// 	}
+// 
+// private:
+// 
+// };
 
 class FD3D12ConstantBufferResource : public FD3D12BufferResource
 {
@@ -261,19 +279,23 @@ public:
 	/// This can be slow. But it's acceptable when it's size is small and the data changes frequently
 	/// https://therealmjp.github.io/posts/gpu-memory-pool/
 	/// </param>
-	FD3D12ConstantBufferResource(const uint64_t InSize, const bool bInDynamic = true, uint8_t* const InShadowDataAddress = nullptr, const bool bNeverCreateShadowData = false)
+	FD3D12ConstantBufferResource(const uint64_t InSize, const bool bInDynamic = true, uint8_t* const InShadowDataAddress = nullptr, const uint32_t InShadowDataSize = 0, const bool bNeverCreateShadowData = false, const bool bInNeedVersioning = true)
 		: FD3D12BufferResource( // @todo : 
 			Align(InSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT),
 			D3D12_RESOURCE_FLAG_NONE,
 			0,
 			bInDynamic,
+			bInDynamic ? D3D12_RESOURCE_STATE_GENERIC_READ : D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
 			InShadowDataAddress,
+			InShadowDataSize,
 			bNeverCreateShadowData),
-		ConstantBufferBlock()
+		bNeedVersioning(bInNeedVersioning),
+		ConstantBufferRingBufferBlock()
 	{
 	}
 
 	virtual void InitResource();
+	virtual void CreateD3D12Resource();
 	virtual bool IsCreateD3D12ResourceOnInitResource() const
 	{
 		return false;
@@ -289,7 +311,8 @@ public:
 
 protected:
 
-	FD3D12ConstantBufferBlock ConstantBufferBlock;
+	const bool bNeedVersioning;
+	FD3D12ConstantBufferBlock ConstantBufferRingBufferBlock;
 };
 
 template <typename ConstantBufferDataType>
@@ -317,39 +340,5 @@ public:
 	}
 
 protected:
-
-};
-
-class FD3D12RenderTargetResource : public FD3D12Resource
-{
-public:
-
-	FD3D12RenderTargetResource(ComPtr<ID3D12Resource> InRenderTargetResource);
-
-	virtual bool IsBuffer() const
-	{
-		return false;
-	}
-	virtual bool IsTexture() const
-	{
-		return true;
-	}
-
-private:
-
-};
-
-class FD3D12DepthStencilTargetResource : public FD3D12Resource
-{
-public:
-
-	virtual bool IsBuffer() const
-	{
-		return false;
-	}
-	virtual bool IsTexture() const
-	{
-		return true;
-	}
 
 };

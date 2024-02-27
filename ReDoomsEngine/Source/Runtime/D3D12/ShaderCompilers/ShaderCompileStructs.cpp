@@ -11,7 +11,7 @@ const wchar_t* FShaderCompileArguments::ConvertShaderFrequencyToShaderProfile(co
 	case EShaderFrequency::Compute:
 		return EA_WCHAR("cs_6_0");
 	default:
-		EA_ASSUME(0);
+		RD_ASSUME(0);
 	}
 }
 

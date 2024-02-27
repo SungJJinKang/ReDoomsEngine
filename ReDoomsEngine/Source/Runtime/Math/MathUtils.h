@@ -1,5 +1,14 @@
 #pragma once
 
+#include "DirectXMath.h"
+#include "DirectXCollision.h"
+#include "DirectXColors.h"
+#include "DirectXPackedVector.h"
+#include "Math/SimpleMath.h"
+
+using namespace DirectX::SimpleMath;
+using namespace DirectX;
+
 template <typename T>
 EASTL_FORCE_INLINE constexpr T Align(T Val, uint64_t Alignment)
 {
