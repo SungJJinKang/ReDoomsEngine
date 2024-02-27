@@ -44,21 +44,6 @@ void D3D12TestRenderer::Init()
 	FRenderer::Init();
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
-
-	DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
-
-	{
-		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
-		MEM_ZERO(BasePassPSODesc);
-		BasePassPSODesc.SampleMask = UINT_MAX;
-		BasePassPSODesc.NumRenderTargets = 1;
-		BasePassPSODesc.RTVFormats[0] = SwapChain->GetFormat();
-		BasePassPSODesc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
-		BasePassPSODesc.SampleDesc.Count = 1;
-
-		RenderScene.PerPassData[static_cast<uint32_t>(EPass::BasePass)].PassPSODesc = BasePassPSODesc;
-	}
-
 }
 
 
@@ -169,6 +154,22 @@ void D3D12TestRenderer::OnStartFrame()
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
+	if (DepthStencilTarget == nullptr ||
+		((DepthStencilTarget->GetDesc().Width != SwapChain->GetWidth()) || (DepthStencilTarget->GetDesc().Height != SwapChain->GetHeight()))
+		)
+	{
+		DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
+
+		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
+		MEM_ZERO(BasePassPSODesc);
+		BasePassPSODesc.SampleMask = UINT_MAX;
+		BasePassPSODesc.NumRenderTargets = 1;
+		BasePassPSODesc.RTVFormats[0] = SwapChain->GetFormat();
+		BasePassPSODesc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
+		BasePassPSODesc.SampleDesc.Count = 1;
+
+		RenderScene.PerPassData[static_cast<uint32_t>(EPass::BasePass)].PassPSODesc = BasePassPSODesc;
+	}
 
 	{
 		float Speed = GTimeDelta * 3.0f;
