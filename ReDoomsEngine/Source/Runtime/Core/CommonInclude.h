@@ -50,3 +50,5 @@ using namespace DirectX;
 #include "TextHelper.h"
 #include "Utils.h"
 #include "Profiling.h"
+
+#include "Utils/ConsoleVariable.h"
