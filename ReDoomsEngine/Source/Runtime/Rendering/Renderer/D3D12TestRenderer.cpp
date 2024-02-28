@@ -276,6 +276,8 @@ bool D3D12TestRenderer::Draw()
 
 	// Base Pass
 	{
+		SCOPED_CPU_TIMER(Renderer_Draw_BasePass)
+
 		eastl::vector<FMeshDraw> BasePassMeshDrawList = RenderScene.CreateMeshDrawListForPass(EPass::BasePass);
 
 		{

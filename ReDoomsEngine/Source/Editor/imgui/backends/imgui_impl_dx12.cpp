@@ -53,6 +53,8 @@
 #pragma comment(lib, "d3dcompiler") // Automatically link with d3dcompiler.lib as we are using D3DCompile() below.
 #endif
 
+#include "D3D12GlobalVariables.h"
+
 // DirectX data
 struct ImGui_ImplDX12_RenderBuffers;
 struct ImGui_ImplDX12_Data
@@ -280,6 +282,7 @@ void ImGui_ImplDX12_RenderDrawData(ImDrawData* draw_data, ID3D12GraphicsCommandL
                 ctx->SetGraphicsRootDescriptorTable(1, texture_handle);
                 ctx->RSSetScissorRects(1, &r);
                 ctx->DrawIndexedInstanced(pcmd->ElemCount, 1, pcmd->IdxOffset + global_idx_offset, pcmd->VtxOffset + global_vtx_offset, 0);
+                ++GDrawCallCount;
             }
         }
         global_idx_offset += cmd_list->IdxBuffer.Size;
