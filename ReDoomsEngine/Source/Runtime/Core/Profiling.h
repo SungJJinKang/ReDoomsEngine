@@ -2,8 +2,8 @@
 
 #include "Macros.h"
 
-#define ENABLE_PROFILER 0
-//#define ENABLE_PROFILER RD_DEBUG
+//#define ENABLE_PROFILER 0
+#define ENABLE_PROFILER RD_DEBUG
 
 #include "EASTL/vector_map.h"
 #if ENABLE_PROFILER

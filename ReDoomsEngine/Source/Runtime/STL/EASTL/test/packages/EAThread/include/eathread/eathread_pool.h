@@ -207,6 +207,8 @@ namespace EA
 			/// Otherwise the user is expected to manually start the thread.
 			ThreadInfo* AddThread(const ThreadParameters& tp, bool bBeginThread);
 
+			void ProcessJobFromCallerThread(const ThreadParameters& tp);
+
 			// Gets the ThreadInfo for the nth Thread identified by index. 
 			// You must call this function and use the info within a Lock/Unlock pair 
 			// on the thread pool.

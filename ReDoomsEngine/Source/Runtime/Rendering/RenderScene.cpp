@@ -1,6 +1,7 @@
 #include "RenderScene.h"
 
 #include "D3D12CommandContext.h"
+#include "Thread/JobSystem.h"
 
 static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
 
@@ -65,6 +66,16 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 
 	// Step 1
 	// CPU Culling (https://github.com/SungJJinKang/EveryCulling)
+
+	FJobSystem::GetInstance()->Dispatch(5, [](FJobDispatchArgs Arg)
+		{
+			const char* const ThreadNAME = TLSThreadName.data();
+			const uint32_t JobIndex = Arg.JobIndex;
+			EA::Thread::ThreadSleep(100);
+		}
+	);
+	FJobSystem::GetInstance()->ProcessJobsOnCallerThread();
+
 
 	// Step 2
 	// Draw!
