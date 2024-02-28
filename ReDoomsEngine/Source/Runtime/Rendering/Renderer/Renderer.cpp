@@ -44,6 +44,7 @@ void FRenderer::Init()
 {
 	GCurrentRendererState = ERendererState::Initializing;
 
+	JobSystem.Init();
 	D3D12Manager.Init(this);
 
 	eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> OnlineDescriptorHeap = eastl::make_shared<FD3D12OnlineDescriptorHeapContainer>(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);

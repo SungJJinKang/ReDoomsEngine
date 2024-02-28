@@ -9,6 +9,7 @@
 #include "D3D12Shader.h"
 #include "View.h"
 #include "RenderScene.h"
+#include "Thread/JobSystem.h"
 
 class FD3D12CommandAllocator;
 
@@ -61,6 +62,7 @@ public:
 
 	void SetUpGlobalConstantBuffer();
 
+	FJobSystem JobSystem;
 	FD3D12Manager D3D12Manager;
 
 	FRenderScene RenderScene;

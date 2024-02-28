@@ -33,8 +33,9 @@ using Microsoft::WRL::ComPtr;
 #include "EASTL/bitvector.h"
 #include "EASTL/queue.h"
 #include "EASTL/optional.h"
-#include "eathread/eathread_futex.h"
 #include "EAStdC/EASingleton.h"
+#include "eathread/eathread_futex.h"
+#include "eathread/eathread_thread.h"
 
 // Math
 #include "DirectXMath.h"
@@ -50,5 +51,6 @@ using namespace DirectX;
 #include "TextHelper.h"
 #include "Utils.h"
 #include "Profiling.h"
+#include "Thread.h"
 
 #include "Utils/ConsoleVariable.h"
