@@ -1,6 +1,6 @@
 #include "OccluderListManager.h"
 
-#include <algorithm>
+#include "EASTL/sort.h"
 
 #include "../../DataType/EntityBlock.h"
 
@@ -20,11 +20,11 @@ void culling::OccluderListManager::AddOccluder(EntityBlock* const entityBlock, c
 	}
 }
 
-std::vector<culling::OccluderData> culling::OccluderListManager::GetSortedOccluderList(const culling::Vec3& cameraWorldPos) const
+eastl::vector<culling::OccluderData> culling::OccluderListManager::GetSortedOccluderList(const culling::Vec3& cameraWorldPos) const
 {
 	const size_t occluderCount = mOccluderCount;
 
-	std::vector<culling::OccluderData> occluderList;
+	eastl::vector<culling::OccluderData> occluderList;
 	occluderList.reserve(EVERYCULLING_MIN(occluderCount, OCCLUDER_LIST_POOL_SIZE));
 
 	for (size_t occluderIndex = 0; occluderIndex < EVERYCULLING_MIN(occluderCount, OCCLUDER_LIST_POOL_SIZE) ; occluderIndex++)
@@ -32,7 +32,7 @@ std::vector<culling::OccluderData> culling::OccluderListManager::GetSortedOcclud
 		occluderList.emplace_back(mOccluderList[occluderIndex]);
 	}
 	
-	std::sort
+	eastl::sort
 	(
 		occluderList.begin(),
 		occluderList.end(),

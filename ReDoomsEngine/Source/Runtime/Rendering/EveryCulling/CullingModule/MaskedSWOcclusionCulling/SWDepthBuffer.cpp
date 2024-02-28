@@ -1,7 +1,5 @@
 #include "SWDepthBuffer.h"
 
-#include <limits>
-
 void culling::HizData::Reset()
 {
 	L0MaxDepthValue = (float)EVERYCULLING_MAX_DEPTH_VALUE;
@@ -35,7 +33,7 @@ void culling::Tile::Reset(const unsigned long long currentTickCount)
 }
 
 
-culling::SWDepthBuffer::SWDepthBuffer(std::uint32_t width, std::uint32_t height)
+culling::SWDepthBuffer::SWDepthBuffer(uint32_t width, uint32_t height)
 	: 
 	mResolution{
 	width, height,
@@ -52,30 +50,30 @@ culling::SWDepthBuffer::SWDepthBuffer(std::uint32_t width, std::uint32_t height)
 	mTiles(nullptr)
 {
 	//"DepthBuffer's size should be multiple of EVERYCULLING_TILE_WIDTH"
-	assert(mResolution.mWidth % EVERYCULLING_TILE_WIDTH == 0);
+	EA_ASSERT(mResolution.mWidth % EVERYCULLING_TILE_WIDTH == 0);
 	//"DepthBuffer's size should be multiple of EVERYCULLING_TILE_HEIGHT"
-	assert(mResolution.mHeight % EVERYCULLING_TILE_HEIGHT == 0);
+	EA_ASSERT(mResolution.mHeight % EVERYCULLING_TILE_HEIGHT == 0);
 
 	
 	const size_t tileCount = static_cast<size_t>(mResolution.mRowTileCount) * static_cast<size_t>(mResolution.mColumnTileCount);
 	mTiles = new Tile[tileCount];
 	mTileCount = tileCount;
 
-	for(std::uint32_t y = 0 ; y < mResolution.mRowTileCount ; y++)
+	for(uint32_t y = 0 ; y < mResolution.mRowTileCount ; y++)
 	{
-		for (std::uint32_t x = 0; x < mResolution.mColumnTileCount; x++)
+		for (uint32_t x = 0; x < mResolution.mColumnTileCount; x++)
 		{
 			culling::Tile* const tile = GetTile(y, x);
-			tile->mLeftBottomTileOrginX = x * (std::uint32_t)EVERYCULLING_TILE_WIDTH;
-			tile->mLeftBottomTileOrginY = y * (std::uint32_t)EVERYCULLING_TILE_HEIGHT;
+			tile->mLeftBottomTileOrginX = x * (uint32_t)EVERYCULLING_TILE_WIDTH;
+			tile->mLeftBottomTileOrginY = y * (uint32_t)EVERYCULLING_TILE_HEIGHT;
 		}
 	}
 
 	//test
 	for(size_t i = 0 ; i < tileCount ; i++)
 	{
-		assert(mTiles[i].mLeftBottomTileOrginX != 0xFFFFFFFF);
-		assert(mTiles[i].mLeftBottomTileOrginY != 0xFFFFFFFF);
+		EA_ASSERT(mTiles[i].mLeftBottomTileOrginX != 0xFFFFFFFF);
+		EA_ASSERT(mTiles[i].mLeftBottomTileOrginY != 0xFFFFFFFF);
 	}
 
 }
@@ -96,7 +94,7 @@ void culling::SWDepthBuffer::Reset(const unsigned long long currentTickCount)
 		mTiles[i].Reset(currentTickCount);
 	}
 
-	std::atomic_thread_fence(std::memory_order_release);
+	eastl::atomic_thread_fence(eastl::memory_order_release);
 }
 
 const culling::Tile* culling::SWDepthBuffer::GetTiles() const

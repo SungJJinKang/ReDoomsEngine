@@ -2,8 +2,6 @@
 
 #include "../../EveryCullingCore.h"
 
-#include <atomic>
-
 #include "../../DataType/Math/Triangle.h"
 
 
@@ -86,22 +84,22 @@ namespace culling
 		void Reset();
 
 		void ClearCoverageMaskAllSubTile();
-		EVERYCULLING_FORCE_INLINE void ClearCoverageMask(const size_t subTileIndex)
+		EASTL_FORCE_INLINE void ClearCoverageMask(const size_t subTileIndex)
 		{
-			assert(subTileIndex < 8);
-			(reinterpret_cast<std::uint32_t*>(&L1CoverageMask))[subTileIndex] = 0x00000000;
+			EA_ASSERT(subTileIndex < 8);
+			(reinterpret_cast<uint32_t*>(&L1CoverageMask))[subTileIndex] = 0x00000000;
 		}
 		void FillCoverageMask();
 
-		EVERYCULLING_FORCE_INLINE void ClearL1MaxDepthValueAllSubTile()
+		EASTL_FORCE_INLINE void ClearL1MaxDepthValueAllSubTile()
 		{
 			L1SubTileMaxDepthValue = _mm256_set1_ps(0.0f);
 		}
 
-		EVERYCULLING_FORCE_INLINE void ClearL1MaxDepthValue(const size_t subTileIndex)
+		EASTL_FORCE_INLINE void ClearL1MaxDepthValue(const size_t subTileIndex)
 		{
-			assert(subTileIndex < 8);
-			(reinterpret_cast<std::uint32_t*>(&L1SubTileMaxDepthValue))[subTileIndex] = 0x00000000;
+			EA_ASSERT(subTileIndex < 8);
+			(reinterpret_cast<uint32_t*>(&L1SubTileMaxDepthValue))[subTileIndex] = 0x00000000;
 		}
 
 		
@@ -135,16 +133,16 @@ namespace culling
 		/// </summary>
 		/// <param name="subTileIndex"></param>
 		/// <returns></returns>
-		EVERYCULLING_FORCE_INLINE bool IsCoverageMaskFullByOne(const size_t subTileIndex) const
+		EASTL_FORCE_INLINE bool IsCoverageMaskFullByOne(const size_t subTileIndex) const
 		{
-			assert(subTileIndex < 8);
-			return reinterpret_cast<const std::uint32_t*>(&L1CoverageMask)[subTileIndex] == 0xFFFFFFFF;
+			EA_ASSERT(subTileIndex < 8);
+			return reinterpret_cast<const uint32_t*>(&L1CoverageMask)[subTileIndex] == 0xFFFFFFFF;
 		}
 		
 		/*
-		EVERYCULLING_FORCE_INLINE void OverriteCoverageMask(const size_t subTileIndex, const std::uint32_t tileCoverage)
+		EASTL_FORCE_INLINE void OverriteCoverageMask(const size_t subTileIndex, const uint32_t tileCoverage)
 		{
-			reinterpret_cast<std::uint32_t*>(&L1CoverageMask)[subTileIndex] = tileCoverage;
+			reinterpret_cast<uint32_t*>(&L1CoverageMask)[subTileIndex] = tileCoverage;
 		}
 		*/
 
@@ -184,8 +182,8 @@ namespace culling
 		friend class SWDepthBuffer;
 	private:
 		
-		std::uint32_t mLeftBottomTileOrginX = 0xFFFFFFFF;
-		std::uint32_t mLeftBottomTileOrginY = 0xFFFFFFFF;
+		uint32_t mLeftBottomTileOrginX = 0xFFFFFFFF;
+		uint32_t mLeftBottomTileOrginY = 0xFFFFFFFF;
 
 
 
@@ -193,15 +191,15 @@ namespace culling
 
 		HizData mHizDatas;
 		TriangleData mBinnedTriangleList[BIN_TRIANGLE_CAPACITY_PER_TILE];
-		std::atomic<size_t> mBinnedTriangleCount;
+		eastl::atomic<size_t> mBinnedTriangleCount;
 
 		void Reset(const unsigned long long currentTickCount);
-		EVERYCULLING_FORCE_INLINE std::uint32_t GetLeftBottomTileOrginX() const
+		EASTL_FORCE_INLINE uint32_t GetLeftBottomTileOrginX() const
 		{
 			return mLeftBottomTileOrginX;
 		}
 
-		EVERYCULLING_FORCE_INLINE std::uint32_t GetLeftBottomTileOrginY() const
+		EASTL_FORCE_INLINE uint32_t GetLeftBottomTileOrginY() const
 		{
 			return mLeftBottomTileOrginY;
 		}
@@ -210,36 +208,36 @@ namespace culling
 
 	struct Resolution
 	{
-		const std::uint32_t mWidth;
-		const std::uint32_t mHeight;
-		const std::uint32_t mRowTileCount;
-		const std::uint32_t mColumnTileCount;
-		const std::uint32_t mRowSubTileCount;
-		const std::uint32_t mColumnSubTileCount;
+		const uint32_t mWidth;
+		const uint32_t mHeight;
+		const uint32_t mRowTileCount;
+		const uint32_t mColumnTileCount;
+		const uint32_t mRowSubTileCount;
+		const uint32_t mColumnSubTileCount;
 
 		/// <summary>
 		/// 0
 		/// </summary>
-		const std::uint32_t mLeftBottomTileOrginX;
+		const uint32_t mLeftBottomTileOrginX;
 		
 		/// <summary>
 		/// 0
 		/// </summary>
-		const std::uint32_t mLeftBottomTileOrginY;
+		const uint32_t mLeftBottomTileOrginY;
 		
 		/// <summary>
 		/// Left Bottom PointX of Right Top Tile
 		/// if Buffer Width is 37 -> 32
 		/// if Buffer Width is 64 -> 32
 		/// </summary>
-		const std::uint32_t mRightTopTileOrginX;
+		const uint32_t mRightTopTileOrginX;
 		
 		/// <summary>
 		/// Left Bottom PointY of Right Top Tile
 		/// if Buffer Width is 37 -> 32
 		/// if Buffer Width is 64 -> 32
 		/// </summary>
-		const std::uint32_t mRightTopTileOrginY;
+		const uint32_t mRightTopTileOrginY;
 
 #if EVERYCULLING_NDC_RANGE == EVERYCULLING_MINUS_ONE_TO_POSITIVE_ONE
 		culling::EVERYCULLING_M256F mReplicatedScreenHalfWidth;
@@ -255,14 +253,14 @@ namespace culling
 
 		Resolution
 		(
-			const std::uint32_t width,
-			const std::uint32_t height,
-			const std::uint32_t rowCount,
-			const std::uint32_t columnCount,
-			const std::uint32_t leftBottomTileOrginX,
-			const std::uint32_t leftBottomTileOrginY,
-			const std::uint32_t rightTopTileOrginX,
-			const std::uint32_t rightTopTileOrginY,
+			const uint32_t width,
+			const uint32_t height,
+			const uint32_t rowCount,
+			const uint32_t columnCount,
+			const uint32_t leftBottomTileOrginX,
+			const uint32_t leftBottomTileOrginY,
+			const uint32_t rightTopTileOrginX,
+			const uint32_t rightTopTileOrginY,
 			const culling::EVERYCULLING_M256F replicatedScreenHalfWidth,
 			const culling::EVERYCULLING_M256F replicatedScreenHalfHeight,
 			const culling::EVERYCULLING_M256F replicatedScreenWidth,
@@ -310,11 +308,11 @@ namespace culling
 		/// </summary>
 		/// <param name="width">Screen Width</param>
 		/// <param name="height">Scree Height</param>
-		SWDepthBuffer(std::uint32_t width, std::uint32_t height);
+		SWDepthBuffer(uint32_t width, uint32_t height);
 
 		~SWDepthBuffer();
 
-		EVERYCULLING_FORCE_INLINE size_t GetTileCount() const
+		EASTL_FORCE_INLINE size_t GetTileCount() const
 		{
 			return mTileCount;
 		}
@@ -323,32 +321,32 @@ namespace culling
 		
 		const Tile* GetTiles() const;
 
-		EVERYCULLING_FORCE_INLINE const Tile* GetTile(const std::uint32_t rowIndex, const std::uint32_t colIndex) const
+		EASTL_FORCE_INLINE const Tile* GetTile(const uint32_t rowIndex, const uint32_t colIndex) const
 		{
-			assert(rowIndex < mResolution.mRowTileCount);
-			assert(colIndex < mResolution.mColumnTileCount);
+			EA_ASSERT(rowIndex < mResolution.mRowTileCount);
+			EA_ASSERT(colIndex < mResolution.mColumnTileCount);
 
 			const size_t tileIndex = (mResolution.mRowTileCount - rowIndex - 1) * mResolution.mColumnTileCount + colIndex;
-			assert(tileIndex < mTileCount);
+			EA_ASSERT(tileIndex < mTileCount);
 			return mTiles + tileIndex;
 		}
-		EVERYCULLING_FORCE_INLINE Tile* GetTile(const std::uint32_t rowIndex, const std::uint32_t colIndex)
+		EASTL_FORCE_INLINE Tile* GetTile(const uint32_t rowIndex, const uint32_t colIndex)
 		{
-			assert(rowIndex < mResolution.mRowTileCount);
-			assert(colIndex < mResolution.mColumnTileCount);
+			EA_ASSERT(rowIndex < mResolution.mRowTileCount);
+			EA_ASSERT(colIndex < mResolution.mColumnTileCount);
 
 			const size_t tileIndex = (mResolution.mRowTileCount - rowIndex - 1) * mResolution.mColumnTileCount + colIndex;
-			assert(tileIndex < mTileCount);
+			EA_ASSERT(tileIndex < mTileCount);
 			return mTiles + tileIndex;
 		}
-		EVERYCULLING_FORCE_INLINE const Tile* GetTile(const size_t tileIndex) const
+		EASTL_FORCE_INLINE const Tile* GetTile(const size_t tileIndex) const
 		{
-			assert(tileIndex < mTileCount);
+			EA_ASSERT(tileIndex < mTileCount);
 			return mTiles + tileIndex;
 		}
-		EVERYCULLING_FORCE_INLINE Tile* GetTile(const size_t tileIndex)
+		EASTL_FORCE_INLINE Tile* GetTile(const size_t tileIndex)
 		{
-			assert(tileIndex < mTileCount);
+			EA_ASSERT(tileIndex < mTileCount);
 			return mTiles + tileIndex;
 		}
 	};

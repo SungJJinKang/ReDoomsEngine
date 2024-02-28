@@ -1,7 +1,5 @@
 #include "BinTrianglesStage.h"
 
-#include <vector>
-
 #include "../MaskedSWOcclusionCulling.h"
 #include "../SWDepthBuffer.h"
 #include "../Utility/vertexTransformationHelper.h"
@@ -14,13 +12,13 @@
 
 #define CONVERT_TO_M256I(_M256F) *reinterpret_cast<const culling::EVERYCULLING_M256I*>(&_M256F)
 
-EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::Clipping
+void culling::BinTrianglesStage::Clipping
 (
 	const culling::EVERYCULLING_M256F* const clipspaceVertexX,
 	const culling::EVERYCULLING_M256F* const clipspaceVertexY,
 	const culling::EVERYCULLING_M256F* const clipspaceVertexZ,
 	const culling::EVERYCULLING_M256F* const clipspaceVertexW,
-	std::uint32_t& triangleCullMask
+	uint32_t& triangleCullMask
 )
 {
 	const culling::EVERYCULLING_M256F pointANdcPositiveW = _mm256_andnot_ps(_mm256_set1_ps(-0.0f), clipspaceVertexW[0]);
@@ -47,14 +45,14 @@ EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::Clipping
 	triangleCullMask &= _mm256_movemask_ps(*reinterpret_cast<const culling::EVERYCULLING_M256F*>(&verticesInFrustum));
 }
 
-EVERYCULLING_FORCE_INLINE culling::EVERYCULLING_M256F culling::BinTrianglesStage::ComputePositiveWMask
+culling::EVERYCULLING_M256F culling::BinTrianglesStage::ComputePositiveWMask
 (
 	const culling::EVERYCULLING_M256F* const clipspaceVertexW
 )
 {
-	const culling::EVERYCULLING_M256F pointA_W_IsNegativeValue = _mm256_cmp_ps(clipspaceVertexW[0], _mm256_set1_ps(std::numeric_limits<float>::epsilon()), _CMP_GE_OQ);
-	const culling::EVERYCULLING_M256F pointB_W_IsNegativeValue = _mm256_cmp_ps(clipspaceVertexW[1], _mm256_set1_ps(std::numeric_limits<float>::epsilon()), _CMP_GE_OQ);
-	const culling::EVERYCULLING_M256F pointC_W_IsNegativeValue = _mm256_cmp_ps(clipspaceVertexW[2], _mm256_set1_ps(std::numeric_limits<float>::epsilon()), _CMP_GE_OQ);
+	const culling::EVERYCULLING_M256F pointA_W_IsNegativeValue = _mm256_cmp_ps(clipspaceVertexW[0], _mm256_set1_ps(eastl::numeric_limits<float>::epsilon()), _CMP_GE_OQ);
+	const culling::EVERYCULLING_M256F pointB_W_IsNegativeValue = _mm256_cmp_ps(clipspaceVertexW[1], _mm256_set1_ps(eastl::numeric_limits<float>::epsilon()), _CMP_GE_OQ);
+	const culling::EVERYCULLING_M256F pointC_W_IsNegativeValue = _mm256_cmp_ps(clipspaceVertexW[2], _mm256_set1_ps(eastl::numeric_limits<float>::epsilon()), _CMP_GE_OQ);
 
 	return _mm256_and_ps(pointA_W_IsNegativeValue, _mm256_and_ps(pointB_W_IsNegativeValue, pointC_W_IsNegativeValue));
 	
@@ -62,17 +60,17 @@ EVERYCULLING_FORCE_INLINE culling::EVERYCULLING_M256F culling::BinTrianglesStage
 
 
 
-EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::BackfaceCulling
+void culling::BinTrianglesStage::BackfaceCulling
 (
 	culling::EVERYCULLING_M256F* const screenPixelX,
 	culling::EVERYCULLING_M256F* const screenPixelY,
-	std::uint32_t& triangleCullMask
+	uint32_t& triangleCullMask
 )
 {
 	culling::EVERYCULLING_M256F triArea1 = _mm256_mul_ps(_mm256_sub_ps(screenPixelX[1], screenPixelX[0]), _mm256_sub_ps(screenPixelY[2], screenPixelY[0]));
 	culling::EVERYCULLING_M256F triArea2 = _mm256_mul_ps(_mm256_sub_ps(screenPixelX[0], screenPixelX[2]), _mm256_sub_ps(screenPixelY[0], screenPixelY[1]));
 	culling::EVERYCULLING_M256F triArea = _mm256_sub_ps(triArea1, triArea2);
-	culling::EVERYCULLING_M256F ccwMask = _mm256_cmp_ps(triArea, _mm256_set1_ps(std::numeric_limits<float>::epsilon()), _CMP_GT_OQ);
+	culling::EVERYCULLING_M256F ccwMask = _mm256_cmp_ps(triArea, _mm256_set1_ps(eastl::numeric_limits<float>::epsilon()), _CMP_GT_OQ);
 	
 	// Return a lane mask with all front faces set
 	triangleCullMask &= _mm256_movemask_ps(ccwMask);
@@ -80,7 +78,7 @@ EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::BackfaceCulling
 
 
 
-EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::PassTrianglesToTileBin
+void culling::BinTrianglesStage::PassTrianglesToTileBin
 (
 	const culling::EVERYCULLING_M256F& pointAScreenPixelPosX,
 	const culling::EVERYCULLING_M256F& pointAScreenPixelPosY,
@@ -94,7 +92,7 @@ EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::PassTrianglesToTileBi
 	const culling::EVERYCULLING_M256F& pointCScreenPixelPosY,
 	const culling::EVERYCULLING_M256F& pointCNdcSpaceVertexZ,
 
-	const std::uint32_t& triangleCullMask, 
+	const uint32_t& triangleCullMask, 
 	const size_t triangleCountPerLoop,
 	const culling::EVERYCULLING_M256I& outBinBoundingBoxMinX, 
 	const culling::EVERYCULLING_M256I& outBinBoundingBoxMinY,
@@ -111,27 +109,27 @@ EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::PassTrianglesToTileBi
 			const int intersectingMaxBoxX = (reinterpret_cast<const int*>(&outBinBoundingBoxMaxX))[triangleIndex];
 			const int intersectingMaxBoxY = (reinterpret_cast<const int*>(&outBinBoundingBoxMaxY))[triangleIndex];
 
-			assert(intersectingMinBoxX <= intersectingMaxBoxX);
-			assert(intersectingMinBoxY <= intersectingMaxBoxY);
+			EA_ASSERT(intersectingMinBoxX <= intersectingMaxBoxX);
+			EA_ASSERT(intersectingMinBoxY <= intersectingMaxBoxY);
 
 			const int startBoxIndexX = EVERYCULLING_MIN((int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount - 1), intersectingMinBoxX / EVERYCULLING_TILE_WIDTH);
 			const int startBoxIndexY = EVERYCULLING_MIN((int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount - 1), intersectingMinBoxY / EVERYCULLING_TILE_HEIGHT);
 			const int endBoxIndexX = EVERYCULLING_MIN((int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount - 1), intersectingMaxBoxX / EVERYCULLING_TILE_WIDTH);
 			const int endBoxIndexY = EVERYCULLING_MIN((int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount - 1), intersectingMaxBoxY / EVERYCULLING_TILE_HEIGHT);
 
-			assert(startBoxIndexX >= 0 && startBoxIndexX < (int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount));
-			assert(startBoxIndexY >= 0 && startBoxIndexY < (int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount));
+			EA_ASSERT(startBoxIndexX >= 0 && startBoxIndexX < (int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount));
+			EA_ASSERT(startBoxIndexY >= 0 && startBoxIndexY < (int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount));
 			
-			assert(endBoxIndexX >= 0 && endBoxIndexX <= (int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount));
-			assert(endBoxIndexY >= 0 && endBoxIndexY <= (int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount));
+			EA_ASSERT(endBoxIndexX >= 0 && endBoxIndexX <= (int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount));
+			EA_ASSERT(endBoxIndexY >= 0 && endBoxIndexY <= (int)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount));
 
 			for (int y = startBoxIndexY; y <= endBoxIndexY; y++)
 			{
 				for (int x = startBoxIndexX; x <= endBoxIndexX; x++)
 				{
-					Tile* const targetTile = mMaskedOcclusionCulling->mDepthBuffer.GetTile(static_cast<std::uint32_t>(y), static_cast<std::uint32_t>(x));
+					Tile* const targetTile = mMaskedOcclusionCulling->mDepthBuffer.GetTile(static_cast<uint32_t>(y), static_cast<uint32_t>(x));
 
-					//assert(targetTile->mBinnedTriangleList.GetIsBinFull() == false);
+					//EA_ASSERT(targetTile->mBinnedTriangleList.GetIsBinFull() == false);
 
 					const size_t triListIndex = targetTile->mBinnedTriangleCount++;
 
@@ -158,11 +156,11 @@ EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::PassTrianglesToTileBi
 
 
 
-EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::GatherVertices
+void culling::BinTrianglesStage::GatherVertices
 (
 	const float* const vertices,
 	const size_t verticeCount,
-	const std::uint32_t* const vertexIndices, 
+	const uint32_t* const vertexIndices, 
 	const size_t indiceCount, 
 	const size_t currentIndiceIndex, 
 	const size_t vertexStrideByte, 
@@ -172,12 +170,12 @@ EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::GatherVertices
 	culling::EVERYCULLING_M256F* outVerticesZ
 )
 {
-	assert(indiceCount % 3 == 0);
-	assert(currentIndiceIndex % 3 == 0);
-	assert(indiceCount != 0); // TODO : implement gatherVertices when there is no indiceCount
+	EA_ASSERT(indiceCount % 3 == 0);
+	EA_ASSERT(currentIndiceIndex % 3 == 0);
+	EA_ASSERT(indiceCount != 0); // TODO : implement gatherVertices when there is no indiceCount
 	
 	//Gather Indices
-	const std::uint32_t* currentVertexIndices = vertexIndices + currentIndiceIndex;
+	const uint32_t* currentVertexIndices = vertexIndices + currentIndiceIndex;
 	const culling::EVERYCULLING_M256I indiceIndexs = _mm256_set_epi32(21, 18, 15, 12, 9, 6, 3, 0);
 	static const culling::EVERYCULLING_M256I SIMD_LANE_MASK[9] = {
 		_mm256_setr_epi32(0,  0,  0,  0,  0,  0,  0,  0),
@@ -201,7 +199,7 @@ EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::GatherVertices
 	//m256i_indices[1] : 1 ( second vertex index ), 4, 7, 10, 13, 16, 19, 22
 	//m256i_indices[2] : 2, 5, 8, 11, 14, 17, 20, 23
 	//Point1 indices of Triangles
-	m256i_indices[0] = _mm256_i32gather_epi32(reinterpret_cast<const int*>(currentVertexIndices + 0), safeIndiceIndexs, 4); // why 4? -> vertexIndices is std::uint32_t( 4byte )
+	m256i_indices[0] = _mm256_i32gather_epi32(reinterpret_cast<const int*>(currentVertexIndices + 0), safeIndiceIndexs, 4); // why 4? -> vertexIndices is uint32_t( 4byte )
 	//Point2 indices of Triangles
 	m256i_indices[1] = _mm256_i32gather_epi32(reinterpret_cast<const int*>(currentVertexIndices + 1), safeIndiceIndexs, 4);
 	//Point3 indices of Triangles
@@ -296,9 +294,9 @@ void culling::BinTrianglesStage::BinTriangleThreadJob(const size_t cameraIndex)
 
 void culling::BinTrianglesStage::BinTriangleThreadJobByObjectOrder(const size_t cameraIndex)
 {
-	std::vector<OccluderData> sortedOccluderList = mMaskedOcclusionCulling->mOccluderListManager.GetSortedOccluderList(mCullingSystem->GetCameraWorldPosition(cameraIndex));
+	eastl::vector<OccluderData> sortedOccluderList = mMaskedOcclusionCulling->mOccluderListManager.GetSortedOccluderList(mCullingSystem->GetCameraWorldPosition(cameraIndex));
 
-	std::uint64_t totalBinnedIndiceCount = 0;
+	uint64_t totalBinnedIndiceCount = 0;
 	
 	for (size_t entityInfoIndex = 0; entityInfoIndex < sortedOccluderList.size() && totalBinnedIndiceCount < EVERYCULLING_MAX_BINNED_INDICE_COUNT ; entityInfoIndex++)
 	{
@@ -307,29 +305,29 @@ void culling::BinTrianglesStage::BinTriangleThreadJobByObjectOrder(const size_t 
 		culling::EntityBlock* const entityBlock = occluderInfo.mEntityBlock;
 		const size_t entityIndexInEntityBlock = occluderInfo.mEntityIndexInEntityBlock;
 		
-		assert(entityBlock->GetIsCulled(entityIndexInEntityBlock, cameraIndex) == false);
+		EA_ASSERT(entityBlock->GetIsCulled(entityIndexInEntityBlock, cameraIndex) == false);
 		
-		std::atomic<std::uint64_t>& atomic_binnedIndiceCountOfCurrentEntity = entityBlock->mVertexDatas[entityIndexInEntityBlock].mBinnedIndiceCount;
+		eastl::atomic<uint64_t>& atomic_binnedIndiceCountOfCurrentEntity = entityBlock->mVertexDatas[entityIndexInEntityBlock].mBinnedIndiceCount;
 
 		const culling::Vec3* const vertices = entityBlock->mVertexDatas[entityIndexInEntityBlock].mVertices;
-		const std::uint64_t verticeCount = entityBlock->mVertexDatas[entityIndexInEntityBlock].mVerticeCount;
-		const std::uint32_t* const indices = entityBlock->mVertexDatas[entityIndexInEntityBlock].mIndices;
-		const std::uint64_t totalIndiceCount = entityBlock->mVertexDatas[entityIndexInEntityBlock].mIndiceCount;
-		const std::uint64_t vertexStride = entityBlock->mVertexDatas[entityIndexInEntityBlock].mVertexStride;
+		const uint64_t verticeCount = entityBlock->mVertexDatas[entityIndexInEntityBlock].mVerticeCount;
+		const uint32_t* const indices = entityBlock->mVertexDatas[entityIndexInEntityBlock].mIndices;
+		const uint64_t totalIndiceCount = entityBlock->mVertexDatas[entityIndexInEntityBlock].mIndiceCount;
+		const uint64_t vertexStride = entityBlock->mVertexDatas[entityIndexInEntityBlock].mVertexStride;
 
-		std::uint64_t currentBinnedIndiceCountOfCurrentEntity = 0;
+		uint64_t currentBinnedIndiceCountOfCurrentEntity = 0;
 
 		while (totalBinnedIndiceCount + currentBinnedIndiceCountOfCurrentEntity < EVERYCULLING_MAX_BINNED_INDICE_COUNT)
 		{
 			static_assert((DEFAULT_BINNED_TRIANGLE_COUNT_PER_LOOP * 3) % 3 == 0);
-			currentBinnedIndiceCountOfCurrentEntity = atomic_binnedIndiceCountOfCurrentEntity.fetch_add(DEFAULT_BINNED_TRIANGLE_COUNT_PER_LOOP * 3, std::memory_order_seq_cst);
+			currentBinnedIndiceCountOfCurrentEntity = atomic_binnedIndiceCountOfCurrentEntity.fetch_add(DEFAULT_BINNED_TRIANGLE_COUNT_PER_LOOP * 3, eastl::memory_order_seq_cst);
 			
 			if (currentBinnedIndiceCountOfCurrentEntity < totalIndiceCount)
 			{
 				const culling::Mat4x4 modelToClipSpaceMatrix = mCullingSystem->GetCameraViewProjectionMatrix(cameraIndex) * entityBlock->GetModelMatrix(entityIndexInEntityBlock);
 
-				const std::uint32_t* const startIndicePtr = indices + currentBinnedIndiceCountOfCurrentEntity;
-				const std::uint64_t indiceCount = EVERYCULLING_MIN(DEFAULT_BINNED_TRIANGLE_COUNT_PER_LOOP * 3, totalIndiceCount - currentBinnedIndiceCountOfCurrentEntity);
+				const uint32_t* const startIndicePtr = indices + currentBinnedIndiceCountOfCurrentEntity;
+				const uint64_t indiceCount = EVERYCULLING_MIN(DEFAULT_BINNED_TRIANGLE_COUNT_PER_LOOP * 3, totalIndiceCount - currentBinnedIndiceCountOfCurrentEntity);
 
 				BinTriangles
 				(
@@ -378,24 +376,24 @@ const char* culling::BinTrianglesStage::GetCullingModuleName() const
 	return "BinTrianglesStage";
 }
 
-EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::BinTriangles
+void culling::BinTrianglesStage::BinTriangles
 (
 	const float* const vertices,
 	const uint64_t verticeCount,
-	const std::uint32_t* const vertexIndices,
+	const uint32_t* const vertexIndices,
 	const uint64_t indiceCount,
 	const uint64_t vertexStrideByte,
 	const float* const modelToClipspaceMatrix
 )
 {
-	assert(indiceCount > 0);
+	EA_ASSERT(indiceCount > 0);
 
 	const uint64_t fetchTriangleCount = EVERYCULLING_MIN(8, indiceCount / 3);
-	assert(fetchTriangleCount != 0);
+	EA_ASSERT(fetchTriangleCount != 0);
 
 	// First 4 bits show if traingle is valid
 	// Current Value : 00000000 00000000 00000000 11111111
-	std::uint32_t triangleCullMask = (1 << fetchTriangleCount) - 1;
+	uint32_t triangleCullMask = (1 << fetchTriangleCount) - 1;
 
 
 	//Why Size of array is 3?
@@ -437,7 +435,7 @@ EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::BinTriangles
 	/*
 	for (int i = 0; i < 3; i++)
 	{
-		const culling::EVERYCULLING_M256F point_W_IsNegativeValue = _mm256_cmp_ps(oneDividedByW[i], _mm256_set1_ps(std::numeric_limits<float>::epsilon()), _CMP_LT_OQ);
+		const culling::EVERYCULLING_M256F point_W_IsNegativeValue = _mm256_cmp_ps(oneDividedByW[i], _mm256_set1_ps(eastl::numeric_limits<float>::epsilon()), _CMP_LT_OQ);
 		oneDividedByW[i] = _mm256_blendv_ps(oneDividedByW[i], _mm256_set1_ps(1.0f), point_W_IsNegativeValue);
 	}
 	*/
@@ -583,8 +581,8 @@ EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::BinTriangles
 		{
 			if ((triangleCullMask & (1 << triangleIndex)) != 0x00000000)
 			{
-				assert(reinterpret_cast<const int*>(&outBinBoundingBoxMinX)[triangleIndex] <= reinterpret_cast<const int*>(&outBinBoundingBoxMaxX)[triangleIndex]);
-				assert(reinterpret_cast<const int*>(&outBinBoundingBoxMinY)[triangleIndex] <= reinterpret_cast<const int*>(&outBinBoundingBoxMaxY)[triangleIndex]);
+				EA_ASSERT(reinterpret_cast<const int*>(&outBinBoundingBoxMinX)[triangleIndex] <= reinterpret_cast<const int*>(&outBinBoundingBoxMaxX)[triangleIndex]);
+				EA_ASSERT(reinterpret_cast<const int*>(&outBinBoundingBoxMinY)[triangleIndex] <= reinterpret_cast<const int*>(&outBinBoundingBoxMaxY)[triangleIndex]);
 			}
 		}
 #endif
@@ -642,8 +640,8 @@ EVERYCULLING_FORCE_INLINE void culling::BinTrianglesStage::BinTriangles
 		{
 			if ((triangleCullMask & (1 << triangleIndex)) != 0x00000000)
 			{
-				assert(reinterpret_cast<const int*>(&outBinBoundingBoxMinX)[triangleIndex] <= reinterpret_cast<const int*>(&outBinBoundingBoxMaxX)[triangleIndex]);
-				assert(reinterpret_cast<const int*>(&outBinBoundingBoxMinY)[triangleIndex] <= reinterpret_cast<const int*>(&outBinBoundingBoxMaxY)[triangleIndex]);
+				EA_ASSERT(reinterpret_cast<const int*>(&outBinBoundingBoxMinX)[triangleIndex] <= reinterpret_cast<const int*>(&outBinBoundingBoxMaxX)[triangleIndex]);
+				EA_ASSERT(reinterpret_cast<const int*>(&outBinBoundingBoxMinY)[triangleIndex] <= reinterpret_cast<const int*>(&outBinBoundingBoxMaxY)[triangleIndex]);
 			}
 		}
 #endif

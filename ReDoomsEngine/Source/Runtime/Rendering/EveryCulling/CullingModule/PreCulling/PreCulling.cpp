@@ -6,7 +6,7 @@
 #define SCREEN_SPACE_MIN_VALUE (float)-50000.0f
 #define SCREEN_SPACE_MAX_VALUE (float)50000.0f
 
-EVERYCULLING_FORCE_INLINE void culling::PreCulling::ComputeScreenSpaceMinMaxAABBAndMinZ
+void culling::PreCulling::ComputeScreenSpaceMinMaxAABBAndMinZ
 (
 	const size_t cameraIndex,
 	culling::EntityBlock* const entityBlock, 
@@ -33,7 +33,7 @@ EVERYCULLING_FORCE_INLINE void culling::PreCulling::ComputeScreenSpaceMinMaxAABB
 		worldToClipSpaceMatrix.data()
 	);
 
-	const culling::EVERYCULLING_M256F isHomogeneousWNegative = _mm256_cmp_ps(aabbVertexW, _mm256_set1_ps(std::numeric_limits<float>::epsilon()), _CMP_LT_OQ);
+	const culling::EVERYCULLING_M256F isHomogeneousWNegative = _mm256_cmp_ps(aabbVertexW, _mm256_set1_ps(eastl::numeric_limits<float>::epsilon()), _CMP_LT_OQ);
 
 	const culling::EVERYCULLING_M256F oneDividedByW = culling::EVERYCULLING_M256F_DIV(_mm256_set1_ps(1.0f), aabbVertexW);
 
@@ -63,24 +63,24 @@ EVERYCULLING_FORCE_INLINE void culling::PreCulling::ComputeScreenSpaceMinMaxAABB
 
 	
 	// Do clamp min, max screen space
-	float minX = std::numeric_limits<float>::max();
-	float minY = std::numeric_limits<float>::max();
-	float maxX = -std::numeric_limits<float>::max();
-	float maxY = -std::numeric_limits<float>::max();
+	float minX = eastl::numeric_limits<float>::max();
+	float minY = eastl::numeric_limits<float>::max();
+	float maxX = -eastl::numeric_limits<float>::max();
+	float maxY = -eastl::numeric_limits<float>::max();
 
 	// set max value to invalid vertex index
 	// this is for branchless codes
 	
-	screenPixelPosX = _mm256_blendv_ps(screenPixelPosX, _mm256_set1_ps(std::numeric_limits<float>::max()), isHomogeneousWNegative);
-	screenPixelPosY = _mm256_blendv_ps(screenPixelPosY, _mm256_set1_ps(std::numeric_limits<float>::max()), isHomogeneousWNegative);
+	screenPixelPosX = _mm256_blendv_ps(screenPixelPosX, _mm256_set1_ps(eastl::numeric_limits<float>::max()), isHomogeneousWNegative);
+	screenPixelPosY = _mm256_blendv_ps(screenPixelPosY, _mm256_set1_ps(eastl::numeric_limits<float>::max()), isHomogeneousWNegative);
 	for(int i = 0 ; i < 8 ; i++)
 	{
 		minX = EVERYCULLING_MIN(minX, reinterpret_cast<const float*>(&screenPixelPosX)[i]);
 		minY = EVERYCULLING_MIN(minY, reinterpret_cast<const float*>(&screenPixelPosY)[i]);
 	}
 	
-	screenPixelPosX = _mm256_blendv_ps(screenPixelPosX, _mm256_set1_ps(-std::numeric_limits<float>::max()), isHomogeneousWNegative);
-	screenPixelPosY = _mm256_blendv_ps(screenPixelPosY, _mm256_set1_ps(-std::numeric_limits<float>::max()), isHomogeneousWNegative);
+	screenPixelPosX = _mm256_blendv_ps(screenPixelPosX, _mm256_set1_ps(-eastl::numeric_limits<float>::max()), isHomogeneousWNegative);
+	screenPixelPosY = _mm256_blendv_ps(screenPixelPosY, _mm256_set1_ps(-eastl::numeric_limits<float>::max()), isHomogeneousWNegative);
 	for (int i = 0; i < 8; i++)
 	{
 		maxX = EVERYCULLING_MAX(maxX, reinterpret_cast<const float*>(&screenPixelPosX)[i]);
@@ -96,8 +96,8 @@ EVERYCULLING_FORCE_INLINE void culling::PreCulling::ComputeScreenSpaceMinMaxAABB
 
 	// Compute min depth value
 
-	aabbVertexZ = _mm256_blendv_ps(aabbVertexZ, _mm256_set1_ps(std::numeric_limits<float>::max()), isHomogeneousWNegative);
-	float aabbMinDepthValue = std::numeric_limits<float>::max();
+	aabbVertexZ = _mm256_blendv_ps(aabbVertexZ, _mm256_set1_ps(eastl::numeric_limits<float>::max()), isHomogeneousWNegative);
+	float aabbMinDepthValue = eastl::numeric_limits<float>::max();
 	for (size_t i = 0; i < 8; i++)
 	{
 		aabbMinDepthValue = EVERYCULLING_MIN(aabbMinDepthValue, reinterpret_cast<const float*>(&aabbVertexZ)[i]);

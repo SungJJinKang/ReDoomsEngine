@@ -1,12 +1,5 @@
 #pragma once
-#include <cassert>
-#include <cstdint>
-
-#if defined(__GNUC__)  || defined( __clang__)
-#  define EVERYCULLING_FORCE_INLINE inline __attribute__ ((always_inline))
-#elif defined(_MSC_VER)
-#  define EVERYCULLING_FORCE_INLINE __forceinline
-#endif
+#include "CommonInclude.h"
 
 #define EVERYCULLING_CACHE_LINE_SIZE 64
 
@@ -39,32 +32,10 @@
 #define EVERYCULLING_DEBUG_CULLING
 #endif
 
-#if defined(_DEBUG) || true
-#define EVERYCULLING_PROFILING_CULLING
-#endif
-
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //Graphics API
 
-//Use Your 
-#ifndef EVERYCULLING_OPENGL
-#define EVERYCULLING_OPENGL
-//#include "" Put Your Opengl Header!!
-#endif
-
-#ifndef EVERYCULLING_DIRECTX
-//#define EVERYCULLING_DIRECTX
-//#include "" Put Your DIRECTX Header!!
-#endif
-
-#ifdef EVERYCULLING_OPENGL
-#define EVERYCULLING_NDC_RANGE EVERYCULLING_MINUS_ONE_TO_POSITIVE_ONE
-#elif DIRECTX
 #define EVERYCULLING_NDC_RANGE EVERYCULLING_ZERO_TO_POSITIVE_ONE
-#endif
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //EntityBlock
@@ -137,7 +108,7 @@
 #endif
 
 #ifndef EVERYCULLING_MAX_BINNED_INDICE_COUNT
-#define EVERYCULLING_MAX_BINNED_INDICE_COUNT (std::uint64_t)50000
+#define EVERYCULLING_MAX_BINNED_INDICE_COUNT (uint64_t)50000
 #endif
 
 #ifndef EVERYCULLING_RASTERIZE_DEPTH_BUFFER_FOR_TWO_FRAMES
@@ -172,9 +143,9 @@
 #endif
 
 #ifndef EVERYCULLING_ALIGNMENT_ASSERT
-#define EVERYCULLING_ALIGNMENT_ASSERT(ADDRESS, ALIGNMENT) (assert(ADDRESS % ALIGNMENT == 0))
+#define EVERYCULLING_ALIGNMENT_EA_ASSERT(ADDRESS, ALIGNMENT) (EA_ASSERT(ADDRESS % ALIGNMENT == 0))
 #endif
 
 #ifndef EVERYCULLING_INVALID_ENTITY_UNIQUE_ID_MAGIC_NUMBER
-#define EVERYCULLING_INVALID_ENTITY_UNIQUE_ID_MAGIC_NUMBER (std::uint64_t)0xfafafafafafafafa
+#define EVERYCULLING_INVALID_ENTITY_UNIQUE_ID_MAGIC_NUMBER (uint64_t)0xfafafafafafafafa
 #endif

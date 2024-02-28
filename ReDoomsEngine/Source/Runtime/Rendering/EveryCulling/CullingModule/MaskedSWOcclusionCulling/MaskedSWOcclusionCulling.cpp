@@ -15,8 +15,8 @@ void culling::MaskedSWOcclusionCulling::ResetDepthBuffer(const unsigned long lon
 culling::MaskedSWOcclusionCulling::MaskedSWOcclusionCulling
 (
 	EveryCulling* everyCulling, 
-	const std::uint32_t depthBufferWidth,
-	const std::uint32_t depthBufferheight
+	const uint32_t depthBufferWidth,
+	const uint32_t depthBufferheight
 )
 	:
 	CullingModule{ everyCulling},
@@ -30,8 +30,8 @@ culling::MaskedSWOcclusionCulling::MaskedSWOcclusionCulling
 	mQueryOccludeeStage{this},
 	mOccluderListManager{}
 {
-	assert(depthBufferWidth% EVERYCULLING_TILE_WIDTH == 0);
-	assert(depthBufferheight% EVERYCULLING_TILE_HEIGHT == 0);
+	EA_ASSERT(depthBufferWidth% EVERYCULLING_TILE_WIDTH == 0);
+	EA_ASSERT(depthBufferheight% EVERYCULLING_TILE_HEIGHT == 0);
 }
 
 void culling::MaskedSWOcclusionCulling::ResetState(const unsigned long long currentTickCount)
@@ -39,7 +39,7 @@ void culling::MaskedSWOcclusionCulling::ResetState(const unsigned long long curr
 	ResetDepthBuffer(currentTickCount);
 	if (EVERYCULLING_WHEN_TO_BIN_TRIANGLE(currentTickCount))
 	{
-		mIsOccluderExist.store(false, std::memory_order_relaxed);
+		mIsOccluderExist.store(false, eastl::memory_order_relaxed);
 	}
 
 	mOccluderListManager.ResetOccluderList();

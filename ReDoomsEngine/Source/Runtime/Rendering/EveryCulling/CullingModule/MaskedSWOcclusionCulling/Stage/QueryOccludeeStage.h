@@ -11,37 +11,37 @@ namespace culling
 	
 	private:
 
-		EVERYCULLING_FORCE_INLINE float MinFloatFromM256F(const culling::EVERYCULLING_M256F& data);
-		EVERYCULLING_FORCE_INLINE float MaxFloatFromM256F(const culling::EVERYCULLING_M256F& data);
-		EVERYCULLING_FORCE_INLINE void ComputeBinBoundingBoxFromVertex
+		float MinFloatFromM256F(const culling::EVERYCULLING_M256F& data);
+		float MaxFloatFromM256F(const culling::EVERYCULLING_M256F& data);
+		void ComputeBinBoundingBoxFromVertex
 		(
 			const culling::EVERYCULLING_M256F& screenPixelX,
 			const culling::EVERYCULLING_M256F& screenPixelY,
-			std::uint32_t& outBinBoundingBoxMinX,
-			std::uint32_t& outBinBoundingBoxMinY,
-			std::uint32_t& outBinBoundingBoxMaxX,
-			std::uint32_t& outBinBoundingBoxMaxY,
+			uint32_t& outBinBoundingBoxMinX,
+			uint32_t& outBinBoundingBoxMinY,
+			uint32_t& outBinBoundingBoxMaxX,
+			uint32_t& outBinBoundingBoxMaxY,
 			SWDepthBuffer& depthBuffer
 		);
-		EVERYCULLING_FORCE_INLINE void ComputeBinBoundingBoxFromVertex
+		void ComputeBinBoundingBoxFromVertex
 		(
 			const float minScreenPixelX,
 			const float minScreenPixelY,
 			const float maxScreenPixelX,
 			const float maxScreenPixelY,
-			std::uint32_t& outBinBoundingBoxMinX,
-			std::uint32_t& outBinBoundingBoxMinY,
-			std::uint32_t& outBinBoundingBoxMaxX,
-			std::uint32_t& outBinBoundingBoxMaxY,
+			uint32_t& outBinBoundingBoxMinX,
+			uint32_t& outBinBoundingBoxMinY,
+			uint32_t& outBinBoundingBoxMaxX,
+			uint32_t& outBinBoundingBoxMaxY,
 			SWDepthBuffer& depthBuffer
 		);
-		EVERYCULLING_FORCE_INLINE void Clipping
+		void Clipping
 		(
 			const culling::EVERYCULLING_M256F& clipspaceVertexX,
 			const culling::EVERYCULLING_M256F& clipspaceVertexY,
 			const culling::EVERYCULLING_M256F& clipspaceVertexZ,
 			const culling::EVERYCULLING_M256F& clipspaceVertexW,
-			std::uint32_t& triangleCullMask
+			uint32_t& triangleCullMask
 		);
 
 		void QueryOccludee(const size_t cameraIndex, culling::EntityBlock* const entityBlock);

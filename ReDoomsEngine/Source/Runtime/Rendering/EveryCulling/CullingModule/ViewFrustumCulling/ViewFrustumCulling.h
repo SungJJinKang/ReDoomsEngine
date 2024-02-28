@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-
 #include "../../EveryCullingCore.h"
 
 #include "../../DataType/Math/Matrix.h"
@@ -48,7 +46,7 @@ namespace culling
 		/// <param name="viewProjectionMatix"></param>
 		virtual void OnSetViewProjectionMatrix(const size_t cameraIndex, const culling::Mat4x4& cameraViewProjectionMatrix) final;
 
-		EVERYCULLING_FORCE_INLINE culling::SIMDFrustumPlanes* GetSIMDPlanes()
+		EASTL_FORCE_INLINE culling::SIMDFrustumPlanes* GetSIMDPlanes()
 		{
 			return mSIMDFrustumPlanes;
 		}

@@ -118,6 +118,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Runtime\Core\Thread.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Triangle.cpp" />
     <ClCompile Include="Source\Runtime\Thread\JobSystem.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\CullingModule.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\DistanceCulling\DistanceCulling.cpp" />
@@ -144,7 +145,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Common.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\SIMD_Core.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\EveryCulling.cpp" />
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\EveryCullingProfiler.cpp" />
     <ClCompile Include="Source\Runtime\Utils\ConsoleVariable.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\RenderScene.cpp" />
@@ -253,7 +253,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\VertexData.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\EveryCulling.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\EveryCullingCore.h" />
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\EveryCullingProfiler.h" />
     <ClInclude Include="Source\Runtime\Utils\ConsoleVariable.h" />
     <ClInclude Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.h" />
     <ClInclude Include="Source\Runtime\Rendering\RenderScene.h" />

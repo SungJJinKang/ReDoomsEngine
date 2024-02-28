@@ -21,16 +21,16 @@ namespace culling
 		/// <param name="clipspaceVertexX"></param>
 		/// <param name="clipspaceVertexY"></param>
 		/// <param name="triangleCullMask"></param>
-		EVERYCULLING_FORCE_INLINE void Clipping
+		void Clipping
 		(
 			const culling::EVERYCULLING_M256F* const clipspaceVertexX,
 			const culling::EVERYCULLING_M256F* const clipspaceVertexY,
 			const culling::EVERYCULLING_M256F* const clipspaceVertexZ,
 			const culling::EVERYCULLING_M256F* const clipspaceVertexW,
-			std::uint32_t& triangleCullMask
+			uint32_t& triangleCullMask
 		);
 
-		EVERYCULLING_FORCE_INLINE culling::EVERYCULLING_M256F ComputePositiveWMask
+		culling::EVERYCULLING_M256F ComputePositiveWMask
 		(
 			const culling::EVERYCULLING_M256F* const clipspaceVertexW
 		);
@@ -44,16 +44,16 @@ namespace culling
 		/// <param name="screenPixelY"></param>
 		/// <param name="ndcSpaceVertexZ"></param>
 		/// <param name="triangleCullMask"></param>
-		EVERYCULLING_FORCE_INLINE void BackfaceCulling
+		void BackfaceCulling
 		(
 			culling::EVERYCULLING_M256F* const screenPixelX, 
 			culling::EVERYCULLING_M256F* const screenPixelY, 
-			std::uint32_t& triangleCullMask
+			uint32_t& triangleCullMask
 		);
 
 		
 
-		EVERYCULLING_FORCE_INLINE void PassTrianglesToTileBin
+		void PassTrianglesToTileBin
 		(
 			const culling::EVERYCULLING_M256F& pointAScreenPixelPosX,
 			const culling::EVERYCULLING_M256F& pointAScreenPixelPosY,
@@ -67,7 +67,7 @@ namespace culling
 			const culling::EVERYCULLING_M256F& pointCScreenPixelPosY,
 			const culling::EVERYCULLING_M256F& pointCNdcSpaceVertexZ,
 
-			const std::uint32_t& triangleCullMask,
+			const uint32_t& triangleCullMask,
 			const size_t triangleCountPerLoop,
 			const culling::EVERYCULLING_M256I& outBinBoundingBoxMinX,
 			const culling::EVERYCULLING_M256I& outBinBoundingBoxMinY,
@@ -101,11 +101,11 @@ namespace culling
 		/// <param name="outVerticesX"></param>
 		/// <param name="outVerticesY"></param>
 		/// <param name="triangleCullMask"></param>
-		EVERYCULLING_FORCE_INLINE void GatherVertices
+		void GatherVertices
 		(
 			const float* const vertices,
 			const size_t verticeCount,
-			const std::uint32_t* const vertexIndices,
+			const uint32_t* const vertexIndices,
 			const size_t indiceCount, 
 			const size_t currentIndiceIndex, 
 			const size_t vertexStrideByte, 
@@ -128,11 +128,11 @@ namespace culling
 		/// --> vertexStride is 6 * 4(float)
 		/// </param>
 		/// <param name="modelToClipspaceMatrix"></param>
-		EVERYCULLING_FORCE_INLINE void BinTriangles
+		void BinTriangles
 		(
 			const float* const vertices,
 			const uint64_t verticeCount,
-			const std::uint32_t* const vertexIndices,
+			const uint32_t* const vertexIndices,
 			const uint64_t indiceCount,
 			const uint64_t vertexStrideByte,
 			const float* const modelToClipspaceMatrix

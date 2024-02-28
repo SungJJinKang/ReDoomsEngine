@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cassert>
-
 #include "EntityBlock.h"
 
 namespace culling
@@ -21,7 +19,7 @@ namespace culling
 		/// <summary>
 		/// Entity Index in Entity Block
 		/// </summary>
-		std::uint64_t mEntityIndexInBlock;
+		uint64_t mEntityIndexInBlock;
 
 		void DeInitializeEntityBlockViewer();
 		void ResetEntityData();
@@ -35,49 +33,22 @@ namespace culling
 		EntityBlockViewer(EntityBlockViewer&&) noexcept;
 		EntityBlockViewer& operator=(EntityBlockViewer&&)noexcept ;
 
-		EVERYCULLING_FORCE_INLINE bool IsValid() const
-		{
-			return (mTargetEntityBlock != nullptr) && (mEntityIndexInBlock != (std::uint64_t)-1);
-		}
+		bool IsValid() const;
 
-		EVERYCULLING_FORCE_INLINE EntityBlock* GetTargetEntityBlock()
-		{
-			assert(IsValid() == true);
-			return mTargetEntityBlock;
-		}
+		EntityBlock* GetTargetEntityBlock();
 
-		EVERYCULLING_FORCE_INLINE const EntityBlock* GetTargetEntityBlock() const
-		{
-			assert(IsValid() == true);
-			return mTargetEntityBlock;
-		}
+		const EntityBlock* GetTargetEntityBlock() const;
 
-		EVERYCULLING_FORCE_INLINE size_t GetEntityIndexInBlock() const
-		{
-			assert(IsValid() == true);
-			return mEntityIndexInBlock;
-		}
+		size_t GetEntityIndexInBlock() const;
 		
 		/// <summary>
 		/// Get if entity is visible from Camera of parameter cameraIndex
 		/// </summary>
 		/// <param name="cameraIndex">0 <= cameraIndex < EveryCulling::mCameraCount</param>
 		/// <returns></returns>
-		EVERYCULLING_FORCE_INLINE bool GetIsCulled(const std::uint32_t cameraIndex) const
-		{
-			assert(IsValid() == true);
-			assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
-			return mTargetEntityBlock->GetIsCulled(mEntityIndexInBlock, cameraIndex);
-		}
+		bool GetIsCulled(const uint32_t cameraIndex) const;
 
-		EVERYCULLING_FORCE_INLINE void SetModelMatrix(const float* const modelMatrix)
-		{
-			assert(IsValid() == true);
-			if (IsValid() == true)
-			{
-				mTargetEntityBlock->SetModelMatrix(mEntityIndexInBlock, modelMatrix);
-			}
-		}
+		void SetModelMatrix(const float* const modelMatrix);
 
 		/**
 		 * \brief Set entity's mesh vertex data.
@@ -90,54 +61,21 @@ namespace culling
 		void SetMeshVertexData
 		(
 			const culling::Vec3* const vertices,
-			const std::uint64_t verticeCount,
-			const std::uint32_t* const indices,
-			const std::uint64_t indiceCount,
-			const std::uint64_t verticeStride
+			const uint64_t verticeCount,
+			const uint32_t* const indices,
+			const uint64_t indiceCount,
+			const uint64_t verticeStride
 		);
 		
-		EVERYCULLING_FORCE_INLINE const culling::VertexData& GetVertexData() const
-		{
-			assert(IsValid() == true);
-			return mTargetEntityBlock->mVertexDatas[mEntityIndexInBlock];
-		}
+		const culling::VertexData& GetVertexData() const;
 
-		EVERYCULLING_FORCE_INLINE void SetIsObjectEnabled(const bool isEnabled)
-		{
-			assert(IsValid() == true);
-			if (IsValid() == true)
-			{
-				mTargetEntityBlock->SetIsObjectEnabled(mEntityIndexInBlock, isEnabled);
-			}
-		}
+		void SetIsObjectEnabled(const bool isEnabled);
 
-		EVERYCULLING_FORCE_INLINE void SetAABBWorldPosition(const float* const minWorldPos, const float* const maxWorldPos)
-		{
-			assert(IsValid() == true);
-			if (IsValid() == true)
-			{
-				mTargetEntityBlock->SetAABBWorldPosition(mEntityIndexInBlock, minWorldPos, maxWorldPos);
-			}
-		}
+		void SetAABBWorldPosition(const float* const minWorldPos, const float* const maxWorldPos);
 
-		EVERYCULLING_FORCE_INLINE void SetObjectWorldPosition(const float* const worldPos)
-		{
-			assert(IsValid() == true);
-			if (IsValid() == true)
-			{
-				mTargetEntityBlock->mWorldPositionAndWorldBoundingSphereRadius[mEntityIndexInBlock].SetPosition(worldPos);
-			}
-		}
+		void SetObjectWorldPosition(const float* const worldPos);
 
-		EVERYCULLING_FORCE_INLINE void SetDesiredMaxDrawDistance(const float desiredMaxDrawDistance)
-		{
-			assert(IsValid() == true);
-
-			if (IsValid() == true)
-			{
-				mTargetEntityBlock->SetDesiredMaxDrawDistance(mEntityIndexInBlock, desiredMaxDrawDistance);
-			}
-		}
+		void SetDesiredMaxDrawDistance(const float desiredMaxDrawDistance);
 
 		/// <summary>
 		/// Update EntityData
@@ -148,24 +86,13 @@ namespace culling
 		/// <param name="aabbMaxWorldPositionVec3"></param>
 		/// <param name="entityModelMatrix4x4"></param>
 		/// <returns></returns>
-		EVERYCULLING_FORCE_INLINE void UpdateEntityData
+		void UpdateEntityData
 		(
 			const float* const entityWorldPositionVec3, 
 			const float* const aabbMinWorldPositionVec3,
 			const float* const aabbMaxWorldPositionVec3,
 			const float* const entityModelMatrix4x4
-		)
-		{
-			assert(IsValid() == true);
-
-			if (IsValid() == true)
-			{
-				SetObjectWorldPosition(entityWorldPositionVec3);
-				SetAABBWorldPosition(aabbMinWorldPositionVec3, aabbMaxWorldPositionVec3);
-
-				SetModelMatrix(entityModelMatrix4x4);
-			}
-		}
+		);
 
 	};
 }

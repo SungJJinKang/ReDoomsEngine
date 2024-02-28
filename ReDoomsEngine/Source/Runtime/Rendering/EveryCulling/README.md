@@ -202,12 +202,12 @@ mCullingSystem.SetCameraCount(Camera Count)
 mCullingSystem.ResetCullJob();
 
 culling::EveryCulling::GlobalDataForCullJob cullingSettingParameters;
-std::memcpy(cullingSettingParameters.mViewProjectionMatrix.data(), Camera ViewProjection Matrix ( Mat4x4, Column major ), sizeof(culling::Mat4x4));
+EA::StdC::Memcpy(cullingSettingParameters.mViewProjectionMatrix.data(), Camera ViewProjection Matrix ( Mat4x4, Column major ), sizeof(culling::Mat4x4));
 cullingSettingParameters.mFieldOfViewInDegree = Camera FOV;
 cullingSettingParameters.mCameraFarPlaneDistance = Camera ClippingPlaneFar;
 cullingSettingParameters.mCameraNearPlaneDistance = Camera ClippingPlaneNear;
-std::memcpy(cullingSettingParameters.mCameraWorldPosition.data(), Camera World Position Data, sizeof(culling::Vec3));                  
-std::memcpy(cullingSettingParameters.mCameraRotation.data(), Camera Rotation Data ( Quaternion ), sizeof(culling::Vec4));                  
+EA::StdC::Memcpy(cullingSettingParameters.mCameraWorldPosition.data(), Camera World Position Data, sizeof(culling::Vec3));                  
+EA::StdC::Memcpy(cullingSettingParameters.mCameraRotation.data(), Camera Rotation Data ( Quaternion ), sizeof(culling::Vec4));                  
 
 EveryCulling::UpdateGlobalDataForCullJob(camera->CameraIndexInCullingSystem, cullingSettingParameters);            
 EveryCulling::PreCullJob();  

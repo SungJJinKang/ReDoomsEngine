@@ -1,14 +1,10 @@
 #include "QueryOccludeeStage.h"
 
-#include <limits>
-
 #include "../MaskedSWOcclusionCulling.h"
 #include "../Utility/vertexTransformationHelper.h"
 #include "../Utility/depthBufferTileHelper.h"
 
-#include <Rendering/Renderer/Renderer.h>
-
-EVERYCULLING_FORCE_INLINE float culling::QueryOccludeeStage::MinFloatFromM256F(const culling::EVERYCULLING_M256F& data)
+float culling::QueryOccludeeStage::MinFloatFromM256F(const culling::EVERYCULLING_M256F& data)
 {
 	float min = FLT_MAX;
 	for (size_t i = 0; i < 8; i++)
@@ -18,7 +14,7 @@ EVERYCULLING_FORCE_INLINE float culling::QueryOccludeeStage::MinFloatFromM256F(c
 	return min;
 }
 
-EVERYCULLING_FORCE_INLINE float culling::QueryOccludeeStage::MaxFloatFromM256F(const culling::EVERYCULLING_M256F& data)
+float culling::QueryOccludeeStage::MaxFloatFromM256F(const culling::EVERYCULLING_M256F& data)
 {
 	float max = -FLT_MAX;
 	for (size_t i = 0; i < 8; i++)
@@ -28,14 +24,14 @@ EVERYCULLING_FORCE_INLINE float culling::QueryOccludeeStage::MaxFloatFromM256F(c
 	return max;
 }
 
-EVERYCULLING_FORCE_INLINE void culling::QueryOccludeeStage::ComputeBinBoundingBoxFromVertex
+void culling::QueryOccludeeStage::ComputeBinBoundingBoxFromVertex
 (
 	const culling::EVERYCULLING_M256F& screenPixelX,
 	const culling::EVERYCULLING_M256F& screenPixelY,
-	std::uint32_t& outBinBoundingBoxMinX,
-	std::uint32_t& outBinBoundingBoxMinY,
-	std::uint32_t& outBinBoundingBoxMaxX,
-	std::uint32_t& outBinBoundingBoxMaxY,
+	uint32_t& outBinBoundingBoxMinX,
+	uint32_t& outBinBoundingBoxMinY,
+	uint32_t& outBinBoundingBoxMaxX,
+	uint32_t& outBinBoundingBoxMaxY,
 	SWDepthBuffer& depthBuffer
 )
 {
@@ -60,16 +56,16 @@ EVERYCULLING_FORCE_INLINE void culling::QueryOccludeeStage::ComputeBinBoundingBo
 	);
 }
 
-EVERYCULLING_FORCE_INLINE void culling::QueryOccludeeStage::ComputeBinBoundingBoxFromVertex
+void culling::QueryOccludeeStage::ComputeBinBoundingBoxFromVertex
 (
 	const float minScreenPixelX,
 	const float minScreenPixelY,
 	const float maxScreenPixelX,
 	const float maxScreenPixelY,
-	std::uint32_t& outBinBoundingBoxMinX,
-	std::uint32_t& outBinBoundingBoxMinY,
-	std::uint32_t& outBinBoundingBoxMaxX,
-	std::uint32_t& outBinBoundingBoxMaxY,
+	uint32_t& outBinBoundingBoxMinX,
+	uint32_t& outBinBoundingBoxMinY,
+	uint32_t& outBinBoundingBoxMaxX,
+	uint32_t& outBinBoundingBoxMaxY,
 	SWDepthBuffer& depthBuffer
 )
 {
@@ -91,8 +87,8 @@ EVERYCULLING_FORCE_INLINE void culling::QueryOccludeeStage::ComputeBinBoundingBo
 	outBinBoundingBoxMaxX = EVERYCULLING_MAX(depthBuffer.mResolution.mLeftBottomTileOrginX, EVERYCULLING_MIN(outBinBoundingBoxMaxX, depthBuffer.mResolution.mRightTopTileOrginX));
 	outBinBoundingBoxMaxY = EVERYCULLING_MAX(depthBuffer.mResolution.mLeftBottomTileOrginY, EVERYCULLING_MIN(outBinBoundingBoxMaxY, depthBuffer.mResolution.mRightTopTileOrginY));
 
-	assert(outBinBoundingBoxMinX <= outBinBoundingBoxMaxX);
-	assert(outBinBoundingBoxMinY <= outBinBoundingBoxMaxY);
+	EA_ASSERT(outBinBoundingBoxMinX <= outBinBoundingBoxMaxX);
+	EA_ASSERT(outBinBoundingBoxMinY <= outBinBoundingBoxMaxY);
 }
 
 
@@ -104,7 +100,7 @@ void culling::QueryOccludeeStage::QueryOccludee
 {
 	for(size_t entityIndex = 0 ; entityIndex < entityBlock->mCurrentEntityCount ; entityIndex++)
 	{
-		std::uint32_t outBinBoundingBoxMinX, outBinBoundingBoxMinY, outBinBoundingBoxMaxX, outBinBoundingBoxMaxY;
+		uint32_t outBinBoundingBoxMinX, outBinBoundingBoxMinY, outBinBoundingBoxMaxX, outBinBoundingBoxMaxY;
 		
 		if
 		(
@@ -125,32 +121,32 @@ void culling::QueryOccludeeStage::QueryOccludee
 				mMaskedOcclusionCulling->mDepthBuffer
 			);
 
-			const std::uint32_t intersectingMinBoxX = outBinBoundingBoxMinX; // this is screen space coordinate
-			const std::uint32_t intersectingMinBoxY = outBinBoundingBoxMinY;
-			const std::uint32_t intersectingMaxBoxX = outBinBoundingBoxMaxX;
-			const std::uint32_t intersectingMaxBoxY = outBinBoundingBoxMaxY;
+			const uint32_t intersectingMinBoxX = outBinBoundingBoxMinX; // this is screen space coordinate
+			const uint32_t intersectingMinBoxY = outBinBoundingBoxMinY;
+			const uint32_t intersectingMaxBoxX = outBinBoundingBoxMaxX;
+			const uint32_t intersectingMaxBoxY = outBinBoundingBoxMaxY;
 
-			assert(intersectingMinBoxX <= intersectingMaxBoxX);
-			assert(intersectingMinBoxY <= intersectingMaxBoxY);
+			EA_ASSERT(intersectingMinBoxX <= intersectingMaxBoxX);
+			EA_ASSERT(intersectingMinBoxY <= intersectingMaxBoxY);
 
-			const std::uint32_t startBoxIndexX = EVERYCULLING_MIN((std::uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount - 1), intersectingMinBoxX / (std::uint32_t)EVERYCULLING_TILE_WIDTH);
-			const std::uint32_t startBoxIndexY = EVERYCULLING_MIN((std::uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount - 1), intersectingMinBoxY / (std::uint32_t)EVERYCULLING_TILE_HEIGHT);
-			const std::uint32_t endBoxIndexX = EVERYCULLING_MIN((std::uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount - 1), intersectingMaxBoxX / (std::uint32_t)EVERYCULLING_TILE_WIDTH);
-			const std::uint32_t endBoxIndexY = EVERYCULLING_MIN((std::uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount - 1), intersectingMaxBoxY / (std::uint32_t)EVERYCULLING_TILE_HEIGHT);
+			const uint32_t startBoxIndexX = EVERYCULLING_MIN((uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount - 1), intersectingMinBoxX / (uint32_t)EVERYCULLING_TILE_WIDTH);
+			const uint32_t startBoxIndexY = EVERYCULLING_MIN((uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount - 1), intersectingMinBoxY / (uint32_t)EVERYCULLING_TILE_HEIGHT);
+			const uint32_t endBoxIndexX = EVERYCULLING_MIN((uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount - 1), intersectingMaxBoxX / (uint32_t)EVERYCULLING_TILE_WIDTH);
+			const uint32_t endBoxIndexY = EVERYCULLING_MIN((uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount - 1), intersectingMaxBoxY / (uint32_t)EVERYCULLING_TILE_HEIGHT);
 
-			assert(startBoxIndexX >= 0 && startBoxIndexX < (std::uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount));
-			assert(startBoxIndexY >= 0 && startBoxIndexY < (std::uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount));
+			EA_ASSERT(startBoxIndexX >= 0 && startBoxIndexX < (uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount));
+			EA_ASSERT(startBoxIndexY >= 0 && startBoxIndexY < (uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount));
 
-			assert(endBoxIndexX >= 0 && endBoxIndexX <= (std::uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount));
-			assert(endBoxIndexY >= 0 && endBoxIndexY <= (std::uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount));
+			EA_ASSERT(endBoxIndexX >= 0 && endBoxIndexX <= (uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mColumnTileCount));
+			EA_ASSERT(endBoxIndexY >= 0 && endBoxIndexY <= (uint32_t)(mMaskedOcclusionCulling->mDepthBuffer.mResolution.mRowTileCount));
 
 			const float aabbMinDepthValue = entityBlock->mAABBMinNDCZ[entityIndex];
 
 			bool isCullded = true;
 
-			for (std::uint32_t y = startBoxIndexY; y <= endBoxIndexY; y++)
+			for (uint32_t y = startBoxIndexY; y <= endBoxIndexY; y++)
 			{
-				for (std::uint32_t x = startBoxIndexX; x <= endBoxIndexX; x++)
+				for (uint32_t x = startBoxIndexX; x <= endBoxIndexX; x++)
 				{
 					const culling::Tile* const tile = mMaskedOcclusionCulling->mDepthBuffer.GetTile(y, x);
 

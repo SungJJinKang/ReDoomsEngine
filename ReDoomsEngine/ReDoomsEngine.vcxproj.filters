@@ -228,9 +228,6 @@
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\EveryCulling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\EveryCullingProfiler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Common.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -307,6 +304,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Runtime\Core\Thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1455,9 +1455,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\EveryCullingCore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\EveryCullingProfiler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\VertexData.h">

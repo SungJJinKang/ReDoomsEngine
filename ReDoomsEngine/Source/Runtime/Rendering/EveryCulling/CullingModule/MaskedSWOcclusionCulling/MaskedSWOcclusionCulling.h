@@ -1,8 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <array>
-
 #include "SWDepthBuffer.h"
 
 #include "../../DataType/Math/AABB.h"
@@ -16,7 +13,7 @@
 
 #include "OccluderListManager.h"
 
-#define INVALID_BINNED_OCCLUDER_COUNT (std::int32_t)(-1)
+#define INVALID_BINNED_OCCLUDER_COUNT (int32_t)(-1)
 
 namespace culling
 {
@@ -42,11 +39,11 @@ namespace culling
 	private:
 
 
-		const std::uint32_t binCountInRow, binCountInColumn;
+		const uint32_t binCountInRow, binCountInColumn;
 
 		void ResetDepthBuffer(const unsigned long long currentTickCount);
 
-		std::atomic<bool> mIsOccluderExist;
+		eastl::atomic<bool> mIsOccluderExist;
 
 		
 
@@ -68,8 +65,8 @@ namespace culling
 		MaskedSWOcclusionCulling
 		(
 			EveryCulling* everyCulling,
-			const std::uint32_t depthBufferWidth, 
-			const std::uint32_t depthBufferheight
+			const uint32_t depthBufferWidth, 
+			const uint32_t depthBufferheight
 		);
 	
 		void ResetState(const unsigned long long currentTickCount);

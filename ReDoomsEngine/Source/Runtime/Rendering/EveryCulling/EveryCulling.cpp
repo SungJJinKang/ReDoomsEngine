@@ -1,7 +1,5 @@
 #include "EveryCulling.h"
 
-#include <thread>
-
 #include "DataType/EntityBlock.h"
 #include "CullingModule/ViewFrustumCulling/ViewFrustumCulling.h"
 #include "CullingModule/PreCulling/PreCulling.h"
@@ -11,7 +9,7 @@
 
 void culling::EveryCulling::FreeEntityBlock(EntityBlock* freedEntityBlock)
 {
-	assert(freedEntityBlock != nullptr);
+	EA_ASSERT(freedEntityBlock != nullptr);
 
 	size_t freedEntityBlockIndex;
 	const size_t entityBlockCount = mActiveEntityBlockList.size();
@@ -28,7 +26,7 @@ void culling::EveryCulling::FreeEntityBlock(EntityBlock* freedEntityBlock)
 		}
 	}
 
-	assert(IsSuccessToFind == true);
+	EA_ASSERT(IsSuccessToFind == true);
 
 	freedEntityBlock->bIsValidEntityBlock = false;
 	freedEntityBlock->mEntityBlockUniqueID = EVERYCULLING_INVALID_ENTITY_UNIQUE_ID_MAGIC_NUMBER;
@@ -49,7 +47,7 @@ culling::EntityBlock* culling::EveryCulling::GetNewEntityBlockFromPool()
 		AllocateEntityBlockPool();
 	}
 
-	assert(mFreeEntityBlockList.size() != 0);
+	EA_ASSERT(mFreeEntityBlockList.size() != 0);
 	EntityBlock* entityBlock = mFreeEntityBlockList.back();
 
 	entityBlock->bIsValidEntityBlock = true;
@@ -83,7 +81,7 @@ void culling::EveryCulling::ResetEntityBlocks()
 void culling::EveryCulling::AllocateEntityBlockPool()
 {
 	EntityBlock* newEntityBlockChunk = new EntityBlock[EVERYCULLING_INITIAL_ENTITY_BLOCK_COUNT];
-	for (std::uint32_t i = 0; i < EVERYCULLING_INITIAL_ENTITY_BLOCK_COUNT; i++)
+	for (uint32_t i = 0; i < EVERYCULLING_INITIAL_ENTITY_BLOCK_COUNT; i++)
 	{
 		newEntityBlockChunk[i].bIsValidEntityBlock = false;
 		newEntityBlockChunk[i].mEntityBlockUniqueID = EVERYCULLING_INVALID_ENTITY_UNIQUE_ID_MAGIC_NUMBER;
@@ -94,17 +92,17 @@ void culling::EveryCulling::AllocateEntityBlockPool()
 }
 
 
-void culling::EveryCulling::RemoveEntityFromBlock(EntityBlock* ownerEntityBlock, std::uint32_t entityIndexInBlock)
+void culling::EveryCulling::RemoveEntityFromBlock(EntityBlock* ownerEntityBlock, uint32_t entityIndexInBlock)
 {
-	assert(ownerEntityBlock != nullptr);
-	assert(entityIndexInBlock >= 0 && entityIndexInBlock < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
+	EA_ASSERT(ownerEntityBlock != nullptr);
+	EA_ASSERT(entityIndexInBlock >= 0 && entityIndexInBlock < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
 
 	for(auto cullingModule : mUpdatedCullingModules)
 	{
 		cullingModule->ClearEntityData(ownerEntityBlock, entityIndexInBlock);
 	}
 	
-	assert(ownerEntityBlock->mCurrentEntityCount != 0);
+	EA_ASSERT(ownerEntityBlock->mCurrentEntityCount != 0);
 	ownerEntityBlock->mCurrentEntityCount--;
 	if (ownerEntityBlock->mCurrentEntityCount == 0)
 	{
@@ -116,7 +114,7 @@ void culling::EveryCulling::RemoveEntityFromBlock(EntityBlock* ownerEntityBlock,
 void culling::EveryCulling::ThreadCullJob(const size_t cameraIndex, const unsigned long long tickCount)
 {
 
-	const std::uint32_t entityBlockCount = static_cast<std::uint32_t>(GetActiveEntityBlockCount());
+	const uint32_t entityBlockCount = static_cast<uint32_t>(GetActiveEntityBlockCount());
 	const unsigned long long currentTickCount = mCurrentTickCount;
 
 	if (entityBlockCount > 0 && currentTickCount == tickCount)
@@ -126,7 +124,7 @@ void culling::EveryCulling::ThreadCullJob(const size_t cameraIndex, const unsign
 		for (size_t moduleIndex = 0; moduleIndex < mUpdatedCullingModules.size(); moduleIndex++)
 		{
 			culling::CullingModule* cullingModule = mUpdatedCullingModules[moduleIndex];
-			assert(cullingModule != nullptr);
+			EA_ASSERT(cullingModule != nullptr);
 
 			if (cullingModule->IsEnabled == true)
 			{
@@ -134,7 +132,7 @@ void culling::EveryCulling::ThreadCullJob(const size_t cameraIndex, const unsign
 
 				cullingModule->ThreadCullJob(cameraIndex, currentTickCount);
 
-				std::atomic_thread_fence(std::memory_order_seq_cst);
+				eastl::atomic_thread_fence(eastl::memory_order_seq_cst);
 
 				while (cullingModule->GetFinishedThreadCount(cameraIndex) < mRunningThreadCount)
 				{
@@ -148,7 +146,7 @@ void culling::EveryCulling::ThreadCullJob(const size_t cameraIndex, const unsign
 }
 
 
-void culling::EveryCulling::WaitToFinishCullJob(const std::uint32_t cameraIndex) const
+void culling::EveryCulling::WaitToFinishCullJob(const uint32_t cameraIndex) const
 {
 	const CullingModule* lastEnabledCullingModule = GetLastEnabledCullingModule();
 	if(lastEnabledCullingModule != nullptr)
@@ -162,7 +160,7 @@ void culling::EveryCulling::WaitToFinishCullJob(const std::uint32_t cameraIndex)
 
 void culling::EveryCulling::WaitToFinishCullJobOfAllCameras() const
 {
-	for (std::uint32_t cameraIndex = 0; cameraIndex < mCameraCount; cameraIndex++)
+	for (uint32_t cameraIndex = 0; cameraIndex < mCameraCount; cameraIndex++)
 	{
 		WaitToFinishCullJob(cameraIndex);
 	}
@@ -177,7 +175,7 @@ void culling::EveryCulling::PreCullJob()
 	ResetCullingModules();
 
 	//release!
-	std::atomic_thread_fence(std::memory_order_seq_cst);
+	eastl::atomic_thread_fence(eastl::memory_order_seq_cst);
 }
 
 const culling::CullingModule* culling::EveryCulling::GetLastEnabledCullingModule() const
@@ -223,7 +221,7 @@ void culling::EveryCulling::SetEnabledCullingModule(const CullingModuleType cull
 	}
 }
 
-std::uint32_t culling::EveryCulling::GetRunningThreadCount() const
+uint32_t culling::EveryCulling::GetRunningThreadCount() const
 {
 	return mRunningThreadCount;
 }
@@ -264,7 +262,7 @@ culling::EntityBlockViewer culling::EveryCulling::AllocateNewEntity()
 		}
 	}
 
-	assert(targetEntityBlock->mCurrentEntityCount <= EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK); // something is weird........
+	EA_ASSERT(targetEntityBlock->mCurrentEntityCount <= EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK); // something is weird........
 	
 	targetEntityBlock->mCurrentEntityCount++;
 	
@@ -283,15 +281,15 @@ void culling::EveryCulling::RemoveEntityFromBlock(EntityBlockViewer& entityBlock
 	//Entities Indexs in EntityBlock should not be swapped because already allocated EntityBlockViewer can't see it
 }
 
-culling::EveryCulling::EveryCulling(const std::uint32_t resolutionWidth, const std::uint32_t resolutionHeight)
+culling::EveryCulling::EveryCulling(const uint32_t resolutionWidth, const uint32_t resolutionHeight)
 	:
-	mPreCulling{ std::make_unique<PreCulling>(this) },
-	mDistanceCulling{ std::make_unique<DistanceCulling>(this) },
-	mViewFrustumCulling{ std::make_unique<ViewFrustumCulling>(this) }
+	mPreCulling{ eastl::make_unique<PreCulling>(this) },
+	mDistanceCulling{ eastl::make_unique<DistanceCulling>(this) },
+	mViewFrustumCulling{ eastl::make_unique<ViewFrustumCulling>(this) }
 #ifdef ENABLE_SCREEN_SAPCE_AABB_CULLING
-	, mScreenSpaceBoudingSphereCulling{ std::make_unique<ScreenSpaceBoundingSphereCulling>(this) }
+	, mScreenSpaceBoudingSphereCulling{ eastl::make_unique<ScreenSpaceBoundingSphereCulling>(this) }
 #endif
-	, mMaskedSWOcclusionCulling{ std::make_unique<MaskedSWOcclusionCulling>(this, resolutionWidth, resolutionHeight) }
+	, mMaskedSWOcclusionCulling{ eastl::make_unique<MaskedSWOcclusionCulling>(this, resolutionWidth, resolutionHeight) }
 	, mUpdatedCullingModules
 		{
 			mPreCulling.get(),
@@ -303,9 +301,6 @@ culling::EveryCulling::EveryCulling(const std::uint32_t resolutionWidth, const s
 			&(mMaskedSWOcclusionCulling->mRasterizeTrianglesStage), // DrawOccluderStage
 			&(mMaskedSWOcclusionCulling->mQueryOccludeeStage) // QueryOccludeeStage
 		}
-#ifdef EVERYCULLING_PROFILING_CULLING
-	, mEveryCullingProfiler{}
-#endif
 	, mCurrentTickCount()
 	, bmIsEntityBlockPoolInitialized(false)
 	, mEntityBlockUniqueIDCounter{0}
@@ -345,23 +340,17 @@ unsigned long long culling::EveryCulling::GetTickCount() const
 
 void culling::EveryCulling::OnStartCullingModule(const culling::CullingModule* const cullingModule)
 {
-#ifdef EVERYCULLING_PROFILING_CULLING
-	mEveryCullingProfiler.SetStartTime(cullingModule->GetCullingModuleName());
-#endif
 }
 
 void culling::EveryCulling::OnEndCullingModule(const culling::CullingModule* const cullingModule)
 {
-#ifdef EVERYCULLING_PROFILING_CULLING
-	mEveryCullingProfiler.SetEndTime(cullingModule->GetCullingModuleName());
-#endif
 }
 
 void culling::EveryCulling::SetViewProjectionMatrix(const size_t cameraIndex, const culling::Mat4x4& viewProjectionMatrix)
 {
-	assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+	EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 
-	EVERYCULLING_ALIGNMENT_ASSERT(reinterpret_cast<size_t>(&viewProjectionMatrix), 32);
+	EVERYCULLING_ALIGNMENT_EA_ASSERT(reinterpret_cast<size_t>(&viewProjectionMatrix), 32);
 
 	mCameraViewProjectionMatrixes[cameraIndex] = viewProjectionMatrix;
 	
@@ -376,8 +365,8 @@ void culling::EveryCulling::SetViewProjectionMatrix(const size_t cameraIndex, co
 
 void culling::EveryCulling::SetFieldOfViewInDegree(const size_t cameraIndex, const float fov)
 {
-	assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
-	assert(fov > 0.0f);
+	EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+	EA_ASSERT(fov > 0.0f);
 
 	mCameraFieldOfView[cameraIndex] = fov;
 
@@ -397,10 +386,10 @@ void culling::EveryCulling::SetCameraNearFarClipPlaneDistance
 	const float farPlaneDistance
 )
 {
-	assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
-	assert(nearPlaneDistance > 0.0f);
-	assert(farPlaneDistance > 0.0f);
-	assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+	EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+	EA_ASSERT(nearPlaneDistance > 0.0f);
+	EA_ASSERT(farPlaneDistance > 0.0f);
+	EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 
 
 	mNearClipPlaneDistance[cameraIndex] = nearPlaneDistance;
@@ -418,7 +407,7 @@ void culling::EveryCulling::SetCameraNearFarClipPlaneDistance
 
 void culling::EveryCulling::SetCameraWorldPosition(const size_t cameraIndex, const culling::Vec3& cameraWorldPos)
 {
-	assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+	EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 
 	mCameraWorldPositions[cameraIndex] = cameraWorldPos;
 
@@ -433,7 +422,7 @@ void culling::EveryCulling::SetCameraWorldPosition(const size_t cameraIndex, con
 
 void culling::EveryCulling::SetCameraRotation(const size_t cameraIndex, const culling::Vec4& cameraRotation)
 {
-	assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+	EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 
 	mCameraRotations[cameraIndex] = cameraRotation;
 
@@ -455,7 +444,7 @@ void culling::EveryCulling::UpdateGlobalDataForCullJob(const size_t cameraIndex,
 	SetCameraRotation(cameraIndex, settingParameters.mCameraRotation);
 }
 
-const std::vector<culling::EntityBlock*>& culling::EveryCulling::GetActiveEntityBlockList() const
+const eastl::vector<culling::EntityBlock*>& culling::EveryCulling::GetActiveEntityBlockList() const
 {
 	return mActiveEntityBlockList;
 }

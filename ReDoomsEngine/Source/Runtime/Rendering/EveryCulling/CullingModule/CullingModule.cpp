@@ -2,7 +2,7 @@
 
 #include "../EveryCulling.h"
 
-culling::EntityBlock* culling::CullingModule::GetNextEntityBlock(const size_t cameraIndex, const bool forceOrdering)
+culling::EntityBlock* culling::CullingModule::GetNextEntityBlock(const size_t cameraIndex)
 {
 	// TODO : Implement Cache Friendly GetNextEntityBlock to prevent cache coherency.
 	//        After thread finished its blocks, steal other threads's block. 
@@ -12,20 +12,20 @@ culling::EntityBlock* culling::CullingModule::GetNextEntityBlock(const size_t ca
 	// Third Thread : 3 6 9 12 ....
 	//
 
-	const std::uint32_t currentEntityBlockIndex = mCullJobState.mCurrentCulledEntityBlockIndex[cameraIndex].fetch_add(1, forceOrdering == true ? std::memory_order_seq_cst : std::memory_order_relaxed);
+	const uint32_t currentEntityBlockIndex = mCullJobState.mCurrentCulledEntityBlockIndex[cameraIndex].fetch_add(1);
 
 	const size_t entityBlockCount = mCullingSystem->GetActiveEntityBlockCount();
 	EntityBlock* const currentEntityBlock = (currentEntityBlockIndex >= entityBlockCount) ? (nullptr) : (mCullingSystem->GetActiveEntityBlockList()[currentEntityBlockIndex]);
 
 	if(currentEntityBlock != nullptr)
 	{
-		assert(currentEntityBlock->mCurrentEntityCount != 0);
+		EA_ASSERT(currentEntityBlock->mCurrentEntityCount != 0);
 	}
 
 	return currentEntityBlock;
 }
 
-size_t culling::CullingModule::ComputeEndEntityBlockIndexOfThread(const std::int32_t threadIndex)
+size_t culling::CullingModule::ComputeEndEntityBlockIndexOfThread(const int32_t threadIndex)
 {
 	return mCullingSystem->GetActiveEntityBlockCount() - (mCullingSystem->GetActiveEntityBlockCount() % threadIndex);
 }
@@ -43,23 +43,23 @@ culling::CullingModule::~CullingModule() = default;
 
 void culling::CullingModule::ResetCullingModule(const unsigned long long currentTickCount)
 {
-	for (std::atomic<std::uint32_t>& atomicVal : mCullJobState.mCurrentCulledEntityBlockIndex)
+	for (eastl::atomic<uint32_t>& atomicVal : mCullJobState.mCurrentCulledEntityBlockIndex)
 	{
-		atomicVal.store(0, std::memory_order_relaxed);
+		atomicVal.store(0, eastl::memory_order_relaxed);
 	}
 	
 
-	for (std::atomic<std::uint32_t>& atomicVal : mCullJobState.mFinishedThreadCount)
+	for (eastl::atomic<uint32_t>& atomicVal : mCullJobState.mFinishedThreadCount)
 	{
-		atomicVal.store(0, std::memory_order_relaxed);
+		atomicVal.store(0, eastl::memory_order_relaxed);
 	}
 }
 
 void culling::CullingModule::ThreadCullJob(const size_t cameraIndex, const unsigned long long currentTickCount)
 {
-	std::atomic_thread_fence(std::memory_order_acquire);
+	eastl::atomic_thread_fence(eastl::memory_order_acquire);
 	CullBlockEntityJob(cameraIndex, currentTickCount);
 
 
-	mCullJobState.mFinishedThreadCount[cameraIndex].fetch_add(1, std::memory_order_seq_cst);
+	mCullJobState.mFinishedThreadCount[cameraIndex].fetch_add(1, eastl::memory_order_seq_cst);
 }

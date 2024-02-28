@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 namespace culling
 {
 	struct EntityBlock;
@@ -19,7 +17,7 @@ namespace culling
 		/// the block should be return to BlockPool.
 		/// So we use array of pointers
 		/// </summary>
-		std::vector<EntityBlock*> mEntityBlocks;
+		eastl::vector<EntityBlock*> mEntityBlocks;
 		
 	};
 }

@@ -1,15 +1,13 @@
 #include "Common.h"
 
-#include <cmath>
-
-float culling::PI = 3.14159265358979323846f;
-float culling::DEGREE_TO_RADIAN = PI / 180.0f;
-float culling::RADIAN_TO_DEGREE = 180.0f / PI;
+const float culling::PI = 3.14159265358979323846f;
+const float culling::DEGREE_TO_RADIAN = PI / 180.0f;
+const float culling::RADIAN_TO_DEGREE = 180.0f / PI;
 
 void culling::NormalizePlane(Vec4& plane) noexcept
 {
-	float mag = std::sqrt(plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2]);
-	assert(std::isnan(mag) == false);
+	float mag = sqrtf(plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2]);
+	EA_ASSERT(eastl::isnan(mag) == false);
 
 	plane[0] = plane[0] / mag;
 	plane[1] = plane[1] / mag;
@@ -108,4 +106,69 @@ void culling::ExtractSIMDPlanesFromViewProjectionMatrix(const Mat4x4& viewProjec
 	eightPlanes[7][2] = sixPlane[4][3];
 	eightPlanes[7][3] = sixPlane[5][3];
 
+}
+
+culling::Vec4 culling::operator*(const Mat4x4& mat4, const Vec3& vec3) noexcept
+{
+	return Vec4
+	{
+			mat4[0][0] * vec3.x + mat4[1][0] * vec3.y + mat4[2][0] * vec3.z + mat4[3][0],
+			mat4[0][1] * vec3.x + mat4[1][1] * vec3.y + mat4[2][1] * vec3.z + mat4[3][1],
+			mat4[0][2] * vec3.x + mat4[1][2] * vec3.y + mat4[2][2] * vec3.z + mat4[3][2],
+			mat4[0][3] * vec3.x + mat4[1][3] * vec3.y + mat4[2][3] * vec3.z + mat4[3][3],
+	};
+}
+
+culling::Mat4x4 culling::operator*(const Mat4x4& mat4_A, const Mat4x4& mat4_B) noexcept
+{
+	culling::EVERYCULLING_M256F _REULST_MAT4[2];
+	culling::EVERYCULLING_M128F TEMP_M128F;
+
+	const culling::EVERYCULLING_M128F* const A = reinterpret_cast<const culling::EVERYCULLING_M128F*>(mat4_A.data());
+	//const EVERYCULLING_M128F* A = (const EVERYCULLING_M128F*)this->data(); // this is slower
+	const culling::EVERYCULLING_M128F* const B = reinterpret_cast<const culling::EVERYCULLING_M128F*>(mat4_B.data());
+	culling::EVERYCULLING_M128F* R = reinterpret_cast<culling::EVERYCULLING_M128F*>(&_REULST_MAT4);
+
+	// First row of result (Matrix1[0] * Matrix2).
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL(EVERYCULLING_M128F_REPLICATE(B[0], 0), A[0]);
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[0], 1), A[1], TEMP_M128F);
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[0], 2), A[2], TEMP_M128F);
+	R[0] = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[0], 3), A[3], TEMP_M128F);
+
+	// Second row of result (Matrix1[1] * Matrix2).
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL(EVERYCULLING_M128F_REPLICATE(B[1], 0), A[0]);
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[1], 1), A[1], TEMP_M128F);
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[1], 2), A[2], TEMP_M128F);
+	R[1] = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[1], 3), A[3], TEMP_M128F);
+
+	// Third row of result (Matrix1[2] * Matrix2).
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL(EVERYCULLING_M128F_REPLICATE(B[2], 0), A[0]);
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[2], 1), A[1], TEMP_M128F);
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[2], 2), A[2], TEMP_M128F);
+	R[2] = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[2], 3), A[3], TEMP_M128F);
+
+	// Fourth row of result (Matrix1[3] * Matrix2).
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL(EVERYCULLING_M128F_REPLICATE(B[3], 0), A[0]);
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[3], 1), A[1], TEMP_M128F);
+	TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[3], 2), A[2], TEMP_M128F);
+	R[3] = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[3], 3), A[3], TEMP_M128F);
+
+	return culling::Mat4x4{ *reinterpret_cast<culling::Mat4x4*>(&_REULST_MAT4) };
+}
+
+culling::Vec4 culling::operator*(const Mat4x4& mat4, const Vec4& vec4) noexcept
+{
+	culling::EVERYCULLING_M128F tempVec4;
+
+	const culling::EVERYCULLING_M128F* A = reinterpret_cast<const culling::EVERYCULLING_M128F*>(&mat4);
+	const culling::EVERYCULLING_M128F* B = reinterpret_cast<const culling::EVERYCULLING_M128F*>(&vec4);
+	culling::EVERYCULLING_M128F* R = reinterpret_cast<culling::EVERYCULLING_M128F*>(&tempVec4);
+
+	// First row of result (Matrix1[0] * Matrix2).
+	*R = culling::EVERYCULLING_M128F_MUL(EVERYCULLING_M128F_REPLICATE(*B, 0), A[0]);
+	*R = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(*B, 1), A[1], *R);
+	*R = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(*B, 2), A[2], *R);
+	*R = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(*B, 3), A[3], *R);
+
+	return Vec4{ *(Vec4*)(&tempVec4) };
 }

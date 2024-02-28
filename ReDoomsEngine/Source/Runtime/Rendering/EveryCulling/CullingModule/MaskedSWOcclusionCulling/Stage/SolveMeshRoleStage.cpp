@@ -1,7 +1,5 @@
 #include "SolveMeshRoleStage.h"
 
-#include <cmath>
-
 #include "../MaskedSWOcclusionCulling.h"
 #include "../Utility/vertexTransformationHelper.h"
 
@@ -23,10 +21,10 @@ bool culling::SolveMeshRoleStage::CheckIsOccluderFromBoundingSphere
 	const culling::Vec3 vecFromCameraToBoundingSphere = mCullingSystem->GetCameraWorldPosition(cameraIndex) - spherePointInWorldSpace;
 	const float distanceFromCameraToBoundingSphere = culling::Dot(vecFromCameraToBoundingSphere, vecFromCameraToBoundingSphere);
 
-	const float disFromCameraToSphereHorizon = std::sqrt(std::abs(distanceFromCameraToBoundingSphere - sphereRadiusInWorldSpace * sphereRadiusInWorldSpace));
+	const float disFromCameraToSphereHorizon = sqrtf(fabs(distanceFromCameraToBoundingSphere - sphereRadiusInWorldSpace * sphereRadiusInWorldSpace));
 	const float halfOfFieldOfView = (mCullingSystem->GetCameraFieldOfView(cameraIndex) * culling::DEGREE_TO_RADIAN) * 0.5f;
 	
-	const float radiusOfViewSpaceSphere = (std::cos(halfOfFieldOfView) / std::sin(halfOfFieldOfView)) * sphereRadiusInWorldSpace / disFromCameraToSphereHorizon;
+	const float radiusOfViewSpaceSphere = (eastl::cos(halfOfFieldOfView) / eastl::sin(halfOfFieldOfView)) * sphereRadiusInWorldSpace / disFromCameraToSphereHorizon;
 	
 	return (radiusOfViewSpaceSphere > mOccluderViewSpaceBoundingSphereRadius);
 }
@@ -50,19 +48,19 @@ bool culling::SolveMeshRoleStage::CheckIsOccluder
 		const float clampedAABBMaxScreenSpacePointX = CLAMP(currentEntityBlock->mAABBMaxScreenSpacePointX[entityIndex], 0.0f, (float)mMaskedOcclusionCulling->mDepthBuffer.mResolution.mWidth);
 		const float clampedAABBMaxScreenSpacePointY = CLAMP(currentEntityBlock->mAABBMaxScreenSpacePointY[entityIndex], 0.0f, (float)mMaskedOcclusionCulling->mDepthBuffer.mResolution.mHeight);
 
-		assert(clampedAABBMinScreenSpacePointX >= 0.0f);
-		assert(clampedAABBMinScreenSpacePointY >= 0.0f);
-		assert(clampedAABBMaxScreenSpacePointX >= 0.0f);
-		assert(clampedAABBMaxScreenSpacePointY >= 0.0f);
-		assert(clampedAABBMaxScreenSpacePointX >= clampedAABBMinScreenSpacePointX);
-		assert(clampedAABBMaxScreenSpacePointY >= clampedAABBMinScreenSpacePointY);
+		EA_ASSERT(clampedAABBMinScreenSpacePointX >= 0.0f);
+		EA_ASSERT(clampedAABBMinScreenSpacePointY >= 0.0f);
+		EA_ASSERT(clampedAABBMaxScreenSpacePointX >= 0.0f);
+		EA_ASSERT(clampedAABBMaxScreenSpacePointY >= 0.0f);
+		EA_ASSERT(clampedAABBMaxScreenSpacePointX >= clampedAABBMinScreenSpacePointX);
+		EA_ASSERT(clampedAABBMaxScreenSpacePointY >= clampedAABBMinScreenSpacePointY);
 
 		const float screenSpaceAABBArea
 			= (clampedAABBMaxScreenSpacePointX - clampedAABBMinScreenSpacePointX) *
 			(clampedAABBMaxScreenSpacePointY - clampedAABBMinScreenSpacePointY);
 
-		assert(screenSpaceAABBArea >= 0.0f);
-		//assert(screenSpaceAABBArea > std::numeric_limits<float>::epsilon());
+		EA_ASSERT(screenSpaceAABBArea >= 0.0f);
+		//EA_ASSERT(screenSpaceAABBArea > eastl::numeric_limits<float>::epsilon());
 
 		if (screenSpaceAABBArea >= mOccluderAABBScreenSpaceMinArea)
 		{
@@ -141,12 +139,12 @@ void culling::SolveMeshRoleStage::ResetCullingModule(const unsigned long long cu
 
 void culling::SolveMeshRoleStage::SetOccluderAABBScreenSpaceMinArea(const float occluderAABBScreenSpaceMinArea)
 {
-	assert(occluderAABBScreenSpaceMinArea >= 0.0f);
+	EA_ASSERT(occluderAABBScreenSpaceMinArea >= 0.0f);
 	mOccluderAABBScreenSpaceMinArea = occluderAABBScreenSpaceMinArea;
 }
 
 void culling::SolveMeshRoleStage::SetOccluderLimitOfDistanceToCamera(const float OccluderLimitOfDistanceToCamera)
 {
-	assert(OccluderLimitOfDistanceToCamera >= 0.0f);
+	EA_ASSERT(OccluderLimitOfDistanceToCamera >= 0.0f);
 	mOccluderLimitOfDistanceToCamera = OccluderLimitOfDistanceToCamera;
 }

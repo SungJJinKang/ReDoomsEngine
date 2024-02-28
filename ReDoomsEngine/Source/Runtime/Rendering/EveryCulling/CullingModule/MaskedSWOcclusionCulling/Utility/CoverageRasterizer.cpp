@@ -1,8 +1,5 @@
 #include "CoverageRasterizer.h"
 
-#include <cmath>
-#include <limits>
-
 culling::EVERYCULLING_M256I culling::CoverageRasterizer::FillBottomFlatTriangle
 (
     const Vec2& TileLeftBottomOriginPoint, 
@@ -11,10 +8,10 @@ culling::EVERYCULLING_M256I culling::CoverageRasterizer::FillBottomFlatTriangle
     const Vec2& point3
 )
 {
-    assert(point2.x <= point3.x);
-    assert(std::abs(point2.y - point3.y) < std::numeric_limits<float>::epsilon());
-    assert(point1.y >= point2.y);
-    assert(point1.y >= point3.y);
+    EA_ASSERT(point2.x <= point3.x);
+    EA_ASSERT(fabs(point2.y - point3.y) < eastl::numeric_limits<float>::epsilon());
+    EA_ASSERT(point1.y >= point2.y);
+    EA_ASSERT(point1.y >= point3.y);
 
     const float inverseSlope1 = (float)(point2.x - point1.x) / (point2.y - point1.y);
     const float inverseSlope2 = (float)(point3.x - point1.x) / (point3.y - point1.y);
@@ -50,10 +47,10 @@ culling::EVERYCULLING_M256I culling::CoverageRasterizer::FillTopFlatTriangle
     const Vec2& point3
 )
 {
-    assert(point1.x <= point2.x);
-    assert(std::abs(point1.y - point2.y) < std::numeric_limits<float>::epsilon());
-    assert(point1.y >= point3.y);
-    assert(point2.y >= point3.y);
+    EA_ASSERT(point1.x <= point2.x);
+    EA_ASSERT(fabs(point1.y - point2.y) < eastl::numeric_limits<float>::epsilon());
+    EA_ASSERT(point1.y >= point3.y);
+    EA_ASSERT(point2.y >= point3.y);
     
     const float inverseSlope1 = (float)(point1.x - point3.x) / (point1.y - point3.y);
     const float inverseSlope2 = (float)(point2.x - point3.x) / (point2.y - point3.y);
@@ -90,7 +87,7 @@ culling::EVERYCULLING_M256I culling::CoverageRasterizer::FillTriangle
 )
 {
     culling::EVERYCULLING_M256I result;
-    if (std::abs(triangleVertex2.y - triangleVertex3.y) < std::numeric_limits<float>::epsilon())
+    if (fabs(triangleVertex2.y - triangleVertex3.y) < eastl::numeric_limits<float>::epsilon())
     {// Bottom Flat Triangle
         result = FillBottomFlatTriangle
         (
@@ -101,7 +98,7 @@ culling::EVERYCULLING_M256I culling::CoverageRasterizer::FillTriangle
         );
     }
     // check for trivial case of top-flat triangle
-    else if (std::abs(triangleVertex1.y - triangleVertex2.y) < std::numeric_limits<float>::epsilon())
+    else if (fabs(triangleVertex1.y - triangleVertex2.y) < eastl::numeric_limits<float>::epsilon())
     {// Top Flat Triangle
         result = FillTopFlatTriangle
         (
@@ -119,8 +116,8 @@ culling::EVERYCULLING_M256I culling::CoverageRasterizer::FillTriangle
       
     	culling::EVERYCULLING_M256I Result1, Result2;
 
-        assert(triangleVertex1.y > triangleVertex2.y);
-        assert(triangleVertex1.y > triangleVertex3.y);
+        EA_ASSERT(triangleVertex1.y > triangleVertex2.y);
+        EA_ASSERT(triangleVertex1.y > triangleVertex3.y);
         
         Result1 = FillBottomFlatTriangle
     	(
@@ -131,8 +128,8 @@ culling::EVERYCULLING_M256I culling::CoverageRasterizer::FillTriangle
         );
 
 
-        assert(triangleVertex3.y < triangleVertex1.y);
-        assert(triangleVertex3.y < triangleVertex2.y);
+        EA_ASSERT(triangleVertex3.y < triangleVertex1.y);
+        EA_ASSERT(triangleVertex3.y < triangleVertex2.y);
 
         Result2 = FillTopFlatTriangle
     	(
@@ -148,6 +145,29 @@ culling::EVERYCULLING_M256I culling::CoverageRasterizer::FillTriangle
     return result;
 }
 
+
+void culling::CoverageRasterizer::FillFlatTriangleBatch(culling::EVERYCULLING_M256I& outCoverageMask, /* 8 coverage mask. array size should be 8 */ const Vec2& TileLeftBottomOriginPoint, const culling::EVERYCULLING_M256I& leftFaceEvent, const culling::EVERYCULLING_M256I& rightFaceEvent, const float bottomEdgeY, const float topEdgeY)
+{
+	culling::EVERYCULLING_M256I Mask1;
+	culling::EVERYCULLING_M256I Mask2;
+
+	culling::EVERYCULLING_M256I Result;
+
+	culling::EVERYCULLING_M256F aboveFlatBottomTriangleFace;
+	culling::EVERYCULLING_M256F belowFlatTopTriangleFace;
+
+	Mask1 = _mm256_sllv_epi32(_mm256_set1_epi64x(0xFFFFFFFFFFFFFFFF), leftFaceEvent);
+	Mask2 = _mm256_sllv_epi32(_mm256_set1_epi64x(0xFFFFFFFFFFFFFFFF), rightFaceEvent);
+
+	const culling::EVERYCULLING_M256F blend = _mm256_andnot_ps(*reinterpret_cast<const culling::EVERYCULLING_M256F*>(&Mask2), *reinterpret_cast<const culling::EVERYCULLING_M256F*>(&Mask1));
+	Result = *reinterpret_cast<const culling::EVERYCULLING_M256I*>(&blend);
+
+	aboveFlatBottomTriangleFace = _mm256_cmp_ps(_mm256_setr_ps(TileLeftBottomOriginPoint.y + 0.5f, TileLeftBottomOriginPoint.y + 1.5f, TileLeftBottomOriginPoint.y + 2.5f, TileLeftBottomOriginPoint.y + 3.5f, TileLeftBottomOriginPoint.y + 4.5f, TileLeftBottomOriginPoint.y + 5.5f, TileLeftBottomOriginPoint.y + 6.5f, TileLeftBottomOriginPoint.y + 7.5f), _mm256_set1_ps(bottomEdgeY), _CMP_GE_OQ);
+	belowFlatTopTriangleFace = _mm256_cmp_ps(_mm256_setr_ps(TileLeftBottomOriginPoint.y + 0.5f, TileLeftBottomOriginPoint.y + 1.5f, TileLeftBottomOriginPoint.y + 2.5f, TileLeftBottomOriginPoint.y + 3.5f, TileLeftBottomOriginPoint.y + 4.5f, TileLeftBottomOriginPoint.y + 5.5f, TileLeftBottomOriginPoint.y + 6.5f, TileLeftBottomOriginPoint.y + 7.5f), _mm256_set1_ps(topEdgeY), _CMP_LE_OQ);
+
+	Result = _mm256_and_si256(Result, *reinterpret_cast<const culling::EVERYCULLING_M256I*>(&aboveFlatBottomTriangleFace));
+	outCoverageMask = _mm256_and_si256(Result, *reinterpret_cast<const culling::EVERYCULLING_M256I*>(&belowFlatTopTriangleFace));
+}
 
 /// <summary>
 /// reference : http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html

@@ -1,7 +1,5 @@
 #include "ViewFrustumCulling.h"
 
-#include <cassert>
-
 #include "../../DataType/Math/Common.h"
 #include "../../EveryCulling.h"
 
@@ -19,12 +17,12 @@ void culling::ViewFrustumCulling::DoViewFrustumCulling
 	culling::EntityBlock* const entityBlock
 )
 {
-	assert(entityBlock->mCurrentEntityCount != 0);
+	EA_ASSERT(entityBlock->mCurrentEntityCount != 0);
 	
 
 	const Vec4* frustumPlane = mSIMDFrustumPlanes[cameraIndex].mFrustumPlanes;
 
-	assert(entityBlock->mCurrentEntityCount != 0);
+	EA_ASSERT(entityBlock->mCurrentEntityCount != 0);
 	for (size_t entityIndex = 0; entityIndex < entityBlock->mCurrentEntityCount ; entityIndex = entityIndex + 2)
 	{
 		if ( (entityBlock->GetIsCulled(entityIndex, cameraIndex) == false) || ((entityIndex + 1 < entityBlock->mCurrentEntityCount) && entityBlock->GetIsCulled(entityIndex + 1, cameraIndex) == false) )
@@ -33,11 +31,11 @@ void culling::ViewFrustumCulling::DoViewFrustumCulling
 #ifdef EVERYCULLING_DEBUG_CULLING
 			if(entityBlock->GetIsCulled(entityIndex, cameraIndex) == false)
 			{
-				assert(entityBlock->mWorldPositionAndWorldBoundingSphereRadius[entityIndex].GetBoundingSphereRadius() >= 0.0f);
+				EA_ASSERT(entityBlock->mWorldPositionAndWorldBoundingSphereRadius[entityIndex].GetBoundingSphereRadius() >= 0.0f);
 			}
 			if ((entityIndex + 1 < entityBlock->mCurrentEntityCount) && entityBlock->GetIsCulled(entityIndex + 1, cameraIndex) == false)
 			{
-				assert(entityBlock->mWorldPositionAndWorldBoundingSphereRadius[entityIndex + 1].GetBoundingSphereRadius() >= 0.0f);
+				EA_ASSERT(entityBlock->mWorldPositionAndWorldBoundingSphereRadius[entityIndex + 1].GetBoundingSphereRadius() >= 0.0f);
 			}
 #endif
 
@@ -81,7 +79,7 @@ const char* culling::ViewFrustumCulling::GetCullingModuleName() const
 	return "ViewFrustumCulling";
 }
 
-EVERYCULLING_FORCE_INLINE char culling::ViewFrustumCulling::CheckInFrustumSIMDWithTwoPoint
+char culling::ViewFrustumCulling::CheckInFrustumSIMDWithTwoPoint
 (
 	const Vec4* eightPlanes,
 	const Position_BoundingSphereRadius* twoPoint
@@ -153,7 +151,7 @@ void culling::ViewFrustumCulling::OnSetViewProjectionMatrix(const size_t cameraI
 {
 	culling::CullingModule::OnSetViewProjectionMatrix(cameraIndex, cameraViewProjectionMatrix);
 
-	assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+	EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 
 	ExtractSIMDPlanesFromViewProjectionMatrix(cameraViewProjectionMatrix, mSIMDFrustumPlanes[cameraIndex].mFrustumPlanes, true);
 }

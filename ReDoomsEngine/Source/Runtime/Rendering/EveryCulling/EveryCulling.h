@@ -7,15 +7,6 @@
 #include "DataType/Math/Vector.h"
 #include "DataType/Math/Matrix.h"
 
-
-#ifdef EVERYCULLING_PROFILING_CULLING
-#include "EveryCullingProfiler.h"
-#endif
-
-#include <array>
-#include <vector>
-#include <memory>
-
 namespace culling
 {
 	class CullingModule;
@@ -31,38 +22,38 @@ namespace culling
 	{
 	private:
 
-		std::atomic<std::uint32_t> mRunningThreadCount;
+		eastl::atomic<uint32_t> mRunningThreadCount;
 		
 		size_t mCameraCount;
-		std::array<culling::Mat4x4, EVERYCULLING_MAX_CAMERA_COUNT> mCameraModelMatrixes;
-		std::array<culling::Mat4x4, EVERYCULLING_MAX_CAMERA_COUNT> mCameraViewProjectionMatrixes;
-		std::array<culling::Vec3, EVERYCULLING_MAX_CAMERA_COUNT> mCameraWorldPositions;
-		std::array<culling::Vec4, EVERYCULLING_MAX_CAMERA_COUNT> mCameraRotations;
-		std::array<float, EVERYCULLING_MAX_CAMERA_COUNT> mCameraFieldOfView;
-		std::array<float, EVERYCULLING_MAX_CAMERA_COUNT> mFarClipPlaneDistance;
-		std::array<float, EVERYCULLING_MAX_CAMERA_COUNT> mNearClipPlaneDistance;
+		eastl::array<culling::Mat4x4, EVERYCULLING_MAX_CAMERA_COUNT> mCameraModelMatrixes;
+		eastl::array<culling::Mat4x4, EVERYCULLING_MAX_CAMERA_COUNT> mCameraViewProjectionMatrixes;
+		eastl::array<culling::Vec3, EVERYCULLING_MAX_CAMERA_COUNT> mCameraWorldPositions;
+		eastl::array<culling::Vec4, EVERYCULLING_MAX_CAMERA_COUNT> mCameraRotations;
+		eastl::array<float, EVERYCULLING_MAX_CAMERA_COUNT> mCameraFieldOfView;
+		eastl::array<float, EVERYCULLING_MAX_CAMERA_COUNT> mFarClipPlaneDistance;
+		eastl::array<float, EVERYCULLING_MAX_CAMERA_COUNT> mNearClipPlaneDistance;
 
 		bool bmIsEntityBlockPoolInitialized;
 
 		/// <summary>
 		/// List of EntityBlock with no entity ( maybe entity was destroyed)
 		/// </summary>
-		std::vector<EntityBlock*> mFreeEntityBlockList;
+		eastl::vector<EntityBlock*> mFreeEntityBlockList;
 		/// <summary>
 		/// List of EntityBlock containing Entities
 		/// </summary>
-		std::vector<EntityBlock*> mActiveEntityBlockList;
+		eastl::vector<EntityBlock*> mActiveEntityBlockList;
 		/// <summary>
 		/// Allocated EntityBlock Arrays
 		/// This objects will be released at destructor
 		/// </summary>
-		std::vector<EntityBlock*> mAllocatedEntityBlockChunkList;
+		eastl::vector<EntityBlock*> mAllocatedEntityBlockChunkList;
 
-		std::uint64_t mEntityBlockUniqueIDCounter;
+		uint64_t mEntityBlockUniqueIDCounter;
 		
 		void AllocateEntityBlockPool();
 		culling::EntityBlock* AllocateNewEntityBlockFromPool();
-		void RemoveEntityFromBlock(EntityBlock* ownerEntityBlock, std::uint32_t entityIndexInBlock);
+		void RemoveEntityFromBlock(EntityBlock* ownerEntityBlock, uint32_t entityIndexInBlock);
 		/// <summary>
 		/// Block Swap removedblock with last block, and return swapped lastblock to pool
 		/// </summary>
@@ -77,20 +68,16 @@ namespace culling
 
 	public:
 
-		std::unique_ptr<PreCulling> mPreCulling;
-		std::unique_ptr<DistanceCulling> mDistanceCulling;
-		std::unique_ptr<ViewFrustumCulling> mViewFrustumCulling;
-		std::unique_ptr<MaskedSWOcclusionCulling> mMaskedSWOcclusionCulling;
-
-#ifdef EVERYCULLING_PROFILING_CULLING
-		EveryCullingProfiler mEveryCullingProfiler;
-#endif
+		eastl::unique_ptr<PreCulling> mPreCulling;
+		eastl::unique_ptr<DistanceCulling> mDistanceCulling;
+		eastl::unique_ptr<ViewFrustumCulling> mViewFrustumCulling;
+		eastl::unique_ptr<MaskedSWOcclusionCulling> mMaskedSWOcclusionCulling;
 
 	private:
 
 		unsigned long long mCurrentTickCount;
 
-		std::vector<culling::CullingModule*> mUpdatedCullingModules;
+		eastl::vector<culling::CullingModule*> mUpdatedCullingModules;
 
 		// this function is called by multiple threads
 		void OnStartCullingModule(const culling::CullingModule* const cullingModule);
@@ -114,7 +101,7 @@ namespace culling
 		};
 
 		EveryCulling() = delete;
-		EveryCulling(const std::uint32_t resolutionWidth, const std::uint32_t resolutionHeight);
+		EveryCulling(const uint32_t resolutionWidth, const uint32_t resolutionHeight);
 		EveryCulling(const EveryCulling&) = delete;
 		EveryCulling& operator=(const EveryCulling&) = delete;
 
@@ -141,38 +128,38 @@ namespace culling
 		 */
 		void UpdateGlobalDataForCullJob(const size_t cameraIndex, const GlobalDataForCullJob& settingParameters);
 
-		EVERYCULLING_FORCE_INLINE size_t GetCameraCount() const
+		EASTL_FORCE_INLINE size_t GetCameraCount() const
 		{
 			return mCameraCount;
 		}
-		EVERYCULLING_FORCE_INLINE const culling::Vec3& GetCameraWorldPosition(const size_t cameraIndex) const
+		EASTL_FORCE_INLINE const culling::Vec3& GetCameraWorldPosition(const size_t cameraIndex) const
 		{
-			assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+			EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 			return mCameraWorldPositions[cameraIndex];
 		}
-		EVERYCULLING_FORCE_INLINE const culling::Mat4x4& GetCameraModelMatrix(const size_t cameraIndex) const
+		EASTL_FORCE_INLINE const culling::Mat4x4& GetCameraModelMatrix(const size_t cameraIndex) const
 		{
-			assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+			EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 			return mCameraModelMatrixes[cameraIndex];
 		}
-		EVERYCULLING_FORCE_INLINE const culling::Mat4x4& GetCameraViewProjectionMatrix(const size_t cameraIndex) const
+		EASTL_FORCE_INLINE const culling::Mat4x4& GetCameraViewProjectionMatrix(const size_t cameraIndex) const
 		{
-			assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+			EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 			return mCameraViewProjectionMatrixes[cameraIndex];
 		}
-		EVERYCULLING_FORCE_INLINE float GetCameraFieldOfView(const size_t cameraIndex) const
+		EASTL_FORCE_INLINE float GetCameraFieldOfView(const size_t cameraIndex) const
 		{
-			assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+			EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 			return mCameraFieldOfView[cameraIndex];
 		}
-		EVERYCULLING_FORCE_INLINE float GetCameraFarClipPlaneDistance(const size_t cameraIndex) const
+		EASTL_FORCE_INLINE float GetCameraFarClipPlaneDistance(const size_t cameraIndex) const
 		{
-			assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+			EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 			return mFarClipPlaneDistance[cameraIndex];
 		}
-		EVERYCULLING_FORCE_INLINE float GetCameraNearClipPlaneDistance(const size_t cameraIndex) const
+		EASTL_FORCE_INLINE float GetCameraNearClipPlaneDistance(const size_t cameraIndex) const
 		{
-			assert(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
+			EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 			return mNearClipPlaneDistance[cameraIndex];
 		}
 		
@@ -180,7 +167,7 @@ namespace culling
 		/// Get EntityBlock List with entities
 		/// </summary>
 		/// <returns></returns>
-		const std::vector<EntityBlock*>& GetActiveEntityBlockList() const;
+		const eastl::vector<EntityBlock*>& GetActiveEntityBlockList() const;
 		size_t GetActiveEntityBlockCount() const;
 
 		/// <summary>
@@ -204,12 +191,12 @@ namespace culling
 		void RemoveEntityFromBlock(EntityBlockViewer& entityBlockViewer);
 		
 		void ThreadCullJob(const size_t cameraIndex, const unsigned long long tickCount);
-		//void ThreadCullJob(const std::uint32_t threadIndex, const std::uint32_t threadCount);
+		//void ThreadCullJob(const uint32_t threadIndex, const uint32_t threadCount);
 
 		/// <summary>
 		/// Caller thread will stall until cull job of all entity block is finished
 		/// </summary>
-		void WaitToFinishCullJob(const std::uint32_t cameraIndex) const;
+		void WaitToFinishCullJob(const uint32_t cameraIndex) const;
 		void WaitToFinishCullJobOfAllCameras() const;
 
 
@@ -228,7 +215,7 @@ namespace culling
 
 		const culling::CullingModule* GetLastEnabledCullingModule() const;
 		void SetEnabledCullingModule(const CullingModuleType cullingModuleType, const bool isEnabled);
-		std::uint32_t GetRunningThreadCount() const;
+		uint32_t GetRunningThreadCount() const;
 
 	};
 }

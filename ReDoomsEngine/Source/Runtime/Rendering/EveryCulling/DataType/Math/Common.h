@@ -7,9 +7,9 @@
 
 namespace culling
 {
-	extern float PI;
-	extern float DEGREE_TO_RADIAN;
-	extern float RADIAN_TO_DEGREE;
+	extern const float PI;
+	extern const float DEGREE_TO_RADIAN;
+	extern const float RADIAN_TO_DEGREE;
 
 	void NormalizePlane(Vec4& plane) noexcept;
 
@@ -31,73 +31,14 @@ namespace culling
 
 	void ExtractSIMDPlanesFromViewProjectionMatrix(const Mat4x4& viewProjectionMatrix, Vec4* eightPlanes, bool normalize) noexcept;
 
-	EVERYCULLING_FORCE_INLINE Vec4 operator*(const culling::Mat4x4& mat4, const culling::Vec3& vec3) noexcept
-	{
-		return Vec4
-		{
-				mat4[0][0] * vec3.x + mat4[1][0] * vec3.y + mat4[2][0] * vec3.z + mat4[3][0],
-				mat4[0][1] * vec3.x + mat4[1][1] * vec3.y + mat4[2][1] * vec3.z + mat4[3][1],
-				mat4[0][2] * vec3.x + mat4[1][2] * vec3.y + mat4[2][2] * vec3.z + mat4[3][2],
-				mat4[0][3] * vec3.x + mat4[1][3] * vec3.y + mat4[2][3] * vec3.z + mat4[3][3],
-		};
-	}
+	Vec4 operator*(const culling::Mat4x4& mat4, const culling::Vec3& vec3) noexcept;
 
-	EVERYCULLING_FORCE_INLINE Vec4 operator*(const culling::Mat4x4& mat4, const culling::Vec4& vec4) noexcept
-	{
-		culling::EVERYCULLING_M128F tempVec4;
+	Vec4 operator*(const culling::Mat4x4& mat4, const culling::Vec4& vec4) noexcept;
 
-		const culling::EVERYCULLING_M128F* A = reinterpret_cast<const culling::EVERYCULLING_M128F*>(&mat4);
-		const culling::EVERYCULLING_M128F* B = reinterpret_cast<const culling::EVERYCULLING_M128F*>(&vec4);
-		culling::EVERYCULLING_M128F* R = reinterpret_cast<culling::EVERYCULLING_M128F*>(&tempVec4);
-
-		// First row of result (Matrix1[0] * Matrix2).
-		*R = culling::EVERYCULLING_M128F_MUL(EVERYCULLING_M128F_REPLICATE(*B, 0), A[0]);
-		*R = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(*B, 1), A[1], *R);
-		*R = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(*B, 2), A[2], *R);
-		*R = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(*B, 3), A[3], *R);
-
-		return Vec4{ *(Vec4*)(&tempVec4) };
-	}
-
-	EVERYCULLING_FORCE_INLINE culling::Mat4x4 operator*(const culling::Mat4x4& mat4_A, const culling::Mat4x4& mat4_B) noexcept
-	{
-		culling::EVERYCULLING_M256F _REULST_MAT4[2];
-		culling::EVERYCULLING_M128F TEMP_M128F;
-
-		const culling::EVERYCULLING_M128F* const A = reinterpret_cast<const culling::EVERYCULLING_M128F*>(mat4_A.data());
-		//const EVERYCULLING_M128F* A = (const EVERYCULLING_M128F*)this->data(); // this is slower
-		const culling::EVERYCULLING_M128F* const B = reinterpret_cast<const culling::EVERYCULLING_M128F*>(mat4_B.data());
-		culling::EVERYCULLING_M128F* R = reinterpret_cast<culling::EVERYCULLING_M128F*>(&_REULST_MAT4);
-
-		// First row of result (Matrix1[0] * Matrix2).
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL(EVERYCULLING_M128F_REPLICATE(B[0], 0), A[0]);
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[0], 1), A[1], TEMP_M128F);
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[0], 2), A[2], TEMP_M128F);
-		R[0] = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[0], 3), A[3], TEMP_M128F);
-
-		// Second row of result (Matrix1[1] * Matrix2).
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL(EVERYCULLING_M128F_REPLICATE(B[1], 0), A[0]);
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[1], 1), A[1], TEMP_M128F);
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[1], 2), A[2], TEMP_M128F);
-		R[1] = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[1], 3), A[3], TEMP_M128F);
-
-		// Third row of result (Matrix1[2] * Matrix2).
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL(EVERYCULLING_M128F_REPLICATE(B[2], 0), A[0]);
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[2], 1), A[1], TEMP_M128F);
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[2], 2), A[2], TEMP_M128F);
-		R[2] = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[2], 3), A[3], TEMP_M128F);
-
-		// Fourth row of result (Matrix1[3] * Matrix2).
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL(EVERYCULLING_M128F_REPLICATE(B[3], 0), A[0]);
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[3], 1), A[1], TEMP_M128F);
-		TEMP_M128F = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[3], 2), A[2], TEMP_M128F);
-		R[3] = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(B[3], 3), A[3], TEMP_M128F);
-
-		return culling::Mat4x4{ *reinterpret_cast<culling::Mat4x4*>(&_REULST_MAT4) };
-	}
+	culling::Mat4x4 operator*(const culling::Mat4x4& mat4_A, const culling::Mat4x4& mat4_B) noexcept;
 
 	template <typename T>
-	EVERYCULLING_FORCE_INLINE void SWAP(T& a, T& b) noexcept
+	EASTL_FORCE_INLINE void SWAP(T& a, T& b) noexcept
 	{
 		const T original = a;
 		a = b;
@@ -105,9 +46,9 @@ namespace culling
 	}
 
 	template <typename T>
-	EVERYCULLING_FORCE_INLINE T CLAMP(const T& value, const T& min, const T& max) noexcept
+	EASTL_FORCE_INLINE T CLAMP(const T& value, const T& min, const T& max) noexcept
 	{
-		assert(min <= max);
+		EA_ASSERT(min <= max);
 		return EVERYCULLING_MIN(EVERYCULLING_MAX(value, min), max);
 	}
 }

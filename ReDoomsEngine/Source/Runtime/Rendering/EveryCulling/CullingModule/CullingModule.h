@@ -1,8 +1,5 @@
 #pragma once
 
-#include <array>
-#include <atomic>
-
 #include "../EveryCullingCore.h"
 #include "../DataType/EntityBlock.h"
 #include "../EveryCulling.h"
@@ -14,9 +11,9 @@ namespace culling
 
 	struct CullJobState
 	{
-		std::array<std::atomic<std::uint32_t>, EVERYCULLING_MAX_CAMERA_COUNT> mCurrentCulledEntityBlockIndex;
+		eastl::array<eastl::atomic<uint32_t>, EVERYCULLING_MAX_CAMERA_COUNT> mCurrentCulledEntityBlockIndex;
 		char padding2[64];
-		std::array<std::atomic<std::uint32_t>, EVERYCULLING_MAX_CAMERA_COUNT> mFinishedThreadCount;
+		eastl::array<eastl::atomic<uint32_t>, EVERYCULLING_MAX_CAMERA_COUNT> mFinishedThreadCount;
 	};
 	class CullingModule
 	{
@@ -25,7 +22,7 @@ namespace culling
 		CullJobState mCullJobState;
 
 
-		size_t ComputeEndEntityBlockIndexOfThread(const std::int32_t threadIndex);
+		size_t ComputeEndEntityBlockIndexOfThread(const int32_t threadIndex);
 
 	protected:
 
@@ -37,7 +34,7 @@ namespace culling
 		/// </summary>
 		/// <param name="cameraIndex"></param>
 		/// <returns></returns>
-		culling::EntityBlock* GetNextEntityBlock(const size_t cameraIndex, const bool forceOrdering = true);
+		culling::EntityBlock* GetNextEntityBlock(const size_t cameraIndex);
 
 	public:
 
@@ -47,7 +44,7 @@ namespace culling
 		bool IsEnabled;
 
 		virtual void ResetCullingModule(const unsigned long long currentTickCount);
-		EVERYCULLING_FORCE_INLINE std::uint32_t GetFinishedThreadCount(const size_t cameraIndex) const
+		EASTL_FORCE_INLINE uint32_t GetFinishedThreadCount(const size_t cameraIndex) const
 		{
 			return mCullJobState.mFinishedThreadCount[cameraIndex];
 		}

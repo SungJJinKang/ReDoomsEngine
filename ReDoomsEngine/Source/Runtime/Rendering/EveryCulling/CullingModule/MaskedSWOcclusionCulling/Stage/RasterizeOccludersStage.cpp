@@ -1,4 +1,4 @@
-﻿#include "RasterizeOccludersStage.h"
+#include "RasterizeOccludersStage.h"
 
 #include "../MaskedSWOcclusionCulling.h"
 #include "../Utility/CoverageRasterizer.h"
@@ -36,7 +36,7 @@
 /// </summary>
 /// <param name="coverageMask"></param>
 /// <returns></returns>
-EVERYCULLING_FORCE_INLINE culling::EVERYCULLING_M256I culling::RasterizeOccludersStage::ShuffleCoverageMask(const culling::EVERYCULLING_M256I& coverageMask) const
+culling::EVERYCULLING_M256I culling::RasterizeOccludersStage::ShuffleCoverageMask(const culling::EVERYCULLING_M256I& coverageMask) const
 {
 	static const culling::EVERYCULLING_M256I shuffleMask
 	=
@@ -62,7 +62,7 @@ void culling::RasterizeOccludersStage::RasterizeBinnedTriangles
 	culling::Tile* const tile
 )
 {
-	assert(tile != nullptr);
+	EA_ASSERT(tile != nullptr);
 
 	const culling::Vec2 tileOriginPoint{ static_cast<float>(tile->GetLeftBottomTileOrginX()), static_cast<float>(tile->GetLeftBottomTileOrginY()) };
 
@@ -220,7 +220,7 @@ void culling::RasterizeOccludersStage::RasterizeBinnedTriangles
 			maxDepthValue = EVERYCULLING_MAX(maxDepthValue, reinterpret_cast<const float*>(&(tile->mHizDatas.L0SubTileMaxDepthValue))[i]);
 		}
 		tile->mHizDatas.L0MaxDepthValue = maxDepthValue;
-		assert(maxDepthValue >= -1.0f && maxDepthValue <= 1.0f);
+		EA_ASSERT(maxDepthValue >= -1.0f && maxDepthValue <= 1.0f);
 
 #ifdef EVERYCULLING_DEBUG_CULLING
 		const culling::EVERYCULLING_M256I test
@@ -254,7 +254,7 @@ void culling::RasterizeOccludersStage::RasterizeBinnedTriangles
 
 		const culling::EVERYCULLING_M256I testResult = ShuffleCoverageMask(test);
 
-		assert(_mm256_test_all_ones(_mm256_cmpeq_epi8(correctTestResult, testResult)));
+		EA_ASSERT(_mm256_test_all_ones(_mm256_cmpeq_epi8(correctTestResult, testResult)));
 
 #endif
 
@@ -275,7 +275,7 @@ culling::Tile* culling::RasterizeOccludersStage::GetNextDepthBufferTileBatch
 {
 	culling::Tile* nextDepthBufferTile = nullptr;
 
-	const size_t currentTileIndex = mFinishedTileCount[cameraIndex].fetch_add(batchCount, std::memory_order_seq_cst);
+	const size_t currentTileIndex = mFinishedTileCount[cameraIndex].fetch_add(batchCount, eastl::memory_order_seq_cst);
 
 	const size_t tileCount = mMaskedOcclusionCulling->mDepthBuffer.GetTileCount();
 
@@ -296,9 +296,9 @@ void culling::RasterizeOccludersStage::ResetCullingModule(const unsigned long lo
 {
 	MaskedSWOcclusionCullingStage::ResetCullingModule(currentTickCount);
 
-	for (std::atomic<size_t>& atomicVal : mFinishedTileCount)
+	for (eastl::atomic<size_t>& atomicVal : mFinishedTileCount)
 	{
-		atomicVal.store(0, std::memory_order_relaxed);
+		atomicVal.store(0, eastl::memory_order_relaxed);
 	}
 }
 
