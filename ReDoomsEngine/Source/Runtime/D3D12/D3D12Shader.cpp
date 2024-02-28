@@ -42,6 +42,11 @@ void FBoundShaderSet::CacheHash()
 			CachedHash = CombineHash(CachedHash, ShaderInstanceList[ShaderIndex]->GetShaderTemplate()->GetShaderHash());
 		}
 	}
+
+	uint128 BoundShaderSetHash;
+	BoundShaderSetHash.first = CachedHash.Value[0];
+	BoundShaderSetHash.second = CachedHash.Value[1];
+	CachedHash64 = Hash128to64(BoundShaderSetHash);
 }
 
 void FBoundShaderSet::Validate()

@@ -63,8 +63,9 @@ struct FRenderObject
 	void SetDrawDistance(const float InDrawDistance);
 };
 
-struct FRenderScene
+class FRenderScene
 {
+public:
 	FRenderObjectList RenderObjectList;
 
 	struct FPass
@@ -73,8 +74,6 @@ struct FRenderScene
 
 		eastl::bitvector<> IsCachedMeshDrawList;
 	};
-
-	eastl::array<FPass, static_cast<uint32_t>(EPass::Num)> PerPassData;
 
 	EA_NODISCARD FRenderObject AddRenderObject(
 		const bool bInVisible,
@@ -93,6 +92,13 @@ struct FRenderScene
 	void PrepareToCreateMeshDrawList();
 	eastl::vector<FMeshDraw> CreateMeshDrawListForPass(const EPass InPass);
 	void SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList);
+
+	void SetPassDesc(const EPass InPass, const FD3D12PSOInitializer::FPassDesc& InPassDesc);
+
+private:
+
+	eastl::array<FPass, static_cast<uint32_t>(EPass::Num)> PerPassData;
+
 };
 
 DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
