@@ -8,6 +8,9 @@
 
 int main(int argc, char** argv)
 {
+	TLSThreadName = "MainThread";
+	TLSThreadType = ThreadType::MainThread;
+
 	{
 		InitMemoryCore();
 	}

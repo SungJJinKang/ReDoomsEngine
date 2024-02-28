@@ -303,6 +303,12 @@
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\DistanceCulling\DistanceCulling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Runtime\Thread\JobSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Core\Thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
@@ -1545,6 +1551,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\DistanceCulling\DistanceCulling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Thread\JobSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Core\Enums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Core\Thread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
