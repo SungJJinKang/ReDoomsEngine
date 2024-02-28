@@ -207,8 +207,65 @@ namespace EA
 			/// Otherwise the user is expected to manually start the thread.
 			ThreadInfo* AddThread(const ThreadParameters& tp, bool bBeginThread);
 
-			void ProcessJobFromCallerThread(const ThreadParameters& tp);
+			void ProcessJobFromCallerThread(const ThreadParameters& tp)
+			{
+				ThreadInfo* const pThreadInfo = CreateThreadInfo();
+				EAT_ASSERT(pThreadInfo != NULL);
 
+				if (pThreadInfo)
+				{
+					AddThread(pThreadInfo);
+
+					ThreadParameters tpUsed(tp);
+					SetupThreadParameters(tpUsed); // This function sets tpUsed.mnProcessor
+
+					ThreadPool* const pThreadPool = pThreadInfo->mpThreadPool;
+					Condition* const pCondition = &pThreadPool->mThreadCondition;
+					Mutex* const pMutex = &pThreadPool->mThreadMutex;
+
+					pMutex->Lock();
+
+					while (!pThreadInfo->mbQuit)
+					{
+						if (!pThreadPool->mJobList.empty())
+						{
+							pThreadInfo->mCurrentJob = pThreadPool->mJobList.front();
+							pThreadPool->mJobList.pop_front();
+							pThreadInfo->mbActive = true;
+							++pThreadPool->mnActiveCount; // Atomic integer operation.
+							pMutex->Unlock();
+
+							// Do the job here. It's important that we keep the mutex unlocked while doing the job.
+							if (pThreadInfo->mCurrentJob.mpRunnable)
+								pThreadInfo->mCurrentJob.mpRunnable->Run(pThreadInfo->mCurrentJob.mpContext);
+							else if (pThreadInfo->mCurrentJob.mpFunction)
+								pThreadInfo->mCurrentJob.mpFunction(pThreadInfo->mCurrentJob.mpContext);
+							else
+								pThreadInfo->mbQuit = true; // Tell ourself to quit.
+
+							// Problem: We are not paying attention to the pThreadInfo->mbPersistent variable.
+							// We don't have an easy way of dealing with it because we don't have a means for
+							// the ThreadPool to direct quit commands to individual threads. For now we don't
+							// pay attention to mbPersistent and require that persistence be controlled by
+							// the min/max thread count settings.
+
+							pMutex->Lock();
+
+							--pThreadPool->mnActiveCount; // Atomic integer operation.
+							pThreadInfo->mbActive = false;
+						}
+						else
+						{
+							break;
+						}
+					}
+
+					pThreadPool->RemoveThread(pThreadInfo);
+
+					pMutex->Unlock();
+				}
+			}
+			
 			// Gets the ThreadInfo for the nth Thread identified by index. 
 			// You must call this function and use the info within a Lock/Unlock pair 
 			// on the thread pool.

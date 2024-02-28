@@ -520,22 +520,6 @@ EA::Thread::ThreadPool::ThreadInfo* EA::Thread::ThreadPool::AddThread(const EA::
 	return pThreadInfo;
 }
 
-void EA::Thread::ThreadPool::ProcessJobFromCallerThread(const EA::Thread::ThreadParameters& tp)
-{
-	ThreadInfo* const pThreadInfo = CreateThreadInfo();
-	EAT_ASSERT(pThreadInfo != NULL);
-
-	if (pThreadInfo)
-	{
-		AddThread(pThreadInfo);
-
-		ThreadParameters tpUsed(tp);
-		SetupThreadParameters(tpUsed); // This function sets tpUsed.mnProcessor
-
-		ThreadFunction(pThreadInfo);
-	}
-}
-
 // Gets the ThreadInfo for the nth Thread identified by index. 
 // You must call this function within a Lock/Unlock pair on the thread pool.
 EA::Thread::ThreadPool::ThreadInfo* EA::Thread::ThreadPool::GetThreadInfo(int index)
