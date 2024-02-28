@@ -112,6 +112,8 @@ void FD3D12StateCache::SetBoundShaderSet(const FBoundShaderSet& InBoundShaderSet
 
 void FD3D12StateCache::SetPSO(const FD3D12PSOInitializer& InPSOInitializer)
 {
+	SCOPED_CPU_TIMER(FD3D12StateCache_SetPSO)
+
 	EA_ASSERT(InPSOInitializer.GetCachedHash() != 0);
 	if (!(CachedPSOInitializer.IsValid()) || (CachedPSOInitializer.GetCachedHash() != InPSOInitializer.GetCachedHash()))
 	{
@@ -260,6 +262,8 @@ void FD3D12StateCache::SetConstantBuffer(const EShaderFrequency InShaderFrequenc
 
 void FD3D12StateCache::SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)>& InVertexBufferViewList)
 {
+	SCOPED_CPU_TIMER(FD3D12StateCache_SetVertexBufferViewList)
+
 	bool bNeedToSet = false;
 
 	if (CachedVertexBufferViewList.size() == InVertexBufferViewList.size())
@@ -291,6 +295,8 @@ void FD3D12StateCache::SetVertexBufferViewList(const eastl::fixed_vector<D3D12_V
 
 void FD3D12StateCache::SetIndexBufferView(const D3D12_INDEX_BUFFER_VIEW InIndexBufferView)
 {
+	SCOPED_CPU_TIMER(FD3D12StateCache_SetIndexBufferView)
+
 	if (
 		(CachedIndexBufferView.BufferLocation != InIndexBufferView.BufferLocation) ||
 		(CachedIndexBufferView.SizeInBytes != InIndexBufferView.SizeInBytes) ||
@@ -460,6 +466,8 @@ void FD3D12StateCache::ApplyIndexBufferView(FD3D12CommandList& InCommandList)
 
 void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipeline InPipeline)
 {
+	SCOPED_CPU_TIMER(FD3D12StateCache_Flush)
+
 	FD3D12DescriptorHeapBlock BaseHeapBlcok;
 
 	if (DirtyFlagsOfSRVs.any() || DirtyFlagsOfUAVs.any())
