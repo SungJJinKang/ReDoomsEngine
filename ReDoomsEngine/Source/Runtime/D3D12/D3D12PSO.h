@@ -2,7 +2,7 @@
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 #include "D3D12Shader.h"
-#include "D3D12RendererStateCallbackInterface.h"
+#include "Common/RendererStateCallbackInterface.h"
 
 class FD3D12RootSignature;
 
@@ -112,7 +112,7 @@ namespace eastl
     };
 }
 
-class FD3D12PSOManager : public EA::StdC::Singleton<FD3D12PSOManager>, public ID3D12RendererStateCallbackInterface
+class FD3D12PSOManager : public EA::StdC::Singleton<FD3D12PSOManager>, public IRendererStateCallbackInterface
 {
 public:
 

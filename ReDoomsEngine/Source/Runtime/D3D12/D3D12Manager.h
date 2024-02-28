@@ -1,7 +1,7 @@
 #pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
-#include "D3D12RendererStateCallbackInterface.h"
+#include "Common/RendererStateCallbackInterface.h"
 
 class FD3D12Window;
 class FD3D12Adapter;
@@ -14,7 +14,7 @@ class FD3D12ConstantBufferRingBuffer;
 class FD3D12ResourceAllocator;
 class FRenderer;
 
-class FD3D12Manager : public EA::StdC::Singleton<FD3D12Manager>, public ID3D12RendererStateCallbackInterface
+class FD3D12Manager : public EA::StdC::Singleton<FD3D12Manager>, public IRendererStateCallbackInterface
 {
 public:
 
@@ -61,6 +61,6 @@ private:
 	eastl::unique_ptr<FD3D12ConstantBufferRingBuffer> D3D12ConstantBufferRingBuffer;
 	eastl::unique_ptr<FD3D12ResourceAllocator> D3D12ResourceAllocator;
 
-	eastl::vector<ID3D12RendererStateCallbackInterface*> TickedManagerList;
+	eastl::vector<IRendererStateCallbackInterface*> TickedManagerList;
 };
 

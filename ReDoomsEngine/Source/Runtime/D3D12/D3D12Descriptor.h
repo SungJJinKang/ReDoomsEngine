@@ -3,7 +3,7 @@
 #include "D3D12Include.h"
 
 #include "EASTL/queue.h"
-#include "D3D12RendererStateCallbackInterface.h"
+#include "Common/RendererStateCallbackInterface.h"
 
 class FD3D12DescriptorHeap;
 class FD3D12Descriptor
@@ -156,7 +156,7 @@ private:
 	eastl::queue<eastl::shared_ptr<FD3D12DescriptorHeap>> FreeDescriptorHeapList;
 };
 
-class FD3D12DescriptorHeapManager : public EA::StdC::Singleton<FD3D12DescriptorHeapManager>, public ID3D12RendererStateCallbackInterface
+class FD3D12DescriptorHeapManager : public EA::StdC::Singleton<FD3D12DescriptorHeapManager>, public IRendererStateCallbackInterface
 {
 public:
 
