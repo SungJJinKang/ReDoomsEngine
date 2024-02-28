@@ -138,9 +138,6 @@
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1269,9 +1266,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Rendering\RendererCommonInclude.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Math\MathUtils.h">
