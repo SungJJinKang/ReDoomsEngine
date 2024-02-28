@@ -116,9 +116,9 @@ void D3D12TestRenderer::SceneSetup()
 	MeshDrawArgument.BaseVertexLocation = 0;
 	MeshDrawArgument.StartInstanceLocation = 0;
 
-	for (int32_t IndexA = -20; IndexA < 20; ++IndexA)
+	for (int32_t IndexA = -30; IndexA < 30; ++IndexA)
 	{
-		for (int32_t IndexB = -20; IndexB < 20; ++IndexB)
+		for (int32_t IndexB = -30; IndexB < 30; ++IndexB)
 		{
 			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
