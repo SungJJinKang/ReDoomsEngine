@@ -84,5 +84,7 @@ int main(int argc, char** argv)
 		TestRenderer.Destroy();
 	}
 
+	DestroyTimerData();
+
 	return 0;
 }

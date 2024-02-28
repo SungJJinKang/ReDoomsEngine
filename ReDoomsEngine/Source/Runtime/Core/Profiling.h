@@ -6,7 +6,7 @@
 //#define ENABLE_PROFILER RD_DEBUG
 
 #if ENABLE_PROFILER
-#include "EASTL/hash_map.h"
+#include "EASTL/vector_map.h"
 #include "EASTL/array.h"
 #include "EASTL/vector.h"
 #endif
@@ -21,23 +21,19 @@ public:
 
 	struct FNode
 	{
-		FNode(const char* const InTimerName)
-			: TimerName(InTimerName), Childs()
-		{
+		FNode(const char* const InTimerName);
 
-		}
-
-		void RecursiveDestory()
-		{
-			for (FNode* ChildNode : Childs)
-			{
-				ChildNode->RecursiveDestory();
-			}
-			delete this;
-		}
+		void RecursiveClearElapsedSeconds();
+		void RecursiveCalculateAverage(const bool bUpdateShownAverage);
+		void RecursiveDestory();
 
 		const char* const TimerName;
-		eastl::vector<FCPUTimer::FNode*> Childs;
+
+		double ElapsedSeconds;
+		double Average = 0.0;
+		double ShownAverage = 0.0;
+
+		eastl::vector_map<const char*, FCPUTimer::FNode*> Childs;
 	};
 
 	FCPUTimer(const char* const InTimerName, const bool bInScopedTimer = true);
@@ -57,7 +53,7 @@ public:
 
 	inline static double TicksToSeconds(unsigned long long ticks) { return static_cast<double>(ticks) / TicksPerSecond; }
 	inline static unsigned long long SecondsToTicks(double seconds) { return static_cast<unsigned long long>(seconds * TicksPerSecond); }
-
+	
 private:
 	const char* const TimerName;
 
@@ -71,14 +67,6 @@ private:
 };
 
 #if ENABLE_PROFILER
-struct FTimerData
-{
-	double ElapsedSeconds;
-	double Average = 0.0;
-	double ShownAverage = 0.0;
-	FCPUTimer::FNode* Node = nullptr;
-};
-
 struct FScopedMemoryTrace
 {
 	// use address of literal string as key
@@ -128,11 +116,13 @@ void CPUTimerBeginFrame();
 void CPUTimerEndFrame();
 void GPUTimerBeginFrame(FD3D12CommandContext* const InD3D12CommandContext);
 void GPUTimerEndFrame(FD3D12CommandContext* const InD3D12CommandContext);
+void DestroyTimerData();
 #else
 inline void CPUTimerBeginFrame() {}
 inline void CPUTimerEndFrame() {}
 inline void GPUTimerBeginFrame(FD3D12CommandContext* const InD3D12CommandContext) {}
 inline void GPUTimerEndFrame(FD3D12CommandContext* const InD3D12CommandContext) {}
+void DestroyTimerData() {}
 #endif
 #if ENABLE_PROFILER
 
