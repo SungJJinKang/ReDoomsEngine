@@ -99,14 +99,15 @@ void D3D12TestRenderer::SceneSetup()
 
 	D3D12_INPUT_LAYOUT_DESC InputDesc{ FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
 	CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
-	DroneDrawDesc.PSODesc.InputLayout = InputDesc;
-	DroneDrawDesc.PSODesc.BlendState = CD3DX12_BLEND_DESC{ D3D12_DEFAULT };
-	DroneDrawDesc.PSODesc.RasterizerState = CD3DX12_RASTERIZER_DESC{ D3D12_DEFAULT };
-	DroneDrawDesc.PSODesc.RasterizerState.FrontCounterClockwise = true;
-	DroneDrawDesc.PSODesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
-	DroneDrawDesc.PSODesc.DepthStencilState.DepthEnable = true;
-	DroneDrawDesc.PSODesc.DepthStencilState.StencilEnable = false;
-	DroneDrawDesc.PSODesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	DroneDrawDesc.Desc.InputLayout = InputDesc;
+	DroneDrawDesc.Desc.BlendState = CD3DX12_BLEND_DESC{ D3D12_DEFAULT };
+	DroneDrawDesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC{ D3D12_DEFAULT };
+	DroneDrawDesc.Desc.RasterizerState.FrontCounterClockwise = true;
+	DroneDrawDesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
+	DroneDrawDesc.Desc.DepthStencilState.DepthEnable = true;
+	DroneDrawDesc.Desc.DepthStencilState.StencilEnable = false;
+	DroneDrawDesc.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	DroneDrawDesc.CacheDescHash();
 
 	FMeshDrawArgument MeshDrawArgument;
 	MeshDrawArgument.IndexCountPerInstance = DroneMesh->MeshList[0].IndexCount;
@@ -162,13 +163,14 @@ void D3D12TestRenderer::OnStartFrame()
 
 		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
 		MEM_ZERO(BasePassPSODesc);
-		BasePassPSODesc.SampleMask = UINT_MAX;
-		BasePassPSODesc.NumRenderTargets = 1;
-		BasePassPSODesc.RTVFormats[0] = SwapChain->GetFormat();
-		BasePassPSODesc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
-		BasePassPSODesc.SampleDesc.Count = 1;
+		BasePassPSODesc.Desc.SampleMask = UINT_MAX;
+		BasePassPSODesc.Desc.NumRenderTargets = 1;
+		BasePassPSODesc.Desc.RTVFormats[0] = SwapChain->GetFormat();
+		BasePassPSODesc.Desc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
+		BasePassPSODesc.Desc.SampleDesc.Count = 1;
+		BasePassPSODesc.CacheDescHash();
 
-		RenderScene.PerPassData[static_cast<uint32_t>(EPass::BasePass)].PassPSODesc = BasePassPSODesc;
+		RenderScene.SetPassDesc(EPass::BasePass, BasePassPSODesc);
 	}
 
 	{
