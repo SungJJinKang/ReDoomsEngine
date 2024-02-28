@@ -3,12 +3,6 @@
 #include "D3D12RootSignature.h"
 #include "ShaderCompilers/DirectXShaderCompiler/include/dxc/dxcapi.h"
 
-bool FD3D12PSOInitializer::IsValid() const
-{
-    return (CachedHash != 0) &&
-        (DrawDesc.BoundShaderSet.GetCachedHash().Value[0] != 0) && (DrawDesc.BoundShaderSet.GetCachedHash().Value[1] != 0);
-}
-
 // void FD3D12PSOInitializer::Reset()
 // {
 //     MEM_ZERO(BoundShaderSet);
@@ -16,16 +10,13 @@ bool FD3D12PSOInitializer::IsValid() const
 //     MEM_ZERO(CachedHash);
 // }
 
-void FD3D12PSOInitializer::FinishCreating()
+void FD3D12PSOInitializer::CacheHash()
 {
-    uint128 BoundShaderSetHash;
-    BoundShaderSetHash.first = DrawDesc.BoundShaderSet.GetCachedHash().Value[0];
-    BoundShaderSetHash.second = DrawDesc.BoundShaderSet.GetCachedHash().Value[1];
-    const uint64 BoundShaderSetHash64 = Hash128to64(BoundShaderSetHash);
-    const uint64 PassDescHash = CityHash64(reinterpret_cast<const char*>(&PassDesc), sizeof(PassDesc));
-    const uint64 DrawDescHash = CityHash64(reinterpret_cast<const char*>(&DrawDesc.PSODesc), sizeof(DrawDesc.PSODesc));
+    EA_ASSERT(DrawDesc.CachedDescHash != 0);
+    EA_ASSERT(PassDesc.CachedDescHash != 0);
+    EA_ASSERT(DrawDesc.BoundShaderSet.GetCachedHash64() != 0);
 
-    CachedHash = BoundShaderSetHash64 ^ PassDescHash ^ DrawDescHash;
+    CachedHash = DrawDesc.BoundShaderSet.GetCachedHash64() ^ DrawDesc.CachedDescHash ^ PassDesc.CachedDescHash;
 }
 
 FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
@@ -40,8 +31,8 @@ FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     Desc.PS.pShaderBytecode = PSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[EShaderFrequency::Pixel]->GetShaderTemplate()->GetShaderBlob()->GetBufferPointer();
     Desc.PS.BytecodeLength = PSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[EShaderFrequency::Pixel]->GetShaderTemplate()->GetShaderBlob()->GetBufferSize();
 
-    #define COPY_DRAW_DESC_MEMBER(MemberName) Desc.MemberName = PSOInitializer.DrawDesc.PSODesc.MemberName;
-    #define COPY_PASS_DESC_MEMBER(MemberName) Desc.MemberName = PSOInitializer.PassDesc.MemberName;
+    #define COPY_DRAW_DESC_MEMBER(MemberName) Desc.MemberName = PSOInitializer.DrawDesc.Desc.MemberName;
+    #define COPY_PASS_DESC_MEMBER(MemberName) Desc.MemberName = PSOInitializer.PassDesc.Desc.MemberName;
 
     COPY_PASS_DESC_MEMBER(StreamOutput)
     COPY_DRAW_DESC_MEMBER(BlendState)
@@ -52,7 +43,7 @@ FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     COPY_PASS_DESC_MEMBER(IBStripCutValue)
     COPY_DRAW_DESC_MEMBER(PrimitiveTopologyType)
     COPY_PASS_DESC_MEMBER(NumRenderTargets)
-    EA::StdC::Memcpy(&(Desc.RTVFormats), &(PSOInitializer.PassDesc.RTVFormats), sizeof(DXGI_FORMAT) * ARRAY_LENGTH(PSOInitializer.PassDesc.RTVFormats));
+    EA::StdC::Memcpy(&(Desc.RTVFormats), &(PSOInitializer.PassDesc.Desc.RTVFormats), sizeof(DXGI_FORMAT) * ARRAY_LENGTH(PSOInitializer.PassDesc.Desc.RTVFormats));
     COPY_PASS_DESC_MEMBER(DSVFormat)
     COPY_PASS_DESC_MEMBER(SampleDesc)
     COPY_PASS_DESC_MEMBER(NodeMask)
@@ -96,4 +87,14 @@ void FD3D12PSOManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 void FD3D12PSOManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
 
+}
+
+void FD3D12PSOInitializer::FPassDesc::CacheDescHash()
+{
+    CachedDescHash = CityHash64(reinterpret_cast<const char*>(&Desc), sizeof(Desc));;
+}
+
+void FD3D12PSOInitializer::FDrawDesc::CacheDescHash()
+{
+    CachedDescHash = CityHash64(reinterpret_cast<const char*>(&Desc), sizeof(Desc));;
 }

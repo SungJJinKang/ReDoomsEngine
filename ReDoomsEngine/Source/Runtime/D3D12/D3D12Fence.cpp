@@ -4,8 +4,10 @@
 #include "D3D12Fence.h"
 #include "D3D12CommandQueue.h"
 
+static TConsoleVariable<bool> GD3D12CPUSpinWaitOnFence{ "r.D3D12.CPUSpinWaitOnFence", true };
+
 FD3D12Fence::FD3D12Fence(const bool bInit)
-	: D3DFence(), LastSignaledValue(0), bInterruptAwaited(false)
+	: D3DFence(), LastSignaledValue(0), bInterruptAwaited(false), Event()
 {
 	if (bInit)
 	{
@@ -89,7 +91,16 @@ uint64_t FD3D12Fence::Signal(FD3D12CommandQueue* const InCommandQueue, const boo
 void FD3D12Fence::CPUWaitOnSignal(const uint64_t SignaledValue)
 {
 	EA_ASSERT(IsInit());
-	do {} while (!IsCompleteSignal(SignaledValue));
+	
+	if (GD3D12CPUSpinWaitOnFence)
+	{
+		do {} while (!IsCompleteSignal(SignaledValue));
+	}
+	else
+	{
+		VERIFYD3D12RESULT(GetD3DFence()->SetEventOnCompletion(SignaledValue, Event));
+		WaitForSingleObject(Event, INFINITE);
+	}
 }
 
 void FD3D12Fence::CPUWaitOnLastSignal()
@@ -97,7 +108,15 @@ void FD3D12Fence::CPUWaitOnLastSignal()
 	EA_ASSERT(IsInit());
 	if (LastSignaledValue > 0)
 	{
-		do {} while (!IsCompleteLastSignal());
+		if (GD3D12CPUSpinWaitOnFence)
+		{
+			do {} while (!IsCompleteLastSignal());
+		}
+		else
+		{
+			VERIFYD3D12RESULT(GetD3DFence()->SetEventOnCompletion(LastSignaledValue, Event));
+			WaitForSingleObject(Event, INFINITE);
+		}
 	}
 }
 

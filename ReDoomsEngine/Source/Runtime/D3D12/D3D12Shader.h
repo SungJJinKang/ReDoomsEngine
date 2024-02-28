@@ -56,12 +56,22 @@ public:
 	{
 		return CachedHash;
 	}
+	inline uint64 GetCachedHash64() const
+	{
+		return CachedHash64;
+	}
+
+	inline bool IsValidHash() const
+	{
+		return CachedHash.IsValid() && (CachedHash64 != 0);
+	}
 
 private:
 
 	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderTemplateList{ nullptr };
 	eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderInstanceList{ nullptr };
 	FShaderHash CachedHash;
+	uint64 CachedHash64;
 };
 
 inline bool operator==(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)

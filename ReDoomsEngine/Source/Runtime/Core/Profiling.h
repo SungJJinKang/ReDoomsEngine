@@ -2,12 +2,13 @@
 
 #include "Macros.h"
 
-#define ENABLE_PROFILER 1
+#define ENABLE_PROFILER 0
 //#define ENABLE_PROFILER RD_DEBUG
 
+#include "EASTL/vector_map.h"
 #if ENABLE_PROFILER
-#include "EASTL/hash_map.h"
 #include "EASTL/array.h"
+#include "EASTL/vector.h"
 #endif
 
 class FD3D12CommandQueue;
@@ -18,10 +19,28 @@ struct FCPUTimer
 {
 public:
 
-	FCPUTimer(const char* const InTimerName);
+	struct FNode
+	{
+		FNode(const char* const InTimerName);
+
+		void RecursiveClearElapsedSeconds();
+		void RecursiveCalculateAverage(const bool bUpdateShownAverage);
+		void RecursiveDestory();
+
+		const char* const TimerName;
+
+		double ElapsedSeconds;
+		double Average = 0.0;
+		double ShownAverage = 0.0;
+
+		eastl::vector_map<const char*, FCPUTimer::FNode*> Childs;
+	};
+
+	FCPUTimer(const char* const InTimerName, const bool bInScopedTimer = true);
 	~FCPUTimer();
 
-	void UpdateElapsedTicks();
+	void Start();
+	void End();
 
 	inline const char* const GetTimerName() const { return TimerName; }
 
@@ -34,7 +53,7 @@ public:
 
 	inline static double TicksToSeconds(unsigned long long ticks) { return static_cast<double>(ticks) / TicksPerSecond; }
 	inline static unsigned long long SecondsToTicks(double seconds) { return static_cast<unsigned long long>(seconds * TicksPerSecond); }
-
+	
 private:
 	const char* const TimerName;
 
@@ -43,16 +62,11 @@ private:
 	// Derived timing data uses a canonical tick format.
 	double ElapsedSeconds;
 	unsigned long long ElapsedTicks;
+
+	const bool bScopedTimer;
 };
 
 #if ENABLE_PROFILER
-struct FTimerData
-{
-	double ElapsedSeconds;
-	double Average = 0.0;
-	double ShownAverage = 0.0;
-};
-
 struct FScopedMemoryTrace
 {
 	// use address of literal string as key
@@ -98,6 +112,19 @@ private:
 };
 
 #if ENABLE_PROFILER
+void CPUTimerBeginFrame();
+void CPUTimerEndFrame();
+void GPUTimerBeginFrame(FD3D12CommandContext* const InD3D12CommandContext);
+void GPUTimerEndFrame(FD3D12CommandContext* const InD3D12CommandContext);
+void DestroyTimerData();
+#else
+inline void CPUTimerBeginFrame() {}
+inline void CPUTimerEndFrame() {}
+inline void GPUTimerBeginFrame(FD3D12CommandContext* const InD3D12CommandContext) {}
+inline void GPUTimerEndFrame(FD3D12CommandContext* const InD3D12CommandContext) {}
+inline void DestroyTimerData() {}
+#endif
+#if ENABLE_PROFILER
 
 #define SCOPED_CPU_TIMER(TRACE_NAME) FCPUTimer RD_CONCAT(FCPUTimer, RD_UNIQUE_NAME(TRACE_NAME)){#TRACE_NAME};
 #define SCOPED_GPU_TIMER_DIRECT_QUEUE(COMMAND_CONTEXT, TRACE_NAME) FGPUTimer RD_CONCAT(FGPUTimer, RD_UNIQUE_NAME(TRACE_NAME)){COMMAND_CONTEXT.CommandQueueList[ED3D12QueueType::Direct], COMMAND_CONTEXT.GraphicsCommandList.get(), #TRACE_NAME};
@@ -111,16 +138,4 @@ private:
 #define SCOPED_GPU_TIMER_DIRECT_QUEUE_COMMAND_LIST(COMMAND_CONTEXT, COMMAND_LIST, TRACE_NAME)
 #define SCOPED_MEMORY_TRACE(TRACE_NAME)
 
-#endif
-
-#if ENABLE_PROFILER
-void CPUTimerBeginFrame();
-void CPUTimerEndFrame();
-void GPUTimerBeginFrame(FD3D12CommandContext* const InD3D12CommandContext);
-void GPUTimerEndFrame(FD3D12CommandContext* const InD3D12CommandContext);
-#else
-inline void CPUTimerBeginFrame() {}
-inline void CPUTimerEndFrame() {}
-inline void GPUTimerBeginFrame(FD3D12CommandContext* const InD3D12CommandContext) {}
-inline void GPUTimerEndFrame(FD3D12CommandContext* const InD3D12CommandContext) {}
 #endif

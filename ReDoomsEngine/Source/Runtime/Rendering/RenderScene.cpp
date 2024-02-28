@@ -29,6 +29,7 @@ FRenderObject FRenderScene::AddRenderObject(
 	RenderObjectList.CachedModelMatrixList.push_back_uninitialized();
 	RenderObjectList.VertexBufferViewList.push_back(InVertexBufferViews);
 	RenderObjectList.IndexBufferViewList.push_back(IndexBufferView);
+	EA_ASSERT(InDrawDesc.IsValidHash());
 	RenderObjectList.TemplateDrawDescList.push_back(InDrawDesc);
 	RenderObjectList.MeshDrawArgumentList.push_back(InMeshDrawArgument);
 
@@ -88,7 +89,7 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 		{
 			SCOPED_CPU_TIMER(FRenderScene_CreateMeshDrawListForPass_PSOSetup)
 			PSO.DrawDesc.BoundShaderSet = FBoundShaderSet{ DuplicatedShaderInstanceList };
-			PSO.FinishCreating();
+			PSO.CacheHash();
 		}
 
 		MeshDrawList.emplace_back(FMeshDraw{ PSO , RenderObjectList.VertexBufferViewList[ObjectIndex], RenderObjectList.IndexBufferViewList[ObjectIndex], RenderObjectList.MeshDrawArgumentList[ObjectIndex]});
@@ -123,6 +124,14 @@ void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::arr
 			}
 		}
 	}
+}
+
+void FRenderScene::SetPassDesc(const EPass InPass, const FD3D12PSOInitializer::FPassDesc& InPassDesc)
+{
+	EA_ASSERT(InPassDesc.IsValidHash());
+	PerPassData[static_cast<uint32_t>(InPass)].PassPSODesc = InPassDesc;
+
+	// @todo invalidate IsCachedMeshDrawList
 }
 
 void FRenderObject::SetVisible(const bool bInVisible)

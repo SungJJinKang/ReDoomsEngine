@@ -42,9 +42,6 @@ void FFrameResourceContainer::ResetForNewFrame()
 
 void FRenderer::Init()
 {
-	SCOPED_CPU_TIMER(Renderer_Init)
-	SCOPED_MEMORY_TRACE(Renderer_Init)
-
 	GCurrentRendererState = ERendererState::Initializing;
 
 	D3D12Manager.Init(this);
