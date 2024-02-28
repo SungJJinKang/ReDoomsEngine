@@ -67,6 +67,8 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -86,7 +88,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
@@ -144,7 +146,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Rendering\Renderer\D3D12TestRenderer.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12CommandContext.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.cpp" />
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12CommandList.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Enums.cpp" />
@@ -193,6 +194,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
   <ItemGroup>
 	<ClInclude Include="Source\Runtime\Core\Enums.h" />
     <ClInclude Include="Source\Runtime\Core\Thread.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\test\packages\EAThread\include\eathread\eathread_pool.h" />
     <ClInclude Include="Source\Runtime\Thread\JobSystem.h" />
     <ClInclude Include="Source\Runtime\Utils\ConsoleVariable.h" />
     <ClInclude Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.h" />
@@ -223,7 +225,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Rendering\Renderer\D3D12TestRenderer.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12CommandContext.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.h" />
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceHelper.h" />
     <ClInclude Include="Source\Runtime\Rendering\RendererCommonInclude.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12CommandList.h" />
