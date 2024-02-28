@@ -95,7 +95,7 @@ void FD3D12Manager::Init(FRenderer* const InRenderer)
 
 void FD3D12Manager::OnPreStartFrame()
 {
-    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
+    for (IRendererStateCallbackInterface* Manager : TickedManagerList)
     {
         Manager->OnPreStartFrame();
     }
@@ -103,7 +103,7 @@ void FD3D12Manager::OnPreStartFrame()
 
 void FD3D12Manager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
-    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
+    for (IRendererStateCallbackInterface* Manager : TickedManagerList)
     {
         Manager->OnStartFrame(InCommandContext);
     }
@@ -111,7 +111,7 @@ void FD3D12Manager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 
 void FD3D12Manager::OnPreEndFrame(FD3D12CommandContext& InCommandContext)
 {
-	for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
+	for (IRendererStateCallbackInterface* Manager : TickedManagerList)
 	{
 		Manager->OnPreEndFrame(InCommandContext);
 	}
@@ -119,7 +119,7 @@ void FD3D12Manager::OnPreEndFrame(FD3D12CommandContext& InCommandContext)
 
 void FD3D12Manager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 {
-    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
+    for (IRendererStateCallbackInterface* Manager : TickedManagerList)
     {
         Manager->OnEndFrame(InCommandContext);
     }
@@ -127,7 +127,7 @@ void FD3D12Manager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 
 void FD3D12Manager::OnPostEndFrame()
 {
-    for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
+    for (IRendererStateCallbackInterface* Manager : TickedManagerList)
     {
         Manager->OnPostEndFrame();
     }
@@ -135,7 +135,7 @@ void FD3D12Manager::OnPostEndFrame()
 
 void FD3D12Manager::OnDestory(FD3D12CommandContext& InCommandContext)
 {
-	for (ID3D12RendererStateCallbackInterface* Manager : TickedManagerList)
+	for (IRendererStateCallbackInterface* Manager : TickedManagerList)
 	{
 		Manager->OnDestory(InCommandContext);
 	}

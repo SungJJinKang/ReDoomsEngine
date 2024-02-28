@@ -3,7 +3,7 @@
 #include "D3D12Include.h"
 #include "D3D12Shader.h"
 #include "D3D12Enums.h"
-#include "D3D12RendererStateCallbackInterface.h"
+#include "Common/RendererStateCallbackInterface.h"
 
 class FD3D12ShaderTemplate;
 
@@ -46,7 +46,7 @@ public:
 	static FD3D12RootSignature CreateRootSignature(const FBoundShaderSet& InBoundShaderSet);
 };
 
-class FD3D12RootSignatureManager : public EA::StdC::Singleton<FD3D12RootSignatureManager>, public ID3D12RendererStateCallbackInterface
+class FD3D12RootSignatureManager : public EA::StdC::Singleton<FD3D12RootSignatureManager>, public IRendererStateCallbackInterface
 {
 public:
 

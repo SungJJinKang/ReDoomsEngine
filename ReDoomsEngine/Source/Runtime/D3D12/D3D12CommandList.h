@@ -4,7 +4,7 @@
 #include "D3D12Include.h"
 #include "D3D12CommandQueue.h"
 #include "D3D12Fence.h"
-#include "D3D12RendererStateCallbackInterface.h"
+#include "Common/RendererStateCallbackInterface.h"
 
 class FD3D12CommandAllocator;
 class FD3D12CommandQueue;

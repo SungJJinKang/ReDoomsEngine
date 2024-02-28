@@ -4,7 +4,7 @@
 #include "D3D12Enums.h"
 #include "D3D12Resource/D3D12ConstantBufferHelper.h"
 #include "D3D12Resource/D3D12Resource.h"
-#include "D3D12RendererStateCallbackInterface.h"
+#include "Common/RendererStateCallbackInterface.h"
 
 struct FD3D12CommandContext;
 class FD3D12RootSignature;
@@ -831,7 +831,7 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 	static F##ShaderName ShaderName{ EA_WCHAR(#ShaderName), EA_WCHAR(ShaderTextFileRelativePath), \
 		EA_WCHAR(ShaderEntryPoint), ShaderFrequency, ShaderCompileFlags };
 
-class FD3D12ShaderManager : public EA::StdC::Singleton<FD3D12ShaderManager>, public ID3D12RendererStateCallbackInterface
+class FD3D12ShaderManager : public EA::StdC::Singleton<FD3D12ShaderManager>, public IRendererStateCallbackInterface
 {
 public:
 

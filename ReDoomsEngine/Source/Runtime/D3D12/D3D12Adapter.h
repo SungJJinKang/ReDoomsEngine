@@ -1,10 +1,10 @@
 #pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
-#include "D3D12RendererStateCallbackInterface.h"
+#include "Common/RendererStateCallbackInterface.h"
 
 class FD3D12Device;
-class FD3D12Adapter : public ID3D12RendererStateCallbackInterface
+class FD3D12Adapter : public IRendererStateCallbackInterface
 {
 public:
 

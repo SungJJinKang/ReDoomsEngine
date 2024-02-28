@@ -132,7 +132,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Editor\imgui\imgui_draw.cpp" />
     <ClCompile Include="Source\Editor\imgui\imgui_tables.cpp" />
     <ClCompile Include="Source\Editor\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\Runtime\D3D12\D3D12RendererStateCallbackInterface.cpp" />
+    <ClCompile Include="Source\Runtime\Common\RendererStateCallbackInterface.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBuffer.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.cpp" />
@@ -212,7 +212,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12GlobalVariables.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Macros.h" />
-    <ClInclude Include="Source\Runtime\D3D12\D3D12RendererStateCallbackInterface.h" />
+    <ClInclude Include="Source\Runtime\Common\RendererStateCallbackInterface.h" />
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\HLSLTypeHelper.h" />
     <ClInclude Include="Source\Runtime\Rendering\Renderer\D3D12TestRenderer.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12CommandContext.h" />
