@@ -71,6 +71,7 @@ public:
 	TConsoleVariable(const char* const InName, const InitialDataType InInitialData)
 		: FConsoleVariable(InName), Data(static_cast<Type>(InInitialData))
 	{
+		// @todo : read from *.ini
 
 	}
 
