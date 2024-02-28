@@ -71,7 +71,6 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 		{
 			const char* const ThreadNAME = TLSThreadName.data();
 			const uint32_t JobIndex = Arg.JobIndex;
-			EA::Thread::ThreadSleep(100);
 		}
 	);
 	FJobSystem::GetInstance()->ProcessJobsOnCallerThread();
