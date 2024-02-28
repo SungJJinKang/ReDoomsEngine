@@ -2,11 +2,11 @@
 
 #include "Macros.h"
 
-#define ENABLE_PROFILER 1
+#define ENABLE_PROFILER 0
 //#define ENABLE_PROFILER RD_DEBUG
 
-#if ENABLE_PROFILER
 #include "EASTL/vector_map.h"
+#if ENABLE_PROFILER
 #include "EASTL/array.h"
 #include "EASTL/vector.h"
 #endif
@@ -122,7 +122,7 @@ inline void CPUTimerBeginFrame() {}
 inline void CPUTimerEndFrame() {}
 inline void GPUTimerBeginFrame(FD3D12CommandContext* const InD3D12CommandContext) {}
 inline void GPUTimerEndFrame(FD3D12CommandContext* const InD3D12CommandContext) {}
-void DestroyTimerData() {}
+inline void DestroyTimerData() {}
 #endif
 #if ENABLE_PROFILER
 

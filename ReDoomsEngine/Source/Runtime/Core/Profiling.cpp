@@ -5,6 +5,7 @@
 #include <windows.h>
 #include "EASTL/stack.h"
 #include "EASTL/vector.h"
+#include "Math/MathUtils.h"
 
 #if ENABLE_PROFILER
 #include "D3D12Include.h"
