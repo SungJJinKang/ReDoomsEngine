@@ -3,6 +3,9 @@
 // reference code : https://github.com/microsoft/DirectX-Graphics-Samples/blob/master/Samples/Desktop/D3D12Raytracing/src/D3D12RaytracingProceduralGeometry/util/PerformanceTimers.cpp#L15
 
 #include <windows.h>
+#include "EASTL/stack.h"
+#include "EASTL/vector.h"
+#include "Math/MathUtils.h"
 
 #if ENABLE_PROFILER
 #include "D3D12Include.h"
@@ -13,6 +16,8 @@
 
 #include "Editor/ImguiHelper.h"
 #include "imgui.h"
+
+#include "EASTL/hash_map.h"
 #endif
 
 #define UPDATE_RATE_SHOWN_AVERAGE_TIMER_DATA 0.3f
@@ -25,20 +30,92 @@ static LARGE_INTEGER QPCFrequency{
 	return QPCFrequency;
 	}() };
 
+FCPUTimer::FNode::FNode(const char* const InTimerName) 
+	: TimerName(InTimerName), ElapsedSeconds(0.0), Average(0.0), ShownAverage(0.0), Childs()
+{
+
+}
+
+void FCPUTimer::FNode::RecursiveClearElapsedSeconds()
+{
+	for (auto ChildNode : Childs)
+	{
+		ChildNode.second->RecursiveClearElapsedSeconds();
+	}
+	ElapsedSeconds = 0.0;
+}
+
+void FCPUTimer::FNode::RecursiveCalculateAverage(const bool bUpdateShownAverage)
+{
+	for (auto ChildNode : Childs)
+	{
+		ChildNode.second->RecursiveCalculateAverage(bUpdateShownAverage);
+	}
+	
+	Average = Lerp(Average, ElapsedSeconds, 0.75);
+
+	if (bUpdateShownAverage)
+	{
+		ShownAverage = Average;
+	}
+}
+
+void FCPUTimer::FNode::RecursiveDestory()
+{
+	for (auto ChildNode : Childs)
+	{
+		ChildNode.second->RecursiveDestory();
+	}
+	delete this;
+}
+
 // CPU Trace
 #if ENABLE_PROFILER
 static class FCPUTimerManager
 {
 public:
+
+	enum class EEventType : uint8_t
+	{
+		PushStack,
+		PopStack
+	};
+
+	struct FEvent
+	{
+		EEventType EventType;
+		const char* TimerName;
+		float ElapsedSeconds;
+
+		FEvent(const EEventType InEventType, FCPUTimer* const Timer)
+			: EventType(InEventType), TimerName(Timer->GetTimerName()), ElapsedSeconds(Timer->GetElapsedSeconds())
+		{
+
+		}
+	};
+
+	void Destroy()
+	{
+		for (FCPUTimer::FNode* TopNode : TopNodes)
+		{
+			TopNode->RecursiveDestory();
+		}
+		TopNodes.clear();
+		PreviousFrameTopNodes.clear();
+	}
 	void BeginFrame()
 	{
-		for (auto& CPUTimerElapsedSecondsPair : CPUTimerElapsedSecondsMap)
+		for (FCPUTimer::FNode* TopNode : TopNodes)
 		{
-			CPUTimerElapsedSecondsPair.second.ElapsedSeconds = 0.0;
+			TopNode->RecursiveClearElapsedSeconds();
 		}
 	}
 	void EndFrame()
 	{
+		ProcessEvents();
+
+		EA_ASSERT(NodeStack.size() == 0);
+
 		ElapsedTimeAfterUpdateShownAverage += GTimeDelta;
 		const bool bUpdateShownAverage = ElapsedTimeAfterUpdateShownAverage > UPDATE_RATE_SHOWN_AVERAGE_TIMER_DATA;
 		if (bUpdateShownAverage)
@@ -46,51 +123,149 @@ public:
 			ElapsedTimeAfterUpdateShownAverage = 0.0f;
 		}
 
-		for (auto& CPUTimerElapsedSecondsPair : CPUTimerElapsedSecondsMap)
+		for (FCPUTimer::FNode* TopNode : TopNodes)
 		{
-			CPUTimerElapsedSecondsPair.second.Average = Lerp(CPUTimerElapsedSecondsPair.second.Average, CPUTimerElapsedSecondsPair.second.ElapsedSeconds, 0.75);
+			TopNode->RecursiveCalculateAverage(bUpdateShownAverage);
+		}
 
-			if (bUpdateShownAverage)
+		PreviousFrameTopNodes = TopNodes;
+	}
+
+	void AddEvent(const FEvent& InEvent)
+	{
+		Events.push_back(InEvent);
+	}
+
+	void ProcessEvents()
+	{
+		eastl::stack<FCPUTimer::FNode*> OutNodeStack{};
+		for (const FEvent& Event : Events)
+		{
+			switch (Event.EventType)
 			{
-				CPUTimerElapsedSecondsPair.second.ShownAverage = CPUTimerElapsedSecondsPair.second.Average;
+				case EEventType::PushStack:
+				{
+					PushStack(Event, OutNodeStack);
+					break;
+				}
+				case EEventType::PopStack:
+				{
+					PopStack(Event, OutNodeStack);
+					break;
+				}
+				default:
+				{
+					EA_ASSUME(false);
+				}
 			}
 		}
-	}
-	void UpdateCPUTimer(const FCPUTimer* const InTimer)
-	{
-		CPUTimerElapsedSecondsMap[InTimer->GetTimerName()].ElapsedSeconds += InTimer->GetElapsedSeconds();
-	}
-	const eastl::hash_map<const char* /*Timer name. Literal string*/, FTimerData /*Elapsed Seconds*/>& GetCPUTimerElapsedSecondsMap()
-	{
-		return CPUTimerElapsedSecondsMap;
+
+		EA_ASSERT(OutNodeStack.size() == 0);
+
+		Events.clear();
 	}
 
+	const eastl::vector<FCPUTimer::FNode*>& GetPreviousFrameTopNodes() const
+	{
+		return PreviousFrameTopNodes;
+	}
 private:
-	eastl::hash_map<const char* /*Timer name. Literal string*/, FTimerData /*Elapsed Seconds*/> CPUTimerElapsedSecondsMap;
+
+	void PushStack(const FEvent& Event, eastl::stack<FCPUTimer::FNode*>& OutNodeStack)
+	{
+		FCPUTimer::FNode* Node = nullptr;
+
+		if (NodeStack.size() > 0)
+		{
+			auto TargetNode = NodeStack.top()->Childs.find(Event.TimerName);
+			if (TargetNode && TargetNode != NodeStack.top()->Childs.end())
+			{
+				Node = TargetNode->second;
+			}
+			else
+			{
+				Node = new FCPUTimer::FNode(Event.TimerName);
+				NodeStack.top()->Childs.emplace(Event.TimerName, Node);
+			}
+		}
+		else
+		{
+			FCPUTimer::FNode* const* TargetNode = eastl::find_if(TopNodes.begin(), TopNodes.end(),
+				[TimeName = Event.TimerName](FCPUTimer::FNode* lhs) -> bool
+				{
+					return lhs->TimerName == TimeName; // Just comparing address of literal string is enough
+				}
+			);
+			if (TargetNode && TargetNode != TopNodes.end())
+			{
+				Node = *TargetNode;
+			}
+			else
+			{
+				Node = new FCPUTimer::FNode(Event.TimerName);
+				TopNodes.emplace_back(Node);
+			}
+		}
+
+		OutNodeStack.push(Node);
+		NodeStack.push(Node);
+	}
+	void PopStack(const FEvent& Event, eastl::stack<FCPUTimer::FNode*>& OutNodeStack)
+	{
+		EA_ASSERT(NodeStack.size() > 0);
+		EA_ASSERT(NodeStack.top()->TimerName == Event.TimerName);
+
+		OutNodeStack.top()->ElapsedSeconds += Event.ElapsedSeconds;
+		OutNodeStack.pop();
+
+		NodeStack.pop();
+	}
+
+	eastl::stack<FCPUTimer::FNode*> NodeStack;
+	eastl::vector<FCPUTimer::FNode*> TopNodes;
+	eastl::vector<FCPUTimer::FNode*> PreviousFrameTopNodes;
 	float ElapsedTimeAfterUpdateShownAverage;
+
+	eastl::vector<FEvent> Events;
 } CPUTimerManager;
 #endif
 
-FCPUTimer::FCPUTimer(const char* const InTimerName) :
+FCPUTimer::FCPUTimer(const char* const InTimerName, const bool bInScopedTimer) :
 	TimerName(InTimerName),
 	QPCLastTime(0),
 	ElapsedSeconds(0),
-	ElapsedTicks(0)
+	ElapsedTicks(0),
+	bScopedTimer(bInScopedTimer)
 {
-	LARGE_INTEGER CurrentTime;
-	QueryPerformanceCounter(&CurrentTime);
-	QPCLastTime = CurrentTime.QuadPart;
+	if (bScopedTimer)
+	{
+		Start();
+	}
 }
 
 FCPUTimer::~FCPUTimer()
 {
-	UpdateElapsedTicks();
+	if (bScopedTimer)
+	{
+		End();
+	}
 }
 
-void FCPUTimer::UpdateElapsedTicks()
+void FCPUTimer::Start()
+{
+#if ENABLE_PROFILER
+	CPUTimerManager.AddEvent(FCPUTimerManager::FEvent{ FCPUTimerManager::EEventType::PushStack, this});
+#endif
+
+	LARGE_INTEGER CurrentTime;
+	QueryPerformanceCounter(&CurrentTime); // A Profile shows this function is quiet too slow... (why? https://stackoverflow.com/questions/1723629/what-happens-when-queryperformancecounter-is-called)
+	QPCLastTime = CurrentTime.QuadPart;
+}
+
+void FCPUTimer::End()
 {
 	LARGE_INTEGER CurrentTime;
-	QueryPerformanceCounter(&CurrentTime);
+	QueryPerformanceCounter(&CurrentTime); // A Profile shows this function is quiet too slow... (why? https://stackoverflow.com/questions/1723629/what-happens-when-queryperformancecounter-is-called)
 
 	UINT64 TimeDelta = CurrentTime.QuadPart - QPCLastTime;
 
@@ -102,7 +277,7 @@ void FCPUTimer::UpdateElapsedTicks()
 	ElapsedSeconds = TicksToSeconds(ElapsedTicks);
 
 #if ENABLE_PROFILER
-	CPUTimerManager.UpdateCPUTimer(this);
+	CPUTimerManager.AddEvent(FCPUTimerManager::FEvent{ FCPUTimerManager::EEventType::PopStack, this });
 #endif
 	QPCLastTime = CurrentTime.QuadPart;
 }
@@ -414,6 +589,19 @@ void FGPUTimer::End(FD3D12CommandList* const InCommandList)
 
 static struct FRegisterProfilerImguiCallback
 {
+	static void RecursiveDrawCPUTimer(const FCPUTimer::FNode* const InNode)
+	{
+		ImGui::Indent();
+
+		ImGui::Text("%s : %f(ms)", InNode->TimerName, InNode->ShownAverage * 1000.0);
+		for (auto& Child : InNode->Childs)
+		{
+			RecursiveDrawCPUTimer(Child.second);
+		}
+
+		ImGui::Unindent();
+	}
+
 	FRegisterProfilerImguiCallback()
 	{
 		FImguiHelperSingleton::GetInstance()->ImguiDrawEventList.emplace_back([]() {
@@ -433,23 +621,26 @@ static struct FRegisterProfilerImguiCallback
 
 				ImGui::Text("DrawCall : %u", GPreviousFrameDrawCallCount);
 
-				const eastl::hash_map<const char* /*Timer name. Literal string*/, FTimerData /*Elapsed Seconds*/>& CPUTimerElapsedSecondsMap
-					= CPUTimerManager.GetCPUTimerElapsedSecondsMap();
+				const eastl::vector<FCPUTimer::FNode*>& TopNodes = CPUTimerManager.GetPreviousFrameTopNodes();
 
-				auto TickTimer = CPUTimerElapsedSecondsMap.find("FrameTime");
-				if (TickTimer != CPUTimerElapsedSecondsMap.end())
+				const FCPUTimer::FNode* const* FrameTimeCPUTimerNode = eastl::find_if(TopNodes.begin(), TopNodes.end(),
+					[](FCPUTimer::FNode* lhs) -> bool
+					{
+						return lhs->TimerName == "FrameTime"; // Just comparing address of literal string is enough
+					}
+				);
+
+				if(FrameTimeCPUTimerNode && FrameTimeCPUTimerNode != TopNodes.end())
 				{
-					double Average = TickTimer->second.ShownAverage;
-
-					ImGui::Text("FPS : %f", 1.0 / Average);
-					ImGui::Text("FrameTime : %f(ms)", Average * 1000.0);
+					ImGui::Text("FPS : %f", 1.0 / (*FrameTimeCPUTimerNode)->ShownAverage);
+					ImGui::Text("FrameTime : %f(ms)", (*FrameTimeCPUTimerNode)->ShownAverage * 1000.0);
 				}
 
 				if (ImGui::TreeNode("CPU Timer"))
 				{
-					for (auto& CPUTimerElapsedSecondPair : CPUTimerElapsedSecondsMap)
+					for (FCPUTimer::FNode* TopNode : TopNodes)
 					{
-						ImGui::Text("%s : %f(ms)", CPUTimerElapsedSecondPair.first, CPUTimerElapsedSecondPair.second.ShownAverage * 1000.0);
+						RecursiveDrawCPUTimer(TopNode);
 					}
 
 					ImGui::TreePop();
@@ -494,5 +685,10 @@ void GPUTimerBeginFrame(FD3D12CommandContext* const InD3D12CommandContext)
 void GPUTimerEndFrame(FD3D12CommandContext* const InD3D12CommandContext)
 {
 	GPUTimerManager.EndFrame(InD3D12CommandContext);
+}
+
+void DestroyTimerData()
+{
+
 }
 #endif

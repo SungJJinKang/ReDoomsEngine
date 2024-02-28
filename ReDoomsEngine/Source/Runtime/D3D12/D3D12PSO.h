@@ -16,7 +16,7 @@ public:
     {
         FBoundShaderSet BoundShaderSet;
 
-        struct FPSODesc
+        struct FDesc
         {
             D3D12_INPUT_LAYOUT_DESC InputLayout;
             CD3DX12_BLEND_DESC BlendState;
@@ -24,7 +24,14 @@ public:
             CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
             D3D12_CACHED_PIPELINE_STATE CachedPSO;
             D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
-        } PSODesc;
+        } Desc;
+        uint64 CachedDescHash = 0;
+        void CacheDescHash();
+
+        inline bool IsValidHash() const
+        {
+            return BoundShaderSet.IsValidHash() && (CachedDescHash != 0);
+        }
     } DrawDesc;
 
     /// <summary>
@@ -32,26 +39,40 @@ public:
     /// </summary>
     struct FPassDesc
     {
-        D3D12_STREAM_OUTPUT_DESC StreamOutput;
-        UINT SampleMask;
-        D3D12_INDEX_BUFFER_STRIP_CUT_VALUE IBStripCutValue;
-        UINT NumRenderTargets;
-        DXGI_FORMAT RTVFormats[8];
-        DXGI_FORMAT DSVFormat;
-        DXGI_SAMPLE_DESC SampleDesc;
-        UINT NodeMask;
-        D3D12_PIPELINE_STATE_FLAGS Flags;
+        struct FDesc
+        {
+            D3D12_STREAM_OUTPUT_DESC StreamOutput;
+            UINT SampleMask;
+            D3D12_INDEX_BUFFER_STRIP_CUT_VALUE IBStripCutValue;
+            UINT NumRenderTargets;
+            DXGI_FORMAT RTVFormats[8];
+            DXGI_FORMAT DSVFormat;
+            DXGI_SAMPLE_DESC SampleDesc;
+            UINT NodeMask;
+            D3D12_PIPELINE_STATE_FLAGS Flags;
+        } Desc;
+        uint64 CachedDescHash = 0;
+        void CacheDescHash();
+        inline bool IsValidHash() const
+        {
+            return (CachedDescHash != 0);
+        }
     } PassDesc;
 
     inline uint64 GetCachedHash() const
     {
-        EA_ASSERT(IsValid());
+        EA_ASSERT(IsValidHash());
         return CachedHash;
     }
-    bool IsValid() const;
-    //void Reset();
-    void FinishCreating();
 
+	inline bool IsValidHash() const
+	{
+        return (CachedHash != 0) && DrawDesc.IsValidHash() && PassDesc.IsValidHash();
+	}
+
+    //void Reset();
+    void CacheHash();
+    
 private:
 
 	uint64 CachedHash;
