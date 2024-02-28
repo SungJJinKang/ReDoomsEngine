@@ -1,9 +1,9 @@
 #pragma once
 struct FD3D12CommandContext;
-class ID3D12RendererStateCallbackInterface
+class IRendererStateCallbackInterface
 {
 public:
-	virtual ~ID3D12RendererStateCallbackInterface() = default;
+	virtual ~IRendererStateCallbackInterface() = default;
 	virtual void OnPreStartFrame();
 	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext) = 0;
 	virtual void OnPreEndFrame(FD3D12CommandContext& InCommandContext);

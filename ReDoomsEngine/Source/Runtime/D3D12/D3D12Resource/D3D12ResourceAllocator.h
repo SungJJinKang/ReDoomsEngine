@@ -3,7 +3,7 @@
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 
-#include "D3D12RendererStateCallbackInterface.h"
+#include "Common/RendererStateCallbackInterface.h"
 #include "D3D12ResourceUploadBatcher.h"
 #include "D3D12Resource/D3D12Resource.h"
 #include "D3D12Resource.h"
@@ -12,7 +12,7 @@ class FD3D12Resource;
 struct FD3D12CommandContext;
 class FD3D12Texture2DResource;
 
-class FD3D12ResourceAllocator : public EA::StdC::Singleton<FD3D12ResourceAllocator>, public ID3D12RendererStateCallbackInterface
+class FD3D12ResourceAllocator : public EA::StdC::Singleton<FD3D12ResourceAllocator>, public IRendererStateCallbackInterface
 {
 public:
 

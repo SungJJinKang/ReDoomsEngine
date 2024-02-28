@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CommonInclude.h"
-#include "D3D12RendererStateCallbackInterface.h"
+#include "Common/RendererStateCallbackInterface.h"
 #include "D3D12Descriptor.h"
 
 class FImguiHelper

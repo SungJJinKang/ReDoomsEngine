@@ -1,7 +1,7 @@
 #pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
-#include "D3D12RendererStateCallbackInterface.h"
+#include "Common/RendererStateCallbackInterface.h"
 
 class FD3D12ConstantBufferResource;
 
@@ -24,7 +24,7 @@ struct FD3D12PerFrameConstantBuffer
 	void Reset();
 };
 
-class FD3D12ConstantBufferRingBuffer : public EA::StdC::Singleton<FD3D12ConstantBufferRingBuffer>, public ID3D12RendererStateCallbackInterface
+class FD3D12ConstantBufferRingBuffer : public EA::StdC::Singleton<FD3D12ConstantBufferRingBuffer>, public IRendererStateCallbackInterface
 {
 public:
 
