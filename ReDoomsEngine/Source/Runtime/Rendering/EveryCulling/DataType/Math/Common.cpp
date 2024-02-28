@@ -1,5 +1,7 @@
 #include "Common.h"
 
+#include "EAStdC/EAMathHelp.h"
+
 const float culling::PI = 3.14159265358979323846f;
 const float culling::DEGREE_TO_RADIAN = PI / 180.0f;
 const float culling::RADIAN_TO_DEGREE = 180.0f / PI;
@@ -7,7 +9,7 @@ const float culling::RADIAN_TO_DEGREE = 180.0f / PI;
 void culling::NormalizePlane(Vec4& plane) noexcept
 {
 	float mag = sqrtf(plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2]);
-	EA_ASSERT(eastl::isnan(mag) == false);
+	EA_ASSERT(EA::StdC::IsNAN(mag) == false);
 
 	plane[0] = plane[0] / mag;
 	plane[1] = plane[1] / mag;

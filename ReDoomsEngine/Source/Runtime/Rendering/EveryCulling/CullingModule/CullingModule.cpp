@@ -17,11 +17,6 @@ culling::EntityBlock* culling::CullingModule::GetNextEntityBlock(const size_t ca
 	const size_t entityBlockCount = mCullingSystem->GetActiveEntityBlockCount();
 	EntityBlock* const currentEntityBlock = (currentEntityBlockIndex >= entityBlockCount) ? (nullptr) : (mCullingSystem->GetActiveEntityBlockList()[currentEntityBlockIndex]);
 
-	if(currentEntityBlock != nullptr)
-	{
-		EA_ASSERT(currentEntityBlock->mCurrentEntityCount != 0);
-	}
-
 	return currentEntityBlock;
 }
 

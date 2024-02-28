@@ -234,9 +234,6 @@
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityBlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityBlockViewer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\ViewFrustumCulling\ViewFrustumCulling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1475,9 +1472,6 @@
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityBlockViewer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityGridCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1551,6 +1545,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Runtime\Core\Thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\STL\EASTL\test\packages\EAThread\include\eathread\eathread_pool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

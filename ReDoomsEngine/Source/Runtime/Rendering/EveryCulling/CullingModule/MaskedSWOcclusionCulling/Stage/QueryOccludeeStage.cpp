@@ -98,7 +98,7 @@ void culling::QueryOccludeeStage::QueryOccludee
 	culling::EntityBlock* const entityBlock
 )
 {
-	for(size_t entityIndex = 0 ; entityIndex < entityBlock->mCurrentEntityCount ; entityIndex++)
+	for(size_t entityIndex = 0 ; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK; entityIndex++)
 	{
 		uint32_t outBinBoundingBoxMinX, outBinBoundingBoxMinY, outBinBoundingBoxMaxX, outBinBoundingBoxMaxY;
 		

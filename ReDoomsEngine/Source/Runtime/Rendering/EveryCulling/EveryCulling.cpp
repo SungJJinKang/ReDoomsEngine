@@ -91,26 +91,6 @@ void culling::EveryCulling::AllocateEntityBlockPool()
 	mAllocatedEntityBlockChunkList.push_back(newEntityBlockChunk);
 }
 
-
-void culling::EveryCulling::RemoveEntityFromBlock(EntityBlock* ownerEntityBlock, uint32_t entityIndexInBlock)
-{
-	EA_ASSERT(ownerEntityBlock != nullptr);
-	EA_ASSERT(entityIndexInBlock >= 0 && entityIndexInBlock < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
-
-	for(auto cullingModule : mUpdatedCullingModules)
-	{
-		cullingModule->ClearEntityData(ownerEntityBlock, entityIndexInBlock);
-	}
-	
-	EA_ASSERT(ownerEntityBlock->mCurrentEntityCount != 0);
-	ownerEntityBlock->mCurrentEntityCount--;
-	if (ownerEntityBlock->mCurrentEntityCount == 0)
-	{
-		FreeEntityBlock(ownerEntityBlock);
-	}
-	
-}
-
 void culling::EveryCulling::ThreadCullJob(const size_t cameraIndex, const unsigned long long tickCount)
 {
 
@@ -236,51 +216,6 @@ culling::EntityBlock* culling::EveryCulling::AllocateNewEntityBlockFromPool()
 	return newEntityBlock;
 }
 
-
-
-
-
-culling::EntityBlockViewer culling::EveryCulling::AllocateNewEntity()
-{
-	culling::EntityBlock* targetEntityBlock;
-	if (mActiveEntityBlockList.size() == 0)
-	{
-		// if Any entityBlock isn't allocated yet
-		targetEntityBlock = AllocateNewEntityBlockFromPool();
-	}
-	else
-	{//When Allocated entity block count is at least one
-
-		//Get last entityblock in active entities
-		targetEntityBlock = { mActiveEntityBlockList.back() };
-
-		if (targetEntityBlock->mCurrentEntityCount == EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK)
-		{
-			//if last entityblock in active entities is full of entities
-			//alocate new entity block
-			targetEntityBlock = AllocateNewEntityBlockFromPool();
-		}
-	}
-
-	EA_ASSERT(targetEntityBlock->mCurrentEntityCount <= EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK); // something is weird........
-	
-	targetEntityBlock->mCurrentEntityCount++;
-	
-	return EntityBlockViewer(targetEntityBlock, targetEntityBlock->mCurrentEntityCount - 1);
-}
-
-void culling::EveryCulling::RemoveEntityFromBlock(EntityBlockViewer& entityBlockViewer)
-{
-	if(entityBlockViewer.IsValid() == true)
-	{
-		RemoveEntityFromBlock(entityBlockViewer.mTargetEntityBlock, entityBlockViewer.mEntityIndexInBlock);
-		entityBlockViewer.DeInitializeEntityBlockViewer();
-	}
-
-	//Don't decrement mEntityGridCell.AllocatedEntityCountInBlocks
-	//Entities Indexs in EntityBlock should not be swapped because already allocated EntityBlockViewer can't see it
-}
-
 culling::EveryCulling::EveryCulling(const uint32_t resolutionWidth, const uint32_t resolutionHeight)
 	:
 	mPreCulling{ eastl::make_unique<PreCulling>(this) },
@@ -349,8 +284,6 @@ void culling::EveryCulling::OnEndCullingModule(const culling::CullingModule* con
 void culling::EveryCulling::SetViewProjectionMatrix(const size_t cameraIndex, const culling::Mat4x4& viewProjectionMatrix)
 {
 	EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
-
-	EVERYCULLING_ALIGNMENT_EA_ASSERT(reinterpret_cast<size_t>(&viewProjectionMatrix), 32);
 
 	mCameraViewProjectionMatrixes[cameraIndex] = viewProjectionMatrix;
 	
@@ -433,15 +366,6 @@ void culling::EveryCulling::SetCameraRotation(const size_t cameraIndex, const cu
 			updatedCullingModule->OnSetCameraRotation(cameraIndex, cameraRotation);
 		}
 	}
-}
-
-void culling::EveryCulling::UpdateGlobalDataForCullJob(const size_t cameraIndex, const GlobalDataForCullJob& settingParameters)
-{
-	SetViewProjectionMatrix(cameraIndex, settingParameters.mViewProjectionMatrix);
-	SetFieldOfViewInDegree(cameraIndex, settingParameters.mFieldOfViewInDegree);
-	SetCameraNearFarClipPlaneDistance(cameraIndex, settingParameters.mCameraNearPlaneDistance, settingParameters.mCameraFarPlaneDistance);
-	SetCameraWorldPosition(cameraIndex, settingParameters.mCameraWorldPosition);
-	SetCameraRotation(cameraIndex, settingParameters.mCameraRotation);
 }
 
 const eastl::vector<culling::EntityBlock*>& culling::EveryCulling::GetActiveEntityBlockList() const

@@ -143,7 +143,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\PreCulling\PreCulling.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\ViewFrustumCulling\ViewFrustumCulling.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityBlock.cpp" />
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityBlockViewer.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Common.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\SIMD_Core.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\EveryCulling.cpp" />
@@ -243,7 +242,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\PreCulling\PreCulling.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\ViewFrustumCulling\ViewFrustumCulling.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityBlock.h" />
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityBlockViewer.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityGridCell.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\AABB.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Common.h" />

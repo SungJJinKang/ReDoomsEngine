@@ -119,7 +119,7 @@ void culling::PreCulling::DoPreCull
 	culling::EntityBlock* const entityBlock
 )
 {
-	for(size_t entityIndex = 0 ; entityIndex < entityBlock->mCurrentEntityCount ; entityIndex++)
+	for(size_t entityIndex = 0 ; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK ; entityIndex++)
 	{
 		if(entityBlock->GetIsObjectEnabled(entityIndex) == false)
 		{
@@ -127,7 +127,7 @@ void culling::PreCulling::DoPreCull
 		}	
 	}
 
-	for (size_t entityIndex = 0; entityIndex < entityBlock->mCurrentEntityCount; entityIndex++)
+	for (size_t entityIndex = 0; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK; entityIndex++)
 	{
 		if (entityBlock->GetIsObjectEnabled(entityIndex) == true)
 		{
@@ -135,7 +135,7 @@ void culling::PreCulling::DoPreCull
 		}
 	}
 
-	for (size_t entityIndex = 0; entityIndex < entityBlock->mCurrentEntityCount; entityIndex++)
+	for (size_t entityIndex = 0; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK; entityIndex++)
 	{
 		if (entityBlock->GetIsObjectEnabled(entityIndex) == true)
 		{

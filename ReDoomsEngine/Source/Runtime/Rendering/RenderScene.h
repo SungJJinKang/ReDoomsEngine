@@ -5,6 +5,8 @@
 #include "EASTL/segmented_vector.h"
 #include "MeshDraw/MeshDraw.h"
 #include "D3D12Shader.h"
+#include "EveryCulling/EveryCulling.h"
+#include "EveryCulling/DataType/Position_BoundingSphereRadius.h"
 
 struct FMesh;
 struct FD3D12CommandContext;
@@ -16,6 +18,14 @@ enum class EPass : uint32_t
 	Num
 };
 
+// Why this is required? : In EveryCulling library, use its own math type instead of DirectXMath's. So we should ensure that our math types have same size and alignment with matching ones.
+static_assert(sizeof(culling::Vec4) == sizeof(AlignedVector4));
+static_assert(alignof(culling::Vec4) == alignof (AlignedVector4));
+static_assert(sizeof(culling::Position_BoundingSphereRadius) == sizeof(AlignedVector4));
+static_assert(alignof(culling::Position_BoundingSphereRadius) == alignof (AlignedVector4));
+static_assert(sizeof(culling::Mat4x4) == sizeof(AlignedMatrix));
+static_assert(alignof(culling::Mat4x4) == alignof (AlignedMatrix));
+
 struct FRenderObjectList
 {
 	eastl::array<eastl::bitvector<>, static_cast<uint32_t>(EPass::Num)> VisibleFlagsList;
@@ -25,10 +35,10 @@ struct FRenderObjectList
 	/// x, y, z : World position
 	/// w : Radius of bounding sphere
 	/// </summary>
-	eastl::vector<Vector4> PositionAndLocalBoundingSphereRadiusList;
-	eastl::vector<Quaternion> RotationList;
-	eastl::vector<Vector4> ScaleAndDrawDistanceList;
-	eastl::vector<Matrix> CachedModelMatrixList;
+	eastl::vector<AlignedVector4> PositionAndLocalBoundingSphereRadiusList;
+	eastl::vector<AlignedQuaternion> RotationList;
+	eastl::vector<AlignedVector4> ScaleAndDrawDistanceList;
+	eastl::vector<AlignedMatrix> CachedModelMatrixList;
 	eastl::vector<eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>> VertexBufferViewList;
 	eastl::vector<D3D12_INDEX_BUFFER_VIEW> IndexBufferViewList;
 
@@ -66,14 +76,8 @@ struct FRenderObject
 class FRenderScene
 {
 public:
-	FRenderObjectList RenderObjectList;
 
-	struct FPass
-	{
-		FD3D12PSOInitializer::FPassDesc PassPSODesc;
-
-		eastl::bitvector<> IsCachedMeshDrawList;
-	};
+	void Init();
 
 	EA_NODISCARD FRenderObject AddRenderObject(
 		const bool bInVisible,
@@ -94,6 +98,16 @@ public:
 	void SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList);
 
 	void SetPassDesc(const EPass InPass, const FD3D12PSOInitializer::FPassDesc& InPassDesc);
+
+	FRenderObjectList RenderObjectList;
+	eastl::unique_ptr<culling::EveryCulling> EveryCulling;
+
+	struct FPass
+	{
+		FD3D12PSOInitializer::FPassDesc PassPSODesc;
+
+		eastl::bitvector<> IsCachedMeshDrawList;
+	};
 
 private:
 

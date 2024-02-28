@@ -3,7 +3,6 @@
 #include "EveryCullingCore.h"
 
 #include "DataType/EntityGridCell.h"
-#include "DataType/EntityBlockViewer.h"
 #include "DataType/Math/Vector.h"
 #include "DataType/Math/Matrix.h"
 
@@ -53,7 +52,6 @@ namespace culling
 		
 		void AllocateEntityBlockPool();
 		culling::EntityBlock* AllocateNewEntityBlockFromPool();
-		void RemoveEntityFromBlock(EntityBlock* ownerEntityBlock, uint32_t entityIndexInBlock);
 		/// <summary>
 		/// Block Swap removedblock with last block, and return swapped lastblock to pool
 		/// </summary>
@@ -111,23 +109,6 @@ namespace culling
 
 		unsigned long long GetTickCount() const;
 		
-		struct GlobalDataForCullJob
-		{
-			culling::Mat4x4 mViewProjectionMatrix;
-			float mFieldOfViewInDegree;
-			float mCameraNearPlaneDistance;
-			float mCameraFarPlaneDistance;
-			culling::Vec3 mCameraWorldPosition;
-			culling::Vec4 mCameraRotation;
-		};
-
-		/**
-		 * \brief Update global data for cull job. Should be called every frame.
-		 * \param cameraIndex 
-		 * \param settingParameters 
-		 */
-		void UpdateGlobalDataForCullJob(const size_t cameraIndex, const GlobalDataForCullJob& settingParameters);
-
 		EASTL_FORCE_INLINE size_t GetCameraCount() const
 		{
 			return mCameraCount;
@@ -170,26 +151,6 @@ namespace culling
 		const eastl::vector<EntityBlock*>& GetActiveEntityBlockList() const;
 		size_t GetActiveEntityBlockCount() const;
 
-		/// <summary>
-		/// You should call this function on your Transform Component or In your game engine
-		///
-		/// increment EntityCountInBlock of TargetBlock.
-		/// If All blocks is full, Get new block from Block Pool
-		/// 
-		/// Allocating New Entity isn't thread safe
-		/// </summary>
-		EntityBlockViewer AllocateNewEntity();
-
-		/// <summary>
-		/// You should call this function on your Transform Component or In your game engine
-		/// 
-		/// Remove Entity is nothing, Just decrement AllocatedEntityCountInBlocks
-		/// And if AllocatedEntityCountInBlocks Of Block become zero, Remove the block using RemoveBlock function
-		/// 
-		/// Removing Entity isn't thread safe
-		/// </summary>
-		void RemoveEntityFromBlock(EntityBlockViewer& entityBlockViewer);
-		
 		void ThreadCullJob(const size_t cameraIndex, const unsigned long long tickCount);
 		//void ThreadCullJob(const uint32_t threadIndex, const uint32_t threadCount);
 
