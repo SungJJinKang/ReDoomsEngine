@@ -1,62 +1,10 @@
-#include "EveryCulling.h"
+﻿#include "EveryCulling.h"
 
 #include "DataType/EntityBlock.h"
 #include "CullingModule/ViewFrustumCulling/ViewFrustumCulling.h"
 #include "CullingModule/PreCulling/PreCulling.h"
 #include "CullingModule/DistanceCulling/DistanceCulling.h"
 #include "CullingModule/MaskedSWOcclusionCulling/MaskedSWOcclusionCulling.h"
-
-
-void culling::EveryCulling::FreeEntityBlock(EntityBlock* freedEntityBlock)
-{
-	EA_ASSERT(freedEntityBlock != nullptr);
-
-	size_t freedEntityBlockIndex;
-	const size_t entityBlockCount = mActiveEntityBlockList.size();
-	bool IsSuccessToFind = false;
-	for (size_t i = 0; i < entityBlockCount; i++)
-	{
-		//Freeing entity block happen barely
-		//So this looping is acceptable
-		if (mActiveEntityBlockList[i] == freedEntityBlock)
-		{
-			freedEntityBlockIndex = i;
-			IsSuccessToFind = true;
-			break;
-		}
-	}
-
-	EA_ASSERT(IsSuccessToFind == true);
-
-	freedEntityBlock->bIsValidEntityBlock = false;
-	freedEntityBlock->mEntityBlockUniqueID = EVERYCULLING_INVALID_ENTITY_UNIQUE_ID_MAGIC_NUMBER;
-	mFreeEntityBlockList.push_back(freedEntityBlock);
-
-	if(IsSuccessToFind == true)
-	{
-		mActiveEntityBlockList.erase(mActiveEntityBlockList.begin() + freedEntityBlockIndex);
-	}
-	
-}
-
-
-culling::EntityBlock* culling::EveryCulling::GetNewEntityBlockFromPool()
-{
-	if (mFreeEntityBlockList.size() == 0)
-	{
-		AllocateEntityBlockPool();
-	}
-
-	EA_ASSERT(mFreeEntityBlockList.size() != 0);
-	EntityBlock* entityBlock = mFreeEntityBlockList.back();
-
-	entityBlock->bIsValidEntityBlock = true;
-	entityBlock->mEntityBlockUniqueID = mEntityBlockUniqueIDCounter;
-	++mEntityBlockUniqueIDCounter;
-
-	mFreeEntityBlockList.pop_back();
-	return entityBlock;
-}
 
 void culling::EveryCulling::ResetCullingModules()
 {
@@ -76,19 +24,6 @@ void culling::EveryCulling::ResetEntityBlocks()
 	{
 		entityBlock->ResetEntityBlock(mCurrentTickCount);
 	}
-}
-
-void culling::EveryCulling::AllocateEntityBlockPool()
-{
-	EntityBlock* newEntityBlockChunk = new EntityBlock[EVERYCULLING_INITIAL_ENTITY_BLOCK_COUNT];
-	for (uint32_t i = 0; i < EVERYCULLING_INITIAL_ENTITY_BLOCK_COUNT; i++)
-	{
-		newEntityBlockChunk[i].bIsValidEntityBlock = false;
-		newEntityBlockChunk[i].mEntityBlockUniqueID = EVERYCULLING_INVALID_ENTITY_UNIQUE_ID_MAGIC_NUMBER;
-
-		mFreeEntityBlockList.push_back(newEntityBlockChunk + i);
-	}
-	mAllocatedEntityBlockChunkList.push_back(newEntityBlockChunk);
 }
 
 void culling::EveryCulling::ThreadCullJob(const size_t cameraIndex, const unsigned long long tickCount)
@@ -206,16 +141,6 @@ uint32_t culling::EveryCulling::GetRunningThreadCount() const
 	return mRunningThreadCount;
 }
 
-culling::EntityBlock* culling::EveryCulling::AllocateNewEntityBlockFromPool()
-{
-	EntityBlock* const newEntityBlock = GetNewEntityBlockFromPool();
-	newEntityBlock->ClearEntityBlock();
-
-	mActiveEntityBlockList.push_back(newEntityBlock);
-
-	return newEntityBlock;
-}
-
 culling::EveryCulling::EveryCulling(const uint32_t resolutionWidth, const uint32_t resolutionHeight)
 	:
 	mPreCulling{ eastl::make_unique<PreCulling>(this) },
@@ -240,21 +165,15 @@ culling::EveryCulling::EveryCulling(const uint32_t resolutionWidth, const uint32
 	, bmIsEntityBlockPoolInitialized(false)
 	, mEntityBlockUniqueIDCounter{0}
 {
-	//to protect 
-	mFreeEntityBlockList.reserve(EVERYCULLING_INITIAL_ENTITY_BLOCK_RESERVED_SIZE);
-	mActiveEntityBlockList.reserve(EVERYCULLING_INITIAL_ENTITY_BLOCK_RESERVED_SIZE);
-
-	AllocateEntityBlockPool();
-
 	//CacheCullBlockEntityJobs();
 	bmIsEntityBlockPoolInitialized = true;
 }
 
 culling::EveryCulling::~EveryCulling()
 {
-	for (culling::EntityBlock* allocatedEntityBlockChunk : mAllocatedEntityBlockChunkList)
+	for (culling::EntityBlock* allocatedEntityBlockChunk : mActiveEntityBlockList)
 	{
-		delete[] allocatedEntityBlockChunk;
+		delete allocatedEntityBlockChunk;
 	}
 }
 

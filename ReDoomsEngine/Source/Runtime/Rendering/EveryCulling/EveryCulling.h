@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EveryCullingCore.h"
 
@@ -35,29 +35,12 @@ namespace culling
 		bool bmIsEntityBlockPoolInitialized;
 
 		/// <summary>
-		/// List of EntityBlock with no entity ( maybe entity was destroyed)
-		/// </summary>
-		eastl::vector<EntityBlock*> mFreeEntityBlockList;
-		/// <summary>
 		/// List of EntityBlock containing Entities
 		/// </summary>
 		eastl::vector<EntityBlock*> mActiveEntityBlockList;
-		/// <summary>
-		/// Allocated EntityBlock Arrays
-		/// This objects will be released at destructor
-		/// </summary>
-		eastl::vector<EntityBlock*> mAllocatedEntityBlockChunkList;
 
 		uint64_t mEntityBlockUniqueIDCounter;
 		
-		void AllocateEntityBlockPool();
-		culling::EntityBlock* AllocateNewEntityBlockFromPool();
-		/// <summary>
-		/// Block Swap removedblock with last block, and return swapped lastblock to pool
-		/// </summary>
-		void FreeEntityBlock(EntityBlock* freedEntityBlock);
-		EntityBlock* GetNewEntityBlockFromPool();
-
 		void ResetCullingModules();
 		/// <summary>
 		/// Reset VisibleFlag
