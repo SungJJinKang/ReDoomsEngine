@@ -1,4 +1,4 @@
-#include "CommonInclude.h"
+﻿#include "CommonInclude.h"
 
 #include "Commandline.h"
 #include "WindowsApplication.h"
@@ -9,7 +9,8 @@
 int main(int argc, char** argv)
 {
 	TLSThreadName = "MainThread";
-	TLSThreadType = ThreadType::MainThread;
+	TLSThreadType = EThreadType::MainThread;
+	EA_ASSERT(IsOnMainThread());
 
 	{
 		InitMemoryCore();

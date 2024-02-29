@@ -1,4 +1,4 @@
-#include "Profiling.h"
+﻿#include "Profiling.h"
 
 // reference code : https://github.com/microsoft/DirectX-Graphics-Samples/blob/master/Samples/Desktop/D3D12Raytracing/src/D3D12RaytracingProceduralGeometry/util/PerformanceTimers.cpp#L15
 
@@ -235,7 +235,8 @@ FCPUTimer::FCPUTimer(const char* const InTimerName, const bool bInScopedTimer) :
 	QPCLastTime(0),
 	ElapsedSeconds(0),
 	ElapsedTicks(0),
-	bScopedTimer(bInScopedTimer)
+	bScopedTimer(bInScopedTimer),
+	bEnd(false)
 {
 	if (bScopedTimer)
 	{
@@ -264,22 +265,27 @@ void FCPUTimer::Start()
 
 void FCPUTimer::End()
 {
-	LARGE_INTEGER CurrentTime;
-	QueryPerformanceCounter(&CurrentTime); // A Profile shows this function is quiet too slow... (why? https://stackoverflow.com/questions/1723629/what-happens-when-queryperformancecounter-is-called)
+	if (!bEnd)
+	{
+		LARGE_INTEGER CurrentTime;
+		QueryPerformanceCounter(&CurrentTime); // A Profile shows this function is quiet too slow... (why? https://stackoverflow.com/questions/1723629/what-happens-when-queryperformancecounter-is-called)
 
-	UINT64 TimeDelta = CurrentTime.QuadPart - QPCLastTime;
+		UINT64 TimeDelta = CurrentTime.QuadPart - QPCLastTime;
 
-	// Convert QPC units into a canonical tick format. This cannot overflow due to the previous clamp.
-	TimeDelta *= TicksPerSecond;
-	TimeDelta /= QPCFrequency.QuadPart;
+		// Convert QPC units into a canonical tick format. This cannot overflow due to the previous clamp.
+		TimeDelta *= TicksPerSecond;
+		TimeDelta /= QPCFrequency.QuadPart;
 
-	ElapsedTicks = TimeDelta;
-	ElapsedSeconds = TicksToSeconds(ElapsedTicks);
+		ElapsedTicks = TimeDelta;
+		ElapsedSeconds = TicksToSeconds(ElapsedTicks);
 
 #if ENABLE_PROFILER
-	CPUTimerManager.AddEvent(FCPUTimerManager::FEvent{ FCPUTimerManager::EEventType::PopStack, this });
+		CPUTimerManager.AddEvent(FCPUTimerManager::FEvent{ FCPUTimerManager::EEventType::PopStack, this });
 #endif
-	QPCLastTime = CurrentTime.QuadPart;
+		QPCLastTime = CurrentTime.QuadPart;
+
+		bEnd = true;
+	}
 }
 
 #if ENABLE_PROFILER
@@ -633,7 +639,6 @@ static struct FRegisterProfilerImguiCallback
 				if(FrameTimeCPUTimerNode && FrameTimeCPUTimerNode != TopNodes.end())
 				{
 					ImGui::Text("FPS : %f", 1.0 / (*FrameTimeCPUTimerNode)->ShownAverage);
-					ImGui::Text("FrameTime : %f(ms)", (*FrameTimeCPUTimerNode)->ShownAverage * 1000.0);
 				}
 
 				if (ImGui::TreeNode("CPU Timer"))
