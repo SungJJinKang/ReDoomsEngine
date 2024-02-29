@@ -1,6 +1,6 @@
-#pragma once
+﻿#pragma once
 
-enum class ThreadType
+enum class EThreadType
 {
 	Unknown,
 	MainThread,

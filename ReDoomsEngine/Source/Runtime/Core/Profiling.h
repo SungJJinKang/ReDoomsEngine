@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Macros.h"
 
@@ -37,6 +37,10 @@ public:
 	};
 
 	FCPUTimer(const char* const InTimerName, const bool bInScopedTimer = true);
+	FCPUTimer(const FCPUTimer&) = delete;
+	FCPUTimer(FCPUTimer&&) = delete;
+	FCPUTimer& operator=(const FCPUTimer&) = delete;
+	FCPUTimer& operator=(FCPUTimer&&) = delete;
 	~FCPUTimer();
 
 	void Start();
@@ -64,6 +68,8 @@ private:
 	unsigned long long ElapsedTicks;
 
 	const bool bScopedTimer;
+
+	bool bEnd;
 };
 
 #if ENABLE_PROFILER
