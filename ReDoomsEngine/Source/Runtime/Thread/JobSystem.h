@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "Common/RendererStateCallbackInterface.h"
 
@@ -26,7 +26,7 @@ class FJobResult
 public:
 	
 	FJobResult(FJobSystem* const InJobSystem, const int32_t InJobIndex);
-	void WaitForJobCompletion(const uint64_t InWaitTimeMilliSeconds = EA::Thread::kTimeoutNone);
+	bool WaitForJobCompletion(const uint64_t InWaitTimeMilliSeconds = EA::Thread::kTimeoutNone);
 
 private:
 
@@ -42,13 +42,19 @@ class FJobSystem : public EA::StdC::Singleton<FJobSystem>, public IRendererState
 public:
 
 	void Init();
+	void Test();
 	void OnStartFrame(FD3D12CommandContext& InCommandContext) override;
 	void OnEndFrame(FD3D12CommandContext& InCommandContext) override;
 
 	void ProcessJobsOnCallerThread();
-	eastl::vector<FJobResult> Dispatch(const uint32_t InJobCount, const JobType& job);
-	void WaitForJobCompletion(const int32_t InJobID, const uint64_t InWaitTimeMilliSeconds = EA::Thread::kTimeoutNone);
+	eastl::vector<FJobResult> Dispatch(const uint32_t InJobCount, const JobType& job, const bool bCallerThreadWorkOnJob);
+	bool WaitForJobCompletion(const int32_t InJobID, const uint64_t InWaitTimeMilliSeconds = EA::Thread::kTimeoutNone);
 	void WaitForAllJobCompletion(const uint64_t InWaitTimeMilliSeconds = EA::Thread::kTimeoutNone);
+
+	inline uint32_t GetJobThreadCount() const
+	{
+		return JobThreadCount;
+	}
 
 private:
 
@@ -57,5 +63,7 @@ private:
 	eastl::queue<FJobContainer> JobQueue;
 	EA::Thread::Mutex JobQueueMutex;
 	eastl::vector<EA::Thread::Thread> JobThreadList;
+
+	uint32_t JobThreadCount;
 };
 
