@@ -1,4 +1,4 @@
-#include "DistanceCulling.h"
+﻿#include "DistanceCulling.h"
 
 static_assert(EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK % 2 == 0);
 
@@ -24,8 +24,6 @@ void culling::DistanceCulling::DoDistanceCulling
 		entityBlock->UpdateIsCulled(entityIndex, cameraIndex, sqrDistanceOfFirstEntity > entityBlock->GetDesiredMaxDrawDistance(entityIndex) * entityBlock->GetDesiredMaxDrawDistance(entityIndex));
 		entityBlock->UpdateIsCulled(entityIndex + 1, cameraIndex, sqrDistanceOfSecondEntity > entityBlock->GetDesiredMaxDrawDistance(entityIndex + 1) * entityBlock->GetDesiredMaxDrawDistance(entityIndex + 1));
 	}
-
-	
 }
 
 culling::DistanceCulling::DistanceCulling(EveryCulling* const everyCulling)

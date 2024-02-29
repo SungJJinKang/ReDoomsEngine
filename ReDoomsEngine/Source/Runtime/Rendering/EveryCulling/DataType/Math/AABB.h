@@ -7,8 +7,8 @@ namespace culling
 
 	struct AABB
 	{
-		Vec4 mMin;
-		Vec4 mMax;
+		AlignedVec4 mMin;
+		AlignedVec4 mMax;
 	};
 
 	struct Face

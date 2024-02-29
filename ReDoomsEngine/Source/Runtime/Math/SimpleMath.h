@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 // SimpleMath.h -- Simplified C++ Math wrapper for DirectXMath
 //
 // Copyright (c) Microsoft Corporation.
@@ -333,6 +333,11 @@ namespace DirectX
             static const Vector3 Forward;
             static const Vector3 Backward;
         };
+
+		XM_ALIGNED_STRUCT(16) AlignedVector3 : public Vector3
+		{
+			using Vector3::Vector3;
+		};
 
         // Binary operators
         Vector3 operator+ (const Vector3& V1, const Vector3& V2) noexcept;

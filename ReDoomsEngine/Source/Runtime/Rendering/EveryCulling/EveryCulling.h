@@ -27,20 +27,13 @@ namespace culling
 		eastl::array<culling::Mat4x4, EVERYCULLING_MAX_CAMERA_COUNT> mCameraModelMatrixes;
 		eastl::array<culling::Mat4x4, EVERYCULLING_MAX_CAMERA_COUNT> mCameraViewProjectionMatrixes;
 		eastl::array<culling::Vec3, EVERYCULLING_MAX_CAMERA_COUNT> mCameraWorldPositions;
-		eastl::array<culling::Vec4, EVERYCULLING_MAX_CAMERA_COUNT> mCameraRotations;
+		eastl::array<culling::AlignedVec4, EVERYCULLING_MAX_CAMERA_COUNT> mCameraRotations;
 		eastl::array<float, EVERYCULLING_MAX_CAMERA_COUNT> mCameraFieldOfView;
 		eastl::array<float, EVERYCULLING_MAX_CAMERA_COUNT> mFarClipPlaneDistance;
 		eastl::array<float, EVERYCULLING_MAX_CAMERA_COUNT> mNearClipPlaneDistance;
 
 		bool bmIsEntityBlockPoolInitialized;
 
-		/// <summary>
-		/// List of EntityBlock containing Entities
-		/// </summary>
-		eastl::vector<EntityBlock*> mActiveEntityBlockList;
-
-		uint64_t mEntityBlockUniqueIDCounter;
-		
 		void ResetCullingModules();
 		/// <summary>
 		/// Reset VisibleFlag
@@ -49,6 +42,7 @@ namespace culling
 
 	public:
 
+		eastl::vector<EntityBlock> mEntityBlockList;
 		eastl::unique_ptr<PreCulling> mPreCulling;
 		eastl::unique_ptr<DistanceCulling> mDistanceCulling;
 		eastl::unique_ptr<ViewFrustumCulling> mViewFrustumCulling;
@@ -69,7 +63,7 @@ namespace culling
 		void SetFieldOfViewInDegree(const size_t cameraIndex, const float fov);
 		void SetCameraNearFarClipPlaneDistance(const size_t cameraIndex, const float nearPlaneDistance, const float farPlaneDistance);;
 		void SetCameraWorldPosition(const size_t cameraIndex, const culling::Vec3& cameraWorldPos);
-		void SetCameraRotation(const size_t cameraIndex, const culling::Vec4& cameraRotation);
+		void SetCameraRotation(const size_t cameraIndex, const culling::AlignedVec4& cameraRotation);
 
 	public:
 
@@ -92,6 +86,23 @@ namespace culling
 
 		unsigned long long GetTickCount() const;
 		
+		struct GlobalDataForCullJob
+		{
+			culling::Mat4x4 mViewProjectionMatrix;
+			float mFieldOfViewInDegree;
+			float mCameraNearPlaneDistance;
+			float mCameraFarPlaneDistance;
+			culling::Vec3 mCameraWorldPosition;
+			culling::AlignedVec4 mCameraRotation;
+		};
+
+		/**
+		 * \brief Update global data for cull job. Should be called every frame.
+		 * \param cameraIndex 
+		 * \param settingParameters 
+		 */
+		void UpdateGlobalDataForCullJob(const size_t cameraIndex, const GlobalDataForCullJob& settingParameters);
+
 		EASTL_FORCE_INLINE size_t GetCameraCount() const
 		{
 			return mCameraCount;
@@ -127,11 +138,6 @@ namespace culling
 			return mNearClipPlaneDistance[cameraIndex];
 		}
 		
-		/// <summary>
-		/// Get EntityBlock List with entities
-		/// </summary>
-		/// <returns></returns>
-		const eastl::vector<EntityBlock*>& GetActiveEntityBlockList() const;
 		size_t GetActiveEntityBlockCount() const;
 
 		void ThreadCullJob(const size_t cameraIndex, const unsigned long long tickCount);

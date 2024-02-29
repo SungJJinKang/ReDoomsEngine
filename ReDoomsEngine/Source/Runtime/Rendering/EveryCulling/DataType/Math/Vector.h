@@ -1,4 +1,4 @@
-#pragma once	
+﻿#pragma once	
 
 #include "../../EveryCullingCore.h"
 
@@ -58,6 +58,33 @@ namespace culling
 		{
 			return sqrtf(sqrMagnitude());
 		}
+
+		Vec3(const Vector3& InVec3)
+		{
+			x = InVec3.x;
+			y = InVec3.y;
+			z = InVec3.z;
+		}
+		Vec3(const AlignedVector3& InVec3)
+		{
+			x = InVec3.x;
+			y = InVec3.y;
+			z = InVec3.z;
+		}
+		Vec3& operator=(const Vector3& InVec3)
+		{
+			x = InVec3.x;
+			y = InVec3.y;
+			z = InVec3.z;
+			return *this;
+		}
+		Vec3& operator=(const AlignedVector3& InVec3)
+		{
+			x = InVec3.x;
+			y = InVec3.y;
+			z = InVec3.z;
+			return *this;
+		}
 	};
 
 	
@@ -66,9 +93,18 @@ namespace culling
 	/// <summary>
 	/// Why alignas(16)? : FOR SIMD!!
 	/// </summary>
-	struct alignas(16) Vec4
+	struct alignas(16) AlignedVec4
 	{
 		float values[4];
+
+		EASTL_FORCE_INLINE AlignedVec4() {}
+		EASTL_FORCE_INLINE AlignedVec4(const float _x, const float _y, const float _z, const float _w)
+		{
+			values[0] = _x;
+			values[1] = _y;
+			values[2] = _z;
+			values[3] = _w;
+		}
 
 		EASTL_FORCE_INLINE float& operator[](size_t index)
 		{
@@ -101,6 +137,53 @@ namespace culling
 		EASTL_FORCE_INLINE float magnitude() const
 		{
 			return sqrtf(sqrMagnitude());
+		}
+
+		AlignedVec4(const Vector4& InVec4)
+		{
+			values[0] = InVec4.x;
+			values[1] = InVec4.y;
+			values[2] = InVec4.z;
+			values[3] = InVec4.w;
+		}
+		AlignedVec4(const AlignedVector4& InVec4)
+		{
+			values[0] = InVec4.x;
+			values[1] = InVec4.y;
+			values[2] = InVec4.z;
+			values[3] = InVec4.w;
+		}
+		AlignedVec4& operator=(const Vector4& InVec4)
+		{
+			values[0] = InVec4.x;
+			values[1] = InVec4.y;
+			values[2] = InVec4.z;
+			values[3] = InVec4.w;
+			return *this;
+		}
+		AlignedVec4& operator=(const AlignedVector4& InVec4)
+		{
+			values[0] = InVec4.x;
+			values[1] = InVec4.y;
+			values[2] = InVec4.z;
+			values[3] = InVec4.w;
+			return *this;
+		}
+
+		AlignedVec4(const Quaternion& Quat)
+		{
+			values[0] = Quat.x;
+			values[1] = Quat.y;
+			values[2] = Quat.z;
+			values[3] = Quat.w;
+		}
+		AlignedVec4& operator=(const Quaternion& Quat)
+		{
+			values[0] = Quat.x;
+			values[1] = Quat.y;
+			values[2] = Quat.z;
+			values[3] = Quat.w;
+			return *this;
 		}
 	};
 
@@ -164,18 +247,18 @@ namespace culling
 	}
 
 
-	EASTL_FORCE_INLINE culling::Vec4 operator+(const culling::Vec4& a, const culling::Vec4& b)
+	EASTL_FORCE_INLINE culling::AlignedVec4 operator+(const culling::AlignedVec4& a, const culling::AlignedVec4& b)
 	{
-		culling::Vec4 result;
+		culling::AlignedVec4 result;
 
 		*reinterpret_cast<culling::EVERYCULLING_M128F*>(result.data()) = _mm_add_ps(*reinterpret_cast<const culling::EVERYCULLING_M128F*>(a.data()), *reinterpret_cast<const culling::EVERYCULLING_M128F*>(b.data()));
 
 		return result;
 	}
 
-	EASTL_FORCE_INLINE culling::Vec4 operator-(const culling::Vec4& a, const culling::Vec4& b)
+	EASTL_FORCE_INLINE culling::AlignedVec4 operator-(const culling::AlignedVec4& a, const culling::AlignedVec4& b)
 	{
-		culling::Vec4 result;
+		culling::AlignedVec4 result;
 
 		*reinterpret_cast<culling::EVERYCULLING_M128F*>(result.data()) = _mm_sub_ps(*reinterpret_cast<const culling::EVERYCULLING_M128F*>(a.data()), *reinterpret_cast<const culling::EVERYCULLING_M128F*>(b.data()));
 

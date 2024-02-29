@@ -1,4 +1,4 @@
-#include "PreCulling.h"
+﻿#include "PreCulling.h"
 
 #include "../MaskedSWOcclusionCulling/Utility/vertexTransformationHelper.h"
 #include "../MaskedSWOcclusionCulling/MaskedSWOcclusionCulling.h"
@@ -13,8 +13,8 @@ void culling::PreCulling::ComputeScreenSpaceMinMaxAABBAndMinZ
 	const size_t entityIndex
 )
 {
-	const culling::Vec4& aabbMinWorldPoint = entityBlock->mAABBMinWorldPoint[entityIndex];
-	const culling::Vec4& aabbMaxWorldPoint = entityBlock->mAABBMaxWorldPoint[entityIndex];
+	const culling::AlignedVec4& aabbMinWorldPoint = entityBlock->mAABBMinWorldPoint[entityIndex];
+	const culling::AlignedVec4& aabbMaxWorldPoint = entityBlock->mAABBMaxWorldPoint[entityIndex];
 
 	const culling::Mat4x4& worldToClipSpaceMatrix = mCullingSystem->GetCameraViewProjectionMatrix(cameraIndex);
 	
@@ -121,23 +121,11 @@ void culling::PreCulling::DoPreCull
 {
 	for(size_t entityIndex = 0 ; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK ; entityIndex++)
 	{
-		if(entityBlock->GetIsObjectEnabled(entityIndex) == false)
+		if(entityBlock->GetIsObjectEnabled(entityIndex) == false || entityIndex >= entityBlock->EntityCount)
 		{
 			entityBlock->SetCulled(entityIndex, cameraIndex);
 		}	
-	}
-
-	for (size_t entityIndex = 0; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK; entityIndex++)
-	{
-		if (entityBlock->GetIsObjectEnabled(entityIndex) == true)
-		{
-			entityBlock->UpdateBoundingSphereRadius(entityIndex);
-		}
-	}
-
-	for (size_t entityIndex = 0; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK; entityIndex++)
-	{
-		if (entityBlock->GetIsObjectEnabled(entityIndex) == true)
+		else
 		{
 			ComputeScreenSpaceMinMaxAABBAndMinZ(cameraIndex, entityBlock, entityIndex);
 		}

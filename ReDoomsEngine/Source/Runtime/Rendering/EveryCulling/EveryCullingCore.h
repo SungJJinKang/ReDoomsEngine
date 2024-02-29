@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 
 #define EVERYCULLING_CACHE_LINE_SIZE 64
@@ -37,22 +37,17 @@
 
 #define EVERYCULLING_NDC_RANGE EVERYCULLING_ZERO_TO_POSITIVE_ONE
 
+// #ifdef EVERYCULLING_OPENGL
+// #define EVERYCULLING_NDC_RANGE EVERYCULLING_MINUS_ONE_TO_POSITIVE_ONE
+// #elif DIRECTX
+// #define EVERYCULLING_NDC_RANGE EVERYCULLING_ZERO_TO_POSITIVE_ONE
+// #endif
+
 ///////////////////////////////////////////////////////////////////////////////////////
 //EntityBlock
-#ifndef EVERYCULLING_INITIAL_ENTITY_BLOCK_COUNT
-#define EVERYCULLING_INITIAL_ENTITY_BLOCK_COUNT 10
-#endif
-
-#ifndef EVERYCULLING_INITIAL_ENTITY_BLOCK_RESERVED_SIZE
-#define EVERYCULLING_INITIAL_ENTITY_BLOCK_RESERVED_SIZE 512
-#endif
 
 #ifndef EVERYCULLING_MAX_CAMERA_COUNT
 #define EVERYCULLING_MAX_CAMERA_COUNT 5
-#endif
-
-#ifndef EVERYCULLING_MAX_THREAD_COUNT
-#define EVERYCULLING_MAX_THREAD_COUNT 10
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-#include "D3D12TestRenderer.h"
+﻿#include "D3D12TestRenderer.h"
 
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "MeshLoader.h"
@@ -116,6 +116,14 @@ void D3D12TestRenderer::SceneSetup()
 	MeshDrawArgument.BaseVertexLocation = 0;
 	MeshDrawArgument.StartInstanceLocation = 0;
 
+
+	culling::VertexData DroneVertexData;
+	DroneVertexData.mVertices = reinterpret_cast<culling::Vec3*>(DroneMesh->MeshList[0].Vertices.data());
+	DroneVertexData.mVerticeCount = DroneMesh->MeshList[0].VertexCount;
+	DroneVertexData.mIndices = DroneMesh->MeshList[0].Indices.data();
+	DroneVertexData.mIndiceCount = DroneMesh->MeshList[0].IndexCount;
+	DroneVertexData.mVertexStride = 0;
+	
 	for (int32_t IndexA = -30; IndexA < 30; ++IndexA)
 	{
 		for (int32_t IndexB = -30; IndexB < 30; ++IndexB)
@@ -134,11 +142,13 @@ void D3D12TestRenderer::SceneSetup()
 			Vector3 OrigianlPos{ 250.0f * IndexB, 250.0f * IndexA + 10.0f, -5.0f };
 			FRenderObject RenderObject = RenderScene.AddRenderObject(
 				true,
-				DroneMesh->MeshList[0].AABB,
+				DroneMesh->MeshList[0].LocalSpaceAABBMin,
+				DroneMesh->MeshList[0].LocalSpaceAABBMax,
 				OrigianlPos,
 				Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f),
 				Vector3{ 0.05f, 0.05f, 0.05f },
-				2000.0f,
+				DroneVertexData,
+				20000.0f,
 				DroneMesh->MeshList[0].VertexBufferViewList,
 				DroneMesh->MeshList[0].IndexBufferView,
 				DroneDrawDesc,
@@ -154,6 +164,12 @@ void D3D12TestRenderer::OnStartFrame()
 	FRenderer::OnStartFrame();
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+
+	if ((View.ScreenWidth != SwapChain->GetWidth()) || (View.ScreenHeight != SwapChain->GetHeight()))
+	{
+		View.ScreenWidth = SwapChain->GetWidth();
+		View.ScreenHeight = SwapChain->GetHeight();
+	}
 
 	if (DepthStencilTarget == nullptr ||
 		((DepthStencilTarget->GetDesc().Width != SwapChain->GetWidth()) || (DepthStencilTarget->GetDesc().Height != SwapChain->GetHeight()))
@@ -211,9 +227,9 @@ void D3D12TestRenderer::OnStartFrame()
 		{
 			View.Transform.Translate(Vector3{ 1.0f, 0.0f, 0.0f } *Speed * 50.0f, ESpace::Self);
 		}
-		Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+		Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix();
 		Matrix ViewMat = View.Get3DViewMatrices();
-		Matrix ProjMat = View.GetPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+		Matrix ProjMat = View.GetPerspectiveProjectionMatrix();
 		ViewConstantBuffer.MemberVariables.ViewMatrix = ViewMat;
 		ViewConstantBuffer.MemberVariables.ProjectionMatrix = ProjMat;
 		ViewConstantBuffer.MemberVariables.ViewProjectionMatrix = ViewProjMat;
@@ -274,7 +290,7 @@ bool D3D12TestRenderer::Draw()
 		Drone.RenderObject.SetPosition(Drone.OriginalPos + Vector3{ Offset * 80.0f, 0.0f, 0.0f });
 	}
 
-	RenderScene.PrepareToCreateMeshDrawList();
+	RenderScene.PrepareToCreateMeshDrawList(View);
 
 	// Base Pass
 	{

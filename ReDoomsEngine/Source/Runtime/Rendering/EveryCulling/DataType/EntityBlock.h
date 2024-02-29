@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../EveryCullingCore.h"
 
@@ -15,13 +15,50 @@ namespace culling
 	/// <summary>
 	/// EntityBlock size should be less 4KB(Page size) for Block data being allocated in a page
 	/// </summary>
-	struct EntityBlock
+	struct alignas(EVERYCULLING_CACHE_LINE_SIZE) EntityBlock
 	{
+		/// <summary>
+		/// uninitiliazed constructor
+		/// </summary>
+		EntityBlock() {}
+
 		/// <summary>
 		/// You don't need to worry about false sharing.
 		/// void* mRenderer and mCurrentEntityCount isn't read during CullJob
 		/// </summary>
-		char* mIsVisibleBitflag;
+		uint8_t* mIsVisibleBitflag;
+
+		// Written in PreCulling Stage ---------------------------------------------------------------------------------------------------
+
+		// This variable is for a camera
+		eastl::array<float, EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK> mAABBMinScreenSpacePointX;
+		eastl::array<float, EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK> mAABBMinScreenSpacePointY;
+		eastl::array<float, EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK> mAABBMaxScreenSpacePointX;
+		eastl::array<float, EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK> mAABBMaxScreenSpacePointY;
+
+		/// <summary>
+		/// This values is set only when mIsAllAABBClipPointWPositive[entityIndex] is true
+		/// </summary>
+		eastl::array<float, EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK> mAABBMinNDCZ;
+
+		/// <summary>
+		/// If All vertex's homogeneous w of object aabb is negative.
+		///	So AABBScreenSpacePoint is invalid
+		/// </summary>
+		eastl::bitset<EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK> mIsAllAABBClipPointWPositive;
+		eastl::bitset<EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK> mIsAllAABBClipPointWNegative;
+		
+
+		// Below variables should be written(set) before start culling by user. -----------------------------------------------------------------------------
+
+		culling::AlignedVec4* mAABBMinWorldPoint;
+		culling::AlignedVec4* mAABBMaxWorldPoint;
+		culling::Mat4x4* mModelMatrixes;
+		/// <summary>
+		/// Whether renderer component is enabled.
+		/// </summary>
+		uint8_t* mIsObjectEnabled;
+		culling::AlignedVec4* mScaleAndDrawDistance;
 
 		/// <summary>
 		/// x, y, z : components is position of entity
@@ -30,53 +67,19 @@ namespace culling
 		/// Writeen in Pre Culling, Read in ViewFrustum Culling, Distance Culling
 		/// </summary>
 		culling::Position_BoundingSphereRadius* mWorldPositionAndWorldBoundingSphereRadius; // 4 * 16 byte
-		
+
 		/**
 		 * \brief Written in BinTriangleStage, Read in BinTriangleStage.
 		 */
 		VertexData* mVertexDatas; // 4 * 16 byte
 
-		// Written in PreCulling Stage ---------------------------------------------------------------------------------------------------
-
-		// This variable is for a camera
-		float* mAABBMinScreenSpacePointX;
-		float* mAABBMinScreenSpacePointY;
-		float* mAABBMaxScreenSpacePointX;
-		float* mAABBMaxScreenSpacePointY;
-		/// <summary>
-		/// This values is set only when mIsAllAABBClipPointWPositive[entityIndex] is true
-		/// </summary>
-		float* mAABBMinNDCZ;
-		/// <summary>
-		/// If All vertex's homogeneous w of object aabb is negative.
-		///	So AABBScreenSpacePoint is invalid
-		/// </summary>
-		bool* mIsAllAABBClipPointWPositive;
-		bool* mIsAllAABBClipPointWNegative;
-		
-		
-		
-		// Below variables is written(set) before start culling. -----------------------------------------------------------------------------
-
-		culling::Vec4* mAABBMinWorldPoint;
-		culling::Vec4* mAABBMaxWorldPoint;
-		culling::Mat4x4* mModelMatrixes;
-		/// <summary>
-		/// Whether renderer component is enabled.
-		/// </summary>
-		bool* mIsObjectEnabled;
-		float* mDesiredMaxDrawDistance;
-
-		// this variable will be used to check if a entity block is the one was referenced by EntityBlockViewer when the entity block is reused after free
-		// The entityBlockViewer can't know if the entity block what it was referencing was freed.
-		uint64_t mEntityBlockUniqueID;
-		bool bIsValidEntityBlock;
+		uint32_t EntityCount;
 
 		// ----------------------------------------------------------------------------------------------------------------------
 
 		EASTL_FORCE_INLINE bool GetIsAllAABBClipPointWNegative(const size_t entityIndex) const
 		{
-			return mIsAllAABBClipPointWNegative[entityIndex];
+			return mIsAllAABBClipPointWPositive.test(entityIndex);
 		}
 
 		EASTL_FORCE_INLINE void SetIsAllAABBClipPointWNegative(const size_t entityIndex, const bool isAllAABBClipPointWNegative)
@@ -84,17 +87,17 @@ namespace culling
 			// Setting value to invalid index is acceptable
 			EA_ASSERT(entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
 
-			mIsAllAABBClipPointWNegative[entityIndex] = isAllAABBClipPointWNegative;
+			mIsAllAABBClipPointWNegative.set(entityIndex, isAllAABBClipPointWNegative);
 		}
 
 		EASTL_FORCE_INLINE bool GetIsAnyAABBClipPointWNegative(const size_t entityIndex) const
 		{
-			return (mIsAllAABBClipPointWPositive[entityIndex] == false);
+			return (mIsAllAABBClipPointWPositive.test(entityIndex) == false);
 		}
 
 		EASTL_FORCE_INLINE bool GetIsAllAABBClipPointWPositive(const size_t entityIndex) const
 		{
-			return mIsAllAABBClipPointWPositive[entityIndex];
+			return mIsAllAABBClipPointWPositive.test(entityIndex);
 		}
 
 		/// <summary>
@@ -112,7 +115,7 @@ namespace culling
 			// Setting value to invalid index is acceptable
 			EA_ASSERT(entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
 			
-			mIsAllAABBClipPointWPositive[entityIndex] = isAllAABBClipPointWPositive;
+			mIsAllAABBClipPointWPositive.set(entityIndex, isAllAABBClipPointWPositive);
 		}
 
 		EASTL_FORCE_INLINE bool GetIsCulled(const size_t entityIndex, const size_t cameraIndex) const
@@ -152,23 +155,12 @@ namespace culling
 
 		EASTL_FORCE_INLINE bool GetIsObjectEnabled(const size_t entityIndex) const
 		{
-			return mIsObjectEnabled[entityIndex];
+			return mIsObjectEnabled[entityIndex / 8] & (1 << (entityIndex/8));
 		}
 		
-		EASTL_FORCE_INLINE void SetModelMatrix(const size_t entityIndex, const float* const modelToClipspaceMatrix)
-		{
-			EA::StdC::Memcpy(mModelMatrixes + entityIndex, modelToClipspaceMatrix, sizeof(culling::Mat4x4));
-		}
 		EASTL_FORCE_INLINE const culling::Mat4x4& GetModelMatrix(const size_t entityIndex) const
 		{
 			return mModelMatrixes[entityIndex];
-		}
-
-		EASTL_FORCE_INLINE void UpdateBoundingSphereRadius(const size_t entityIndex)
-		{
-			culling::Vec4 vec = mAABBMaxWorldPoint[entityIndex] - mAABBMinWorldPoint[entityIndex];
-			vec[3] = 1.0f;
-			mWorldPositionAndWorldBoundingSphereRadius[entityIndex].SetBoundingSphereRadius(vec.magnitude() * 0.5f);
 		}
 
 		EASTL_FORCE_INLINE const culling::Position_BoundingSphereRadius& GetEntityWorldPositionAndBoudingSphereRadius(const size_t entityIndex) const
@@ -176,41 +168,23 @@ namespace culling
 			return mWorldPositionAndWorldBoundingSphereRadius[entityIndex];
 		}
 
-		EASTL_FORCE_INLINE void SetAABBWorldPosition(const size_t entityIndex, const float* const minWorldPos, const float* const maxWorldPos)
-		{
-			EA::StdC::Memcpy(mAABBMinWorldPoint + entityIndex, minWorldPos, sizeof(culling::Vec4));
-			EA::StdC::Memcpy(mAABBMaxWorldPoint + entityIndex, maxWorldPos, sizeof(culling::Vec4));
-		}
-		
 		EASTL_FORCE_INLINE void ResetEntityBlock(const unsigned long long currentTickCount)
 		{
 			for(size_t entityIndex = 0 ; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK ; entityIndex++)
 			{
 				mVertexDatas[entityIndex].Reset(currentTickCount);
 			}
-			EA::StdC::Memset8(mIsVisibleBitflag, 0xFF, sizeof(char) * EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
-			EA::StdC::Memset8(mIsAllAABBClipPointWPositive, 0xFF, sizeof(char) * EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
-		}
-
-		EASTL_FORCE_INLINE void SetDesiredMaxDrawDistance(const size_t entityIndex, const float desiredMaxDrawDistance)
-		{
-			EA_ASSERT(desiredMaxDrawDistance >= 0.0f);
-
-			mDesiredMaxDrawDistance[entityIndex] = desiredMaxDrawDistance;
+			EA::StdC::Memset8(mIsVisibleBitflag, 0xFF, sizeof(uint8_t) * EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
+			EA::StdC::Memset8(mIsAllAABBClipPointWPositive.data(), 0xFF, sizeof(uint8_t) * EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
 		}
 
 		EASTL_FORCE_INLINE float GetDesiredMaxDrawDistance(const size_t entityIndex)
 		{
-			EA_ASSERT(mDesiredMaxDrawDistance[entityIndex] >= 0.0f);
+			EA_ASSERT(mScaleAndDrawDistance[entityIndex][3] >= 0.0f);
 
-			return mDesiredMaxDrawDistance[entityIndex];
+			return mScaleAndDrawDistance[entityIndex][3];
 		}
 		
-		EASTL_FORCE_INLINE const culling::VertexData& GetVertexData(const size_t entityIndex) const
-		{
-			return mVertexDatas[entityIndex];
-		}
-
 		void ClearEntityBlock();
 	};
 

@@ -1,4 +1,4 @@
-#include "Renderer/Renderer.h"
+﻿#include "Renderer/Renderer.h"
 
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "Editor/ImguiHelper.h"
@@ -71,6 +71,7 @@ void FRenderer::OnPreStartFrame()
 {
 	GCurrentRendererState = ERendererState::OnPreStartFrame;
 
+	JobSystem.OnPreStartFrame();
 	D3D12Manager.OnPreStartFrame();
 }
 
@@ -101,6 +102,7 @@ void FRenderer::OnStartFrame()
 
 	FrametimeGPUTimer.Start(CurrentFrameCommandContext.CommandQueueList[ED3D12QueueType::Direct], CurrentFrameCommandContext.GraphicsCommandList.get());
 
+	JobSystem.OnStartFrame(CurrentFrameCommandContext);
 	D3D12Manager.OnStartFrame(CurrentFrameCommandContext);
 	FImguiHelperSingleton::GetInstance()->NewFrame();
 }
@@ -123,6 +125,7 @@ void FRenderer::OnPreEndFrame()
 {
 	GCurrentRendererState = ERendererState::OnPreEndFrame;
 
+	JobSystem.OnPreEndFrame(CurrentFrameCommandContext);
 	D3D12Manager.OnPreEndFrame(CurrentFrameCommandContext);
 
 	FImguiHelperSingleton::GetInstance()->EndDraw(CurrentFrameCommandContext);
@@ -132,6 +135,7 @@ void FRenderer::OnPostEndFrame()
 {
 	GCurrentRendererState = ERendererState::OnPostEndFrame;
 
+	JobSystem.OnPostEndFrame();
 	D3D12Manager.OnPostEndFrame();
 }
 
@@ -139,6 +143,7 @@ void FRenderer::OnEndFrame()
 {
 	GCurrentRendererState = ERendererState::OnEndFrame;
 
+	JobSystem.OnEndFrame(CurrentFrameCommandContext);
 	D3D12Manager.OnEndFrame(CurrentFrameCommandContext);
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
@@ -171,6 +176,7 @@ void FRenderer::Destroy()
 
 	FImguiHelperSingleton::GetInstance()->OnDestory();
 
+	JobSystem.OnDestory(CurrentFrameCommandContext);
 	D3D12Manager.OnDestory(CurrentFrameCommandContext);
 }
 

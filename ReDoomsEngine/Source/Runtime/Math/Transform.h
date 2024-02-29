@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 
 enum ESpace
@@ -13,17 +13,17 @@ struct FTransform
 	Vector3 Scale;
 	Quaternion Rotation;
 
-	inline Vector3 Up()
+	inline Vector3 Up() const
 	{
 		return Vector3::Transform(Vector3::Up, Rotation);
 	}
 
-	inline Vector3 Right()
+	inline Vector3 Right() const
 	{
 		return Vector3::Transform(Vector3::Right, Rotation);
 	}
 
-	inline Vector3 Forward()
+	inline Vector3 Forward() const
 	{
 		return Vector3::Transform(Vector3::Forward, Rotation);
 	}

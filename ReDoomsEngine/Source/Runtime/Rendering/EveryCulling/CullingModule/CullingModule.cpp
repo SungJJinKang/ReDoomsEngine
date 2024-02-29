@@ -1,4 +1,4 @@
-#include "CullingModule.h"
+﻿#include "CullingModule.h"
 
 #include "../EveryCulling.h"
 
@@ -15,7 +15,7 @@ culling::EntityBlock* culling::CullingModule::GetNextEntityBlock(const size_t ca
 	const uint32_t currentEntityBlockIndex = mCullJobState.mCurrentCulledEntityBlockIndex[cameraIndex].fetch_add(1);
 
 	const size_t entityBlockCount = mCullingSystem->GetActiveEntityBlockCount();
-	EntityBlock* const currentEntityBlock = (currentEntityBlockIndex >= entityBlockCount) ? (nullptr) : (mCullingSystem->GetActiveEntityBlockList()[currentEntityBlockIndex]);
+	EntityBlock* const currentEntityBlock = (currentEntityBlockIndex >= entityBlockCount) ? (nullptr) : (mCullingSystem->mEntityBlockList.data() + currentEntityBlockIndex);
 
 	return currentEntityBlock;
 }

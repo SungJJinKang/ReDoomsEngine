@@ -8,7 +8,7 @@ namespace culling
 	struct alignas(16) Position_BoundingSphereRadius
 	{
 
-		culling::Vec4 Position;
+		culling::AlignedVec4 Position;
 
 
 		EASTL_FORCE_INLINE void SetPosition(const culling::Vec3& _position)

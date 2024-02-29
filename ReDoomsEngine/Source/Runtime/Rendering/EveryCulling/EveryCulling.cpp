@@ -20,9 +20,9 @@ void culling::EveryCulling::ResetCullingModules()
 void culling::EveryCulling::ResetEntityBlocks()
 {
 	//Maybe Compiler use SIMD or do faster than SIMD instruction
-	for (auto entityBlock : mActiveEntityBlockList)
+	for (EntityBlock& entityBlock : mEntityBlockList)
 	{
-		entityBlock->ResetEntityBlock(mCurrentTickCount);
+		entityBlock.ResetEntityBlock(mCurrentTickCount);
 	}
 }
 
@@ -163,19 +163,12 @@ culling::EveryCulling::EveryCulling(const uint32_t resolutionWidth, const uint32
 		}
 	, mCurrentTickCount()
 	, bmIsEntityBlockPoolInitialized(false)
-	, mEntityBlockUniqueIDCounter{0}
 {
 	//CacheCullBlockEntityJobs();
 	bmIsEntityBlockPoolInitialized = true;
 }
 
-culling::EveryCulling::~EveryCulling()
-{
-	for (culling::EntityBlock* allocatedEntityBlockChunk : mActiveEntityBlockList)
-	{
-		delete allocatedEntityBlockChunk;
-	}
-}
+culling::EveryCulling::~EveryCulling() = default;
 
 void culling::EveryCulling::SetCameraCount(const size_t cameraCount)
 {
@@ -272,7 +265,7 @@ void culling::EveryCulling::SetCameraWorldPosition(const size_t cameraIndex, con
 	}
 }
 
-void culling::EveryCulling::SetCameraRotation(const size_t cameraIndex, const culling::Vec4& cameraRotation)
+void culling::EveryCulling::SetCameraRotation(const size_t cameraIndex, const culling::AlignedVec4& cameraRotation)
 {
 	EA_ASSERT(cameraIndex >= 0 && cameraIndex < EVERYCULLING_MAX_CAMERA_COUNT);
 
@@ -287,12 +280,16 @@ void culling::EveryCulling::SetCameraRotation(const size_t cameraIndex, const cu
 	}
 }
 
-const eastl::vector<culling::EntityBlock*>& culling::EveryCulling::GetActiveEntityBlockList() const
+void culling::EveryCulling::UpdateGlobalDataForCullJob(const size_t cameraIndex, const GlobalDataForCullJob& settingParameters)
 {
-	return mActiveEntityBlockList;
+	SetViewProjectionMatrix(cameraIndex, settingParameters.mViewProjectionMatrix);
+	SetFieldOfViewInDegree(cameraIndex, settingParameters.mFieldOfViewInDegree);
+	SetCameraNearFarClipPlaneDistance(cameraIndex, settingParameters.mCameraNearPlaneDistance, settingParameters.mCameraFarPlaneDistance);
+	SetCameraWorldPosition(cameraIndex, settingParameters.mCameraWorldPosition);
+	SetCameraRotation(cameraIndex, settingParameters.mCameraRotation);
 }
 
 size_t culling::EveryCulling::GetActiveEntityBlockCount() const
 {
-	return GetActiveEntityBlockList().size();
+	return mEntityBlockList.size();
 }

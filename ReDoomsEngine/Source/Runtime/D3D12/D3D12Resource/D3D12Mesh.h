@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CommonInclude.h"
 #include "D3D12Include.h"
@@ -31,15 +31,29 @@ struct FMesh
 	eastl::array<eastl::shared_ptr<FD3D12VertexIndexBufferResource>, MAX_NUMBER_OF_VERTEXCOLOR> VertexColorBuffer;
 	eastl::array<eastl::shared_ptr<FD3D12VertexIndexBufferResource>, MAX_NUMBER_OF_TEXTURECOORDS> TexCoordBuffers;
 
+	uint64_t VertexCount;
 	uint32_t IndexCount;
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> IndexBuffer;
 
-	BoundingBox AABB;
+	Vector3 LocalSpaceAABBMin;
+	Vector3 LocalSpaceAABBMax;
 
 	uint32_t MaterialIndex;
 
 	eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> VertexBufferViewList;
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView;
+
+	// reference original data
+	eastl::vector<Vector3> Vertices;
+
+	eastl::vector<uint32_t> Indices;
+
+	/// <summary>
+	/// Vertex Stride ( offset between vertices )
+	///	ex) Vertex1.X Vertex1.Y Vertex1.Z Vertex1.UV_X(4byte) Vertex1.UV_Y(4byte) Vertex2.X Vertex2.Y Vertex2.Z
+	///		-> Stride is 8byte!
+	/// </summary>
+	uint64_t VertexStride; // 8byte
 };
 
 struct FMeshMaterial

@@ -7,9 +7,11 @@
 #include "D3D12Shader.h"
 #include "EveryCulling/EveryCulling.h"
 #include "EveryCulling/DataType/Position_BoundingSphereRadius.h"
+#include "EveryCulling/DataType/VertexData.h"
 
 struct FMesh;
 struct FD3D12CommandContext;
+class FView;
 
 enum class EPass : uint32_t
 {
@@ -18,27 +20,33 @@ enum class EPass : uint32_t
 	Num
 };
 
-// Why this is required? : In EveryCulling library, use its own math type instead of DirectXMath's. So we should ensure that our math types have same size and alignment with matching ones.
-static_assert(sizeof(culling::Vec4) == sizeof(AlignedVector4));
-static_assert(alignof(culling::Vec4) == alignof (AlignedVector4));
-static_assert(sizeof(culling::Position_BoundingSphereRadius) == sizeof(AlignedVector4));
-static_assert(alignof(culling::Position_BoundingSphereRadius) == alignof (AlignedVector4));
-static_assert(sizeof(culling::Mat4x4) == sizeof(AlignedMatrix));
-static_assert(alignof(culling::Mat4x4) == alignof (AlignedMatrix));
-
 struct FRenderObjectList
 {
-	eastl::array<eastl::bitvector<>, static_cast<uint32_t>(EPass::Num)> VisibleFlagsList;
-	eastl::bitvector<> ModelMatrixDirtyList;
-	eastl::vector<BoundingBox> BoundingBoxList;
+	eastl::bitvector<> EnabledFlagsList;
+	//eastl::array<eastl::bitvector<>, static_cast<uint32_t>(EPass::Num)> EnabledFlagsList;
+	/// <summary>
+	/// Each bit represents if the object is visible to each camera
+	/// </summary>
+	eastl::vector<uint8_t> VisibleFlagsList;
+	eastl::bitvector<> TransformDirtyList;
+	eastl::vector<Vector3> LocalPositionAABBMinPointList;
+	eastl::vector<Vector3> LocalPositionAABBMaxPointList;
+	eastl::vector<AlignedVector3> WorldPositionAABBMinPointList;
+	eastl::vector<AlignedVector3> WorldPositionAABBMaxPointList;
+
+
+	eastl::vector<float> LocalBoundingSphereRadiusList;
 	/// <summary>
 	/// x, y, z : World position
 	/// w : Radius of bounding sphere
 	/// </summary>
-	eastl::vector<AlignedVector4> PositionAndLocalBoundingSphereRadiusList;
+	eastl::vector<AlignedVector4> PositionAndWorldBoundingSphereRadiusList;
+
 	eastl::vector<AlignedQuaternion> RotationList;
 	eastl::vector<AlignedVector4> ScaleAndDrawDistanceList;
 	eastl::vector<AlignedMatrix> CachedModelMatrixList;
+	eastl::vector<AlignedMatrix> CachedColumnMajorModelMatrixList;
+	eastl::vector<culling::VertexData> EveryCullingVertexData;
 	eastl::vector<eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>> VertexBufferViewList;
 	eastl::vector<D3D12_INDEX_BUFFER_VIEW> IndexBufferViewList;
 
@@ -51,6 +59,7 @@ struct FRenderObjectList
 
 	void CacheModelMatrixs();
 	void Reserve(const size_t InSize);
+	uint32_t GetObjectCount() const;
 };
 
 struct FRenderObject
@@ -60,11 +69,11 @@ struct FRenderObject
 
 	void SetVisible(const bool bInVisible);
 	void SetVisible(const EPass InPass, const bool bInVisible);
-	const BoundingBox& GetBoundingBox() const;
-	void SetBoundingBox(const BoundingBox& InBoundingBox);
+// 	const BoundingBox& GetBoundingBox() const;
+// 	void SetBoundingBox(const BoundingBox& InBoundingBox);
 	const Vector3& GetPosition() const;
 	void SetPosition(const Vector3& InPosition);
-	float GetLocalBoundingSphereRadius() const;
+/*	float GetLocalBoundingSphereRadius() const;*/
 	const Quaternion& GetRotation() const;
 	void SetRotation(const Quaternion& InQuaternion);
 	const Vector3& GetScale() const;
@@ -81,10 +90,12 @@ public:
 
 	EA_NODISCARD FRenderObject AddRenderObject(
 		const bool bInVisible,
-		const BoundingBox& InLocalBoundingBox, 
+		const Vector3& InLocalPositionAABBMinPoint,
+		const Vector3& InLocalPositionAABBMaxPoint,
 		const Vector3& Position, 
 		const Quaternion& InRotation, 
 		const Vector3& InScale, 
+		const culling::VertexData& InEveryCullingVertexData,
 		const float InDrawDistance, 
 		const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViews,
 		const D3D12_INDEX_BUFFER_VIEW& IndexBufferView,
@@ -92,8 +103,9 @@ public:
 		const FMeshDrawArgument& InMeshDrawArgument
 	);
 
+	eastl::vector<culling::EntityBlock> CreateEveryCullingEntityBlockList();
 	// This function will be called from worker thread
-	void PrepareToCreateMeshDrawList();
+	void PrepareToCreateMeshDrawList(const FView& InView);
 	eastl::vector<FMeshDraw> CreateMeshDrawListForPass(const EPass InPass);
 	void SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList);
 

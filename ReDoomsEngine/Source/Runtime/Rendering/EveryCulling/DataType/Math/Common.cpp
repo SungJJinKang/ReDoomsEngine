@@ -1,4 +1,4 @@
-#include "Common.h"
+﻿#include "Common.h"
 
 #include "EAStdC/EAMathHelp.h"
 
@@ -6,7 +6,7 @@ const float culling::PI = 3.14159265358979323846f;
 const float culling::DEGREE_TO_RADIAN = PI / 180.0f;
 const float culling::RADIAN_TO_DEGREE = 180.0f / PI;
 
-void culling::NormalizePlane(Vec4& plane) noexcept
+void culling::NormalizePlane(AlignedVec4& plane) noexcept
 {
 	float mag = sqrtf(plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2]);
 	EA_ASSERT(EA::StdC::IsNAN(mag) == false);
@@ -17,7 +17,7 @@ void culling::NormalizePlane(Vec4& plane) noexcept
 	plane[3] = plane[3] / mag;
 }
 
-void culling::ExtractPlanesFromVIewProjectionMatrix(const Mat4x4& viewProjectionMatrix, Vec4* sixPlanes,
+void culling::ExtractPlanesFromVIewProjectionMatrix(const Mat4x4& viewProjectionMatrix, AlignedVec4* sixPlanes,
 	bool normalize) noexcept
 {
 	sixPlanes[0][0] = viewProjectionMatrix[0][3] + viewProjectionMatrix[0][0];
@@ -60,11 +60,11 @@ void culling::ExtractPlanesFromVIewProjectionMatrix(const Mat4x4& viewProjection
 	}
 }
 
-void culling::ExtractSIMDPlanesFromViewProjectionMatrix(const Mat4x4& viewProjectionMatrix, Vec4* eightPlanes,
+void culling::ExtractSIMDPlanesFromViewProjectionMatrix(const Mat4x4& viewProjectionMatrix, AlignedVec4* eightPlanes,
 	bool normalize) noexcept
 {
 
-	Vec4 sixPlane[6];
+	AlignedVec4 sixPlane[6];
 
 	ExtractPlanesFromVIewProjectionMatrix(viewProjectionMatrix, sixPlane, normalize);
 
@@ -110,9 +110,9 @@ void culling::ExtractSIMDPlanesFromViewProjectionMatrix(const Mat4x4& viewProjec
 
 }
 
-culling::Vec4 culling::operator*(const Mat4x4& mat4, const Vec3& vec3) noexcept
+culling::AlignedVec4 culling::operator*(const Mat4x4& mat4, const Vec3& vec3) noexcept
 {
-	return Vec4
+	return AlignedVec4
 	{
 			mat4[0][0] * vec3.x + mat4[1][0] * vec3.y + mat4[2][0] * vec3.z + mat4[3][0],
 			mat4[0][1] * vec3.x + mat4[1][1] * vec3.y + mat4[2][1] * vec3.z + mat4[3][1],
@@ -158,7 +158,7 @@ culling::Mat4x4 culling::operator*(const Mat4x4& mat4_A, const Mat4x4& mat4_B) n
 	return culling::Mat4x4{ *reinterpret_cast<culling::Mat4x4*>(&_REULST_MAT4) };
 }
 
-culling::Vec4 culling::operator*(const Mat4x4& mat4, const Vec4& vec4) noexcept
+culling::AlignedVec4 culling::operator*(const Mat4x4& mat4, const AlignedVec4& vec4) noexcept
 {
 	culling::EVERYCULLING_M128F tempVec4;
 
@@ -172,5 +172,5 @@ culling::Vec4 culling::operator*(const Mat4x4& mat4, const Vec4& vec4) noexcept
 	*R = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(*B, 2), A[2], *R);
 	*R = culling::EVERYCULLING_M128F_MUL_AND_ADD(EVERYCULLING_M128F_REPLICATE(*B, 3), A[3], *R);
 
-	return Vec4{ *(Vec4*)(&tempVec4) };
+	return AlignedVec4{ *(AlignedVec4*)(&tempVec4) };
 }

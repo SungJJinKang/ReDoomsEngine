@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CommonInclude.h"
 
@@ -10,18 +10,21 @@ public:
 
 	FView();
 
-	Matrix Get3DViewMatrices();
-	Matrix GetPerspectiveProjectionMatrix(const float InFovInDegrees, const float InScreenWidth, const float InScreenHeight);
-	Matrix GetViewPerspectiveProjectionMatrix(const float InFovInDegrees, const float InScreenWidth, const float InScreenHeight);
-	Matrix GetOrthoProjMatrices(const float InWidth, const float InHeight);
+	Matrix Get3DViewMatrices() const;
+	Matrix GetPerspectiveProjectionMatrix() const;
+	Matrix GetViewPerspectiveProjectionMatrix() const;
+	Matrix GetOrthoProjMatrices() const;
 	void Reset();
 
 	FTransform Transform;
 
-private:
-
 	float NearPlane = 0.01f;
 	float FarPlane = 12000.0f;
+	float FovInDegree = 90.0f;
+	float ScreenWidth;
+	float ScreenHeight;
+
+private:
 
 };
 

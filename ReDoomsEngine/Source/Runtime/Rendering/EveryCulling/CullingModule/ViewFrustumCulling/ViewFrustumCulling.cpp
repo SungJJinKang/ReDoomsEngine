@@ -1,4 +1,4 @@
-#include "ViewFrustumCulling.h"
+﻿#include "ViewFrustumCulling.h"
 
 #include "../../DataType/Math/Common.h"
 #include "../../EveryCulling.h"
@@ -17,11 +17,11 @@ void culling::ViewFrustumCulling::DoViewFrustumCulling
 	culling::EntityBlock* const entityBlock
 )
 {
-	const Vec4* frustumPlane = mSIMDFrustumPlanes[cameraIndex].mFrustumPlanes;
+	const AlignedVec4* frustumPlane = mSIMDFrustumPlanes[cameraIndex].mFrustumPlanes;
 
 	for (size_t entityIndex = 0; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK; entityIndex = entityIndex + 2)
 	{
-		if ( (entityBlock->GetIsCulled(entityIndex, cameraIndex) == false) || ((entityIndex + 1 < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK) && entityBlock->GetIsCulled(entityIndex + 1, cameraIndex) == false) )
+		if ( (entityBlock->GetIsCulled(entityIndex, cameraIndex) == false) || ((entityIndex + 1 < entityBlock->EntityCount) && entityBlock->GetIsCulled(entityIndex + 1, cameraIndex) == false) )
 		{
 
 #ifdef EVERYCULLING_DEBUG_CULLING
@@ -29,7 +29,7 @@ void culling::ViewFrustumCulling::DoViewFrustumCulling
 			{
 				EA_ASSERT(entityBlock->mWorldPositionAndWorldBoundingSphereRadius[entityIndex].GetBoundingSphereRadius() >= 0.0f);
 			}
-			if ((entityIndex + 1 < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK) && entityBlock->GetIsCulled(entityIndex + 1, cameraIndex) == false)
+			if ((entityIndex + 1 < entityBlock->EntityCount) && entityBlock->GetIsCulled(entityIndex + 1, cameraIndex) == false)
 			{
 				EA_ASSERT(entityBlock->mWorldPositionAndWorldBoundingSphereRadius[entityIndex + 1].GetBoundingSphereRadius() >= 0.0f);
 			}
@@ -77,7 +77,7 @@ const char* culling::ViewFrustumCulling::GetCullingModuleName() const
 
 char culling::ViewFrustumCulling::CheckInFrustumSIMDWithTwoPoint
 (
-	const Vec4* eightPlanes,
+	const AlignedVec4* eightPlanes,
 	const Position_BoundingSphereRadius* twoPoint
 )
 {

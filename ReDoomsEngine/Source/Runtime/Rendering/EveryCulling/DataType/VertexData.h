@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../EveryCullingCore.h"
 
@@ -8,10 +8,10 @@ namespace culling
 	{
 		eastl::atomic<uint64_t> mBinnedIndiceCount; //  8byte + ??
 
-		const culling::Vec3* mVertices; // 8byte or 4byte
+		culling::Vec3* mVertices; // 8byte or 4byte
 		uint64_t mVerticeCount; // 8byte
 
-		const uint32_t* mIndices; // 8byte or 4byte
+		uint32_t* mIndices; // 8byte or 4byte
 		uint64_t mIndiceCount; // 8byte
 
 		/// <summary>
@@ -20,6 +20,19 @@ namespace culling
 		///		-> Stride is 8byte!
 		/// </summary>
 		uint64_t mVertexStride; // 8byte
+
+		VertexData() {}
+		VertexData(const VertexData& InVertexData)
+			: 
+			mBinnedIndiceCount(0),
+			mVertices(InVertexData.mVertices),
+			mVerticeCount(InVertexData.mVerticeCount),
+			mIndices(InVertexData.mIndices),
+			mIndiceCount(InVertexData.mIndiceCount),
+			mVertexStride(InVertexData.mVertexStride)
+		{
+
+		}
 		
 		EASTL_FORCE_INLINE void Reset(const unsigned long long currentTickCount)
 		{

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CommonInclude.h"
 
@@ -9,7 +9,7 @@ class FMeshLoader
 {
 public:
 
-	static eastl::shared_ptr<F3DModel> LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder);
+	static eastl::shared_ptr<F3DModel> LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder, const bool bPreserveVertexDataOnCPUSide = true /*this is required from everyculling's cpu occlusion culling*/);
 
 private:
 };

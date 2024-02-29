@@ -1,4 +1,4 @@
-#include "BinTrianglesStage.h"
+﻿#include "BinTrianglesStage.h"
 
 #include "../MaskedSWOcclusionCulling.h"
 #include "../SWDepthBuffer.h"

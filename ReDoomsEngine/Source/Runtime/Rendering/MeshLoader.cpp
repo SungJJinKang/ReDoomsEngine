@@ -1,4 +1,4 @@
-#include "MeshLoader.h"
+﻿#include "MeshLoader.h"
 
 #include "AssetManager.h"
 #include "D3D12Resource/D3D12ResourceAllocator.h"
@@ -9,19 +9,20 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 
-eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder)
+eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder, const bool bPreserveVertexDataOnCPUSide)
 {
     eastl::shared_ptr<F3DModel> Result{};
 
     // Create an instance of the Importer class
     eastl::shared_ptr<Assimp::Importer> AssimpImporter = eastl::make_shared<Assimp::Importer>();
-
     // And have it read the given file with some example postprocessing
     // Usually - if speed is not the most important aspect for you - you'll
     // probably to request more postprocessing than we do in this example.
     const aiScene* const AssimpScene = AssimpImporter->ReadFile(WCHAR_TO_UTF8(FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePathToAssetFolder)),
         aiProcess_CalcTangentSpace |
-        aiProcess_Triangulate
+        aiProcess_Triangulate |
+		aiProcess_ConvertToLeftHanded |
+		aiProcess_GenBoundingBoxes
         );
 
     // If the import failed, report it
@@ -38,11 +39,22 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             eastl::wstring MeshName = AssimpMesh->mName.C_Str() ? ANSI_TO_WCHAR(AssimpMesh->mName.C_Str()) : InRelativePathToAssetFolder;
             
             Mesh.MeshName = MeshName;
+
+			Mesh.VertexCount = AssimpMesh->mNumVertices;
+
             Mesh.PositionBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext,
                 reinterpret_cast<const uint8_t*>(AssimpMesh->mVertices), sizeof(aiVector3D) * AssimpMesh->mNumVertices, sizeof(aiVector3D), AssimpImporter);
             #if D3D_NAME_OBJECT
             Mesh.PositionBuffer->SetDebugNameToResource((MeshName + EA_WCHAR("(VertexBuffer)")).c_str());
             #endif
+
+			static_assert(sizeof(decltype(*(AssimpMesh->mVertices))) == sizeof(decltype(Mesh.Vertices[0])));
+			static_assert(alignof(decltype(*(AssimpMesh->mVertices))) == alignof(decltype(Mesh.Vertices[0])));
+			if (bPreserveVertexDataOnCPUSide)
+			{
+				Mesh.Vertices.resize(AssimpMesh->mNumVertices);
+				EA::StdC::Memcpy(Mesh.Vertices.data(), AssimpMesh->mVertices, sizeof(aiVector3D) * AssimpMesh->mNumVertices);
+			}
 
             Mesh.NormalBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext,
                 reinterpret_cast<const uint8_t*>(AssimpMesh->mNormals), sizeof(aiVector3D) * AssimpMesh->mNumVertices, sizeof(aiVector3D), AssimpImporter);
@@ -131,11 +143,20 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
 
                 eastl::vector<uint8_t> IndexList{};
                 IndexList.resize(AssimpMesh->mNumFaces * sizeof(uint32_t) * 3); // @todo : doesn't need default initialize
+				if (bPreserveVertexDataOnCPUSide)
+				{
+					Mesh.Indices.resize(AssimpMesh->mNumFaces * 3); // @todo : doesn't need default initialize
+				}
+
                 for (uint32_t FaceIndex = 0; FaceIndex < AssimpMesh->mNumFaces; ++FaceIndex)
                 {
                     EA_ASSERT(AssimpMesh->mFaces[FaceIndex].mNumIndices == 3);
 
                     EA::StdC::Memcpy(IndexList.data() + FaceIndex * sizeof(uint32_t) * 3, AssimpMesh->mFaces[FaceIndex].mIndices, sizeof(uint32_t) * 3);
+					if (bPreserveVertexDataOnCPUSide)
+					{
+						EA::StdC::Memcpy(Mesh.Indices.data() + FaceIndex * 3, AssimpMesh->mFaces[FaceIndex].mIndices, sizeof(uint32_t) * 3);
+					}
                 }
                 eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(IndexList));
 
@@ -145,12 +166,16 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
                 #endif
 
                 Mesh.IndexCount = AssimpMesh->mNumFaces * 3;
+
+				static_assert(sizeof(decltype(*(AssimpMesh->mFaces[0].mIndices))) == sizeof(decltype(Mesh.Indices[0])));
+				static_assert(alignof(decltype(*(AssimpMesh->mFaces[0].mIndices))) == alignof(decltype(Mesh.Indices[0])));
             }
 
             {
-                XMFLOAT3 Min{ AssimpMesh->mAABB.mMin.x, AssimpMesh->mAABB.mMin.y, AssimpMesh->mAABB.mMin.z };
-                XMFLOAT3 Max{ AssimpMesh->mAABB.mMax.x, AssimpMesh->mAABB.mMax.y, AssimpMesh->mAABB.mMax.z };
-                Mesh.AABB = BoundingBox::CreateBoundingBoxFromMinMax(Min, Max);
+                Vector3 AABBMin{ AssimpMesh->mAABB.mMin.x, AssimpMesh->mAABB.mMin.y, AssimpMesh->mAABB.mMin.z };
+				Vector3 AABBMax{ AssimpMesh->mAABB.mMax.x, AssimpMesh->mAABB.mMax.y, AssimpMesh->mAABB.mMax.z };
+                Mesh.LocalSpaceAABBMin = AABBMin;
+                Mesh.LocalSpaceAABBMax = AABBMax;
             }
 
             Mesh.MaterialIndex = AssimpMesh->mMaterialIndex;
@@ -258,7 +283,6 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             }
 
         }
-
     }
     else
     {
