@@ -371,6 +371,7 @@ void FRenderObjectList::CacheModelMatrixs()
 				Vector3::Transform(LocalPositionAABBMinPointList[ObjectIndex], ModelMatrix, WorldPositionAABBMinPointList[ObjectIndex]);
 				Vector3::Transform(LocalPositionAABBMaxPointList[ObjectIndex], ModelMatrix, WorldPositionAABBMaxPointList[ObjectIndex]);
 				PositionAndWorldBoundingSphereRadiusList[ObjectIndex].w = (WorldPositionAABBMaxPointList[ObjectIndex] - WorldPositionAABBMinPointList[ObjectIndex]).Length() * 0.5f;
+				EA_ASSERT(PositionAndWorldBoundingSphereRadiusList[ObjectIndex].w > 0);
 
 				TransformDirtyList[ObjectIndex] = false;
 			}

@@ -1,4 +1,4 @@
-#include "vertexTransformationHelper.h"
+﻿#include "vertexTransformationHelper.h"
 
 void culling::vertexTransformationHelper::TransformThreeVerticesToClipSpace(culling::EVERYCULLING_M256F* outClipVertexX, culling::EVERYCULLING_M256F* outClipVertexY, culling::EVERYCULLING_M256F* outClipVertexZ, culling::EVERYCULLING_M256F* outClipVertexW, const float* const toClipspaceMatrix)
 {
@@ -70,10 +70,10 @@ void culling::vertexTransformationHelper::ConvertNDCSpaceThreeVerticesToScreenPi
 
 #elif EVERYCULLING_NDC_RANGE == EVERYCULLING_ZERO_TO_POSITIVE_ONE
 
-		outScreenPixelSpaceX[i] = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexX[i], mDepthBuffer.mResolution.mReplicatedScreenWidth);
+		outScreenPixelSpaceX[i] = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexX[i], depthBuffer.mResolution.mReplicatedScreenWidth);
 		outScreenPixelSpaceX[i] = _mm256_ceil_ps(outScreenPixelSpaceX[i]);
 
-		outScreenPixelSpaceY[i] = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexY[i], mDepthBuffer.mResolution.mReplicatedScreenHeight);
+		outScreenPixelSpaceY[i] = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexY[i], depthBuffer.mResolution.mReplicatedScreenHeight);
 		outScreenPixelSpaceY[i] = _mm256_floor_ps(outScreenPixelSpaceY[i]);
 
 #else 
@@ -99,11 +99,12 @@ void culling::vertexTransformationHelper::ConvertClipSpaceThreeVerticesToScreenP
 
 #elif EVERYCULLING_NDC_RANGE == EVERYCULLING_ZERO_TO_POSITIVE_ONE
 
-		EA_ASSERT(0); // edit this codes based on above codes
-		outScreenPixelSpaceX[i] = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexX[i], mDepthBuffer.mResolution.mReplicatedScreenWidth);
+		const culling::EVERYCULLING_M256F ndcSpaceVertexX = culling::EVERYCULLING_M256F_MUL(clipSpaceVertexX[i], clipSpaceVertexReverseW[i]);
+		outScreenPixelSpaceX[i] = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexX, depthBuffer.mResolution.mReplicatedScreenWidth);
 		outScreenPixelSpaceX[i] = _mm256_ceil_ps(outScreenPixelSpaceX[i]);
 
-		outScreenPixelSpaceY[i] = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexY[i], mDepthBuffer.mResolution.mReplicatedScreenHeight);
+		const culling::EVERYCULLING_M256F ndcSpaceVertexY = culling::EVERYCULLING_M256F_MUL(clipSpaceVertexY[i], clipSpaceVertexReverseW[i]);
+		outScreenPixelSpaceY[i] = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexY, depthBuffer.mResolution.mReplicatedScreenHeight);
 		outScreenPixelSpaceY[i] = _mm256_floor_ps(outScreenPixelSpaceY[i]);
 
 #else 
@@ -119,8 +120,8 @@ void culling::vertexTransformationHelper::ConvertNDCSpaceVertexToScreenPixelSpac
 	outScreenPixelSpaceX = culling::EVERYCULLING_M256F_MUL(culling::EVERYCULLING_M256F_ADD(ndcSpaceVertexX, _mm256_set1_ps(1.0f)), depthBuffer.mResolution.mReplicatedScreenHalfWidth);
 	outScreenPixelSpaceY = culling::EVERYCULLING_M256F_MUL(culling::EVERYCULLING_M256F_ADD(ndcSpaceVertexY, _mm256_set1_ps(1.0f)), depthBuffer.mResolution.mReplicatedScreenHalfHeight);
 #elif EVERYCULLING_NDC_RANGE == EVERYCULLING_ZERO_TO_POSITIVE_ONE
-	outScreenPixelSpaceX = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexX, mDepthBuffer.mResolution.mReplicatedScreenWidth);
-	outScreenPixelSpaceY = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexY, mDepthBuffer.mResolution.mReplicatedScreenHeight);
+	outScreenPixelSpaceX = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexX, depthBuffer.mResolution.mReplicatedScreenWidth);
+	outScreenPixelSpaceY = culling::EVERYCULLING_M256F_MUL(ndcSpaceVertexY, depthBuffer.mResolution.mReplicatedScreenHeight);
 #else 
 	EA_ASSERT(0); //NEVER HAPPEN
 #endif

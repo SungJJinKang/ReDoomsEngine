@@ -175,12 +175,12 @@ namespace culling
 				mVertexDatas[entityIndex].Reset(currentTickCount);
 			}
 			EA::StdC::Memset8(mIsVisibleBitflag, 0xFF, sizeof(uint8_t) * EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
-			EA::StdC::Memset8(mIsAllAABBClipPointWPositive.data(), 0xFF, sizeof(uint8_t) * EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK);
+			EA::StdC::Memset8(mIsAllAABBClipPointWPositive.data(), 0xFF, mIsAllAABBClipPointWPositive.size() / 8);
 		}
 
 		EASTL_FORCE_INLINE float GetDesiredMaxDrawDistance(const size_t entityIndex)
 		{
-			EA_ASSERT(mScaleAndDrawDistance[entityIndex][3] >= 0.0f);
+			//EA_ASSERT(mScaleAndDrawDistance[entityIndex][3] >= 0.0f);
 
 			return mScaleAndDrawDistance[entityIndex][3];
 		}

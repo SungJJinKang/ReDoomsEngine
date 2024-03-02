@@ -19,7 +19,7 @@ void culling::ViewFrustumCulling::DoViewFrustumCulling
 {
 	const AlignedVec4* frustumPlane = mSIMDFrustumPlanes[cameraIndex].mFrustumPlanes;
 
-	for (size_t entityIndex = 0; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK; entityIndex = entityIndex + 2)
+	for (size_t entityIndex = 0; entityIndex < entityBlock->EntityCount; entityIndex = entityIndex + 2)
 	{
 		if ( (entityBlock->GetIsCulled(entityIndex, cameraIndex) == false) || ((entityIndex + 1 < entityBlock->EntityCount) && entityBlock->GetIsCulled(entityIndex + 1, cameraIndex) == false) )
 		{

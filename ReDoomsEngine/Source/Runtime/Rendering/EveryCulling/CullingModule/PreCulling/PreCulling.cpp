@@ -119,9 +119,9 @@ void culling::PreCulling::DoPreCull
 	culling::EntityBlock* const entityBlock
 )
 {
-	for(size_t entityIndex = 0 ; entityIndex < EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK ; entityIndex++)
+	for(size_t entityIndex = 0 ; entityIndex < entityBlock->EntityCount; entityIndex++)
 	{
-		if(entityBlock->GetIsObjectEnabled(entityIndex) == false || entityIndex >= entityBlock->EntityCount)
+		if(entityBlock->GetIsObjectEnabled(entityIndex) == false)
 		{
 			entityBlock->SetCulled(entityIndex, cameraIndex);
 		}	

@@ -102,7 +102,7 @@ void D3D12TestRenderer::SceneSetup()
 	DroneDrawDesc.Desc.InputLayout = InputDesc;
 	DroneDrawDesc.Desc.BlendState = CD3DX12_BLEND_DESC{ D3D12_DEFAULT };
 	DroneDrawDesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC{ D3D12_DEFAULT };
-	DroneDrawDesc.Desc.RasterizerState.FrontCounterClockwise = true;
+	DroneDrawDesc.Desc.RasterizerState.FrontCounterClockwise = false;
 	DroneDrawDesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
 	DroneDrawDesc.Desc.DepthStencilState.DepthEnable = true;
 	DroneDrawDesc.Desc.DepthStencilState.StencilEnable = false;
@@ -124,9 +124,9 @@ void D3D12TestRenderer::SceneSetup()
 	DroneVertexData.mIndiceCount = DroneMesh->MeshList[0].IndexCount;
 	DroneVertexData.mVertexStride = 0;
 	
-	for (int32_t IndexA = -30; IndexA < 30; ++IndexA)
+	for (int32_t IndexA = 0; IndexA < 2; ++IndexA)
 	{
-		for (int32_t IndexB = -30; IndexB < 30; ++IndexB)
+		for (int32_t IndexB = 0; IndexB < 2; ++IndexB)
 		{
 			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
@@ -139,7 +139,8 @@ void D3D12TestRenderer::SceneSetup()
 			FBoundShaderSet BoundShaderSet{ ShaderList };
 			DroneDrawDesc.BoundShaderSet = BoundShaderSet;
 
-			Vector3 OrigianlPos{ 250.0f * IndexB, 250.0f * IndexA + 10.0f, -5.0f };
+			//Vector3 OrigianlPos{ 250.0f * IndexB, 250.0f * IndexA + 10.0f, -5.0f };
+			Vector3 OrigianlPos{ 0.0f, 50.0f, 50.0f };
 			FRenderObject RenderObject = RenderScene.AddRenderObject(
 				true,
 				DroneMesh->MeshList[0].LocalSpaceAABBMin,
@@ -194,29 +195,29 @@ void D3D12TestRenderer::OnStartFrame()
 
 		if (FD3D12Window::LeftArrowKeyPressed)
 		{
-			View.Transform.RotateYaw(Speed, ESpace::Self);
+			View.Transform.RotateYaw(-Speed, ESpace::Self);
 		}
 		else if (FD3D12Window::RIghtArrowKeyPressed)
 		{
-			View.Transform.RotateYaw(-Speed, ESpace::Self);
+			View.Transform.RotateYaw(+Speed, ESpace::Self);
 		}
 
 		if (FD3D12Window::UpArrowKeyPressed)
 		{
-			View.Transform.RotatePitch(Speed, ESpace::Self);
+			View.Transform.RotatePitch(-Speed, ESpace::Self);
 		}
 		else if (FD3D12Window::DownArrowKeyPressed)
 		{
-			View.Transform.RotatePitch(-Speed, ESpace::Self);
+			View.Transform.RotatePitch(Speed, ESpace::Self);
 		}
 
 		if (FD3D12Window::WKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed*50.0f, ESpace::Self);
+			View.Transform.Translate(Vector3{ 0.0f, 0.0f, 1.0f } *Speed*50.0f, ESpace::Self);
 		}
 		else if (FD3D12Window::SKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 0.0f, 0.0f, 1.0f } *Speed * 50.0f, ESpace::Self);
+			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed * 50.0f, ESpace::Self);
 		}
 
 		if (FD3D12Window::AKeyPressed)
@@ -287,7 +288,7 @@ bool D3D12TestRenderer::Draw()
 
 	for (FDrone& Drone : DroneList)
 	{
-		Drone.RenderObject.SetPosition(Drone.OriginalPos + Vector3{ Offset * 80.0f, 0.0f, 0.0f });
+		//Drone.RenderObject.SetPosition(Drone.OriginalPos + Vector3{ Offset * 80.0f, 0.0f, 0.0f });
 	}
 
 	RenderScene.PrepareToCreateMeshDrawList(View);
