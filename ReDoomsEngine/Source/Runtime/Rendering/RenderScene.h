@@ -29,10 +29,10 @@ struct FRenderObjectList
 	/// </summary>
 	eastl::vector<uint8_t> VisibleFlagsList;
 	eastl::bitvector<> TransformDirtyList;
-	eastl::vector<Vector3> LocalPositionAABBMinPointList;
-	eastl::vector<Vector3> LocalPositionAABBMaxPointList;
-	eastl::vector<AlignedVector3> WorldPositionAABBMinPointList;
-	eastl::vector<AlignedVector3> WorldPositionAABBMaxPointList;
+	eastl::vector<math::Vector3> LocalPositionAABBMinPointList;
+	eastl::vector<math::Vector3> LocalPositionAABBMaxPointList;
+	eastl::vector<math::Vector3> WorldPositionAABBMinPointList;
+	eastl::vector<math::Vector3> WorldPositionAABBMaxPointList;
 
 
 	eastl::vector<float> LocalBoundingSphereRadiusList;
@@ -40,12 +40,11 @@ struct FRenderObjectList
 	/// x, y, z : World position
 	/// w : Radius of bounding sphere
 	/// </summary>
-	eastl::vector<AlignedVector4> PositionAndWorldBoundingSphereRadiusList;
+	eastl::vector<math::Vector4> PositionAndWorldBoundingSphereRadiusList;
 
-	eastl::vector<AlignedQuaternion> RotationList;
-	eastl::vector<AlignedVector4> ScaleAndDrawDistanceList;
-	eastl::vector<AlignedMatrix> CachedModelMatrixList;
-	eastl::vector<AlignedMatrix> CachedColumnMajorModelMatrixList;
+	eastl::vector<math::Quaternion> RotationList;
+	eastl::vector<math::Vector4> ScaleAndDrawDistanceList;
+	eastl::vector<math::Matrix4x4> CachedModelMatrixList;
 	eastl::vector<culling::VertexData> EveryCullingVertexData;
 	eastl::vector<eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>> VertexBufferViewList;
 	eastl::vector<D3D12_INDEX_BUFFER_VIEW> IndexBufferViewList;
@@ -71,13 +70,13 @@ struct FRenderObject
 	void SetVisible(const EPass InPass, const bool bInVisible);
 // 	const BoundingBox& GetBoundingBox() const;
 // 	void SetBoundingBox(const BoundingBox& InBoundingBox);
-	const Vector3& GetPosition() const;
-	void SetPosition(const Vector3& InPosition);
+	const math::Vector3& GetPosition() const;
+	void SetPosition(const math::Vector3& InPosition);
 /*	float GetLocalBoundingSphereRadius() const;*/
-	const Quaternion& GetRotation() const;
-	void SetRotation(const Quaternion& InQuaternion);
-	const Vector3& GetScale() const;
-	void SetScale(const Vector3& InScale);
+	const math::Quaternion& GetRotation() const;
+	void SetRotation(const math::Quaternion& InQuaternion);
+	const math::Vector3& GetScale() const;
+	void SetScale(const math::Vector3& InScale);
 	float GetDrawDistance() const;
 	void SetDrawDistance(const float InDrawDistance);
 };
@@ -90,11 +89,11 @@ public:
 
 	EA_NODISCARD FRenderObject AddRenderObject(
 		const bool bInVisible,
-		const Vector3& InLocalPositionAABBMinPoint,
-		const Vector3& InLocalPositionAABBMaxPoint,
-		const Vector3& Position, 
-		const Quaternion& InRotation, 
-		const Vector3& InScale, 
+		const math::Vector3& InLocalPositionAABBMinPoint,
+		const math::Vector3& InLocalPositionAABBMaxPoint,
+		const math::Vector3& Position,
+		const math::Quaternion& InRotation,
+		const math::Vector3& InScale,
 		const culling::VertexData& InEveryCullingVertexData,
 		const float InDrawDistance, 
 		const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViews,
@@ -129,5 +128,5 @@ private:
 
 DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
 	MeshDrawConstantBuffer, true,
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ModelMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(math::Matrix4x4, ModelMatrix)
 )

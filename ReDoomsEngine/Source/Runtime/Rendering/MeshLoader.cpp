@@ -92,16 +92,16 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
                     EA_ASSERT(AssimpMesh->GetNumColorChannels() == 3);
 
 					eastl::vector<uint8_t> VertexColors;  // @todo : doesn't need default initialize
-					VertexColors.resize(AssimpMesh->mNumVertices * sizeof(Vector3));
+					VertexColors.resize(AssimpMesh->mNumVertices * sizeof(math::Vector3));
 
 					for (uint32_t VertexIndex = 0; VertexIndex < AssimpMesh->mNumVertices; ++VertexIndex)
 					{
-						EA::StdC::Memcpy(VertexColors.data() + VertexIndex * sizeof(Vector3), AssimpMesh->mColors[VertexColorIndex] + VertexIndex, sizeof(Vector3));
+						EA::StdC::Memcpy(VertexColors.data() + VertexIndex * sizeof(math::Vector3), AssimpMesh->mColors[VertexColorIndex] + VertexIndex, sizeof(math::Vector3));
 					}
 
 					eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(VertexColors));
 
-					Mesh.VertexColorBuffer[VertexColorIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(Vector2));
+					Mesh.VertexColorBuffer[VertexColorIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(math::Vector2));
                     #if D3D_NAME_OBJECT
 					Mesh.VertexColorBuffer[VertexColorIndex]->SetDebugNameToResource((MeshName + VertexColorsDebugName[VertexColorIndex]).c_str());
                     #endif
@@ -121,16 +121,16 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
                 if (AssimpMesh->HasTextureCoords(UVIndex))
                 {
                     eastl::vector<uint8_t> TextureCoords;  // @todo : doesn't need default initialize
-                    TextureCoords.resize(AssimpMesh->mNumVertices * sizeof(Vector2));
+                    TextureCoords.resize(AssimpMesh->mNumVertices * sizeof(math::Vector2));
 
                     for (uint32_t TextureCoordIndex = 0; TextureCoordIndex < AssimpMesh->mNumVertices; ++TextureCoordIndex)
                     {
-                        EA::StdC::Memcpy(TextureCoords.data() + TextureCoordIndex * sizeof(Vector2), AssimpMesh->mTextureCoords[UVIndex] + TextureCoordIndex, sizeof(Vector2));
+                        EA::StdC::Memcpy(TextureCoords.data() + TextureCoordIndex * sizeof(math::Vector2), AssimpMesh->mTextureCoords[UVIndex] + TextureCoordIndex, sizeof(math::Vector2));
                     }
 
                     eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(TextureCoords));
 
-                    Mesh.TexCoordBuffers[UVIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(Vector2));
+                    Mesh.TexCoordBuffers[UVIndex] = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext, eastl::move(SubresourceContainer), sizeof(math::Vector2));
                     #if D3D_NAME_OBJECT
                     Mesh.TexCoordBuffers[UVIndex]->SetDebugNameToResource((MeshName + TextureCoordsDebugName[UVIndex]).c_str());
                     #endif
@@ -172,8 +172,8 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             }
 
             {
-                Vector3 AABBMin{ AssimpMesh->mAABB.mMin.x, AssimpMesh->mAABB.mMin.y, AssimpMesh->mAABB.mMin.z };
-				Vector3 AABBMax{ AssimpMesh->mAABB.mMax.x, AssimpMesh->mAABB.mMax.y, AssimpMesh->mAABB.mMax.z };
+				math::Vector3 AABBMin{ AssimpMesh->mAABB.mMin.x, AssimpMesh->mAABB.mMin.y, AssimpMesh->mAABB.mMin.z };
+				math::Vector3 AABBMax{ AssimpMesh->mAABB.mMax.x, AssimpMesh->mAABB.mMax.y, AssimpMesh->mAABB.mMax.z };
                 Mesh.LocalSpaceAABBMin = AABBMin;
                 Mesh.LocalSpaceAABBMax = AABBMax;
             }

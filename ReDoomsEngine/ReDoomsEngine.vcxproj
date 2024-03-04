@@ -58,7 +58,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;EA_DEBUG;_HAS_EXCEPTIONS=0;MIMALLOC_VERBOSE=1;EA_ASSERT_ENABLED=1</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;EA_DEBUG;_HAS_EXCEPTIONS=0;MIMALLOC_VERBOSE=1;EA_ASSERT_ENABLED=1;JINMATH_DIRECTX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source;$(SolutionDir)Source\Editor\imgui;$(SolutionDir)Source\Editor\imgui\backends;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\include;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\DirectXTex;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\IO;$(SolutionDir)Source\Runtime\;$(SolutionDir)Source\Runtime\Utils\cityhash;$(SolutionDir)Source\Runtime\Utils\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -91,7 +91,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;JINMATH_DIRECTX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source;$(SolutionDir)Source\Editor\imgui;$(SolutionDir)Source\Editor\imgui\backends;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\include;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\DirectXTex;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\IO;$(SolutionDir)Source\Runtime\;$(SolutionDir)Source\Runtime\Utils\cityhash;$(SolutionDir)Source\Runtime\Utils\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -120,6 +120,16 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Runtime\Core\Thread.cpp" />
+    <ClCompile Include="Source\Runtime\Math\JINMATH\Matrix2x2.cpp" />
+    <ClCompile Include="Source\Runtime\Math\JINMATH\Matrix3x3.cpp" />
+    <ClCompile Include="Source\Runtime\Math\JINMATH\Matrix4x4.cpp" />
+    <ClCompile Include="Source\Runtime\Math\JINMATH\Matrix_utility.cpp" />
+    <ClCompile Include="Source\Runtime\Math\JINMATH\Quaternion_Scalar.cpp" />
+    <ClCompile Include="Source\Runtime\Math\JINMATH\SIMD_Core.cpp" />
+    <ClCompile Include="Source\Runtime\Math\JINMATH\Utility.cpp" />
+    <ClCompile Include="Source\Runtime\Math\JINMATH\Vector2.cpp" />
+    <ClCompile Include="Source\Runtime\Math\JINMATH\Vector3.cpp" />
+    <ClCompile Include="Source\Runtime\Math\JINMATH\Vector4.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Triangle.cpp" />
     <ClCompile Include="Source\Runtime\Thread\JobSystem.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\CullingModule.cpp" />
@@ -144,13 +154,12 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\ViewFrustumCulling\ViewFrustumCulling.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\EntityBlock.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Common.cpp" />
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\SIMD_Core.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\EveryCullingSIMDCore.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\EveryCulling.cpp" />
     <ClCompile Include="Source\Runtime\Utils\ConsoleVariable.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\RenderScene.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.cpp" />
-    <ClCompile Include="Source\Runtime\Math\SimpleMath.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\MeshLoader.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.cpp" />
     <ClCompile Include="Source\Runtime\Core\Profiling.cpp" />
@@ -219,6 +228,22 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
   <ItemGroup>
     <ClInclude Include="Source\Runtime\Core\Enums.h" />
     <ClInclude Include="Source\Runtime\Core\Thread.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Euler.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\JINMATHCore.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Matrix2x2.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Matrix3x3.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Matrix4x4.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Matrix_utility.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Quaternion.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Quaternion_Scalar.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\SIMD.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\SIMD_Core.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Trigonometric.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\TypeDef.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Utility.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Vector2.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Vector3.h" />
+    <ClInclude Include="Source\Runtime\Math\JINMATH\Vector4.h" />
     <ClInclude Include="Source\Runtime\STL\EASTL\test\packages\EAThread\include\eathread\eathread_pool.h" />
     <ClInclude Include="Source\Runtime\Thread\JobSystem.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\CullingModule.h" />
@@ -246,7 +271,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\AABB.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Common.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Matrix.h" />
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\SIMD_Core.h" />
+    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\EveryCullingSIMDCore.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Triangle.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\Math\Vector.h" />
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\DataType\Position_BoundingSphereRadius.h" />
@@ -645,6 +670,8 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathMisc.inl" />
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathVector.inl" />
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl" />
+    <None Include="Source\Runtime\Math\JINMATH\LICENSE" />
+    <None Include="Source\Runtime\Math\JINMATH\README.md" />
     <None Include="Source\Runtime\Math\SimpleMath.inl" />
     <None Include="Source\Runtime\Rendering\EveryCulling\.gitignore" />
     <None Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\MaskedSWOcclusionCulling_HowWorks.md" />

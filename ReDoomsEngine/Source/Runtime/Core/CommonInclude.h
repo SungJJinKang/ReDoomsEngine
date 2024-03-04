@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifndef UNICODE
 #error "ReDoomsEngine requires unicode"
@@ -38,14 +38,15 @@ using Microsoft::WRL::ComPtr;
 #include "eathread/eathread_thread.h"
 
 // Math
-#include "DirectXMath.h"
-#include "DirectXCollision.h"
-#include "DirectXColors.h"
-#include "DirectXPackedVector.h"
-#include "Math/SimpleMath.h"
+#include "Math/JINMATH/Matrix2x2.h"
+#include "Math/JINMATH/Matrix3x3.h"
+#include "Math/JINMATH/Matrix4x4.h"
+#include "Math/JINMATH/Matrix_utility.h"
+#include "Math/JINMATH/Quaternion.h"
+#include "Math/JINMATH/Vector2.h"
+#include "Math/JINMATH/Vector3.h"
+#include "Math/JINMATH/Vector4.h"
 #include "Math/MathUtils.h"
-using namespace DirectX::SimpleMath;
-using namespace DirectX;
 
 #include "Log.h"
 #include "TextHelper.h"

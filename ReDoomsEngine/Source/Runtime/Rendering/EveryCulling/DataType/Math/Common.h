@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include "../../EveryCullingCore.h"
-#include "SIMD_Core.h"
+#include "EveryCullingSIMDCore.h"
 #include "Vector.h"
 #include "Matrix.h"
 

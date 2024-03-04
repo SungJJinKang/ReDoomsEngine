@@ -35,8 +35,8 @@ struct FMesh
 	uint32_t IndexCount;
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> IndexBuffer;
 
-	Vector3 LocalSpaceAABBMin;
-	Vector3 LocalSpaceAABBMax;
+	math::Vector3 LocalSpaceAABBMin;
+	math::Vector3 LocalSpaceAABBMax;
 
 	uint32_t MaterialIndex;
 
@@ -44,7 +44,7 @@ struct FMesh
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView;
 
 	// reference original data
-	eastl::vector<Vector3> Vertices;
+	eastl::vector<math::Vector3> Vertices;
 
 	eastl::vector<uint32_t> Indices;
 

@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 
 #include "../../../EveryCullingCore.h"
 
-#include "../../../DataType/Math/SIMD_Core.h"
+#include "../../../DataType/Math/EveryCullingSIMDCore.h"
 #include "depthUtility.h"
 
 namespace culling

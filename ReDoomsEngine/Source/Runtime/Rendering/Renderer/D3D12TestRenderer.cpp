@@ -8,8 +8,8 @@ DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, ESha
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(bool, AddOffset)
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(math::Vector4, ColorOffset1)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(math::Vector4, ColorOffset2)
 		)
 		ADD_SHADER_CONSTANT_BUFFER(VertexOffset, VertexOffset)
 	)
@@ -18,9 +18,9 @@ DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, ESha
 DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset3)
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(math::Vector4, ColorOffset1)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(math::Vector4, ColorOffset3)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(math::Vector4, ColorOffset2)
 		)
 		ADD_SHADER_SRV_VARIABLE(TestTexture, EShaderParameterResourceType::Texture)
 	)
@@ -67,9 +67,9 @@ void D3D12TestRenderer::SceneSetup()
 	float m_aspectRatio = 1.0f;
 	struct Vertex
 	{
-		Vector3 position;
-		Vector4 color;
-		Vector2 uv;
+		math::Vector3 position;
+		math::Vector4 color;
+		math::Vector2 uv;
 	};
 	Vertex TriangleVertices[] =
 	{
@@ -140,14 +140,14 @@ void D3D12TestRenderer::SceneSetup()
 			DroneDrawDesc.BoundShaderSet = BoundShaderSet;
 
 			//Vector3 OrigianlPos{ 250.0f * IndexB, 250.0f * IndexA + 10.0f, -5.0f };
-			Vector3 OrigianlPos{ 0.0f, 50.0f, 50.0f };
+			math::Vector3 OrigianlPos{ 0.0f, 50.0f, 50.0f };
 			FRenderObject RenderObject = RenderScene.AddRenderObject(
 				true,
 				DroneMesh->MeshList[0].LocalSpaceAABBMin,
 				DroneMesh->MeshList[0].LocalSpaceAABBMax,
 				OrigianlPos,
-				Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f),
-				Vector3{ 0.05f, 0.05f, 0.05f },
+				math::Quaternion::EulerAngleToQuaternion(-90.0f, 180.0f, 0.0f),
+				math::Vector3{ 0.05f, 0.05f, 0.05f },
 				DroneVertexData,
 				20000.0f,
 				DroneMesh->MeshList[0].VertexBufferViewList,
@@ -213,24 +213,24 @@ void D3D12TestRenderer::OnStartFrame()
 
 		if (FD3D12Window::WKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 0.0f, 0.0f, 1.0f } *Speed*50.0f, ESpace::Self);
+			View.Transform.Translate(math::Vector3{ 0.0f, 0.0f, 1.0f } *Speed*50.0f, ESpace::Self);
 		}
 		else if (FD3D12Window::SKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed * 50.0f, ESpace::Self);
+			View.Transform.Translate(math::Vector3{ 0.0f, 0.0f, -1.0f } *Speed * 50.0f, ESpace::Self);
 		}
 
 		if (FD3D12Window::AKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ -1.0f , 0.0f, 0.0f } *Speed * 50.0f, ESpace::Self);
+			View.Transform.Translate(math::Vector3{ -1.0f , 0.0f, 0.0f } *Speed * 50.0f, ESpace::Self);
 		}
 		else if (FD3D12Window::DKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 1.0f, 0.0f, 0.0f } *Speed * 50.0f, ESpace::Self);
+			View.Transform.Translate(math::Vector3{ 1.0f, 0.0f, 0.0f } *Speed * 50.0f, ESpace::Self);
 		}
-		Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix();
-		Matrix ViewMat = View.Get3DViewMatrices();
-		Matrix ProjMat = View.GetPerspectiveProjectionMatrix();
+		math::Matrix4x4 ViewProjMat = View.GetViewPerspectiveProjectionMatrix();
+		math::Matrix4x4 ViewMat = View.Get3DViewMatrices();
+		math::Matrix4x4 ProjMat = View.GetPerspectiveProjectionMatrix();
 		ViewConstantBuffer.MemberVariables.ViewMatrix = ViewMat;
 		ViewConstantBuffer.MemberVariables.ProjectionMatrix = ProjMat;
 		ViewConstantBuffer.MemberVariables.ViewProjectionMatrix = ViewProjMat;

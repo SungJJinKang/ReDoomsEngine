@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "ShaderCompilers/ShaderCompileStructs.h"
 #include "D3D12Enums.h"
@@ -764,10 +764,10 @@ private:
 // @todo : this constant buffer should be allocated on default heap because it's modified once for a frame
 DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 	ViewConstantBuffer, false,
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, ViewMatrix)
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, ProjectionMatrix)
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, ViewProjectionMatrix)
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, PrevViewProjectionMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(math::Matrix4x4, ViewMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(math::Matrix4x4, ProjectionMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(math::Matrix4x4, ViewProjectionMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(math::Matrix4x4, PrevViewProjectionMatrix)
 )
 
 // TODO) Need to support permutation?

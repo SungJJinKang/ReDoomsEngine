@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 
@@ -56,39 +56,39 @@ struct FD3D12ConstantBufferMemberVariableHelper<double>
 };
 
 template <>
-struct FD3D12ConstantBufferMemberVariableHelper<Vector2>
+struct FD3D12ConstantBufferMemberVariableHelper<math::Vector2>
 {
 	static constexpr bool CanBeMemberOfConstantBuffer = true;
 	static constexpr size_t Alignment = 8;
 
-	using AlignedType = eastl::aligned_storage_t<sizeof(Vector2), Alignment>;
+	using AlignedType = eastl::aligned_storage_t<sizeof(math::Vector2), Alignment>;
 };
 
 template <>
-struct FD3D12ConstantBufferMemberVariableHelper<Vector3>
+struct FD3D12ConstantBufferMemberVariableHelper<math::Vector3>
 {
 	static constexpr bool CanBeMemberOfConstantBuffer = true;
 	static constexpr size_t Alignment = 16;
 
-	using AlignedType = eastl::aligned_storage_t<sizeof(Vector3), Alignment>;
+	using AlignedType = eastl::aligned_storage_t<sizeof(math::Vector3), Alignment>;
 };
 
 template <>
-struct FD3D12ConstantBufferMemberVariableHelper<Vector4>
+struct FD3D12ConstantBufferMemberVariableHelper<math::Vector4>
 {
 	static constexpr bool CanBeMemberOfConstantBuffer = true;
 	static constexpr size_t Alignment = 16;
 
-	using AlignedType = eastl::aligned_storage_t<sizeof(Vector4), Alignment>;
+	using AlignedType = eastl::aligned_storage_t<sizeof(math::Vector4), Alignment>;
 };
 
 template <>
-struct FD3D12ConstantBufferMemberVariableHelper<Matrix>
+struct FD3D12ConstantBufferMemberVariableHelper<math::Matrix4x4>
 {
 	static constexpr bool CanBeMemberOfConstantBuffer = true;
 	static constexpr size_t Alignment = 16;
 
-	using AlignedType = eastl::aligned_storage_t<sizeof(Matrix), Alignment>;
+	using AlignedType = eastl::aligned_storage_t<sizeof(math::Matrix4x4), Alignment>;
 };
 
 #define START_DEFINE_CONSTANT_BUFFER(ConstantBufferTypeName)

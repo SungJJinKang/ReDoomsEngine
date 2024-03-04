@@ -1,9 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "Common.h"
 #include "Vector.h"
 
-#include "SIMD_Core.h"
+#include "EveryCullingSIMDCore.h"
 
 namespace culling
 {

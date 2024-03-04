@@ -2,7 +2,7 @@
 
 #include "../../EveryCullingCore.h"
 
-#include "SIMD_Core.h"
+#include "EveryCullingSIMDCore.h"
 
 namespace culling
 {
@@ -58,33 +58,6 @@ namespace culling
 		{
 			return sqrtf(sqrMagnitude());
 		}
-
-		Vec3(const Vector3& InVec3)
-		{
-			x = InVec3.x;
-			y = InVec3.y;
-			z = InVec3.z;
-		}
-		Vec3(const AlignedVector3& InVec3)
-		{
-			x = InVec3.x;
-			y = InVec3.y;
-			z = InVec3.z;
-		}
-		Vec3& operator=(const Vector3& InVec3)
-		{
-			x = InVec3.x;
-			y = InVec3.y;
-			z = InVec3.z;
-			return *this;
-		}
-		Vec3& operator=(const AlignedVector3& InVec3)
-		{
-			x = InVec3.x;
-			y = InVec3.y;
-			z = InVec3.z;
-			return *this;
-		}
 	};
 
 	
@@ -137,53 +110,6 @@ namespace culling
 		EASTL_FORCE_INLINE float magnitude() const
 		{
 			return sqrtf(sqrMagnitude());
-		}
-
-		AlignedVec4(const Vector4& InVec4)
-		{
-			values[0] = InVec4.x;
-			values[1] = InVec4.y;
-			values[2] = InVec4.z;
-			values[3] = InVec4.w;
-		}
-		AlignedVec4(const AlignedVector4& InVec4)
-		{
-			values[0] = InVec4.x;
-			values[1] = InVec4.y;
-			values[2] = InVec4.z;
-			values[3] = InVec4.w;
-		}
-		AlignedVec4& operator=(const Vector4& InVec4)
-		{
-			values[0] = InVec4.x;
-			values[1] = InVec4.y;
-			values[2] = InVec4.z;
-			values[3] = InVec4.w;
-			return *this;
-		}
-		AlignedVec4& operator=(const AlignedVector4& InVec4)
-		{
-			values[0] = InVec4.x;
-			values[1] = InVec4.y;
-			values[2] = InVec4.z;
-			values[3] = InVec4.w;
-			return *this;
-		}
-
-		AlignedVec4(const Quaternion& Quat)
-		{
-			values[0] = Quat.x;
-			values[1] = Quat.y;
-			values[2] = Quat.z;
-			values[3] = Quat.w;
-		}
-		AlignedVec4& operator=(const Quaternion& Quat)
-		{
-			values[0] = Quat.x;
-			values[1] = Quat.y;
-			values[2] = Quat.z;
-			values[3] = Quat.w;
-			return *this;
 		}
 	};
 

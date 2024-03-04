@@ -9,50 +9,50 @@ enum ESpace
 
 struct FTransform
 {
-	Vector3 Position;
-	Vector3 Scale;
-	Quaternion Rotation;
+	math::Vector3 Position;
+	math::Vector3 Scale;
+	math::Quaternion Rotation;
 
-	inline Vector3 Up() const
+	inline math::Vector3 Up() const
 	{
-		return Vector3::Transform(Vector3::Up, Rotation);
+		return Rotation * math::Vector3::up;
 	}
 
-	inline Vector3 Right() const
+	inline math::Vector3 Right() const
 	{
-		return Vector3::Transform(Vector3::Right, Rotation);
+		return Rotation * math::Vector3::right;
 	}
 
-	inline Vector3 Forward() const
+	inline math::Vector3 Forward() const
 	{
-		return Vector3::Transform(Vector3::Forward, Rotation);
+		return Rotation * math::Vector3::forward;
 	}
 
-	void LookAt(const FTransform& Target, const Vector3& Up);
-	void LookAt(const Vector3& TargetPoint, const Vector3& Up);
-	void Rotate(const Quaternion& Quat);
-	void Rotate(const Vector3 EulerAngle);
-	void RotateYaw(const float EulerAngle, const ESpace& RelativeTo);
-	void RotatePitch(const float EulerAngle, const ESpace& RelativeTo);
-	void RotateAround(const Vector3& CenterPoint, const Vector3& Axis, const float Angle);
+	void LookAt(const FTransform& Target, const math::Vector3& Up);
+	void LookAt(const math::Vector3& TargetPoint, const math::Vector3& Up);
+	void Rotate(const math::Quaternion& Quat, const ESpace RelativeTo);
+	void Rotate(const math::Vector3 EulerAngle, const ESpace RelativeTo);
+	void RotateYaw(const float EulerAngle, const ESpace RelativeTo);
+	void RotatePitch(const float EulerAngle, const ESpace RelativeTo);
+	void RotateAround(const math::Vector3& CenterPoint, const math::Vector3& Axis, const float Angle);
 
-	Vector3 TransformDirection(Vector3 Direction) const
+	math::Vector3 TransformDirection(math::Vector3 Direction) const
 	{
 		Direction.Normalize();
-		return Vector3::Transform(Direction, Rotation);
+		return Rotation * Direction;
 	}
 
-	Vector3 TransformPoint(const Vector3& Point) const
+	math::Vector3 TransformPoint(const math::Vector3& Point) const
 	{
-		return Vector3::Transform(Point, Rotation);
+		return Rotation * Point;
 	}
 
-	Vector3 TransformVector(const Vector3& Vector) const
+	math::Vector3 TransformVector(const math::Vector3& Vector) const
 	{
-		return Vector3::Transform(Vector, Rotation);
+		return Rotation * Vector;
 	}
 
-	void Translate(const Vector3& Translation, const ESpace& RelativeTo)
+	void Translate(const math::Vector3& Translation, const ESpace& RelativeTo)
 	{
 		if (RelativeTo == ESpace::World)
 		{

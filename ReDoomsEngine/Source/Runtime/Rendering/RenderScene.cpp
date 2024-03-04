@@ -13,21 +13,23 @@ static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
 static TConsoleVariable<bool> GParallelCacheModelMatrixs{ "r.ParallelCacheModelMatrixs", true };
 static TConsoleVariable<uint32_t> GParallelCacheModelMatrixsObjectCountPerJob{ "r.ParallelCacheModelMatrixsObjectCountPerJob", 512 };
 
-static TConsoleVariable<bool> GEveryCullingEnable{ "r.EveryCulling.Enable", true };
+static TConsoleVariable<bool> GEveryCullingEnable{ "r.EveryCulling.Enable", false };
 static TConsoleVariable<bool> GEveryCullingPreCulling{ "r.EveryCulling.PreCulling", true };
 static TConsoleVariable<bool> GEveryCullingDistanceCulling{ "r.EveryCulling.DistanceCulling", true };
 static TConsoleVariable<bool> GEveryCullingViewFrustumCulling{ "r.EveryCulling.ViewFrustumCulling", true };
 static TConsoleVariable<bool> GEveryCullingOcculusionCulling{ "r.EveryCulling.OcculusionCulling", true };
 
 // Why this is required? : In EveryCulling library, use its own math type instead of DirectXMath's. So we should ensure that our math types have same size and alignment with matching ones.
-static_assert(sizeof(culling::AlignedVec4) == sizeof(AlignedVector4));
-static_assert(alignof(culling::AlignedVec4) == alignof (AlignedVector4));
-static_assert(sizeof(culling::AlignedVec4) == sizeof(AlignedVector3));
-static_assert(alignof(culling::AlignedVec4) == alignof (AlignedVector3));
-static_assert(sizeof(culling::Position_BoundingSphereRadius) == sizeof(AlignedVector4));
-static_assert(alignof(culling::Position_BoundingSphereRadius) == alignof (AlignedVector4));
-static_assert(sizeof(culling::Mat4x4) == sizeof(AlignedMatrix));
-static_assert(alignof(culling::Mat4x4) == alignof (AlignedMatrix));
+static_assert(sizeof(culling::AlignedVec4) == sizeof(math::Vector4));
+static_assert(alignof(culling::AlignedVec4) == alignof (math::Vector4));
+static_assert(sizeof(culling::Vec3) == sizeof(math::Vector3));
+static_assert(alignof(culling::Vec3) == alignof (math::Vector3));
+static_assert(sizeof(culling::Vec2) == sizeof(math::Vector2));
+static_assert(alignof(culling::Vec2) == alignof (math::Vector2));
+static_assert(sizeof(culling::Position_BoundingSphereRadius) == sizeof(math::Vector4));
+static_assert(alignof(culling::Position_BoundingSphereRadius) == alignof (math::Vector4));
+static_assert(sizeof(culling::Mat4x4) == sizeof(math::Matrix4x4));
+static_assert(alignof(culling::Mat4x4) == alignof (math::Matrix4x4));
 
 void FRenderScene::Init()
 {
@@ -39,11 +41,11 @@ void FRenderScene::Init()
 
 FRenderObject FRenderScene::AddRenderObject(
 	const bool bInVisible,
-	const Vector3& InLocalPositionAABBMinPoint,
-	const Vector3& InLocalPositionAABBMaxPoint,
-	const Vector3& Position, 
-	const Quaternion& InRotation,
-	const Vector3& InScale,
+	const math::Vector3& InLocalPositionAABBMinPoint,
+	const math::Vector3& InLocalPositionAABBMaxPoint,
+	const math::Vector3& Position,
+	const math::Quaternion& InRotation,
+	const math::Vector3& InScale,
 	const culling::VertexData& InEveryCullingVertexData,
 	const float InDrawDistance,
 	const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViews,
@@ -63,13 +65,12 @@ FRenderObject FRenderScene::AddRenderObject(
 	RenderObjectList.LocalPositionAABBMaxPointList.push_back(InLocalPositionAABBMaxPoint);
 	RenderObjectList.WorldPositionAABBMinPointList.push_back_uninitialized();
 	RenderObjectList.WorldPositionAABBMaxPointList.push_back_uninitialized();
-	RenderObjectList.LocalBoundingSphereRadiusList.emplace_back((InLocalPositionAABBMaxPoint - InLocalPositionAABBMinPoint).Length() * 0.5f);
+	RenderObjectList.LocalBoundingSphereRadiusList.emplace_back((InLocalPositionAABBMaxPoint - InLocalPositionAABBMinPoint).magnitude() * 0.5f);
 	RenderObjectList.PositionAndWorldBoundingSphereRadiusList.emplace_back(Position.x, Position.y, Position.z, -1);
 	RenderObjectList.RotationList.push_back(InRotation);
 	RenderObjectList.ScaleAndDrawDistanceList.emplace_back(InScale.x, InScale.y, InScale.z, InDrawDistance);
 	RenderObjectList.EveryCullingVertexData.emplace_back(InEveryCullingVertexData);
 	RenderObjectList.CachedModelMatrixList.push_back_uninitialized();
-	RenderObjectList.CachedColumnMajorModelMatrixList.push_back_uninitialized();
 	RenderObjectList.VertexBufferViewList.push_back(InVertexBufferViews);
 	RenderObjectList.IndexBufferViewList.push_back(IndexBufferView);
 	EA_ASSERT(InDrawDesc.IsValidHash());
@@ -110,7 +111,7 @@ eastl::vector<culling::EntityBlock> FRenderScene::CreateEveryCullingEntityBlockL
 		TargetEntityBlock.mIsVisibleBitflag = RenderObjectList.VisibleFlagsList.data() + StartIndex;
 		TargetEntityBlock.mAABBMinWorldPoint = reinterpret_cast<culling::AlignedVec4*>(RenderObjectList.WorldPositionAABBMinPointList.data() + StartIndex);
 		TargetEntityBlock.mAABBMaxWorldPoint = reinterpret_cast<culling::AlignedVec4*>(RenderObjectList.WorldPositionAABBMaxPointList.data() + StartIndex);
-		TargetEntityBlock.mModelMatrixes = reinterpret_cast<culling::Mat4x4*>(RenderObjectList.CachedColumnMajorModelMatrixList.data() + StartIndex);
+		TargetEntityBlock.mModelMatrixes = reinterpret_cast<culling::Mat4x4*>(RenderObjectList.CachedModelMatrixList.data() + StartIndex);
 		TargetEntityBlock.mIsObjectEnabled = reinterpret_cast<uint8_t*>(RenderObjectList.EnabledFlagsList.data()) + (StartIndex / 8);
 		TargetEntityBlock.mScaleAndDrawDistance = reinterpret_cast<culling::AlignedVec4*>(RenderObjectList.ScaleAndDrawDistanceList.data() + StartIndex);
 		TargetEntityBlock.mWorldPositionAndWorldBoundingSphereRadius = reinterpret_cast<culling::Position_BoundingSphereRadius*>(RenderObjectList.PositionAndWorldBoundingSphereRadiusList.data() + StartIndex);
@@ -136,12 +137,14 @@ void FRenderScene::PrepareToCreateMeshDrawList(const FView& InView)
 		SCOPED_MEMORY_TRACE(FRenderScene_PrepareToCreateMeshDrawList_PrepareEveryCullingData)
 
 		culling::EveryCulling::GlobalDataForCullJob GlobalDataForCullJob;
-		GlobalDataForCullJob.mViewProjectionMatrix = InView.GetViewPerspectiveProjectionMatrix();
+		const math::Matrix4x4 ViewPerspectiveProjectionMatrix = InView.GetViewPerspectiveProjectionMatrix();
+		GlobalDataForCullJob.mViewProjectionMatrix = *reinterpret_cast<const culling::Mat4x4*>(&ViewPerspectiveProjectionMatrix);
 		GlobalDataForCullJob.mFieldOfViewInDegree = InView.FovInDegree;
 		GlobalDataForCullJob.mCameraNearPlaneDistance = InView.NearPlane;
 		GlobalDataForCullJob.mCameraFarPlaneDistance = InView.FarPlane;
-		GlobalDataForCullJob.mCameraWorldPosition = InView.Transform.Position;
-		GlobalDataForCullJob.mCameraRotation = InView.Transform.Rotation;
+		GlobalDataForCullJob.mCameraWorldPosition = *reinterpret_cast<const culling::Vec3*>(&InView.Transform.Position);
+		const math::Vector4 Rot = static_cast<math::Vector4>(InView.Transform.Rotation);
+		GlobalDataForCullJob.mCameraRotation = *reinterpret_cast<const culling::AlignedVec4*>(&Rot);
 
 		EveryCulling->SetCameraCount(1);
 		{
@@ -287,12 +290,12 @@ void FRenderObject::SetVisible(const EPass InPass, const bool bInVisible)
 // 	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z = InBoundingBox.LengthOfCenterToCorner();
 // }
 
-const DirectX::SimpleMath::Vector3& FRenderObject::GetPosition() const
+const math::Vector3& FRenderObject::GetPosition() const
 {
-	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(RenderObjectList->PositionAndWorldBoundingSphereRadiusList[ObjectIndex]);
+	return reinterpret_cast<const math::Vector3&>(RenderObjectList->PositionAndWorldBoundingSphereRadiusList[ObjectIndex]);
 }
 
-void FRenderObject::SetPosition(const Vector3& InPosition)
+void FRenderObject::SetPosition(const math::Vector3& InPosition)
 {
 	RenderObjectList->PositionAndWorldBoundingSphereRadiusList[ObjectIndex].x = InPosition.x;
 	RenderObjectList->PositionAndWorldBoundingSphereRadiusList[ObjectIndex].y = InPosition.y;
@@ -306,24 +309,24 @@ void FRenderObject::SetPosition(const Vector3& InPosition)
 // 	return RenderObjectList->PositionAndWorldBoundingSphereRadiusList[ObjectIndex].z;
 // }
 
-const DirectX::SimpleMath::Quaternion& FRenderObject::GetRotation() const
+const math::Quaternion& FRenderObject::GetRotation() const
 {
 	return RenderObjectList->RotationList[ObjectIndex];
 }
 
-void FRenderObject::SetRotation(const Quaternion& InQuaternion)
+void FRenderObject::SetRotation(const math::Quaternion& InQuaternion)
 {
 	RenderObjectList->RotationList[ObjectIndex] = InQuaternion;
 
 	RenderObjectList->TransformDirtyList.set(ObjectIndex, true);
 }
 
-const DirectX::SimpleMath::Vector3& FRenderObject::GetScale() const
+const math::Vector3& FRenderObject::GetScale() const
 {
-	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex]);
+	return reinterpret_cast<const math::Vector3&>(RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex]);
 }
 
-void FRenderObject::SetScale(const Vector3& InScale)
+void FRenderObject::SetScale(const math::Vector3& InScale)
 {
 	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].x = InScale.x;
 	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].y = InScale.y;
@@ -358,19 +361,23 @@ void FRenderObjectList::CacheModelMatrixs()
 		{
 			if (TransformDirtyList[ObjectIndex])
 			{
-				const Matrix ModelMatrix = Matrix::CreateTranslation(
+				const math::Matrix4x4 ModelMatrix = math::translate(
 					PositionAndWorldBoundingSphereRadiusList[ObjectIndex].x,
 					PositionAndWorldBoundingSphereRadiusList[ObjectIndex].y,
 					PositionAndWorldBoundingSphereRadiusList[ObjectIndex].z);
 
-				const Matrix RotationMatrix = Matrix::CreateFromQuaternion(RotationList[ObjectIndex]);
-				const Matrix ScaleMatrix = Matrix::CreateScale(ScaleAndDrawDistanceList[ObjectIndex].x, ScaleAndDrawDistanceList[ObjectIndex].y, ScaleAndDrawDistanceList[ObjectIndex].z);
+				//const math::Matrix4x4 RotationMatrix = static_cast<math::Matrix4x4>(RotationList[ObjectIndex]);
+				//const math::Matrix4x4 RotationMatrix = static_cast<math::Matrix4x4>(math::Quaternion::);
+				const math::Matrix4x4 RotationMatrix = math::rotate(0.0f, math::Vector3::up);
+				//const math::Matrix4x4 ScaleMatrix = math::scale(ScaleAndDrawDistanceList[ObjectIndex].x, ScaleAndDrawDistanceList[ObjectIndex].y, ScaleAndDrawDistanceList[ObjectIndex].z);
+				const math::Matrix4x4 ScaleMatrix = math::scale(1.0f, 1.0f, 1.0f);
 
 				CachedModelMatrixList[ObjectIndex] = ModelMatrix * RotationMatrix * ScaleMatrix;
-				CachedColumnMajorModelMatrixList[ObjectIndex] = CachedModelMatrixList[ObjectIndex].Transpose();
-				Vector3::Transform(LocalPositionAABBMinPointList[ObjectIndex], ModelMatrix, WorldPositionAABBMinPointList[ObjectIndex]);
-				Vector3::Transform(LocalPositionAABBMaxPointList[ObjectIndex], ModelMatrix, WorldPositionAABBMaxPointList[ObjectIndex]);
-				PositionAndWorldBoundingSphereRadiusList[ObjectIndex].w = (WorldPositionAABBMaxPointList[ObjectIndex] - WorldPositionAABBMinPointList[ObjectIndex]).Length() * 0.5f;
+				
+				WorldPositionAABBMinPointList[ObjectIndex] = ModelMatrix * LocalPositionAABBMinPointList[ObjectIndex];
+				WorldPositionAABBMinPointList[ObjectIndex] = ModelMatrix * LocalPositionAABBMinPointList[ObjectIndex];
+				WorldPositionAABBMaxPointList[ObjectIndex] = ModelMatrix * LocalPositionAABBMaxPointList[ObjectIndex];
+				PositionAndWorldBoundingSphereRadiusList[ObjectIndex].w = (WorldPositionAABBMaxPointList[ObjectIndex] - WorldPositionAABBMinPointList[ObjectIndex]).magnitude() * 0.5f;
 				EA_ASSERT(PositionAndWorldBoundingSphereRadiusList[ObjectIndex].w > 0);
 
 				TransformDirtyList[ObjectIndex] = false;
@@ -417,7 +424,6 @@ void FRenderObjectList::Reserve(const size_t InSize)
 	ScaleAndDrawDistanceList.reserve(InSize);
 	EveryCullingVertexData.reserve(InSize);
 	CachedModelMatrixList.reserve(InSize);
-	CachedColumnMajorModelMatrixList.reserve(InSize);
 	VertexBufferViewList.reserve(InSize);
 	IndexBufferViewList.reserve(InSize);
 	TemplateDrawDescList.reserve(InSize);

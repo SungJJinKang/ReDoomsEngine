@@ -1,13 +1,8 @@
-#pragma once
+﻿#pragma once
 
-#include "DirectXMath.h"
-#include "DirectXCollision.h"
-#include "DirectXColors.h"
-#include "DirectXPackedVector.h"
-#include "Math/SimpleMath.h"
-
-using namespace DirectX::SimpleMath;
-using namespace DirectX;
+inline constexpr float PI = 3.14159265358979323846f;
+inline constexpr float DEGREE_TO_RADIAN = PI / 180.0f;
+inline constexpr float RADIAN_TO_DEGREE = 180.0f / PI;
 
 template <typename T>
 EASTL_FORCE_INLINE constexpr T Align(T Val, uint64_t Alignment)

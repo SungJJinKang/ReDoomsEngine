@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "Renderer/Renderer.h"
 
@@ -6,13 +6,13 @@ struct F3DModel;
 
 DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
 	VertexOffset, true,
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, Offset)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(math::Vector4, Offset)
 )
 
 struct FDrone
 {
 	FRenderObject RenderObject;
-	Vector3 OriginalPos;
+	math::Vector3 OriginalPos;
 };
 
 class D3D12TestRenderer : public FRenderer

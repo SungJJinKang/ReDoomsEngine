@@ -1,4 +1,4 @@
-#include "TextureLoader.h"
+﻿#include "TextureLoader.h"
 
 #include <filesystem>
 
@@ -26,11 +26,11 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12Co
 	HRESULT HR;
 	if (AbsoluePath.extension().string() == ".dds")
 	{
-		HR = DirectX::LoadFromDDSFile(AbsoluePath.c_str(), DDS_FLAGS::DDS_FLAGS_NONE, &Metadata, ScreatchImage);
+		HR = DirectX::LoadFromDDSFile(AbsoluePath.c_str(), DirectX::DDS_FLAGS::DDS_FLAGS_NONE, &Metadata, ScreatchImage);
 	}
 	else
 	{
-		HR = DirectX::LoadFromWICFile(AbsoluePath.c_str(), WIC_FLAGS::WIC_FLAGS_NONE, &Metadata, ScreatchImage);
+		HR = DirectX::LoadFromWICFile(AbsoluePath.c_str(), DirectX::WIC_FLAGS::WIC_FLAGS_NONE, &Metadata, ScreatchImage);
 	}
 
 	if (!FAILED(HR))
@@ -42,20 +42,20 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12Co
 
 		{
 			DXGI_FORMAT DXGIFormat = Metadata.format;
-			if (InCreateTexFlag & CREATETEX_FORCE_SRGB)
+			if (InCreateTexFlag & DirectX::CREATETEX_FORCE_SRGB)
 			{
-				DXGIFormat = MakeSRGB(DXGIFormat);
+				DXGIFormat = DirectX::MakeSRGB(DXGIFormat);
 			}
-			else if (InCreateTexFlag & CREATETEX_IGNORE_SRGB)
+			else if (InCreateTexFlag & DirectX::CREATETEX_IGNORE_SRGB)
 			{
-				DXGIFormat = MakeLinear(DXGIFormat);
+				DXGIFormat = DirectX::MakeLinear(DXGIFormat);
 			}
 
 			D3D12_RESOURCE_DESC desc = {};
 			desc.Width = static_cast<UINT>(Metadata.width);
 			desc.Height = static_cast<UINT>(Metadata.height);
 			desc.MipLevels = static_cast<UINT16>(Metadata.mipLevels);
-			desc.DepthOrArraySize = (Metadata.dimension == TEX_DIMENSION_TEXTURE3D)
+			desc.DepthOrArraySize = (Metadata.dimension == DirectX::TEX_DIMENSION_TEXTURE3D)
 				? static_cast<UINT16>(Metadata.depth)
 				: static_cast<UINT16>(Metadata.arraySize);
 			desc.Format = DXGIFormat;

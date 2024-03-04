@@ -10,10 +10,10 @@ public:
 
 	FView();
 
-	Matrix Get3DViewMatrices() const;
-	Matrix GetPerspectiveProjectionMatrix() const;
-	Matrix GetViewPerspectiveProjectionMatrix() const;
-	Matrix GetOrthoProjMatrices() const;
+	math::Matrix4x4 Get3DViewMatrices() const;
+	math::Matrix4x4 GetPerspectiveProjectionMatrix() const;
+	math::Matrix4x4 GetViewPerspectiveProjectionMatrix() const;
+	math::Matrix4x4 GetOrthoProjMatrices() const;
 	void Reset();
 
 	FTransform Transform;
