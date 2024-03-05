@@ -14,7 +14,7 @@ namespace culling
 	void NormalizePlane(AlignedVec4& plane) noexcept;
 
 	/// <summary>
-		/// Extract 6 Planes ( 8 Planes ) From MVPMatrix
+		/// Extract 6 Planes ( 8 Planes ) From View projection matrix
 		/// SIMD Version
 		///  sixPlanes[0] : x of Plane0, y of Plane0, z of Plane0, w of Plane0
 		///  sixPlanes[1] : x of Plane1, y of Plane1, z of Plane1, w of Plane1

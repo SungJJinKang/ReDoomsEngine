@@ -1,8 +1,8 @@
-#include "D3D12ConstantBufferRingBuffer.h"
+﻿#include "D3D12ConstantBufferRingBuffer.h"
 #include "D3D12Resource.h"
 #include "Renderer/Renderer.h"
 
-static uint64_t GRingBufferSize = D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT * 10000 * GNumBackBufferCount;
+static uint64_t GRingBufferSize = D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT * 1000 * GNumBackBufferCount;
 
 void FD3D12ConstantBufferRingBuffer::Init()
 {
@@ -43,19 +43,9 @@ FD3D12ConstantBufferBlock FD3D12ConstantBufferRingBuffer::Allocate(uint64_t InSi
 
 		for (uint32_t BackBufferIndex = 0; BackBufferIndex < GNumBackBufferCount; ++BackBufferIndex)
 		{
-			if ((BackBufferIndex == GCurrentBackbufferIndex) && !bAnyAllocedThisFrame)
+			if (StartOffset < OffsetFromBaseWhenStartFrameList[BackBufferIndex] && EndOffset > OffsetFromBaseWhenStartFrameList[BackBufferIndex])
 			{
-				if (StartOffset < OffsetFromBaseWhenStartFrameList[BackBufferIndex] && EndOffset > OffsetFromBaseWhenStartFrameList[BackBufferIndex])
-				{
-					EXHAUST_RING_BUFFER;
-				}
-			}
-			else
-			{
-				if (StartOffset <= OffsetFromBaseWhenStartFrameList[BackBufferIndex] && EndOffset > OffsetFromBaseWhenStartFrameList[BackBufferIndex])
-				{
-					EXHAUST_RING_BUFFER;
-				}
+				EXHAUST_RING_BUFFER;
 			}
 		}
 	}

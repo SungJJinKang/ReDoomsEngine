@@ -208,9 +208,6 @@ ANSI_TO_WCHAR(ErrorStr.c_str()));
 			break;
 		}
 
-		// Unpack uniform matrices as row-major to match the CPU layout.
-		//DXCArguements.emplace_back(DXC_ARG_PACK_MATRIX_ROW_MAJOR);
-
 		DXCArguements.emplace_back(DXC_ARG_DEBUG_NAME_FOR_SOURCE); // this is required for DXC_OUT_SHADER_HASH
 
 		// disable undesired warnings

@@ -1,4 +1,4 @@
-#include "Common.hlsl"
+﻿#include "Common.hlsl"
 
 #include "MeshDrawCommon.hlsl"
 
@@ -27,11 +27,11 @@ PSInput MainVS(
     float4 NewPosition = float4(Position, 1.0f);
 
     Normal.z *= -1.0f;
-    NewPosition = mul(NewPosition, ModelMatrix);
+    NewPosition = mul(ModelMatrix, NewPosition);
 
     Result.WorldPosition = NewPosition;
 
-    NewPosition = mul(NewPosition, ViewProjectionMatrix);
+    NewPosition = mul(ViewProjectionMatrix, NewPosition);
 
     Result.Position = NewPosition;
     Result.UV0 = UV0;

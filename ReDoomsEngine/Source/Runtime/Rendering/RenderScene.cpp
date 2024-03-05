@@ -137,7 +137,7 @@ void FRenderScene::PrepareToCreateMeshDrawList(const FView& InView)
 		SCOPED_MEMORY_TRACE(FRenderScene_PrepareToCreateMeshDrawList_PrepareEveryCullingData)
 
 		culling::EveryCulling::GlobalDataForCullJob GlobalDataForCullJob;
-		const math::Matrix4x4 ViewPerspectiveProjectionMatrix = InView.GetViewPerspectiveProjectionMatrix();
+		const math::Matrix4x4 ViewPerspectiveProjectionMatrix = InView.GetViewPerspectiveProjectionMatrix(true);
 		GlobalDataForCullJob.mViewProjectionMatrix = *reinterpret_cast<const culling::Mat4x4*>(&ViewPerspectiveProjectionMatrix);
 		GlobalDataForCullJob.mFieldOfViewInDegree = InView.FovInDegree;
 		GlobalDataForCullJob.mCameraNearPlaneDistance = InView.NearPlane;
@@ -361,22 +361,19 @@ void FRenderObjectList::CacheModelMatrixs()
 		{
 			if (TransformDirtyList[ObjectIndex])
 			{
-				const math::Matrix4x4 ModelMatrix = math::translate(
+				const math::Matrix4x4 TranslationMatrix = math::translate(
 					PositionAndWorldBoundingSphereRadiusList[ObjectIndex].x,
 					PositionAndWorldBoundingSphereRadiusList[ObjectIndex].y,
 					PositionAndWorldBoundingSphereRadiusList[ObjectIndex].z);
 
-				//const math::Matrix4x4 RotationMatrix = static_cast<math::Matrix4x4>(RotationList[ObjectIndex]);
-				//const math::Matrix4x4 RotationMatrix = static_cast<math::Matrix4x4>(math::Quaternion::);
-				const math::Matrix4x4 RotationMatrix = math::rotate(0.0f, math::Vector3::up);
-				//const math::Matrix4x4 ScaleMatrix = math::scale(ScaleAndDrawDistanceList[ObjectIndex].x, ScaleAndDrawDistanceList[ObjectIndex].y, ScaleAndDrawDistanceList[ObjectIndex].z);
-				const math::Matrix4x4 ScaleMatrix = math::scale(1.0f, 1.0f, 1.0f);
+				const math::Matrix4x4 RotationMatrix = static_cast<math::Matrix4x4>(math::Quaternion{1.0f, 0.0f, 0.0f, 0.0f});
+				const math::Matrix4x4 ScaleMatrix = math::scale(ScaleAndDrawDistanceList[ObjectIndex].x, ScaleAndDrawDistanceList[ObjectIndex].y, ScaleAndDrawDistanceList[ObjectIndex].z);
 
-				CachedModelMatrixList[ObjectIndex] = ModelMatrix * RotationMatrix * ScaleMatrix;
+				CachedModelMatrixList[ObjectIndex] = TranslationMatrix * RotationMatrix * ScaleMatrix;
 				
-				WorldPositionAABBMinPointList[ObjectIndex] = ModelMatrix * LocalPositionAABBMinPointList[ObjectIndex];
-				WorldPositionAABBMinPointList[ObjectIndex] = ModelMatrix * LocalPositionAABBMinPointList[ObjectIndex];
-				WorldPositionAABBMaxPointList[ObjectIndex] = ModelMatrix * LocalPositionAABBMaxPointList[ObjectIndex];
+				WorldPositionAABBMinPointList[ObjectIndex] = TranslationMatrix * LocalPositionAABBMinPointList[ObjectIndex];
+				WorldPositionAABBMinPointList[ObjectIndex] = TranslationMatrix * LocalPositionAABBMinPointList[ObjectIndex];
+				WorldPositionAABBMaxPointList[ObjectIndex] = TranslationMatrix * LocalPositionAABBMaxPointList[ObjectIndex];
 				PositionAndWorldBoundingSphereRadiusList[ObjectIndex].w = (WorldPositionAABBMaxPointList[ObjectIndex] - WorldPositionAABBMinPointList[ObjectIndex]).magnitude() * 0.5f;
 				EA_ASSERT(PositionAndWorldBoundingSphereRadiusList[ObjectIndex].w > 0);
 

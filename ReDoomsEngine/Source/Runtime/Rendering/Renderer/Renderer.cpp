@@ -104,6 +104,9 @@ void FRenderer::OnStartFrame()
 
 	JobSystem.OnStartFrame(CurrentFrameCommandContext);
 	D3D12Manager.OnStartFrame(CurrentFrameCommandContext);
+
+	CurrentFrameCommandContext.StateCache.ApplyDescriptorHeap(*CurrentFrameCommandContext.GraphicsCommandList.get());
+
 	FImguiHelperSingleton::GetInstance()->NewFrame();
 }
 

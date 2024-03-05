@@ -3,6 +3,8 @@
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "MeshLoader.h"
 #include "RenderScene.h"
+#include "Editor/imguiHelper.h"
+#include "imgui.h"
 
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
@@ -124,9 +126,9 @@ void D3D12TestRenderer::SceneSetup()
 	DroneVertexData.mIndiceCount = DroneMesh->MeshList[0].IndexCount;
 	DroneVertexData.mVertexStride = 0;
 	
-	for (int32_t IndexA = 0; IndexA < 2; ++IndexA)
+	for (int32_t IndexA = 0; IndexA < 1; ++IndexA)
 	{
-		for (int32_t IndexB = 0; IndexB < 2; ++IndexB)
+		for (int32_t IndexB = 0; IndexB < 1; ++IndexB)
 		{
 			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
@@ -191,24 +193,24 @@ void D3D12TestRenderer::OnStartFrame()
 	}
 
 	{
-		float Speed = GTimeDelta * 3.0f;
+		float Speed = GTimeDelta * 5.0f;
 
 		if (FD3D12Window::LeftArrowKeyPressed)
 		{
-			View.Transform.RotateYaw(-Speed, ESpace::Self);
+			View.Transform.RotateYaw(-Speed * 10.0f, ESpace::Self);
 		}
 		else if (FD3D12Window::RIghtArrowKeyPressed)
 		{
-			View.Transform.RotateYaw(+Speed, ESpace::Self);
+			View.Transform.RotateYaw(+Speed * 10.0f, ESpace::Self);
 		}
 
 		if (FD3D12Window::UpArrowKeyPressed)
 		{
-			View.Transform.RotatePitch(-Speed, ESpace::Self);
+			View.Transform.RotatePitch(-Speed * 10.0f, ESpace::Self);
 		}
 		else if (FD3D12Window::DownArrowKeyPressed)
 		{
-			View.Transform.RotatePitch(Speed, ESpace::Self);
+			View.Transform.RotatePitch(Speed * 10.0f, ESpace::Self);
 		}
 
 		if (FD3D12Window::WKeyPressed)

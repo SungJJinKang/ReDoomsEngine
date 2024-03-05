@@ -120,14 +120,22 @@ math::Quaternion math::Quaternion::CreateFromAxisAngle(const float& angle, const
 
 math::Quaternion math::Quaternion::EulerAngleToQuaternion(const Vector3& eulerAngle) noexcept
 {
-	Vector3 c = math::cos(eulerAngle * float(0.5f));
-	Vector3 s = math::sin(eulerAngle * float(0.5f));
+	float xOver2 = eulerAngle.x * DEGREE_TO_RADIAN * 0.5f;
+	float yOver2 = eulerAngle.y * DEGREE_TO_RADIAN * 0.5f;
+	float zOver2 = eulerAngle.z * DEGREE_TO_RADIAN * 0.5f;
 
-	Quaternion result{};
-	result.w = c.x * c.y * c.z + s.x * s.y * s.z;
-	result.x = s.x * c.y * c.z - c.x * s.y * s.z;
-	result.y = c.x * s.y * c.z + s.x * c.y * s.z;
-	result.z = c.x * c.y * s.z - s.x * s.y * c.z;
+	float sinXOver2 = std::sin(xOver2);
+	float cosXOver2 = std::cos(xOver2);
+	float sinYOver2 = std::sin(yOver2);
+	float cosYOver2 = std::cos(yOver2);
+	float sinZOver2 = std::sin(zOver2);
+	float cosZOver2 = std::cos(zOver2);
+
+	Quaternion result;
+	result.x = cosYOver2 * sinXOver2 * cosZOver2 + sinYOver2 * cosXOver2 * sinZOver2;
+	result.y = sinYOver2 * cosXOver2 * cosZOver2 - cosYOver2 * sinXOver2 * sinZOver2;
+	result.z = cosYOver2 * cosXOver2 * sinZOver2 - sinYOver2 * sinXOver2 * cosZOver2;
+	result.w = cosYOver2 * cosXOver2 * cosZOver2 + sinYOver2 * sinXOver2 * sinZOver2;
 
 	return result;
 }

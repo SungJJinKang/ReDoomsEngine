@@ -59,14 +59,23 @@ math::Matrix4x4 FView::Get3DViewMatrices() const
 	return math::lookAt(Eye, Eye + Forward, Up);
 }
 
-math::Matrix4x4 FView::GetPerspectiveProjectionMatrix() const
+math::Matrix4x4 FView::GetPerspectiveProjectionMatrix(const bool bNDCNegativeOneToOne) const
 {
-	return math::perspectiveFov(FovInDegree * DEGREE_TO_RADIAN, ScreenHeight, NearPlane, NearPlane, FarPlane);
+	math::Matrix4x4 PerspectiveProjectionMatrix = math::perspectiveFov(FovInDegree * DEGREE_TO_RADIAN, ScreenWidth, ScreenHeight, NearPlane, FarPlane);
+	
+#if (JINMATH_CURRENT_SETTING | JINMATH_CLIP_RANGE_ZERO_TO_ONE)
+	if (bNDCNegativeOneToOne)
+	{
+		static const math::Matrix4x4 ZOffsetMatrix = math::translate(math::Vector3{ 0, 0, -1.0f }) * math::scale(math::Vector3{ 1.0f, 1.0f, 2.0f });
+		PerspectiveProjectionMatrix = ZOffsetMatrix * PerspectiveProjectionMatrix;
+	}
+#endif
+	return PerspectiveProjectionMatrix;
 }
 
-math::Matrix4x4 FView::GetViewPerspectiveProjectionMatrix() const
+math::Matrix4x4 FView::GetViewPerspectiveProjectionMatrix(const bool bNDCNegativeOneToOne) const
 {
-	return GetPerspectiveProjectionMatrix() * Get3DViewMatrices();
+	return GetPerspectiveProjectionMatrix(bNDCNegativeOneToOne) * Get3DViewMatrices();
 }
 
 math::Matrix4x4 FView::GetOrthoProjMatrices() const
@@ -76,7 +85,7 @@ math::Matrix4x4 FView::GetOrthoProjMatrices() const
 
 void FView::Reset()
 {
-	Transform.Position = math::Vector3{ 0.0f, 50.0f, -50.0f };
+	Transform.Position = math::Vector3{ 0.0f, 0.0f, -50.0f };
 	Transform.Scale = math::Vector3{ 1.0f, 1.0f, 1.0f };
 	Transform.Rotation = math::Quaternion::LookAt(math::Vector3::forward, math::Vector3::up);
 	NearPlane = 0.01f;

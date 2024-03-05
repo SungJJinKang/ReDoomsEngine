@@ -16,6 +16,7 @@ namespace math
 {
 	/// <summary>
 	/// This class is made for SIMD computation. So it's aligned to 16 byte
+	/// Column vector
 	/// </summary>
 	struct alignas(16) Vector4
 	{

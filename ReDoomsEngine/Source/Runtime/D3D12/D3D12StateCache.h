@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "D3D12Include.h"
 #include "D3D12PSO.h"
 #include "D3D12Resource/D3D12Mesh.h"
@@ -30,6 +30,8 @@ public:
 	void SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)>& InVertexBufferViewList);
 	void SetIndexBufferView(const D3D12_INDEX_BUFFER_VIEW InIndexBufferView);
 
+	void ApplyDescriptorHeap(FD3D12CommandList& InCommandList);
+
 	void Flush(FD3D12CommandContext& InCommandList, const EPipeline InPipeline);
 	void ResetForNewCommandlist();
 	void ResetToDefault();
@@ -41,7 +43,6 @@ private:
 	void ApplyPSO(FD3D12CommandList& InCommandList);
 	void ApplyRTVAndDSV(FD3D12CommandList& InCommandList);
 	void ApplyRootSignature(FD3D12CommandList& InCommandList);
-	void ApplyDescriptorHeap(FD3D12CommandList& InCommandList);
 	void ApplySRVs(FD3D12CommandList& InCommandList, const FD3D12DescriptorHeapBlock& BaseHeapBlcok, uint32_t& OutUsedBlockCount);
 	void ApplyUAVs(FD3D12CommandList& InCommandList, const FD3D12DescriptorHeapBlock& BaseHeapBlcok, uint32_t& OutUsedBlockCount);
 	void ApplyConstantBuffers(FD3D12CommandList& InCommandList);

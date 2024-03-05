@@ -10,6 +10,7 @@ namespace math
 	struct Vector4;
 
 	// never put alignas
+	/// Column vector
 	struct Vector3
 	{
 		using value_type = float;
