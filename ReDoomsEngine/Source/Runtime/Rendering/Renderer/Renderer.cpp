@@ -58,6 +58,7 @@ void FRenderer::Init()
 
 	CurrentFrameCommandContext.StateCache.ResetToDefault();
 
+	RenderScene.Init();
 	RenderScene.RenderObjectList.Reserve(500);
 }
 
