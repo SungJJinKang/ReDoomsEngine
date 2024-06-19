@@ -12,9 +12,9 @@ static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
 static TConsoleVariable<bool> GParallelCacheModelMatrixs{ "r.ParallelCacheModelMatrixs", true };
 static TConsoleVariable<uint32_t> GParallelCacheModelMatrixsObjectCountPerJob{ "r.ParallelCacheModelMatrixsObjectCountPerJob", 512 };
 
-static TConsoleVariable<bool> GEveryCullingPreCulling{ "r.EveryCulling.PreCulling", true };
 static TConsoleVariable<bool> GEveryCullingEnable{ "r.EveryCulling.Enable", true };
 static TConsoleVariable<bool> GEveryCullingParallel{ "r.EveryCulling.Parallel", true };
+static TConsoleVariable<bool> GEveryCullingPreCulling{ "r.EveryCulling.PreCulling", true, EConsoleVariableFlag::HideInEditor };
 static TConsoleVariable<bool> GEveryCullingDistanceCulling{ "r.EveryCulling.DistanceCulling", true };
 static TConsoleVariable<bool> GEveryCullingViewFrustumCulling{ "r.EveryCulling.ViewFrustumCulling", true };
 
