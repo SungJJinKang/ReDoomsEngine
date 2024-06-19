@@ -10,6 +10,8 @@ Build!
 - [ ] GPU Driven Rendering
 - [ ] Visibility Buffer, Deferred Texturing
 - [ ] Render Graph
+- [ ] Virtual Texturing
+- [ ] Virtual Shadow Map
 ## Third party
 [Assimp](https://github.com/assimp/assimp)        
 [cityhash](https://github.com/google/cityhash)        
