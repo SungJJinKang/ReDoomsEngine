@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "EASTL/hash_map.h"
 #include "EAStdC/EASingleton.h"
 
@@ -21,11 +21,17 @@ private:
 };
 class FConsoleVariableManagerSingleton : public EA::StdC::SingletonAdapter<FConsoleVariableManager, true> { };
 
+enum EConsoleVariableFlag
+{
+	DefaultConsoleVariableFlag = 0,
+	HideInEditor = 1 << 0
+};
+
 class FConsoleVariable
 {
 public:
 
-	FConsoleVariable(const char* const InName);
+	FConsoleVariable(const char* const InName, const EConsoleVariableFlag InConsoleVariableFlag = EConsoleVariableFlag::DefaultConsoleVariableFlag);
 
 	inline const char* GetName() const
 	{
@@ -55,9 +61,15 @@ public:
 	virtual bool IsDouble() const = 0;
 	virtual bool IsBoolean() const = 0;
 
+	inline EConsoleVariableFlag GetConsoleVariableFlag()
+	{
+		return ConsoleVariableFlag;
+	}
+
 private:
 
 	const char* Name;
+	EConsoleVariableFlag ConsoleVariableFlag;
 };
 
 EA_DISABLE_VC_WARNING(4244)
@@ -68,8 +80,8 @@ class TConsoleVariable : public FConsoleVariable
 public:
 
 	template<typename InitialDataType>
-	TConsoleVariable(const char* const InName, const InitialDataType InInitialData)
-		: FConsoleVariable(InName), Data(static_cast<Type>(InInitialData))
+	TConsoleVariable(const char* const InName, const InitialDataType InInitialData, const EConsoleVariableFlag InConsoleVariableFlag = EConsoleVariableFlag::DefaultConsoleVariableFlag)
+		: FConsoleVariable(InName, InConsoleVariableFlag), Data(static_cast<Type>(InInitialData))
 	{
 		// @todo : read from *.ini
 
@@ -167,7 +179,6 @@ public:
 private:
 
 	Type Data;
-
 };
 
 EA_RESTORE_VC_WARNING()
