@@ -1,4 +1,4 @@
-#include "ConsoleVariable.h"
+﻿#include "ConsoleVariable.h"
 
 #include "CommonInclude.h"
 #include "Editor/imguiHelper.h"
@@ -36,65 +36,68 @@ static struct FRegisterConsoleVariableImguiCallback
 
 				for (auto& ConsoleVariable : ConsoleVariables)
 				{
-					if (ConsoleVariable.second->IsBoolean())
+					if (!(ConsoleVariable.second->GetConsoleVariableFlag() & EConsoleVariableFlag::HideInEditor))
 					{
-						bool bIsChecked = ConsoleVariable.second->GetBool();
-						if (ImGui::Checkbox(ConsoleVariable.first, &bIsChecked))
+						if (ConsoleVariable.second->IsBoolean())
 						{
-							ConsoleVariable.second->SetBool(bIsChecked);
+							bool bIsChecked = ConsoleVariable.second->GetBool();
+							if (ImGui::Checkbox(ConsoleVariable.first, &bIsChecked))
+							{
+								ConsoleVariable.second->SetBool(bIsChecked);
+							}
 						}
-					}
-					else if (ConsoleVariable.second->IsInt32())
-					{
-						int32_t Value = ConsoleVariable.second->GetInt();
-						if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_S32, &Value))
+						else if (ConsoleVariable.second->IsInt32())
 						{
-							ConsoleVariable.second->SetInt(Value);
+							int32_t Value = ConsoleVariable.second->GetInt();
+							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_S32, &Value))
+							{
+								ConsoleVariable.second->SetInt(Value);
+							}
 						}
-					}
-					else if (ConsoleVariable.second->IsUInt32())
-					{
-						uint32_t Value = ConsoleVariable.second->GetUInt();
-						if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_U32, &Value))
+						else if (ConsoleVariable.second->IsUInt32())
 						{
-							ConsoleVariable.second->SetUInt(Value);
+							uint32_t Value = ConsoleVariable.second->GetUInt();
+							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_U32, &Value))
+							{
+								ConsoleVariable.second->SetUInt(Value);
+							}
 						}
-					}
-					else if (ConsoleVariable.second->IsInt64())
-					{
-						int64_t Value = ConsoleVariable.second->GetInt64();
-						if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_S64, &Value))
+						else if (ConsoleVariable.second->IsInt64())
 						{
-							ConsoleVariable.second->SetInt64(Value);
+							int64_t Value = ConsoleVariable.second->GetInt64();
+							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_S64, &Value))
+							{
+								ConsoleVariable.second->SetInt64(Value);
+							}
 						}
-					}
-					else if (ConsoleVariable.second->IsUInt64())
-					{
-						uint64_t Value = ConsoleVariable.second->GetUInt64();
-						if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_U64, &Value))
+						else if (ConsoleVariable.second->IsUInt64())
 						{
-							ConsoleVariable.second->SetUInt64(Value);
+							uint64_t Value = ConsoleVariable.second->GetUInt64();
+							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_U64, &Value))
+							{
+								ConsoleVariable.second->SetUInt64(Value);
+							}
 						}
-					}
-					else if (ConsoleVariable.second->IsFloat())
-					{
-						float Value = ConsoleVariable.second->GetFloat();
-						if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_Float, &Value))
+						else if (ConsoleVariable.second->IsFloat())
 						{
-							ConsoleVariable.second->SetFloat(Value);
+							float Value = ConsoleVariable.second->GetFloat();
+							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_Float, &Value))
+							{
+								ConsoleVariable.second->SetFloat(Value);
+							}
 						}
-					}
-					else if (ConsoleVariable.second->IsDouble())
-					{
-						double Value = ConsoleVariable.second->GetDouble();
-						if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_Double, &Value))
+						else if (ConsoleVariable.second->IsDouble())
 						{
-							ConsoleVariable.second->SetDouble(Value);
+							double Value = ConsoleVariable.second->GetDouble();
+							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_Double, &Value))
+							{
+								ConsoleVariable.second->SetDouble(Value);
+							}
 						}
-					}
-					else
-					{
-						EA_ASSERT_MSG(false, "Unsupported Type");
+						else
+						{
+							EA_ASSERT_MSG(false, "Unsupported Type");
+						}
 					}
 				}
 
@@ -126,7 +129,8 @@ const eastl::hash_map<const char*, FConsoleVariable*>& FConsoleVariableManager::
 	return ConsoleVariables;
 }
 
-FConsoleVariable::FConsoleVariable(const char* const InName) : Name(InName)
+FConsoleVariable::FConsoleVariable(const char* const InName, const EConsoleVariableFlag InConsoleVariableFlag) 
+	: Name(InName), ConsoleVariableFlag(InConsoleVariableFlag)
 {
 	FConsoleVariableManagerSingleton::GetInstance()->AddConsoleVariable(this);
 }
