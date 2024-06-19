@@ -11,7 +11,6 @@ namespace culling
 	class CullingModule;
 	class ViewFrustumCulling;
 	class ScreenSpaceBoundingSphereCulling;
-	class MaskedSWOcclusionCulling;
 	class QueryOcclusionCulling;
 	class PreCulling;
 	class DistanceCulling;
@@ -46,7 +45,6 @@ namespace culling
 		eastl::unique_ptr<PreCulling> mPreCulling;
 		eastl::unique_ptr<DistanceCulling> mDistanceCulling;
 		eastl::unique_ptr<ViewFrustumCulling> mViewFrustumCulling;
-		eastl::unique_ptr<MaskedSWOcclusionCulling> mMaskedSWOcclusionCulling;
 
 	private:
 
@@ -71,7 +69,6 @@ namespace culling
 		{
 			PreCulling,
 			ViewFrustumCulling,
-			MaskedSWOcclusionCulling,
 			DistanceCulling
 		};
 

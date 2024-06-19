@@ -1,8 +1,6 @@
 ﻿#include "PreCulling.h"
 
 #include "../MaskedSWOcclusionCulling/Utility/vertexTransformationHelper.h"
-#include "../MaskedSWOcclusionCulling/MaskedSWOcclusionCulling.h"
-
 #define SCREEN_SPACE_MIN_VALUE (float)-50000.0f
 #define SCREEN_SPACE_MAX_VALUE (float)50000.0f
 
@@ -37,77 +35,7 @@ void culling::PreCulling::ComputeScreenSpaceMinMaxAABBAndMinZ
 
 	const culling::EVERYCULLING_M256F oneDividedByW = culling::EVERYCULLING_M256F_DIV(_mm256_set1_ps(1.0f), aabbVertexW);
 
-	// Convert clip space to ndc space
-	culling::vertexTransformationHelper::ConvertClipSpaceVertexToNDCSpace
-	(
-		aabbVertexX,
-		aabbVertexY,
-		aabbVertexZ,
-		oneDividedByW
-	);
-
-	culling::EVERYCULLING_M256F screenPixelPosX, screenPixelPosY;
-	culling::vertexTransformationHelper::ConvertNDCSpaceVertexToScreenPixelSpace
-	(
-		aabbVertexX,
-		aabbVertexY,
-		screenPixelPosX, 
-		screenPixelPosY, 
-		mCullingSystem->mMaskedSWOcclusionCulling->mDepthBuffer
-	);
-
-
-
-
-	// Compute min, max sreen space X, Y
-
-	
-	// Do clamp min, max screen space
-	float minX = eastl::numeric_limits<float>::max();
-	float minY = eastl::numeric_limits<float>::max();
-	float maxX = -eastl::numeric_limits<float>::max();
-	float maxY = -eastl::numeric_limits<float>::max();
-
-	// set max value to invalid vertex index
-	// this is for branchless codes
-	
-	screenPixelPosX = _mm256_blendv_ps(screenPixelPosX, _mm256_set1_ps(eastl::numeric_limits<float>::max()), isHomogeneousWNegative);
-	screenPixelPosY = _mm256_blendv_ps(screenPixelPosY, _mm256_set1_ps(eastl::numeric_limits<float>::max()), isHomogeneousWNegative);
-	for(int i = 0 ; i < 8 ; i++)
-	{
-		minX = EVERYCULLING_MIN(minX, reinterpret_cast<const float*>(&screenPixelPosX)[i]);
-		minY = EVERYCULLING_MIN(minY, reinterpret_cast<const float*>(&screenPixelPosY)[i]);
-	}
-	
-	screenPixelPosX = _mm256_blendv_ps(screenPixelPosX, _mm256_set1_ps(-eastl::numeric_limits<float>::max()), isHomogeneousWNegative);
-	screenPixelPosY = _mm256_blendv_ps(screenPixelPosY, _mm256_set1_ps(-eastl::numeric_limits<float>::max()), isHomogeneousWNegative);
-	for (int i = 0; i < 8; i++)
-	{
-		maxX = EVERYCULLING_MAX(maxX, reinterpret_cast<const float*>(&screenPixelPosX)[i]);
-		maxY = EVERYCULLING_MAX(maxY, reinterpret_cast<const float*>(&screenPixelPosY)[i]);
-	}
-
-	entityBlock->mAABBMinScreenSpacePointX[entityIndex] = minX;
-	entityBlock->mAABBMinScreenSpacePointY[entityIndex] = minY;
-
-	entityBlock->mAABBMaxScreenSpacePointX[entityIndex] = maxX;
-	entityBlock->mAABBMaxScreenSpacePointY[entityIndex] = maxY;
-	
-
-	// Compute min depth value
-
-	aabbVertexZ = _mm256_blendv_ps(aabbVertexZ, _mm256_set1_ps(eastl::numeric_limits<float>::max()), isHomogeneousWNegative);
-	float aabbMinDepthValue = eastl::numeric_limits<float>::max();
-	for (size_t i = 0; i < 8; i++)
-	{
-		aabbMinDepthValue = EVERYCULLING_MIN(aabbMinDepthValue, reinterpret_cast<const float*>(&aabbVertexZ)[i]);
-	}
-
-	entityBlock->mAABBMinNDCZ[entityIndex] = aabbMinDepthValue;
-
 	const int isHomogeneousWNegativeMask = _mm256_movemask_ps(isHomogeneousWNegative);
-	entityBlock->SetIsAllAABBClipPointWPositive(entityIndex, (isHomogeneousWNegativeMask == 0x00000000));
-	entityBlock->SetIsAllAABBClipPointWNegative(entityIndex, (isHomogeneousWNegativeMask == 0x000000FF));
 
 	// If All vertex's w of clip space aabb is negative, it should be culled!
 	entityBlock->UpdateIsCulled(entityIndex, cameraIndex, isHomogeneousWNegativeMask == 0x000000FF);

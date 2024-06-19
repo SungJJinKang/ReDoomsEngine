@@ -126,9 +126,9 @@ void D3D12TestRenderer::SceneSetup()
 	DroneVertexData.mIndiceCount = DroneMesh->MeshList[0].IndexCount;
 	DroneVertexData.mVertexStride = 0;
 	
-	for (int32_t IndexA = 0; IndexA < 1; ++IndexA)
+	for (int32_t IndexA = 0; IndexA < 50; ++IndexA)
 	{
-		for (int32_t IndexB = 0; IndexB < 1; ++IndexB)
+		for (int32_t IndexB = 0; IndexB < 50; ++IndexB)
 		{
 			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
@@ -141,8 +141,7 @@ void D3D12TestRenderer::SceneSetup()
 			FBoundShaderSet BoundShaderSet{ ShaderList };
 			DroneDrawDesc.BoundShaderSet = BoundShaderSet;
 
-			//Vector3 OrigianlPos{ 250.0f * IndexB, 250.0f * IndexA + 10.0f, -5.0f };
-			math::Vector3 OrigianlPos{ 0.0f, 50.0f, 50.0f };
+			math::Vector3 OrigianlPos{ 25.0f * IndexB, 25.0f * IndexA, -5.0f };
 			FRenderObject RenderObject = RenderScene.AddRenderObject(
 				true,
 				DroneMesh->MeshList[0].LocalSpaceAABBMin,
@@ -150,7 +149,6 @@ void D3D12TestRenderer::SceneSetup()
 				OrigianlPos,
 				math::Quaternion::EulerAngleToQuaternion(-90.0f, 180.0f, 0.0f),
 				math::Vector3{ 0.05f, 0.05f, 0.05f },
-				DroneVertexData,
 				20000.0f,
 				DroneMesh->MeshList[0].VertexBufferViewList,
 				DroneMesh->MeshList[0].IndexBufferView,

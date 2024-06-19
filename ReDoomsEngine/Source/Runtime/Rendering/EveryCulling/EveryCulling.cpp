@@ -4,7 +4,6 @@
 #include "CullingModule/ViewFrustumCulling/ViewFrustumCulling.h"
 #include "CullingModule/PreCulling/PreCulling.h"
 #include "CullingModule/DistanceCulling/DistanceCulling.h"
-#include "CullingModule/MaskedSWOcclusionCulling/MaskedSWOcclusionCulling.h"
 
 void culling::EveryCulling::ResetCullingModules()
 {
@@ -12,9 +11,6 @@ void culling::EveryCulling::ResetCullingModules()
 	{
 		cullingModule->ResetCullingModule(mCurrentTickCount);
 	}
-	
-	mMaskedSWOcclusionCulling->ResetState(mCurrentTickCount);
-
 }
 
 void culling::EveryCulling::ResetEntityBlocks()
@@ -120,14 +116,6 @@ void culling::EveryCulling::SetEnabledCullingModule(const CullingModuleType cull
 		mViewFrustumCulling->IsEnabled = isEnabled;
 		break;
 
-	case CullingModuleType::MaskedSWOcclusionCulling:
-
-		mMaskedSWOcclusionCulling->mSolveMeshRoleStage.IsEnabled = isEnabled;
-		mMaskedSWOcclusionCulling->mBinTrianglesStage.IsEnabled = isEnabled;
-		mMaskedSWOcclusionCulling->mRasterizeTrianglesStage.IsEnabled = isEnabled;
-		mMaskedSWOcclusionCulling->mQueryOccludeeStage.IsEnabled = isEnabled;
-		break;
-
 	case CullingModuleType::DistanceCulling:
 
 		mDistanceCulling->IsEnabled = isEnabled;
@@ -149,17 +137,11 @@ culling::EveryCulling::EveryCulling(const uint32_t resolutionWidth, const uint32
 #ifdef ENABLE_SCREEN_SAPCE_AABB_CULLING
 	, mScreenSpaceBoudingSphereCulling{ eastl::make_unique<ScreenSpaceBoundingSphereCulling>(this) }
 #endif
-	, mMaskedSWOcclusionCulling{ eastl::make_unique<MaskedSWOcclusionCulling>(this, resolutionWidth, resolutionHeight) }
 	, mUpdatedCullingModules
 		{
 			mPreCulling.get(),
 			mDistanceCulling.get(),
-			mViewFrustumCulling.get(),
-			mMaskedSWOcclusionCulling.get(), // Choose Role Stage
-			&(mMaskedSWOcclusionCulling->mSolveMeshRoleStage), // Choose Role Stage
-			&(mMaskedSWOcclusionCulling->mBinTrianglesStage), // BinTriangles
-			&(mMaskedSWOcclusionCulling->mRasterizeTrianglesStage), // DrawOccluderStage
-			&(mMaskedSWOcclusionCulling->mQueryOccludeeStage) // QueryOccludeeStage
+			mViewFrustumCulling.get()
 		}
 	, mCurrentTickCount()
 	, bmIsEntityBlockPoolInitialized(false)

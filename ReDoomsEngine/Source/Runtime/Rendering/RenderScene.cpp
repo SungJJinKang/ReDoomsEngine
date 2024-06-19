@@ -6,18 +6,17 @@
 #include "D3D12Manager.h"
 #include "View.h"
 
-#include "EveryCulling/CullingModule/MaskedSWOcclusionCulling/MaskedSWOcclusionCulling.h"
-#include "EveryCulling/CullingModule/MaskedSWOcclusionCulling/Stage/SolveMeshRoleStage.h"
+#include "EveryCulling/DataType/EntityBlock.h"
 
 static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
 static TConsoleVariable<bool> GParallelCacheModelMatrixs{ "r.ParallelCacheModelMatrixs", true };
 static TConsoleVariable<uint32_t> GParallelCacheModelMatrixsObjectCountPerJob{ "r.ParallelCacheModelMatrixsObjectCountPerJob", 512 };
 
-static TConsoleVariable<bool> GEveryCullingEnable{ "r.EveryCulling.Enable", false };
 static TConsoleVariable<bool> GEveryCullingPreCulling{ "r.EveryCulling.PreCulling", true };
+static TConsoleVariable<bool> GEveryCullingEnable{ "r.EveryCulling.Enable", true };
+static TConsoleVariable<bool> GEveryCullingParallel{ "r.EveryCulling.Parallel", true };
 static TConsoleVariable<bool> GEveryCullingDistanceCulling{ "r.EveryCulling.DistanceCulling", true };
 static TConsoleVariable<bool> GEveryCullingViewFrustumCulling{ "r.EveryCulling.ViewFrustumCulling", true };
-static TConsoleVariable<bool> GEveryCullingOcculusionCulling{ "r.EveryCulling.OcculusionCulling", true };
 
 // Why this is required? : In EveryCulling library, use its own math type instead of DirectXMath's. So we should ensure that our math types have same size and alignment with matching ones.
 static_assert(sizeof(culling::AlignedVec4) == sizeof(math::Vector4));
@@ -35,7 +34,6 @@ void FRenderScene::Init()
 {
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 	EveryCulling = eastl::make_unique<culling::EveryCulling>(SwapChain->GetWidth(), SwapChain->GetHeight());
-	EveryCulling->mMaskedSWOcclusionCulling->mSolveMeshRoleStage.SetOccluderAABBScreenSpaceMinArea(0.5f);
 	EveryCulling->SetCameraCount(1);
 }
 
@@ -46,7 +44,6 @@ FRenderObject FRenderScene::AddRenderObject(
 	const math::Vector3& Position,
 	const math::Quaternion& InRotation,
 	const math::Vector3& InScale,
-	const culling::VertexData& InEveryCullingVertexData,
 	const float InDrawDistance,
 	const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViews,
 	const D3D12_INDEX_BUFFER_VIEW& IndexBufferView, 
@@ -69,7 +66,6 @@ FRenderObject FRenderScene::AddRenderObject(
 	RenderObjectList.PositionAndWorldBoundingSphereRadiusList.emplace_back(Position.x, Position.y, Position.z, -1);
 	RenderObjectList.RotationList.push_back(InRotation);
 	RenderObjectList.ScaleAndDrawDistanceList.emplace_back(InScale.x, InScale.y, InScale.z, InDrawDistance);
-	RenderObjectList.EveryCullingVertexData.emplace_back(InEveryCullingVertexData);
 	RenderObjectList.CachedModelMatrixList.push_back_uninitialized();
 	RenderObjectList.VertexBufferViewList.push_back(InVertexBufferViews);
 	RenderObjectList.IndexBufferViewList.push_back(IndexBufferView);
@@ -111,11 +107,9 @@ eastl::vector<culling::EntityBlock> FRenderScene::CreateEveryCullingEntityBlockL
 		TargetEntityBlock.mIsVisibleBitflag = RenderObjectList.VisibleFlagsList.data() + StartIndex;
 		TargetEntityBlock.mAABBMinWorldPoint = reinterpret_cast<culling::AlignedVec4*>(RenderObjectList.WorldPositionAABBMinPointList.data() + StartIndex);
 		TargetEntityBlock.mAABBMaxWorldPoint = reinterpret_cast<culling::AlignedVec4*>(RenderObjectList.WorldPositionAABBMaxPointList.data() + StartIndex);
-		TargetEntityBlock.mModelMatrixes = reinterpret_cast<culling::Mat4x4*>(RenderObjectList.CachedModelMatrixList.data() + StartIndex);
 		TargetEntityBlock.mIsObjectEnabled = reinterpret_cast<uint8_t*>(RenderObjectList.EnabledFlagsList.data()) + (StartIndex / 8);
 		TargetEntityBlock.mScaleAndDrawDistance = reinterpret_cast<culling::AlignedVec4*>(RenderObjectList.ScaleAndDrawDistanceList.data() + StartIndex);
 		TargetEntityBlock.mWorldPositionAndWorldBoundingSphereRadius = reinterpret_cast<culling::Position_BoundingSphereRadius*>(RenderObjectList.PositionAndWorldBoundingSphereRadiusList.data() + StartIndex);
-		TargetEntityBlock.mVertexDatas = reinterpret_cast<culling::VertexData*>(RenderObjectList.EveryCullingVertexData.data() + StartIndex);
 		TargetEntityBlock.EntityCount = (EndIndex <= ObjectCount) ? EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK : (EVERYCULLING_ENTITY_COUNT_IN_ENTITY_BLOCK - (EndIndex - ObjectCount));
 	};
 
@@ -156,7 +150,6 @@ void FRenderScene::PrepareToCreateMeshDrawList(const FView& InView)
 		EveryCulling->SetEnabledCullingModule(culling::EveryCulling::CullingModuleType::PreCulling, GEveryCullingPreCulling);
 		EveryCulling->SetEnabledCullingModule(culling::EveryCulling::CullingModuleType::DistanceCulling, GEveryCullingDistanceCulling);
 		EveryCulling->SetEnabledCullingModule(culling::EveryCulling::CullingModuleType::ViewFrustumCulling, GEveryCullingViewFrustumCulling);
-		EveryCulling->SetEnabledCullingModule(culling::EveryCulling::CullingModuleType::MaskedSWOcclusionCulling, GEveryCullingOcculusionCulling);
 		{
 			SCOPED_CPU_TIMER(EveryCulling_PreCullJob)
 			EveryCulling->PreCullJob();
@@ -165,7 +158,18 @@ void FRenderScene::PrepareToCreateMeshDrawList(const FView& InView)
 
 		{
 			SCOPED_CPU_TIMER(EveryCulling_DispatchCullJob)
-			FJobSystem::GetInstance()->Dispatch(FJobSystem::GetInstance()->GetJobThreadCount() + 1, [this, CurrentTickCount](FJobDispatchArgs DispatchArg) {EveryCulling->ThreadCullJob(0, CurrentTickCount); }, true);
+			if (GEveryCullingParallel)
+			{
+				FJobSystem::GetInstance()->Dispatch(FJobSystem::GetInstance()->GetJobThreadCount() + 1,
+					[this, CurrentTickCount](FJobDispatchArgs DispatchArg) {
+						EveryCulling->ThreadCullJob(0, CurrentTickCount);
+					},
+					true);
+			}
+			else
+			{
+				EveryCulling->ThreadCullJob(0, CurrentTickCount);
+			}
 		}
 	}
 	else
@@ -419,7 +423,6 @@ void FRenderObjectList::Reserve(const size_t InSize)
 	PositionAndWorldBoundingSphereRadiusList.reserve(InSize);
 	RotationList.reserve(InSize);
 	ScaleAndDrawDistanceList.reserve(InSize);
-	EveryCullingVertexData.reserve(InSize);
 	CachedModelMatrixList.reserve(InSize);
 	VertexBufferViewList.reserve(InSize);
 	IndexBufferViewList.reserve(InSize);

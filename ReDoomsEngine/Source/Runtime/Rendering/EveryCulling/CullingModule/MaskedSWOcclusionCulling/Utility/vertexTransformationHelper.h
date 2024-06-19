@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include "../../../EveryCullingCore.h"
-#include "../SWDepthBuffer.h"
+#include "../../../DataType/Math/EveryCullingSIMDCore.h"
 
 namespace culling
 {
@@ -57,34 +57,6 @@ namespace culling
 			const culling::EVERYCULLING_M256F& oneDividedByW
 		);
 
-
-		void ConvertNDCSpaceThreeVerticesToScreenPixelSpace
-		(
-			const culling::EVERYCULLING_M256F* ndcSpaceVertexX,
-			const culling::EVERYCULLING_M256F* ndcSpaceVertexY,
-			culling::EVERYCULLING_M256F* outScreenPixelSpaceX,
-			culling::EVERYCULLING_M256F* outScreenPixelSpaceY,
-			culling::SWDepthBuffer& depthBuffer
-		);
-
-		void ConvertClipSpaceThreeVerticesToScreenPixelSpace
-		(
-			const culling::EVERYCULLING_M256F* clipSpaceVertexX,
-			const culling::EVERYCULLING_M256F* clipSpaceVertexY,
-			const culling::EVERYCULLING_M256F* clipSpaceVertexReverseW,
-			culling::EVERYCULLING_M256F* outScreenPixelSpaceX,
-			culling::EVERYCULLING_M256F* outScreenPixelSpaceY,
-			culling::SWDepthBuffer& depthBuffer
-		);
-
-		void ConvertNDCSpaceVertexToScreenPixelSpace
-		(
-			const culling::EVERYCULLING_M256F& ndcSpaceVertexX,
-			const culling::EVERYCULLING_M256F& ndcSpaceVertexY,
-			culling::EVERYCULLING_M256F& outScreenPixelSpaceX,
-			culling::EVERYCULLING_M256F& outScreenPixelSpaceY,
-			culling::SWDepthBuffer& depthBuffer
-		);
 	}
 
 }

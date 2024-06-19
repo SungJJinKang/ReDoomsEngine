@@ -45,7 +45,6 @@ struct FRenderObjectList
 	eastl::vector<math::Quaternion> RotationList;
 	eastl::vector<math::Vector4> ScaleAndDrawDistanceList;
 	eastl::vector<math::Matrix4x4> CachedModelMatrixList;
-	eastl::vector<culling::VertexData> EveryCullingVertexData;
 	eastl::vector<eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>> VertexBufferViewList;
 	eastl::vector<D3D12_INDEX_BUFFER_VIEW> IndexBufferViewList;
 
@@ -94,7 +93,6 @@ public:
 		const math::Vector3& Position,
 		const math::Quaternion& InRotation,
 		const math::Vector3& InScale,
-		const culling::VertexData& InEveryCullingVertexData,
 		const float InDrawDistance, 
 		const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViews,
 		const D3D12_INDEX_BUFFER_VIEW& IndexBufferView,

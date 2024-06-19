@@ -240,54 +240,6 @@
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\PreCulling\PreCulling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\clipTriangle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\CoverageRasterizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\depthBufferTileHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\depthUtility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\DepthValueComputer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\RasterizerHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\triangleSlopeEventGetter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\vertexTransformationHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\MaskedSWOcclusionCulling.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\OccluderListManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\SWDepthBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Stage\BinTrianglesStage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Stage\MaskedSWOcclusionCullingStage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Stage\QueryOccludeeStage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Stage\RasterizeOccludersStage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Stage\SolveMeshRoleStage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\DistanceCulling\DistanceCulling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -328,6 +280,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Runtime\Math\JINMATH\Vector4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\vertexTransformationHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1514,54 +1469,6 @@
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\PreCulling\PreCulling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\SWDepthBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\clipTriangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\CoverageRasterizer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\depthBufferTileHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\depthUtility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\DepthValueComputer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\RasterizerHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\triangleSlopeEventGetter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\vertexTransformationHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\MaskedSWOcclusionCulling.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\OccluderListManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Stage\SolveMeshRoleStage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Stage\BinTrianglesStage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Stage\MaskedSWOcclusionCullingStage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Stage\QueryOccludeeStage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Stage\RasterizeOccludersStage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\DistanceCulling\DistanceCulling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1625,6 +1532,9 @@
     <ClInclude Include="Source\Runtime\Math\JINMATH\Vector4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\Utility\vertexTransformationHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
@@ -1657,7 +1567,6 @@
     <None Include="Source\Runtime\Rendering\EveryCulling\LICENSE" />
     <None Include="Source\Runtime\Rendering\EveryCulling\README.md" />
     <None Include="Source\Runtime\Rendering\EveryCulling\TODO.md" />
-    <None Include="Source\Runtime\Rendering\EveryCulling\CullingModule\MaskedSWOcclusionCulling\MaskedSWOcclusionCulling_HowWorks.md" />
     <None Include="Source\Runtime\Math\JINMATH\LICENSE" />
     <None Include="Source\Runtime\Math\JINMATH\README.md" />
   </ItemGroup>
