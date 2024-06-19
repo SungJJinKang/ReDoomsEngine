@@ -2,8 +2,15 @@
 
 #include "D3D12CommandContext.h"
 #include "Thread/JobSystem.h"
+#include "D3D12Swapchain.h"
+#include "D3D12Manager.h"
 
 static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
+
+void FRenderScene::Init()
+{
+	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+}
 
 FRenderObject FRenderScene::AddRenderObject(
 	const bool bInVisible,

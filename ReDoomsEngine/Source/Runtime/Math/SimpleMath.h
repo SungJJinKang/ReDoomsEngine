@@ -448,6 +448,11 @@ namespace DirectX
             static const Vector4 UnitW;
         };
 
+        XM_ALIGNED_STRUCT(16) AlignedVector4 : public Vector4
+        {
+            using Vector4::Vector4;
+        };
+
         // Binary operators
         Vector4 operator+ (const Vector4& V1, const Vector4& V2) noexcept;
         Vector4 operator- (const Vector4& V1, const Vector4& V2) noexcept;
@@ -615,6 +620,11 @@ namespace DirectX
             static const Matrix Identity;
         };
 
+		XM_ALIGNED_STRUCT(32) AlignedMatrix: public Matrix
+		{
+			using Matrix::Matrix;
+		};
+
         // Binary operators
         Matrix operator+ (const Matrix& M1, const Matrix& M2) noexcept;
         Matrix operator- (const Matrix& M1, const Matrix& M2) noexcept;
@@ -768,6 +778,11 @@ namespace DirectX
             // Constants
             static const Quaternion Identity;
         };
+
+		XM_ALIGNED_STRUCT(16) AlignedQuaternion: public Quaternion
+		{
+			using Quaternion::Quaternion;
+		};
 
         // Binary operators
         Quaternion operator+ (const Quaternion& Q1, const Quaternion& Q2) noexcept;

@@ -25,10 +25,10 @@ struct FRenderObjectList
 	/// x, y, z : World position
 	/// w : Radius of bounding sphere
 	/// </summary>
-	eastl::vector<Vector4> PositionAndLocalBoundingSphereRadiusList;
-	eastl::vector<Quaternion> RotationList;
-	eastl::vector<Vector4> ScaleAndDrawDistanceList;
-	eastl::vector<Matrix> CachedModelMatrixList;
+	eastl::vector<AlignedVector4> PositionAndLocalBoundingSphereRadiusList;
+	eastl::vector<AlignedQuaternion> RotationList;
+	eastl::vector<AlignedVector4> ScaleAndDrawDistanceList;
+	eastl::vector<AlignedMatrix> CachedModelMatrixList;
 	eastl::vector<eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>> VertexBufferViewList;
 	eastl::vector<D3D12_INDEX_BUFFER_VIEW> IndexBufferViewList;
 
@@ -66,14 +66,8 @@ struct FRenderObject
 class FRenderScene
 {
 public:
-	FRenderObjectList RenderObjectList;
 
-	struct FPass
-	{
-		FD3D12PSOInitializer::FPassDesc PassPSODesc;
-
-		eastl::bitvector<> IsCachedMeshDrawList;
-	};
+	void Init();
 
 	EA_NODISCARD FRenderObject AddRenderObject(
 		const bool bInVisible,
@@ -94,6 +88,15 @@ public:
 	void SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList);
 
 	void SetPassDesc(const EPass InPass, const FD3D12PSOInitializer::FPassDesc& InPassDesc);
+
+	FRenderObjectList RenderObjectList;
+
+	struct FPass
+	{
+		FD3D12PSOInitializer::FPassDesc PassPSODesc;
+
+		eastl::bitvector<> IsCachedMeshDrawList;
+	};
 
 private:
 
