@@ -206,7 +206,7 @@ void FJobSystem::Test()
 
 	{
 		FCPUTimer FCPUTimerFJobSystem_Test_UseJobThread176{ "FJobSystem_Test_UseJobThread" };
-		Dispatch(7, IncrementTestStructure1, true);
+		Dispatch(7, IncrementTestStructure1, true, true);
 
 		FCPUTimerFJobSystem_Test_UseJobThread176.End();
 		
@@ -240,7 +240,7 @@ void FJobSystem::ProcessJobsOnCallerThread()
 	ThreadPool->ProcessJobFromCallerThread(ThreadParam);
 }
 
-eastl::vector<FJobResult> FJobSystem::Dispatch(const uint32_t InJobCount, const JobType& job, const bool bCallerThreadWorkOnJob)
+eastl::vector<FJobResult> FJobSystem::Dispatch(const uint32_t InJobCount, const JobType& job, const bool bCallerThreadWorkOnJob, const bool bInWaitForFinish)
 {
 	eastl::vector<FJobResult> JobResults{};
 	JobResults.reserve(InJobCount);
@@ -269,6 +269,14 @@ eastl::vector<FJobResult> FJobSystem::Dispatch(const uint32_t InJobCount, const 
 	if (bCallerThreadWorkOnJob)
 	{
 		ProcessJobsOnCallerThread();
+	}
+
+	if (bInWaitForFinish)
+	{
+		for (FJobResult& Job : JobResults)
+		{
+			Job.WaitForJobCompletion();
+		}
 	}
 
 	return JobResults;

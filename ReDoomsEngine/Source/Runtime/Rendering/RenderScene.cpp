@@ -1,4 +1,4 @@
-#include "RenderScene.h"
+﻿#include "RenderScene.h"
 
 #include "D3D12CommandContext.h"
 #include "Thread/JobSystem.h"
@@ -71,19 +71,6 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 	FD3D12PSOInitializer PSO;
 	PSO.PassDesc = Pass.PassPSODesc;
 
-	// Step 1
-	// CPU Culling (https://github.com/SungJJinKang/EveryCulling)
-
-	FJobSystem::GetInstance()->Dispatch(5, [](FJobDispatchArgs Arg)
-		{
-			const char* const ThreadNAME = TLSThreadName.data();
-			const uint32_t JobIndex = Arg.JobIndex;
-		}
-	);
-	FJobSystem::GetInstance()->ProcessJobsOnCallerThread();
-
-
-	// Step 2
 	// Draw!
 	for(uint32_t ObjectIndex = 0 ; ObjectIndex < ObjectCount ; ++ObjectIndex)
 	{
