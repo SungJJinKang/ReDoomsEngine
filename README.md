@@ -5,6 +5,11 @@ Let's make toy game engine better than [DoomsEngine](https://github.com/SungJJin
 Open "ReDoomsEngine/ReDoomsEngine.sln" with with visual studio 2022    
 Build!
 
+## Planed Features
+- [ ] PBR
+- [ ] GPU Driven Rendering
+- [ ] Visibility Buffer, Deferred Texturing
+- [ ] Render Graph
 ## Third party
 [Assimp](https://github.com/assimp/assimp)        
 [cityhash](https://github.com/google/cityhash)        
