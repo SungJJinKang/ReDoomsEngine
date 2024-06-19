@@ -47,7 +47,7 @@ public:
 	void OnEndFrame(FD3D12CommandContext& InCommandContext) override;
 
 	void ProcessJobsOnCallerThread();
-	eastl::vector<FJobResult> Dispatch(const uint32_t InJobCount, const JobType& job, const bool bCallerThreadWorkOnJob);
+	eastl::vector<FJobResult> Dispatch(const uint32_t InJobCount, const JobType& job, const bool bCallerThreadWorkOnJob, const bool bInWaitForFinish);
 	bool WaitForJobCompletion(const int32_t InJobID, const uint64_t InWaitTimeMilliSeconds = EA::Thread::kTimeoutNone);
 	void WaitForAllJobCompletion(const uint64_t InWaitTimeMilliSeconds = EA::Thread::kTimeoutNone);
 
