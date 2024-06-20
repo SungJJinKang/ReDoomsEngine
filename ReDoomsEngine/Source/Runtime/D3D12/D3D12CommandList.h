@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 
 #include "D3D12Include.h"
 #include "D3D12CommandQueue.h"
 #include "D3D12Fence.h"
 #include "Common/RendererStateCallbackInterface.h"
+#include "D3D12ResourceBarrierBatcher.h"
 
 class FD3D12CommandAllocator;
 class FD3D12CommandQueue;
@@ -25,7 +26,10 @@ public:
 	void ResetRecordingCommandList(FD3D12PSO* const InInitialPSO);
 	void FinishRecordingCommandList();
 
+	void FlushResourceBarriers();
+
 	FD3D12Fence Fence;
+	FD3D12ResourceBarrierBatcher ResourceBarrierBatcher;
 
 private:
 

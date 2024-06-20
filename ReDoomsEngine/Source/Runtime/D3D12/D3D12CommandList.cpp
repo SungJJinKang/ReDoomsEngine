@@ -1,4 +1,4 @@
-#include "D3D12CommandList.h"
+﻿#include "D3D12CommandList.h"
 #include "D3D12Device.h"
 #include "D3D12CommandQueue.h"
 #include "D3D12PSO.h"
@@ -37,6 +37,11 @@ void FD3D12CommandList::ResetRecordingCommandList(FD3D12PSO* const InInitialPSO)
 void FD3D12CommandList::FinishRecordingCommandList()
 {
 	VERIFYD3D12RESULT(CommandList->Close());
+}
+
+void FD3D12CommandList::FlushResourceBarriers()
+{
+	ResourceBarrierBatcher.Flush(*this);
 }
 
 FD3D12CommandAllocator::FD3D12CommandAllocator(const ED3D12QueueType InQueueType)

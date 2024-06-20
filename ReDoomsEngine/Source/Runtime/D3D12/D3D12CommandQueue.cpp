@@ -1,4 +1,4 @@
-#include "D3D12CommandQueue.h"
+﻿#include "D3D12CommandQueue.h"
 #include "D3D12Device.h"
 #include "D3D12CommandList.h"
 
@@ -23,7 +23,6 @@ const wchar_t* GetD3D12QueueTypeString(ED3D12QueueType QueueType)
 	default: RD_ASSUME(0);
 	}
 }
-
 
 FD3D12CommandQueue::FD3D12CommandQueue(const ED3D12QueueType InQueueType)
 	: QueueType(InQueueType), D3DCommandQueue(), Fence()
@@ -59,6 +58,7 @@ void FD3D12CommandQueue::ExecuteCommandLists(eastl::vector<eastl::shared_ptr<FD3
 
 	for (eastl::shared_ptr<FD3D12CommandList>& CommandList : CommandLists)
 	{
+		CommandList->FlushResourceBarriers();
 		CommandList->FinishRecordingCommandList();
 		D3D12CommandLists.emplace_back(CommandList->GetD3DCommandList());
 	}

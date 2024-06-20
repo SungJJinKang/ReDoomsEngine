@@ -1,4 +1,9 @@
-#pragma once
+﻿#pragma once
+
+#include "CommonInclude.h"
+#include "D3D12Include.h"
+
+class FD3D12CommandList;
 
 // why batch(group) resource barrier? : to minimize overhead. the worst case can be picked instaed of sequentially going through all barrier.
 // 
@@ -9,7 +14,17 @@
 // https://gpuopen.com/wp-content/uploads/2016/03/Practical_DX12_Programming_Model_and_Hardware_Capabilities.pdf
 //
 // 
-class D3D12ResourceBarrierBatcher
+class FD3D12ResourceBarrierBatcher
 {
+public:
+
+	void AddBarrier(const CD3DX12_RESOURCE_BARRIER& InBarrier);
+	void AddBarrier(const eastl::vector<CD3DX12_RESOURCE_BARRIER>& InBarriers);
+	void Flush(FD3D12CommandList& InCommandList);
+
+private:
+
+	eastl::vector<CD3DX12_RESOURCE_BARRIER> PendingResourceBarriers;
+
 };
 

@@ -1,4 +1,4 @@
-#include "D3D12ResourceUploadBatcher.h"
+﻿#include "D3D12ResourceUploadBatcher.h"
 
 #include "D3D12CommandList.h"
 #include "D3D12Device.h"
@@ -55,8 +55,10 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 
 			if (ResourceBarriersBeforeUpload.size() > 0)
 			{
-				CommandListForUploadBatcher->GetD3DCommandList()->ResourceBarrier(ResourceBarriersBeforeUpload.size(), ResourceBarriersBeforeUpload.data());
+				InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarriersBeforeUpload);
 			}
+
+			InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*InCommandContext.GraphicsCommandList);
 
 			for (FD3D12ResourceUpload& PendingResourceUpload : PendingResourceUploadList)
 			{
@@ -75,7 +77,7 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 
 			if (ResourceBarriersAfterUpload.size() > 0)
 			{
-				CommandListForUploadBatcher->GetD3DCommandList()->ResourceBarrier(ResourceBarriersAfterUpload.size(), ResourceBarriersAfterUpload.data());
+				InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarriersAfterUpload);
 			}
 		}
 
