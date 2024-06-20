@@ -1,4 +1,4 @@
-#include "Renderer/Renderer.h"
+﻿#include "Renderer/Renderer.h"
 
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "Editor/ImguiHelper.h"
@@ -147,7 +147,7 @@ void FRenderer::OnEndFrame()
 
 	// Indicate that the back buffer will now be used to present.
 	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ResourceBarrier(1, &ResourceBarrierB);
+	CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarrierB);
 
 	FrametimeGPUTimer.End(CurrentFrameCommandContext.GraphicsCommandList.get());
 	GPUTimerEndFrame(&CurrentFrameCommandContext);
@@ -158,6 +158,7 @@ void FRenderer::OnEndFrame()
 	TargetCommandQueue->ExecuteCommandLists(CommandLists);
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
+
 	SwapChain->Present(0);
 
 	CurrentFrameContainer.FrameWorkEndFence->Signal(TargetCommandQueue, false);

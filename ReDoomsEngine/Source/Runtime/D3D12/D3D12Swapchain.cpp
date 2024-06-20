@@ -1,4 +1,4 @@
-#include "D3D12Swapchain.h"
+﻿#include "D3D12Swapchain.h"
 #include "D3D12Manager.h"
 #include "D3D12CommandQueue.h"
 #include "D3D12Window.h"
@@ -78,9 +78,12 @@ void FD3D12Swapchain::CreateRenderTargets()
 		ComPtr<ID3D12Resource> SwapChainBuffer{};
 
 		VERIFYD3D12RESULT(D3DSwapchain->GetBuffer(BufferIndex, IID_PPV_ARGS(&SwapChainBuffer)));
-		RenderTargets.emplace_back(
+		eastl::shared_ptr<FD3D12Texture2DResource>& RenderTarget = RenderTargets.emplace_back(
             eastl::make_shared<FD3D12Texture2DResource>(SwapChainBuffer, Width, Height, Format, SampleCount, SampleQuality)
-        )->InitResource();
+        );
+
+		RenderTarget->InitResource();
+		RenderTarget->SetDebugNameToResource(FORMATTED_WCHAR("Render Target(%d)", BufferIndex));
 	}
 }
 
