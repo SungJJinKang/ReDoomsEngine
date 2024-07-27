@@ -152,16 +152,13 @@ void FRenderer::OnEndFrame()
 	FrametimeGPUTimer.End(CurrentFrameCommandContext.GraphicsCommandList.get());
 	GPUTimerEndFrame(&CurrentFrameCommandContext);
 
-	FD3D12CommandQueue* const TargetCommandQueue = CurrentFrameCommandContext.CommandQueueList[ED3D12QueueType::Direct];
-
-	eastl::vector<eastl::shared_ptr<FD3D12CommandList>> CommandLists = { CurrentFrameCommandContext.GraphicsCommandList };
-	TargetCommandQueue->ExecuteCommandLists(CommandLists);
+	CurrentFrameCommandContext.FlushCommandList(ED3D12QueueType::Direct);
 
 	FFrameResourceContainer& CurrentFrameContainer = GetCurrentFrameResourceContainer();
 
 	SwapChain->Present(0);
 
-	CurrentFrameContainer.FrameWorkEndFence->Signal(TargetCommandQueue, false);
+	CurrentFrameContainer.FrameWorkEndFence->Signal(CurrentFrameCommandContext.CommandQueueList[ED3D12QueueType::Direct], false);
 }
 
 void FRenderer::Destroy()

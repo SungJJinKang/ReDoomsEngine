@@ -31,3 +31,23 @@ void FD3D12CommandContext::Dispatch(uint32_t ThreadGroupCountX, uint32_t ThreadG
 	StateCache.Flush(*this, EPipeline::Compute);
 	GraphicsCommandList->GetD3DCommandList()->Dispatch(ThreadGroupCountX, ThreadGroupCountY, ThreadGroupCountZ);
 }
+
+void FD3D12CommandContext::FlushCommandList(const ED3D12QueueType InD3D12QueueType, const bool InWaitOnCompletation)
+{
+	FD3D12CommandQueue* const TargetCommandQueue = CommandQueueList[InD3D12QueueType];
+
+	if (InD3D12QueueType == ED3D12QueueType::Direct)
+	{
+		eastl::vector<eastl::shared_ptr<FD3D12CommandList>> CommandLists = { GraphicsCommandList };
+		TargetCommandQueue->ExecuteCommandLists(CommandLists);
+	}
+	else
+	{
+		EA_ASSERT(false);
+	}
+
+	if (InWaitOnCompletation)
+	{
+		TargetCommandQueue->WaitForCompletion();
+	}
+}

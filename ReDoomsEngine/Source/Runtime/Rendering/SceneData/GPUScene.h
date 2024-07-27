@@ -18,7 +18,7 @@ class GPUScene
 public:
 
 	void Init();
-	void UploadDirtyData(const FRenderObjectList& InRenderObjectList, const eastl::bitvector<>& InDirtyObjectList);
+	void UploadDirtyData(FD3D12CommandContext& InCommandContext, const FRenderObjectList& InRenderObjectList, const eastl::bitvector<>& InDirtyObjectList);
 
 private:
 
