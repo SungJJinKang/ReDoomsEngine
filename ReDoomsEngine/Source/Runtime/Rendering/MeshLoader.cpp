@@ -1,4 +1,4 @@
-#include "MeshLoader.h"
+﻿#include "MeshLoader.h"
 
 #include "AssetManager.h"
 #include "D3D12Resource/D3D12ResourceAllocator.h"
@@ -21,7 +21,9 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
     // probably to request more postprocessing than we do in this example.
     const aiScene* const AssimpScene = AssimpImporter->ReadFile(WCHAR_TO_UTF8(FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePathToAssetFolder)),
         aiProcess_CalcTangentSpace |
-        aiProcess_Triangulate
+        aiProcess_Triangulate |
+		aiProcess_GenUVCoords |
+		aiProcess_ConvertToLeftHanded
         );
 
     // If the import failed, report it
