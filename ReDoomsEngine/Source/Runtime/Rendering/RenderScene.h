@@ -5,6 +5,7 @@
 #include "EASTL/segmented_vector.h"
 #include "MeshDraw/MeshDraw.h"
 #include "D3D12Shader.h"
+#include "SceneData/GPUScene.h"
 
 struct FMesh;
 struct FD3D12CommandContext;
@@ -90,6 +91,7 @@ public:
 	void SetPassDesc(const EPass InPass, const FD3D12PSOInitializer::FPassDesc& InPassDesc);
 
 	FRenderObjectList RenderObjectList;
+	GPUScene GPUSceneData;
 
 	struct FPass
 	{

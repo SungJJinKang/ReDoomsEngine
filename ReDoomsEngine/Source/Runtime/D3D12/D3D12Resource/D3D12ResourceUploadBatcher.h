@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CommonInclude.h"
 #include "D3D12Include.h"
@@ -87,6 +87,7 @@ class FD3D12ResourceUploadBatcher
 public:
 
 	void AddPendingResourceUpload(FD3D12ResourceUpload&& InResourceUpload);
+	void AddPendingResourceUploads(const eastl::vector<FD3D12ResourceUpload&&>& InResourceUploads);
 	void Flush(FD3D12CommandContext& InCommandContext);
 	void FreeUnusedUploadBuffers();
 

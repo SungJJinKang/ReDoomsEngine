@@ -275,7 +275,7 @@ bool D3D12TestRenderer::Draw()
 		Drone.RenderObject.SetPosition(Drone.OriginalPos + Vector3{ Offset * 80.0f, 0.0f, 0.0f });
 	}
 
-	RenderScene.PrepareToCreateMeshDrawList();
+	PrepareDraw();
 
 	// Base Pass
 	{

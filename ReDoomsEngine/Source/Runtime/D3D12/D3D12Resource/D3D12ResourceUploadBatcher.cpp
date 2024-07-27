@@ -32,6 +32,14 @@ void FD3D12ResourceUploadBatcher::AddPendingResourceUpload(FD3D12ResourceUpload&
 	PendingResourceUploadList.emplace_back(eastl::move(InResourceUpload));
 }
 
+void FD3D12ResourceUploadBatcher::AddPendingResourceUploads(const eastl::vector<FD3D12ResourceUpload&&>& InResourceUploads)
+{
+	for (FD3D12ResourceUpload&& ResourceUpload : InResourceUploads)
+	{
+		AddPendingResourceUpload(eastl::move(ResourceUpload));
+	}
+}
+
 void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 {
 	if (PendingResourceUploadList.size() > 0)

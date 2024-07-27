@@ -175,6 +175,11 @@ void FRenderer::Destroy()
 	D3D12Manager.OnDestory(CurrentFrameCommandContext);
 }
 
+void FRenderer::PrepareDraw()
+{
+	RenderScene.PrepareToCreateMeshDrawList();
+}
+
 void FRenderer::Tick()
 {
 	if (!bEverSceneSetup)

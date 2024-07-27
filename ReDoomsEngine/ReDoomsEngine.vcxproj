@@ -119,7 +119,8 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-	<ClCompile Include="Source\Runtime\Core\Thread.cpp" />
+    <ClCompile Include="Source\Runtime\Core\Thread.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\SceneData\GPUScene.cpp" />
     <ClCompile Include="Source\Runtime\Thread\JobSystem.cpp" />
     <ClCompile Include="Source\Runtime\Utils\ConsoleVariable.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.cpp" />
@@ -192,8 +193,10 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-	<ClInclude Include="Source\Runtime\Core\Enums.h" />
+    <ClInclude Include="Source\Runtime\Core\Enums.h" />
     <ClInclude Include="Source\Runtime\Core\Thread.h" />
+    <ClInclude Include="Source\Runtime\Core\Types.h" />
+    <ClInclude Include="Source\Runtime\Rendering\SceneData\GPUScene.h" />
     <ClInclude Include="Source\Runtime\STL\EASTL\test\packages\EAThread\include\eathread\eathread_pool.h" />
     <ClInclude Include="Source\Runtime\Thread\JobSystem.h" />
     <ClInclude Include="Source\Runtime\Utils\ConsoleVariable.h" />
@@ -592,6 +595,15 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\seafloor.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\Shader\Common.hlsl" />
+    <FxCompile Include="Assets\Shader\HelloTriangle.hlsl" />
+    <FxCompile Include="Assets\Shader\MeshDraw.hlsl" />
+    <FxCompile Include="Assets\Shader\MeshDrawCommon.hlsl" />
+    <FxCompile Include="Assets\Shader\SceneData.hlsl" />
+    <FxCompile Include="Assets\Shader\SquidRoom.hlsl" />
+    <FxCompile Include="Assets\Shader\Test\Test.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

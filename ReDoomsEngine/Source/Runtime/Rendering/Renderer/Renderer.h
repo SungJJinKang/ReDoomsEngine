@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "D3D12Manager.h"
 #include "D3D12Window.h"
@@ -53,6 +53,8 @@ public:
 	void OnEndFrame();
 	virtual void OnPostEndFrame();
 	virtual void Destroy();
+
+	virtual void PrepareDraw();
 
 	void Tick();
 
