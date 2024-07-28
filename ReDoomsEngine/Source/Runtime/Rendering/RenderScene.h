@@ -20,7 +20,8 @@ enum class EPass : uint32_t
 struct FRenderObjectList
 {
 	eastl::array<eastl::bitvector<>, static_cast<uint32_t>(EPass::Num)> VisibleFlagsList;
-	eastl::bitvector<> ModelMatrixDirtyList;
+	eastl::bitvector<> TransformDirtyObjectList;
+	eastl::bitvector<> GPUSceneDirtyObjectList;
 	eastl::vector<BoundingBox> BoundingBoxList;
 	/// <summary>
 	/// x, y, z : World position
@@ -29,7 +30,7 @@ struct FRenderObjectList
 	eastl::vector<AlignedVector4> PositionAndLocalBoundingSphereRadiusList;
 	eastl::vector<AlignedQuaternion> RotationList;
 	eastl::vector<AlignedVector4> ScaleAndDrawDistanceList;
-	eastl::vector<AlignedMatrix> CachedModelMatrixList;
+	eastl::vector<AlignedMatrix> CachedLocalToWorldMatrixList;
 	eastl::vector<eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>> VertexBufferViewList;
 	eastl::vector<D3D12_INDEX_BUFFER_VIEW> IndexBufferViewList;
 
@@ -40,7 +41,8 @@ struct FRenderObjectList
 	eastl::vector<FD3D12PSOInitializer::FDrawDesc> TemplateDrawDescList;
 	eastl::vector<FMeshDrawArgument> MeshDrawArgumentList;
 
-	void CacheModelMatrixs();
+	void CacheLocalToWorldMatrixs();
+	void DirtyTransform(const uint32 InObjectIndex);
 	void Reserve(const size_t InSize);
 };
 
@@ -84,7 +86,7 @@ public:
 	);
 
 	// This function will be called from worker thread
-	void PrepareToCreateMeshDrawList();
+	void PrepareToCreateMeshDrawList(FD3D12CommandContext& InCommandContext);
 	eastl::vector<FMeshDraw> CreateMeshDrawListForPass(const EPass InPass);
 	void SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList);
 
@@ -108,5 +110,5 @@ private:
 
 DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
 	MeshDrawConstantBuffer, true,
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ModelMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, LocalToWorldMatrix)
 )

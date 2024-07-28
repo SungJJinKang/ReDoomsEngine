@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "D3D12Include.h"
 #include "D3D12PSO.h"
 #include "D3D12Resource/D3D12Mesh.h"
@@ -39,6 +39,7 @@ private:
 	void SetRootSignature(FD3D12RootSignature* const InRootSignature);
 
 	void ApplyPSO(FD3D12CommandList& InCommandList);
+	void ApplyPrimitiveTopologyDirty(FD3D12CommandList& InCommandList);
 	void ApplyRTVAndDSV(FD3D12CommandList& InCommandList);
 	void ApplyRootSignature(FD3D12CommandList& InCommandList);
 	void ApplyDescriptorHeap(FD3D12CommandList& InCommandList);
@@ -50,6 +51,8 @@ private:
 
 	bool bIsPSODirty = true;
 	FD3D12PSOInitializer CachedPSOInitializer{};
+
+	bool bIsPrimitiveTopologyDirty = true;
 
 	bool bIsRootSignatureDirty = true;
 	FD3D12RootSignature* CachedRootSignature = nullptr;

@@ -10,6 +10,14 @@
 class FD3D12CommandAllocator;
 class FD3D12CommandQueue;
 struct FD3D12PSO;
+
+enum class ED3D12CommandListStatus
+{
+	Unknown,
+	Closed,
+	Recording,
+	Submitted
+};
 class FD3D12CommandList : public eastl::enable_shared_from_this<FD3D12CommandList>
 {
 public:
@@ -35,6 +43,8 @@ private:
 
 	FD3D12CommandAllocator* const OwnerCommandAllocator;
 	ComPtr<ID3D12GraphicsCommandList> CommandList;
+
+	ED3D12CommandListStatus CurrentCommandListStatus;
 };
 
 class FD3D12CommandAllocator

@@ -478,13 +478,4 @@
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl" />
     <None Include="Source\Runtime\Math\SimpleMath.inl" />
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Assets\Shader\SquidRoom.hlsl" />
-    <FxCompile Include="Assets\Shader\HelloTriangle.hlsl" />
-    <FxCompile Include="Assets\Shader\MeshDraw.hlsl" />
-    <FxCompile Include="Assets\Shader\MeshDrawCommon.hlsl" />
-    <FxCompile Include="Assets\Shader\SceneData.hlsl" />
-    <FxCompile Include="Assets\Shader\Common.hlsl" />
-    <FxCompile Include="Assets\Shader\Test\Test.hlsl" />
-  </ItemGroup>
 </Project>

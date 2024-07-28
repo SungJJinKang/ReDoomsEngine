@@ -574,6 +574,10 @@ void FShaderParameterContainerTemplate::Init()
 				}
 			}
 		}
+		else if (ShaderParameter->IsSRV() && STR_EQUAL(ShaderParameter->GetVariableName(), PRIMITIVE_SCENEDATA_VARIABLE_NAME_STR))
+		{
+			PrimitiveSceneDataSRVIndexInShaderParameterList = ShaderParameterIndex;
+		}
 	}
 }
 
@@ -636,6 +640,21 @@ void FShaderParameterContainerTemplate::CopyFrom(const FShaderParameterContainer
 	{
 		ShaderParameterList[Index]->CopyFrom(*(InTemplate.ShaderParameterList[Index]));
 	}
+}
+
+FShaderParameterTemplate* FShaderParameterContainerTemplate::FindShaderParameterTemplate(const char* const InVariableName)
+{
+	FShaderParameterTemplate* FoundShaderParamter = nullptr;
+	for (FShaderParameterTemplate* ShaderParamter : ShaderParameterList)
+	{
+		if (STR_EQUAL(ShaderParamter->GetVariableName(), InVariableName))
+		{
+			FoundShaderParamter = ShaderParamter;
+			break;
+		}
+	}
+	
+	return FoundShaderParamter;
 }
 
 void FShaderParameterTemplate::CopyFrom(const FShaderParameterTemplate& InTemplate)

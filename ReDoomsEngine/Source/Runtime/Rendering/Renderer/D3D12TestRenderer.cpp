@@ -3,6 +3,7 @@
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "MeshLoader.h"
 #include "RenderScene.h"
+#include "SceneData/GPUScene.h"
 
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
@@ -275,7 +276,7 @@ bool D3D12TestRenderer::Draw()
 		Drone.RenderObject.SetPosition(Drone.OriginalPos + Vector3{ Offset * 80.0f, 0.0f, 0.0f });
 	}
 
-	PrepareDraw();
+	PrepareDraw(CurrentFrameCommandContext);
 
 	// Base Pass
 	{

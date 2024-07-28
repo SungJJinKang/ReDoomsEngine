@@ -8,7 +8,7 @@ cbuffer SceneConstantBuffer
 };
 
 Texture2D<float4> TestTexture;
-float4x4 ModelMatrix;
+float4x4 LocalToWorldMatrix;
 
 struct PSInput
 {
@@ -33,7 +33,7 @@ PSInput MainVS(float4 position : POSITION, float2 UV : TEXCOORD0)
 {
     PSInput result;
 
-    result.position = position + offset + ModelMatrix[0] + offsetShaderVariable1 + offsetShaderVariable2 + TestTexture.Load(int3(Time, 0, 0));
+    result.position = position + offset + LocalToWorldMatrix[0] + offsetShaderVariable1 + offsetShaderVariable2 + TestTexture.Load(int3(Time, 0, 0));
     result.UV = UV;
 
     return result;

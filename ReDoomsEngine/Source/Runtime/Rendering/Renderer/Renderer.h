@@ -54,7 +54,7 @@ public:
 	virtual void OnPostEndFrame();
 	virtual void Destroy();
 
-	virtual void PrepareDraw();
+	virtual void PrepareDraw(FD3D12CommandContext& InCommandContext);
 
 	void Tick();
 

@@ -27,7 +27,7 @@ PSInput MainVS(
     float4 NewPosition = float4(Position, 1.0f);
 
     Normal.z *= -1.0f;
-    NewPosition = mul(NewPosition, ModelMatrix);
+    NewPosition = mul(NewPosition, LocalToWorldMatrix);
 
     Result.WorldPosition = NewPosition;
 

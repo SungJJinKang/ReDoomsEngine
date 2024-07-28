@@ -89,7 +89,6 @@ void FRenderer::OnStartFrame()
 	}
 
 	CurrentFrameContainer.ResetForNewFrame();
-	CurrentFrameCommandContext.StateCache.ResetForNewCommandlist();
 	CurrentFrameCommandContext.FrameResourceCounter = &CurrentFrameContainer;
 	for (uint32_t QueueIndex = 0; QueueIndex < ED3D12QueueType::NumD3D12QueueType; ++QueueIndex)
 	{
@@ -97,6 +96,8 @@ void FRenderer::OnStartFrame()
 	}
 	CurrentFrameCommandContext.CommandAllocatorList = CurrentFrameContainer.CommandAllocatorList;
 	CurrentFrameCommandContext.GraphicsCommandList = CurrentFrameContainer.CommandAllocatorList[static_cast<uint32_t>(ECommandAllocatorType::Graphics)]->GetOrCreateNewCommandList();
+	CurrentFrameCommandContext.StateCache.ResetForNewCommandlist();
+
 	GPUTimerBeginFrame(&CurrentFrameCommandContext);
 
 	FrametimeGPUTimer.Start(CurrentFrameCommandContext.CommandQueueList[ED3D12QueueType::Direct], CurrentFrameCommandContext.GraphicsCommandList.get());
@@ -108,8 +109,6 @@ void FRenderer::OnStartFrame()
 bool FRenderer::Draw()
 {
 	GCurrentRendererState = ERendererState::Draw;
-
-	FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(CurrentFrameCommandContext);
 
 	if (GCurrentFrameIndex == GNumBackBufferCount)
 	{
@@ -172,9 +171,9 @@ void FRenderer::Destroy()
 	D3D12Manager.OnDestory(CurrentFrameCommandContext);
 }
 
-void FRenderer::PrepareDraw()
+void FRenderer::PrepareDraw(FD3D12CommandContext& InCommandContext)
 {
-	RenderScene.PrepareToCreateMeshDrawList();
+	RenderScene.PrepareToCreateMeshDrawList(InCommandContext);
 }
 
 void FRenderer::Tick()

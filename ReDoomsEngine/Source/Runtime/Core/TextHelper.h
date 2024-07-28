@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "EAStdC/EAString.h"
 #include "EAStdC/EASprintf.h"
 #include "EASTL/string.h"
@@ -7,6 +7,8 @@
 #define WCHAR_TO_UTF8(Str) EA::StdC::ConvertString<eastl::wstring_view, eastl::string>(Str).c_str()
 #define UTF8_TO_WCHAR(Str) EA::StdC::ConvertString<eastl::u8string_view, eastl::wstring>(Str).c_str()
 #define ANSI_TO_WCHAR(Str) UTF8_TO_WCHAR(Str)
+
+#define STR_EQUAL(Str1, Str2) (EA::StdC::Strcmp(Str1, Str2) == 0)
 
 template <typename StrType, typename ReturnType = eastl::basic_string<typename eastl::remove_const<typename eastl::remove_pointer<StrType>::type>::type>>
 ReturnType PrintfHelper(StrType pFormat, ...)

@@ -596,15 +596,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
   <ItemGroup>
     <Image Include="Assets\seafloor.dds" />
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Assets\Shader\Common.hlsl" />
-    <FxCompile Include="Assets\Shader\HelloTriangle.hlsl" />
-    <FxCompile Include="Assets\Shader\MeshDraw.hlsl" />
-    <FxCompile Include="Assets\Shader\MeshDrawCommon.hlsl" />
-    <FxCompile Include="Assets\Shader\SceneData.hlsl" />
-    <FxCompile Include="Assets\Shader\SquidRoom.hlsl" />
-    <FxCompile Include="Assets\Shader\Test\Test.hlsl" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

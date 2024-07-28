@@ -1,4 +1,4 @@
-#include "D3D12StateCache.h"
+﻿#include "D3D12StateCache.h"
 
 #include "D3D12Device.h"
 #include "D3D12CommandContext.h"
@@ -11,6 +11,8 @@
 #include "D3D12CommandList.h"
 #include "Renderer/Renderer.h"
 #include "EASTL/sort.h"
+
+static TConsoleVariable<bool> GAlwaysInvalidateD3D12StateCache{ "r.AlwaysInvalidateD3D12StateCache", false };
 
 void FD3D12StateCache::SetPSOInputLayout(const D3D12_INPUT_LAYOUT_DESC& InputLayoutDesc)
 {
@@ -117,6 +119,11 @@ void FD3D12StateCache::SetPSO(const FD3D12PSOInitializer& InPSOInitializer)
 	EA_ASSERT(InPSOInitializer.GetCachedHash() != 0);
 	if (!(CachedPSOInitializer.IsValidHash()) || (CachedPSOInitializer.GetCachedHash() != InPSOInitializer.GetCachedHash()))
 	{
+		if (CachedPSOInitializer.DrawDesc.Desc.PrimitiveTopologyType != InPSOInitializer.DrawDesc.Desc.PrimitiveTopologyType)
+		{
+			bIsPrimitiveTopologyDirty = true;
+		}
+
 		CachedPSOInitializer = InPSOInitializer;
 		bIsPSODirty = true;
 	}
@@ -316,6 +323,33 @@ void FD3D12StateCache::ApplyPSO(FD3D12CommandList& InCommandList)
 	bIsPSODirty = false;
 }
 
+static D3D12_PRIMITIVE_TOPOLOGY GetD3D12PrimitiveTopology(const D3D12_PRIMITIVE_TOPOLOGY_TYPE InPrimitiveTopologyType)
+{
+	D3D12_PRIMITIVE_TOPOLOGY PrimTopology = D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+	switch (InPrimitiveTopologyType)
+	{
+		case D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE:
+		{
+			PrimTopology = D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			break;
+		}
+		default:
+		{
+			EA_ASSERT(false);
+			break;
+		}
+	}
+
+	return PrimTopology;
+}
+
+void FD3D12StateCache::ApplyPrimitiveTopologyDirty(FD3D12CommandList& InCommandList)
+{
+	InCommandList.GetD3DCommandList()->IASetPrimitiveTopology(GetD3D12PrimitiveTopology(CachedPSOInitializer.DrawDesc.Desc.PrimitiveTopologyType));
+
+	bIsPrimitiveTopologyDirty = false;
+}
+
 void FD3D12StateCache::ApplyRTVAndDSV(FD3D12CommandList& InCommandList)
 {
 	EA_ASSERT(CachedRTVCount != UINT32_MAX);
@@ -470,7 +504,7 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipe
 
 	FD3D12DescriptorHeapBlock BaseHeapBlcok;
 
-	if (DirtyFlagsOfSRVs.any() || DirtyFlagsOfUAVs.any())
+	if (DirtyFlagsOfSRVs.any() || DirtyFlagsOfUAVs.any() || GAlwaysInvalidateD3D12StateCache)
 	{
 		uint32_t RequiredSRVSlotCount = 0;
 		uint32_t RequiredUAVSlotCount = 0;
@@ -499,39 +533,43 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipe
 		}
 	}
 
-	if (bIsPSODirty)
+	if (bIsPSODirty || GAlwaysInvalidateD3D12StateCache)
 	{
 		ApplyPSO(*(InCommandContext.GraphicsCommandList));
 	}
-	if ((InPipeline == EPipeline::Graphics) && bNeedToSetRTVAndDSV)
+	if (bIsPrimitiveTopologyDirty || GAlwaysInvalidateD3D12StateCache)
+	{
+		ApplyPrimitiveTopologyDirty(*(InCommandContext.GraphicsCommandList));
+	}
+	if ((InPipeline == EPipeline::Graphics) && (bNeedToSetRTVAndDSV || GAlwaysInvalidateD3D12StateCache))
 	{
 		ApplyRTVAndDSV(*(InCommandContext.GraphicsCommandList));
 	}
-	if (bIsRootSignatureDirty)
+	if (bIsRootSignatureDirty || GAlwaysInvalidateD3D12StateCache)
 	{
 		ApplyRootSignature(*(InCommandContext.GraphicsCommandList));
 	}
-	if (bNeedToSetDescriptorHeaps)
+	if (bNeedToSetDescriptorHeaps || GAlwaysInvalidateD3D12StateCache)
 	{
 		ApplyDescriptorHeap(*(InCommandContext.GraphicsCommandList));
 	}
-	if (DirtyFlagsOfSRVs.any())
+	if (DirtyFlagsOfSRVs.any() || GAlwaysInvalidateD3D12StateCache)
 	{
 		ApplySRVs(*(InCommandContext.GraphicsCommandList), BaseHeapBlcok, OutUsedBlockCount);
 	}
-	if (DirtyFlagsOfUAVs.any())
+	if (DirtyFlagsOfUAVs.any() || GAlwaysInvalidateD3D12StateCache)
 	{
 		ApplyUAVs(*(InCommandContext.GraphicsCommandList), BaseHeapBlcok, OutUsedBlockCount);
 	}
-	if (bIsRootCBVDirty)
+	if (bIsRootCBVDirty || GAlwaysInvalidateD3D12StateCache)
 	{
 		ApplyConstantBuffers(*(InCommandContext.GraphicsCommandList));
 	}
-	if ((InPipeline == EPipeline::Graphics) && bNeedToSetVertexBufferView)
+	if ((InPipeline == EPipeline::Graphics) && (bNeedToSetVertexBufferView || GAlwaysInvalidateD3D12StateCache))
 	{
 		ApplyVertexBufferViewList(*(InCommandContext.GraphicsCommandList));
 	}
-	if ((InPipeline == EPipeline::Graphics) && bNeedToSetIndexBufferView && CachedIndexBufferView.BufferLocation)
+	if ((InPipeline == EPipeline::Graphics) && (bNeedToSetIndexBufferView || GAlwaysInvalidateD3D12StateCache) && CachedIndexBufferView.BufferLocation)
 	{
 		ApplyIndexBufferView(*(InCommandContext.GraphicsCommandList));
 	}
@@ -543,6 +581,7 @@ void FD3D12StateCache::ResetForNewCommandlist()
 	CachedRootSignature = nullptr;
 
 	bIsPSODirty = true;
+	bIsPrimitiveTopologyDirty = true;
 	bIsRootSignatureDirty = true;
 	bIsRootCBVDirty = true;
 	bNeedToSetDescriptorHeaps = true;

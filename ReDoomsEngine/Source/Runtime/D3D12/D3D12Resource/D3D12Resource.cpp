@@ -1,4 +1,4 @@
-#include "D3D12Resource.h"
+﻿#include "D3D12Resource.h"
 
 #include "D3D12Device.h"
 #include "D3D12ConstantBufferRingBuffer.h"
@@ -125,7 +125,41 @@ FD3D12ShaderResourceView* FD3D12Resource::GetSRV()
 
 	if (DefaultSRV == nullptr)
 	{
-		DefaultSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this());
+		if (IsBuffer())
+		{
+			D3D12_SHADER_RESOURCE_VIEW_DESC SRVDesc{};
+
+			if (!Info.bNullView)
+			{
+				SRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+				SRVDesc.Format = UE::DXGIUtilities::FindShaderResourceFormat(DXGI_FORMAT(GPixelFormats[Info.Format].PlatformFormat), false);
+				SRVDesc.Buffer.FirstElement = (Info.OffsetInBytes + Buffer->ResourceLocation.GetOffsetFromBaseOfResource()) / Info.StrideInBytes;
+				SRVDesc.Buffer.NumElements = Info.NumElements;
+
+				switch (Info.BufferType)
+				{
+				case FRHIViewDesc::EBufferType::Raw:
+					SRVDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+					SRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
+					break;
+
+				case FRHIViewDesc::EBufferType::Structured:
+					SRVDesc.Buffer.StructureByteStride = Info.StrideInBytes;
+					break;
+
+				case FRHIViewDesc::EBufferType::Typed:
+					// Nothing more to specify
+					break;
+				}
+			}
+
+			DefaultSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this(), SRVDesc);
+		}
+		else
+		{
+			DefaultSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this());
+		}
+
 		DefaultSRV->UpdateDescriptor();
 	}
 
@@ -145,7 +179,7 @@ FD3D12UnorderedAccessView* FD3D12Resource::GetUAV()
 
 	return DefaultUAV.get();
 }
-
+																			
 FD3D12RenderTargetView* FD3D12Resource::GetRTV()
 {
 	EA_ASSERT(bInit);

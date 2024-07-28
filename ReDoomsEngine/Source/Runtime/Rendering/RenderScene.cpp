@@ -10,6 +10,7 @@ static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
 void FRenderScene::Init()
 {
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+	GPUSceneData.Init();
 }
 
 FRenderObject FRenderScene::AddRenderObject(
@@ -29,19 +30,19 @@ FRenderObject FRenderScene::AddRenderObject(
 	{
 		RenderObjectList.VisibleFlagsList[PassIndex].push_back(bInVisible);
 	}
-	RenderObjectList.ModelMatrixDirtyList.push_back(true);
+	RenderObjectList.TransformDirtyObjectList.push_back(true);
 	RenderObjectList.BoundingBoxList.push_back(InLocalBoundingBox);
 	RenderObjectList.PositionAndLocalBoundingSphereRadiusList.emplace_back(Position.x, Position.y, Position.z, InLocalBoundingBox.LengthOfCenterToCorner());
 	RenderObjectList.RotationList.push_back(InRotation);
 	RenderObjectList.ScaleAndDrawDistanceList.emplace_back(InScale.x, InScale.y, InScale.z, InDrawDistance);
-	RenderObjectList.CachedModelMatrixList.push_back_uninitialized();
+	RenderObjectList.CachedLocalToWorldMatrixList.push_back_uninitialized();
 	RenderObjectList.VertexBufferViewList.push_back(InVertexBufferViews);
 	RenderObjectList.IndexBufferViewList.push_back(IndexBufferView);
 	EA_ASSERT(InDrawDesc.IsValidHash());
 	RenderObjectList.TemplateDrawDescList.push_back(InDrawDesc);
 	RenderObjectList.MeshDrawArgumentList.push_back(InMeshDrawArgument);
 
-	FRenderObject NewRenderObject{ &RenderObjectList,  RenderObjectList.ModelMatrixDirtyList.size() - 1 };
+	FRenderObject NewRenderObject{ &RenderObjectList,  RenderObjectList.TransformDirtyObjectList.size() - 1 };
 
 	if (GCacheMeshDraw)
 	{
@@ -51,9 +52,11 @@ FRenderObject FRenderScene::AddRenderObject(
 	return NewRenderObject;
 }
 
-void FRenderScene::PrepareToCreateMeshDrawList()
+void FRenderScene::PrepareToCreateMeshDrawList(FD3D12CommandContext& InCommandContext)
 {
-	RenderObjectList.CacheModelMatrixs();
+	RenderObjectList.CacheLocalToWorldMatrixs();
+
+	GPUSceneData.UploadDirtyData(InCommandContext, RenderObjectList);
 }
 
 eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InPass)
@@ -113,19 +116,22 @@ void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::arr
 		{
 			EA_ASSERT(!(ShaderInstance->bIsTemplateInstance));
 
+			FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate = ShaderInstance->GetShaderParameterContainer();
+			eastl::vector<FShaderParameterTemplate*>& ShaderParameterList = ShaderParameterContainerTemplate->GetShaderParameterList();
 			if (ShaderInstanceIndex == EShaderFrequency::Vertex)
 			{
-				FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate = ShaderInstance->GetShaderParameterContainer();
 				const int32_t MeshDrawConstantBufferIndex = ShaderParameterContainerTemplate->GetMeshDrawConstantBufferIndex();
-				eastl::vector<FShaderParameterTemplate*>& ShaderParameterList = ShaderParameterContainerTemplate->GetShaderParameterList();
 				EA_ASSERT_FORMATTED(
 					MeshDrawConstantBufferIndex >= 0 && MeshDrawConstantBufferIndex < ShaderParameterList.size(),
 					("Invalid MeshDrawConstantBufferIndex. You need to add ConstantBuffer \"%s\" to Shader \"%s\"", ANSI_TO_WCHAR(MeshDrawConstantBuffer.GetVariableName()), ShaderInstance->GetShaderTemplate()->GetShaderDeclaration().ShaderName)
 				);
 
-				static_cast<FConstantBufferTypeMeshDrawConstantBuffer*>(ShaderParameterList[MeshDrawConstantBufferIndex])->MemberVariables.ModelMatrix =
-					RenderObjectList.CachedModelMatrixList[InObjectIndex];
+				static_cast<FConstantBufferTypeMeshDrawConstantBuffer*>(ShaderParameterList[MeshDrawConstantBufferIndex])->MemberVariables.LocalToWorldMatrix =
+					RenderObjectList.CachedLocalToWorldMatrixList[InObjectIndex];
 			}
+
+			const int32_t PrimitiveSceneDataSRVIndex = ShaderParameterContainerTemplate->GetPrimitiveSceneDataSRVIndex();
+			*static_cast<FShaderParameterShaderResourceView*>(ShaderParameterList[PrimitiveSceneDataSRVIndex]) = GPUSceneData.GetGPUSceneBuffer()->GetSRV();
 		}
 	}
 }
@@ -173,7 +179,7 @@ void FRenderObject::SetPosition(const Vector3& InPosition)
 	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].y = InPosition.y;
 	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z = InPosition.z;
 
-	RenderObjectList->ModelMatrixDirtyList.set(ObjectIndex, true);
+	RenderObjectList->DirtyTransform(ObjectIndex);
 }
 
 float FRenderObject::GetLocalBoundingSphereRadius() const
@@ -190,7 +196,7 @@ void FRenderObject::SetRotation(const Quaternion& InQuaternion)
 {
 	RenderObjectList->RotationList[ObjectIndex] = InQuaternion;
 
-	RenderObjectList->ModelMatrixDirtyList.set(ObjectIndex, true);
+	RenderObjectList->DirtyTransform(ObjectIndex);
 }
 
 const DirectX::SimpleMath::Vector3& FRenderObject::GetScale() const
@@ -204,7 +210,7 @@ void FRenderObject::SetScale(const Vector3& InScale)
 	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].y = InScale.y;
 	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].z = InScale.z;
 
-	RenderObjectList->ModelMatrixDirtyList.set(ObjectIndex, true);
+	RenderObjectList->DirtyTransform(ObjectIndex);
 }
 
 float FRenderObject::GetDrawDistance() const
@@ -217,17 +223,17 @@ void FRenderObject::SetDrawDistance(const float InDrawDistance)
 	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].w = InDrawDistance;
 }
 
-void FRenderObjectList::CacheModelMatrixs()
+void FRenderObjectList::CacheLocalToWorldMatrixs()
 {
-	SCOPED_CPU_TIMER(FRenderObjectList_CacheModelMatrixs)
-	SCOPED_MEMORY_TRACE(FRenderObjectList_CacheModelMatrixs)
+	SCOPED_CPU_TIMER(FRenderObjectList_CacheLocalToWorldMatrixs)
+	SCOPED_MEMORY_TRACE(FRenderObjectList_CacheLocalToWorldMatrixs)
 
 	// todo : multithread?
 	for (uint32_t ObjectIndex = 0; ObjectIndex < PositionAndLocalBoundingSphereRadiusList.size(); ++ObjectIndex)
 	{
-		if (ModelMatrixDirtyList[ObjectIndex])
+		if (TransformDirtyObjectList[ObjectIndex])
 		{
-			const Matrix ModelMatrix = Matrix::CreateTranslation(
+			const Matrix LocalToWorldMatrix = Matrix::CreateTranslation(
 				PositionAndLocalBoundingSphereRadiusList[ObjectIndex].x,
 				PositionAndLocalBoundingSphereRadiusList[ObjectIndex].y,
 				PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z);
@@ -235,11 +241,17 @@ void FRenderObjectList::CacheModelMatrixs()
 			const Matrix RotationMatrix = Matrix::CreateFromQuaternion(RotationList[ObjectIndex]);
 			const Matrix ScaleMatrix = Matrix::CreateScale(ScaleAndDrawDistanceList[ObjectIndex].x, ScaleAndDrawDistanceList[ObjectIndex].y, ScaleAndDrawDistanceList[ObjectIndex].z);
 
-			CachedModelMatrixList[ObjectIndex] = ModelMatrix * RotationMatrix * ScaleMatrix;
+			CachedLocalToWorldMatrixList[ObjectIndex] = LocalToWorldMatrix * RotationMatrix * ScaleMatrix;
 
-			ModelMatrixDirtyList[ObjectIndex] = false;
+			TransformDirtyObjectList[ObjectIndex] = false;
 		}
 	}
+}
+
+void FRenderObjectList::DirtyTransform(const uint32 InObjectIndex)
+{
+	TransformDirtyObjectList.set(InObjectIndex, true);
+	GPUSceneDirtyObjectList.set(InObjectIndex, true);
 }
 
 void FRenderObjectList::Reserve(const size_t InSize)
@@ -248,12 +260,12 @@ void FRenderObjectList::Reserve(const size_t InSize)
 	{
 		VisibleFlagsList[PassIndex].reserve(InSize);
 	}
-	ModelMatrixDirtyList.reserve(InSize);
+	TransformDirtyObjectList.reserve(InSize);
 	BoundingBoxList.reserve(InSize);
 	PositionAndLocalBoundingSphereRadiusList.reserve(InSize);
 	RotationList.reserve(InSize);
 	ScaleAndDrawDistanceList.reserve(InSize);
-	CachedModelMatrixList.reserve(InSize);
+	CachedLocalToWorldMatrixList.reserve(InSize);
 	VertexBufferViewList.reserve(InSize);
 	IndexBufferViewList.reserve(InSize);
 	TemplateDrawDescList.reserve(InSize);

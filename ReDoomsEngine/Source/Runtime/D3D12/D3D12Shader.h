@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "ShaderCompilers/ShaderCompileStructs.h"
 #include "D3D12Enums.h"
 #include "D3D12Resource/D3D12ConstantBufferHelper.h"
 #include "D3D12Resource/D3D12Resource.h"
 #include "Common/RendererStateCallbackInterface.h"
+#include "SceneData/GPUScene.h"
 
 struct FD3D12CommandContext;
 class FD3D12RootSignature;
@@ -212,11 +213,13 @@ class FShaderParameterContainerTemplate
 public:
 
 	FShaderParameterContainerTemplate(FD3D12ShaderTemplate* InD3D12ShaderTemplate)
-		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(), bIsShaderInstance(false), ShaderParameterList(), MeshDrawConstantBufferIndexInShaderParameterList(-1)
+		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(), bIsShaderInstance(false), 
+		ShaderParameterList(), MeshDrawConstantBufferIndexInShaderParameterList(-1), PrimitiveSceneDataSRVIndexInShaderParameterList(-1)
 	{
 	}
 	FShaderParameterContainerTemplate(FD3D12ShaderTemplate* InD3D12ShaderTemplate, FD3D12ShaderInstance* InD3D12ShaderInstance)
-		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(InD3D12ShaderInstance), bIsShaderInstance(true), ShaderParameterList(), MeshDrawConstantBufferIndexInShaderParameterList(-1)
+		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(InD3D12ShaderInstance), bIsShaderInstance(true), 
+		ShaderParameterList(), MeshDrawConstantBufferIndexInShaderParameterList(-1), PrimitiveSceneDataSRVIndexInShaderParameterList(-1)
 	{
 	}
 	FShaderParameterContainerTemplate(const FShaderParameterContainerTemplate&) = delete;
@@ -246,10 +249,15 @@ public:
 	{
 		return MeshDrawConstantBufferIndexInShaderParameterList;
 	}
+	inline int32_t GetPrimitiveSceneDataSRVIndex() const
+	{
+		return PrimitiveSceneDataSRVIndexInShaderParameterList;
+	}
 
 	void AddShaderParamter(FShaderParameterTemplate* const InShaderParameter);
 	void ApplyShaderParameters(FD3D12CommandContext& InCommandContext);
 	void CopyFrom(const FShaderParameterContainerTemplate& InTemplate);
+	FShaderParameterTemplate* FindShaderParameterTemplate(const char* const InVariableName);
 
 protected:
 
@@ -264,6 +272,7 @@ private:
 
 	// this is fast path for RenderScene
 	int32_t MeshDrawConstantBufferIndexInShaderParameterList;
+	int32_t PrimitiveSceneDataSRVIndexInShaderParameterList;
 };
 
 class FShaderParameterTemplate
@@ -354,7 +363,9 @@ private:
 enum class EShaderParameterResourceType
 {
 	Texture,
-	Buffer
+	RawBuffer,
+	StructuredBuffer,
+	TypedBuffer,
 };
 
 class FShaderParameterResourceView : public FShaderParameterTemplate
@@ -676,6 +687,10 @@ private:
 
 };
 
+#define ADD_DEFAULT_SHADER_PARAMETER \
+		ADD_SHADER_CONSTANT_BUFFER(ViewConstantBuffer, ViewConstantBuffer) \
+		ADD_SHADER_SRV_VARIABLE(PRIMITIVE_SCENEDATA_VARIABLE_NAME, EShaderParameterResourceType::StructuredBuffer)
+
 #define DEFINE_SHADER_PARAMTERS(...) \
 	public: \
 	class FShaderParameterContainer : public FShaderParameterContainerTemplate \
@@ -686,7 +701,7 @@ private:
 		FShaderParameterContainer(FD3D12ShaderTemplate* InD3D12ShaderTemplate, FD3D12ShaderInstance* InD3D12ShaderInstance) \
 			: FShaderParameterContainerTemplate(InD3D12ShaderTemplate, InD3D12ShaderInstance) {} \
 		__VA_ARGS__ \
-		ADD_SHADER_CONSTANT_BUFFER(ViewConstantBuffer, ViewConstantBuffer) \
+		ADD_DEFAULT_SHADER_PARAMETER \
 	} ShaderParameter{this};	
 
 #define SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, bInIsDynamic, bInAllowCull, ...) \

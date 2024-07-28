@@ -4,7 +4,7 @@
 #include "D3D12PSO.h"
 
 FD3D12CommandList::FD3D12CommandList(FD3D12CommandAllocator* const InOwnerCommandAllocator)
-	: OwnerCommandAllocator(InOwnerCommandAllocator), Fence(false)
+	:Fence(false), ResourceBarrierBatcher(), OwnerCommandAllocator(InOwnerCommandAllocator), CommandList(), CurrentCommandListStatus(ED3D12CommandListStatus::Unknown)
 {
 
 }
@@ -32,11 +32,15 @@ void FD3D12CommandList::ResetRecordingCommandList(FD3D12PSO* const InInitialPSO)
 	// Unlike ID3D12CommandAllocator::Reset, you can call Reset while the command list is still being executed. 
 	// A typical pattern is to submit a command list and then immediately reset it to reuse the allocated memory for another command list.
 	VERIFYD3D12RESULT(CommandList->Reset(OwnerCommandAllocator->GetD3DCommandAllocator(), InInitialPSO ? InInitialPSO->PSOObject.Get() : nullptr));
+
+	CurrentCommandListStatus = ED3D12CommandListStatus::Recording;
 }
 
 void FD3D12CommandList::FinishRecordingCommandList()
 {
 	VERIFYD3D12RESULT(CommandList->Close());
+
+	CurrentCommandListStatus = ED3D12CommandListStatus::Closed;
 }
 
 void FD3D12CommandList::FlushResourceBarriers()
@@ -96,10 +100,11 @@ void FD3D12CommandAllocator::ResetCommandAllocator(const bool bWaitForCompletati
 	// 	Unlike ID3D12GraphicsCommandList::Reset, it is not recommended that you call Reset on the command allocator while a command list is still being executed.
 
  	if (bWaitForCompletationOfCommandLists && (AllocatedCommandListPool.size() > 0))
- 	{
+	{
+		SCOPED_CPU_TIMER(FD3D12CommandAllocator_ResetCommandAllocator_WaitForCompletationOfCommandLists)
 		AllocatedCommandListPool.back()->Fence.CPUWaitOnLastSignal();
  	}
 
-	VERIFYD3D12RESULT(CommandAllocator->Reset());
+ 	VERIFYD3D12RESULT(CommandAllocator->Reset());
 
 }

@@ -1,8 +1,12 @@
 ﻿#pragma once
 #include "CommonInclude.h"
-#include "D3D12Resource/D3D12ResourceAllocator.h"
 
 struct FRenderObjectList;
+class FD3D12ConstantBufferResource;
+struct FD3D12CommandContext;
+
+#define PRIMITIVE_SCENEDATA_VARIABLE_NAME PrimitiveSceneData
+#define PRIMITIVE_SCENEDATA_VARIABLE_NAME_STR "PrimitiveSceneData"
 
 // this shoud match with struct in SceneData.hlsl
 struct FPrimitiveSceneData
@@ -18,11 +22,12 @@ class GPUScene
 public:
 
 	void Init();
-	void UploadDirtyData(FD3D12CommandContext& InCommandContext, const FRenderObjectList& InRenderObjectList, const eastl::bitvector<>& InDirtyObjectList);
+	void UploadDirtyData(FD3D12CommandContext& InCommandContext, FRenderObjectList& InRenderObjectList);
+	FD3D12ConstantBufferResource* GetGPUSceneBuffer();
 
 private:
 
-	eastl::unique_ptr<FD3D12ConstantBufferResource> GPUSceneBuffer;
+	eastl::shared_ptr<FD3D12ConstantBufferResource> GPUSceneBuffer;
 
 };
 
