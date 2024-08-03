@@ -86,6 +86,7 @@ void GPUScene::UploadDirtyData(FD3D12CommandContext& InCommandContext, FRenderOb
 							VisibilityFlags |= (1 << PassIndex);
 						}
 					}
+					PrimitiveSceneData->Flags = 0;
 					PrimitiveSceneData->VisibilityFlags = VisibilityFlags;
 					PrimitiveSceneData->LocalToWorld = InRenderObjectList.CachedLocalToWorldMatrixList[ObjectIndex];
 					PrimitiveSceneData->WorldToLocal = InRenderObjectList.CachedLocalToWorldMatrixList[ObjectIndex].Invert();
@@ -106,10 +107,22 @@ void GPUScene::UploadDirtyData(FD3D12CommandContext& InCommandContext, FRenderOb
 		InCommandContext.FlushCommandList(ED3D12QueueType::Direct, true);
 		InCommandContext.ResetCommandList(ED3D12QueueType::Direct);
 		InCommandContext.StateCache.ResetForNewCommandlist();
+	
+		PrimitiveCount = InRenderObjectList.GPUSceneDirtyObjectList.size();
 	}
 }
 
 FD3D12ConstantBufferResource* GPUScene::GetGPUSceneBuffer()
 {
 	return GPUSceneBuffer.get();
+}
+
+uint32 GPUScene::GetPrimitiveCount() const
+{
+	return PrimitiveCount;
+}
+
+uint32 GPUScene::GetSceneBufferSize() const
+{
+	return GPUSceneBuffer->GetBufferSize();
 }

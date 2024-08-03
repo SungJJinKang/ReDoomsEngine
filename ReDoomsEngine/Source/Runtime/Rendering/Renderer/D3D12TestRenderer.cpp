@@ -124,7 +124,9 @@ void D3D12TestRenderer::SceneSetup()
 			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
 
-			MeshDrawPSInstance->Parameter.TriangleColorTexture = DroneMesh->Material[0].DiffuseTexture->GetSRV();
+			FD3D12SRVDesc TriangleColorTextureSRV{};
+			TriangleColorTextureSRV.ShaderParameterResourceType = EShaderParameterResourceType::Texture;
+			MeshDrawPSInstance->Parameter.TriangleColorTexture = DroneMesh->Material[0].DiffuseTexture->GetSRV(TriangleColorTextureSRV);
 
 			eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 			ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;

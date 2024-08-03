@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "D3D12Include.h"
 
 #include "D3D12View.h"
 #include "D3D12ConstantBufferRingBuffer.h"
 #include "D3D12ResourcePool.h"
 #include "D3D12Fence.h"
+#include "D3D12ViewDesc.h"
 
 class FD3D12Resource : public eastl::enable_shared_from_this<FD3D12Resource>
 {
@@ -70,7 +71,7 @@ public:
 	virtual bool IsTexture() const = 0;
 
 	FD3D12ConstantBufferView* GetCBV();
-	FD3D12ShaderResourceView* GetSRV();
+	FD3D12ShaderResourceView* GetSRV(const FD3D12SRVDesc InD3D12SRVDesc);
 	FD3D12UnorderedAccessView* GetUAV();
 	FD3D12RenderTargetView* GetRTV();
 	FD3D12DepthStencilView* GetDSV();
@@ -95,6 +96,7 @@ private:
 
 	eastl::shared_ptr<FD3D12ConstantBufferView> DefaultCBV;
 	eastl::shared_ptr<FD3D12ShaderResourceView> DefaultSRV;
+	eastl::hash_map<FD3D12SRVDesc, eastl::shared_ptr<FD3D12ShaderResourceView>> CachedSRVMap;
 	eastl::shared_ptr<FD3D12UnorderedAccessView> DefaultUAV;
 	eastl::shared_ptr<FD3D12RenderTargetView> DefaultRTV;
 	eastl::shared_ptr<FD3D12DepthStencilView> DefaultDSV;

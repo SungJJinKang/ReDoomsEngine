@@ -7,7 +7,7 @@
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resources(),
-	DefaultCBV(), DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
+	DefaultCBV(), DefaultSRV(), CachedSRVMap(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
 	ValidateResourceProperties();
 }
@@ -26,7 +26,7 @@ FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource>& InResource)
 
 FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false),
-	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
+	DefaultSRV(), CachedSRVMap(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
 	Resources[0] = InResource;
 }
@@ -118,52 +118,73 @@ FD3D12ConstantBufferView* FD3D12Resource::GetCBV()
 	return DefaultCBV.get();
 }
 
-FD3D12ShaderResourceView* FD3D12Resource::GetSRV()
+FD3D12ShaderResourceView* FD3D12Resource::GetSRV(const FD3D12SRVDesc InD3D12SRVDesc)
 {
 	EA_ASSERT(bInit);
+	EA_ASSERT(InD3D12SRVDesc.ShaderParameterResourceType != EShaderParameterResourceType::Unknown);
 	EA_ASSERT(!(Desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE));
 
-	if (DefaultSRV == nullptr)
+	FD3D12ShaderResourceView* SRV{ nullptr };
+
+	auto CachedSRVIter = CachedSRVMap.find(InD3D12SRVDesc);
+	if (CachedSRVIter == CachedSRVMap.end())
 	{
+		eastl::shared_ptr<FD3D12ShaderResourceView> NewSRV{};
 		if (IsBuffer())
 		{
 			D3D12_SHADER_RESOURCE_VIEW_DESC SRVDesc{};
 
-			if (!Info.bNullView)
-			{
-				SRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-				SRVDesc.Format = UE::DXGIUtilities::FindShaderResourceFormat(DXGI_FORMAT(GPixelFormats[Info.Format].PlatformFormat), false);
-				SRVDesc.Buffer.FirstElement = (Info.OffsetInBytes + Buffer->ResourceLocation.GetOffsetFromBaseOfResource()) / Info.StrideInBytes;
-				SRVDesc.Buffer.NumElements = Info.NumElements;
+			SRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+			SRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+			SRVDesc.Buffer.FirstElement = InD3D12SRVDesc.FirstElement;
+			SRVDesc.Buffer.NumElements = InD3D12SRVDesc.NumElements;
 
-				switch (Info.BufferType)
+			switch (InD3D12SRVDesc.ShaderParameterResourceType)
+			{
+				case EShaderParameterResourceType::RawBuffer:
 				{
-				case FRHIViewDesc::EBufferType::Raw:
 					SRVDesc.Format = DXGI_FORMAT_R32_TYPELESS;
 					SRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
 					break;
+				}
 
-				case FRHIViewDesc::EBufferType::Structured:
-					SRVDesc.Buffer.StructureByteStride = Info.StrideInBytes;
+				case EShaderParameterResourceType::StructuredBuffer:
+				{
+					SRVDesc.Format = DXGI_FORMAT_UNKNOWN;
+					SRVDesc.Buffer.StructureByteStride = InD3D12SRVDesc.StructureByteStride;
 					break;
+				}
 
-				case FRHIViewDesc::EBufferType::Typed:
+				case EShaderParameterResourceType::TypedBuffer:
+				{
 					// Nothing more to specify
 					break;
 				}
+
+				default:
+				{
+					EA_ASSERT(false);
+				}
 			}
 
-			DefaultSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this(), SRVDesc);
+			NewSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this(), SRVDesc);
 		}
 		else
 		{
-			DefaultSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this());
+			NewSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this());
 		}
 
-		DefaultSRV->UpdateDescriptor();
+		NewSRV->UpdateDescriptor();
+
+		CachedSRVMap.try_emplace(InD3D12SRVDesc, NewSRV);
+		SRV = NewSRV.get();
+	}
+	else
+	{
+		SRV = CachedSRVIter->second.get();
 	}
 
-	return DefaultSRV.get();
+	return SRV;
 }
 
 FD3D12UnorderedAccessView* FD3D12Resource::GetUAV()

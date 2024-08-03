@@ -360,14 +360,6 @@ private:
 	virtual void SetReflectionDataFromShaderReflectionData() = 0;
 };
 
-enum class EShaderParameterResourceType
-{
-	Texture,
-	RawBuffer,
-	StructuredBuffer,
-	TypedBuffer,
-};
-
 class FShaderParameterResourceView : public FShaderParameterTemplate
 {
 public:
@@ -689,7 +681,7 @@ private:
 
 #define ADD_DEFAULT_SHADER_PARAMETER \
 		ADD_SHADER_CONSTANT_BUFFER(ViewConstantBuffer, ViewConstantBuffer) \
-		ADD_SHADER_SRV_VARIABLE(PRIMITIVE_SCENEDATA_VARIABLE_NAME, EShaderParameterResourceType::StructuredBuffer)
+		ADD_SHADER_SRV_VARIABLE(PrimitiveSceneData, EShaderParameterResourceType::StructuredBuffer)
 
 #define DEFINE_SHADER_PARAMTERS(...) \
 	public: \

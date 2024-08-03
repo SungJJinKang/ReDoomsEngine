@@ -574,7 +574,7 @@ void FShaderParameterContainerTemplate::Init()
 				}
 			}
 		}
-		else if (ShaderParameter->IsSRV() && STR_EQUAL(ShaderParameter->GetVariableName(), PRIMITIVE_SCENEDATA_VARIABLE_NAME_STR))
+		else if (ShaderParameter->IsSRV() && STR_EQUAL(ShaderParameter->GetVariableName(), PRIMITIVE_SCENEDATA_VARIABLE_NAME))
 		{
 			PrimitiveSceneDataSRVIndexInShaderParameterList = ShaderParameterIndex;
 		}

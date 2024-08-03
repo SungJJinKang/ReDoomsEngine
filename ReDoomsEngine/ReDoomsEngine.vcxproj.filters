@@ -77,6 +77,7 @@
     <ClCompile Include="Source\Runtime\Rendering\View.cpp" />
     <ClCompile Include="Source\Runtime\Math\Transform.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\SceneData\GPUScene.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\Core\Enums.h" />
@@ -464,6 +465,7 @@
     <ClInclude Include="Source\Runtime\Math\Transform.h" />
     <ClInclude Include="Source\Runtime\Rendering\SceneData\GPUScene.h" />
     <ClInclude Include="Source\Runtime\Core\Types.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\seafloor.dds" />

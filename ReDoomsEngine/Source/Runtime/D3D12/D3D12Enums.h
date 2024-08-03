@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 
 #include "d3d12.h"
@@ -73,4 +73,13 @@ enum class EPipeline
 {
 	Graphics,
 	Compute
+};
+
+enum class EShaderParameterResourceType
+{
+	Unknown,
+	Texture,
+	RawBuffer,
+	StructuredBuffer,
+	TypedBuffer,
 };

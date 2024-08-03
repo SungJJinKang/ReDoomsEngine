@@ -131,7 +131,15 @@ void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::arr
 			}
 
 			const int32_t PrimitiveSceneDataSRVIndex = ShaderParameterContainerTemplate->GetPrimitiveSceneDataSRVIndex();
-			*static_cast<FShaderParameterShaderResourceView*>(ShaderParameterList[PrimitiveSceneDataSRVIndex]) = GPUSceneData.GetGPUSceneBuffer()->GetSRV();
+			if (PrimitiveSceneDataSRVIndex != -1)
+			{
+				FD3D12SRVDesc PrimitiveSceneDataSRV{};
+				PrimitiveSceneDataSRV.ShaderParameterResourceType = EShaderParameterResourceType::StructuredBuffer;
+				PrimitiveSceneDataSRV.StructureByteStride = 16;
+				PrimitiveSceneDataSRV.NumElements = GPUSceneData.GetSceneBufferSize() / PrimitiveSceneDataSRV.StructureByteStride;
+
+				*static_cast<FShaderParameterShaderResourceView*>(ShaderParameterList[PrimitiveSceneDataSRVIndex]) = GPUSceneData.GetGPUSceneBuffer()->GetSRV(PrimitiveSceneDataSRV);
+			}
 		}
 	}
 }

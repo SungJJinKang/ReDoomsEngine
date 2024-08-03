@@ -119,6 +119,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.cpp" />
     <ClCompile Include="Source\Runtime\Core\Thread.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\SceneData\GPUScene.cpp" />
     <ClCompile Include="Source\Runtime\Thread\JobSystem.cpp" />
@@ -193,6 +194,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.h" />
     <ClInclude Include="Source\Runtime\Core\Enums.h" />
     <ClInclude Include="Source\Runtime\Core\Thread.h" />
     <ClInclude Include="Source\Runtime\Core\Types.h" />
