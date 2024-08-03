@@ -100,6 +100,10 @@ private:
 	eastl::shared_ptr<FD3D12UnorderedAccessView> DefaultUAV;
 	eastl::shared_ptr<FD3D12RenderTargetView> DefaultRTV;
 	eastl::shared_ptr<FD3D12DepthStencilView> DefaultDSV;
+
+	#if D3D_NAME_OBJECT
+	eastl::wstring DebugName;
+	#endif
 };
 
 class FD3D12TextureResource : public FD3D12Resource

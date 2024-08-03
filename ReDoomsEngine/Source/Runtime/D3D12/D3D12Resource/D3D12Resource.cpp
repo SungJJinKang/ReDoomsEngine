@@ -80,6 +80,8 @@ void FD3D12Resource::SetDebugNameToResource(const wchar_t* const InDebugName)
 			bAny = true;
 		}
 	}
+	DebugName = InDebugName;
+
 	EA_ASSERT(bAny);
 }
 #endif
