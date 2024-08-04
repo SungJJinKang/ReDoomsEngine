@@ -27,7 +27,7 @@ public:
 	void SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>& BindPointInfos);
 	void SetConstantBuffer(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>& BindPointInfos);
 
-	void SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)>& InVertexBufferViewList);
+	void SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViewList);
 	void SetIndexBufferView(const D3D12_INDEX_BUFFER_VIEW InIndexBufferView);
 
 	void Flush(FD3D12CommandContext& InCommandList, const EPipeline InPipeline);
@@ -57,11 +57,17 @@ private:
 	bool bIsRootSignatureDirty = true;
 	FD3D12RootSignature* CachedRootSignature = nullptr;
 
+	struct FBoundResourceViewInfo
+	{
+		CD3DX12_CPU_DESCRIPTOR_HANDLE CPUDescriptorHandle{};
+		const FD3D12View* ResourceView = nullptr;
+	};
+
 	eastl::bitset<EShaderFrequency::NumShaderFrequency> DirtyFlagsOfSRVs;
-	eastl::array<eastl::array<CD3DX12_CPU_DESCRIPTOR_HANDLE, MAX_SRVS>, EShaderFrequency::NumShaderFrequency> CachedSRVs;
+	eastl::array<eastl::array<FBoundResourceViewInfo, MAX_SRVS>, EShaderFrequency::NumShaderFrequency> CachedSRVs;
 
 	eastl::bitset<EShaderFrequency::NumShaderFrequency> DirtyFlagsOfUAVs;
-	eastl::array<eastl::array<CD3DX12_CPU_DESCRIPTOR_HANDLE, MAX_UAVS>, EShaderFrequency::NumShaderFrequency> CachedUAVs;
+	eastl::array<eastl::array<FBoundResourceViewInfo, MAX_UAVS>, EShaderFrequency::NumShaderFrequency> CachedUAVs;
 
 // 	bool bIsRTVDirty = true;
 // 	eastl::array<eastl::array<FViewBindPointInfo, MAX_SRVS>, EShaderFrequency::NumShaderFrequency> CachedRTVBindPointInfosOfFrequencies;
@@ -80,11 +86,11 @@ private:
 	bool bNeedToSetRTVAndDSV = true;
 
 	uint32_t CachedRTVCount = UINT32_MAX;
-	eastl::array<CD3DX12_CPU_DESCRIPTOR_HANDLE, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> CachedRTVCPUHandleList;
+	eastl::array<FBoundResourceViewInfo, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> CachedRTVCPUHandleList;
 	
-	CD3DX12_CPU_DESCRIPTOR_HANDLE CachedDSVCPUHandle;
+	FBoundResourceViewInfo CachedDSVCPUHandle;
 
-	eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)> CachedVertexBufferViewList;
+	eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> CachedVertexBufferViewList;
 	bool bNeedToSetVertexBufferView = true;
 
 	D3D12_INDEX_BUFFER_VIEW CachedIndexBufferView;

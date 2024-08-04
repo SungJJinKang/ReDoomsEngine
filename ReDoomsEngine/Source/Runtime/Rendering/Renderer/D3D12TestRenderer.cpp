@@ -30,7 +30,7 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 
 DEFINE_SHADER(MeshDrawVS, "MeshDraw.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
-		ADD_SHADER_CONSTANT_BUFFER(MeshDrawConstantBuffer, MeshDrawConstantBuffer)
+		ADD_SHADER_SRV_VARIABLE(GPrimitiveSceneData, EShaderParameterResourceType::StructuredBuffer)
 	)
 );
 
@@ -273,11 +273,6 @@ bool D3D12TestRenderer::Draw()
 		Offset = -5.0f;
 	}
 
-	for (FDrone& Drone : DroneList)
-	{
-		Drone.RenderObject.SetPosition(Drone.OriginalPos + Vector3{ Offset * 80.0f, 0.0f, 0.0f });
-	}
-
 	PrepareDraw(CurrentFrameCommandContext);
 
 	// Base Pass
@@ -290,7 +285,7 @@ bool D3D12TestRenderer::Draw()
 			SCOPED_GPU_TIMER_DIRECT_QUEUE(CurrentFrameCommandContext, Renderer_BasePassDraw)
 			for (FMeshDraw& MeshDraw : BasePassMeshDrawList)
 			{
-				MeshDraw.Draw(CurrentFrameCommandContext);
+				MeshDraw.Draw(CurrentFrameCommandContext, *(RenderScene.GPUSceneData.GetPrimitiveIDBuffer()), MeshDraw.PrimitiveIndex);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-#include "D3D12Descriptor.h"
+﻿#include "D3D12Descriptor.h"
 
 #include "D3D12Device.h"
 
@@ -51,8 +51,8 @@ CD3DX12_GPU_DESCRIPTOR_HANDLE FD3D12DescriptorHeapBlock::GPUDescriptorHandle() c
     return CD3DX12_GPU_DESCRIPTOR_HANDLE{ ParentDescriptorHeap.lock()->GetGPUBase(), static_cast<int32_t>(BaseSlot), DescriptorSize };
 }
 
-FD3D12DescriptorHeap::FD3D12DescriptorHeap(uint32_t InNumDescriptors, D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
-	: NumDescriptors(InNumDescriptors), HeapFlags(InHeapFlags), HeapType(InHeapType), DescriptorSize(), CPUBase(), GPUBase()
+FD3D12DescriptorHeap::FD3D12DescriptorHeap(const FD3D12DescriptorHeapContainer* const InD3D12DescriptorHeapContainer, uint32_t InNumDescriptors, D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, D3D12_DESCRIPTOR_HEAP_TYPE InHeapType)
+	: OwnerDescriptorHeapContainer(InD3D12DescriptorHeapContainer), NumDescriptors(InNumDescriptors), HeapFlags(InHeapFlags), HeapType(InHeapType), DescriptorSize(), CPUBase(), GPUBase()
 {
     EA_ASSERT(NumDescriptors > 0);
 }
@@ -139,7 +139,7 @@ void FD3D12OnlineDescriptorHeapContainer::Init()
     FD3D12DescriptorHeapContainer::Init();
 
     EA_ASSERT(OnlineHeap == nullptr);
-    OnlineHeap = eastl::make_shared<FD3D12DescriptorHeap>(NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, HeapType);
+    OnlineHeap = eastl::make_shared<FD3D12DescriptorHeap>(this, NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, HeapType);
     OnlineHeap->Init();
 }
 
@@ -241,7 +241,7 @@ FD3D12DescriptorHeap* FD3D12OfflineDescriptorHeapContainer::AllocateNewHeap()
     }
     else
     {
-        Heap = DescriptorHeapListAllocatedToUser.emplace_back(eastl::make_shared<FD3D12DescriptorHeap>(NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, HeapType)).get();
+        Heap = DescriptorHeapListAllocatedToUser.emplace_back(eastl::make_shared<FD3D12DescriptorHeap>(this, NumDescriptor, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, HeapType)).get();
         Heap->Init();
     }
 

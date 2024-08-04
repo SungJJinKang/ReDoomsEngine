@@ -135,10 +135,12 @@ void FD3D12StateCache::SetRenderTargets(const eastl::array<FD3D12Texture2DResour
 	CachedRTVCount = 0;
 	for (uint32_t RenderTargetIndex = 0; RenderTargetIndex < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++RenderTargetIndex)
 	{
-		CD3DX12_CPU_DESCRIPTOR_HANDLE InputRTVCPUHandle = InRenderTargets[RenderTargetIndex] ? InRenderTargets[RenderTargetIndex]->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
-		if (CachedRTVCPUHandleList[RenderTargetIndex] != InputRTVCPUHandle)
+		FD3D12View* ResourceView = InRenderTargets[RenderTargetIndex] ? InRenderTargets[RenderTargetIndex]->GetRTV() : nullptr;
+		CD3DX12_CPU_DESCRIPTOR_HANDLE InputRTVCPUHandle = InRenderTargets[RenderTargetIndex] ? ResourceView->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
+		if (CachedRTVCPUHandleList[RenderTargetIndex].CPUDescriptorHandle != InputRTVCPUHandle)
 		{
-			CachedRTVCPUHandleList[RenderTargetIndex] = InputRTVCPUHandle;
+			CachedRTVCPUHandleList[RenderTargetIndex].CPUDescriptorHandle = InputRTVCPUHandle;
+			CachedRTVCPUHandleList[RenderTargetIndex].ResourceView = ResourceView;
 			bNeedToSetRTVAndDSV = true;
 		}
 
@@ -172,10 +174,12 @@ void FD3D12StateCache::SetRenderTargets(const eastl::array<FD3D12Texture2DResour
 
 void FD3D12StateCache::SetDepthStencilTarget(FD3D12Texture2DResource* const InDepthStencilTarget)
 {
-	CD3DX12_CPU_DESCRIPTOR_HANDLE InputDSVCPUHandle = InDepthStencilTarget ? InDepthStencilTarget->GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
-	if (CachedDSVCPUHandle != InputDSVCPUHandle)
+	FD3D12View* ResourceView = InDepthStencilTarget ? InDepthStencilTarget->GetDSV() : nullptr;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE InputDSVCPUHandle = InDepthStencilTarget ? ResourceView->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
+	if (CachedDSVCPUHandle.CPUDescriptorHandle != InputDSVCPUHandle)
 	{
-		CachedDSVCPUHandle = InputDSVCPUHandle;
+		CachedDSVCPUHandle.CPUDescriptorHandle = InputDSVCPUHandle;
+		CachedDSVCPUHandle.ResourceView = ResourceView;
 		bNeedToSetRTVAndDSV = true;
 	}
 
@@ -219,7 +223,7 @@ void FD3D12StateCache::SetSRVs(const EShaderFrequency InShaderFrequency, const e
 	for (uint32_t SRVIndex = 0; SRVIndex < MAX_SRVS; ++SRVIndex)
 	{
 		CD3DX12_CPU_DESCRIPTOR_HANDLE Handle = BindPointInfos[SRVIndex] ? BindPointInfos[SRVIndex]->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
-		if (CachedSRVs[InShaderFrequency][SRVIndex] != Handle)
+		if (CachedSRVs[InShaderFrequency][SRVIndex].CPUDescriptorHandle != Handle)
 		{
 			bEqual = false;
 			break;
@@ -232,7 +236,8 @@ void FD3D12StateCache::SetSRVs(const EShaderFrequency InShaderFrequency, const e
 		for (uint32_t SRVIndex = 0; SRVIndex < MAX_SRVS; ++SRVIndex)
 		{
 			CD3DX12_CPU_DESCRIPTOR_HANDLE Handle = BindPointInfos[SRVIndex] ? BindPointInfos[SRVIndex]->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
-			CachedSRVs[InShaderFrequency][SRVIndex] = Handle;
+			CachedSRVs[InShaderFrequency][SRVIndex].CPUDescriptorHandle = Handle;
+			CachedSRVs[InShaderFrequency][SRVIndex].ResourceView = BindPointInfos[SRVIndex];
 		}
 	}
 }
@@ -243,7 +248,7 @@ void FD3D12StateCache::SetUAVs(const EShaderFrequency InShaderFrequency, const e
 	for (uint32_t UAVIndex = 0; UAVIndex < MAX_UAVS; ++UAVIndex)
 	{
 		CD3DX12_CPU_DESCRIPTOR_HANDLE Handle = BindPointInfos[UAVIndex] ? BindPointInfos[UAVIndex]->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
-		if (CachedUAVs[InShaderFrequency][UAVIndex] != Handle)
+		if (CachedUAVs[InShaderFrequency][UAVIndex].CPUDescriptorHandle != Handle)
 		{
 			bEqual = false;
 			break;
@@ -256,7 +261,8 @@ void FD3D12StateCache::SetUAVs(const EShaderFrequency InShaderFrequency, const e
 		for (uint32_t SRVIndex = 0; SRVIndex < MAX_UAVS; ++SRVIndex)
 		{
 			CD3DX12_CPU_DESCRIPTOR_HANDLE Handle = BindPointInfos[SRVIndex] ? BindPointInfos[SRVIndex]->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
-			CachedUAVs[InShaderFrequency][SRVIndex] = Handle;
+			CachedUAVs[InShaderFrequency][SRVIndex].CPUDescriptorHandle = Handle;
+			CachedUAVs[InShaderFrequency][SRVIndex].ResourceView = BindPointInfos[SRVIndex];
 		}
 	}
 }
@@ -267,7 +273,7 @@ void FD3D12StateCache::SetConstantBuffer(const EShaderFrequency InShaderFrequenc
 	bIsRootCBVDirty = true;
 }
 
-void FD3D12StateCache::SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)>& InVertexBufferViewList)
+void FD3D12StateCache::SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViewList)
 {
 	SCOPED_CPU_TIMER(FD3D12StateCache_SetVertexBufferViewList)
 
@@ -353,7 +359,13 @@ void FD3D12StateCache::ApplyPrimitiveTopologyDirty(FD3D12CommandList& InCommandL
 void FD3D12StateCache::ApplyRTVAndDSV(FD3D12CommandList& InCommandList)
 {
 	EA_ASSERT(CachedRTVCount != UINT32_MAX);
-	InCommandList.GetD3DCommandList()->OMSetRenderTargets(CachedRTVCount, CachedRTVCPUHandleList.data(), false, CachedDSVCPUHandle.ptr ? &CachedDSVCPUHandle : nullptr);
+	eastl::array<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> LocalCachedRTVCPUHandleList{};
+	for (int32 Index = 0; Index < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++Index)
+	{
+		LocalCachedRTVCPUHandleList[Index] = CachedRTVCPUHandleList[Index].CPUDescriptorHandle;
+	}
+
+	InCommandList.GetD3DCommandList()->OMSetRenderTargets(CachedRTVCount, LocalCachedRTVCPUHandleList.data(), false, CachedDSVCPUHandle.CPUDescriptorHandle.ptr ? &(CachedDSVCPUHandle.CPUDescriptorHandle) : nullptr);
 
 	bNeedToSetRTVAndDSV = false;
 }
@@ -383,15 +395,15 @@ void FD3D12StateCache::ApplySRVs(FD3D12CommandList& InCommandList, const FD3D12D
 
 		if (SlotsNeeded > 0 && DirtyFlagsOfSRVs[FrequencyIndex])
 		{
-			CD3DX12_CPU_DESCRIPTOR_HANDLE DestDescriptor = BaseHeapBlcok.CPUDescriptorHandle().Offset(FirstSlotIndex);
+			CD3DX12_CPU_DESCRIPTOR_HANDLE DestDescriptor = BaseHeapBlcok.CPUDescriptorHandle().Offset(FirstSlotIndex, BaseHeapBlcok.DescriptorSize);
 			eastl::array<CD3DX12_CPU_DESCRIPTOR_HANDLE, MAX_SRVS> SrcDescriptors;
 
 			for (uint32_t SlotIndex = 0; SlotIndex < SlotsNeeded; ++SlotIndex)
 			{
-				CD3DX12_CPU_DESCRIPTOR_HANDLE SRV = CachedSRVs[FrequencyIndex][SlotIndex];
-				if (SRV.ptr != NULL)
+				CD3DX12_CPU_DESCRIPTOR_HANDLE SRVCPUHandle = CachedSRVs[FrequencyIndex][SlotIndex].CPUDescriptorHandle;
+				if (SRVCPUHandle.ptr != NULL)
 				{
-					SrcDescriptors[SlotIndex] = SRV;
+					SrcDescriptors[SlotIndex] = SRVCPUHandle;
 				}
 				else
 				{
@@ -413,7 +425,7 @@ void FD3D12StateCache::ApplySRVs(FD3D12CommandList& InCommandList, const FD3D12D
 				GetD3D12Device()->CopyDescriptors(1, &DestDescriptor, &SlotsNeeded, SlotsNeeded, SrcDescriptors.data(), nullptr, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 			}
 
-			const CD3DX12_GPU_DESCRIPTOR_HANDLE BindDescriptor = BaseHeapBlcok.GPUDescriptorHandle().Offset(FirstSlotIndex);
+			const CD3DX12_GPU_DESCRIPTOR_HANDLE BindDescriptor = BaseHeapBlcok.GPUDescriptorHandle().Offset(FirstSlotIndex, BaseHeapBlcok.DescriptorSize);
 			InCommandList.GetD3DCommandList()->SetGraphicsRootDescriptorTable(CachedRootSignature->SRVBindSlot[FrequencyIndex], BindDescriptor);
 
 			OutUsedBlockCount += SlotsNeeded;

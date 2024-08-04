@@ -107,8 +107,3 @@ private:
 	eastl::array<FPass, static_cast<uint32_t>(EPass::Num)> PerPassData;
 
 };
-
-DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
-	MeshDrawConstantBuffer, true,
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, LocalToWorldMatrix)
-)

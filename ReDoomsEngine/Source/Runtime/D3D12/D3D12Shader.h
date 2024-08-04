@@ -214,12 +214,12 @@ public:
 
 	FShaderParameterContainerTemplate(FD3D12ShaderTemplate* InD3D12ShaderTemplate)
 		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(), bIsShaderInstance(false), 
-		ShaderParameterList(), MeshDrawConstantBufferIndexInShaderParameterList(-1), PrimitiveSceneDataSRVIndexInShaderParameterList(-1)
+		ShaderParameterList(), PrimitiveSceneDataSRVIndexInShaderParameterList(-1)
 	{
 	}
 	FShaderParameterContainerTemplate(FD3D12ShaderTemplate* InD3D12ShaderTemplate, FD3D12ShaderInstance* InD3D12ShaderInstance)
 		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(InD3D12ShaderInstance), bIsShaderInstance(true), 
-		ShaderParameterList(), MeshDrawConstantBufferIndexInShaderParameterList(-1), PrimitiveSceneDataSRVIndexInShaderParameterList(-1)
+		ShaderParameterList(), PrimitiveSceneDataSRVIndexInShaderParameterList(-1)
 	{
 	}
 	FShaderParameterContainerTemplate(const FShaderParameterContainerTemplate&) = delete;
@@ -245,10 +245,6 @@ public:
 	{
 		return ShaderParameterList;
 	}
-	inline int32_t GetMeshDrawConstantBufferIndex() const
-	{
-		return MeshDrawConstantBufferIndexInShaderParameterList;
-	}
 	inline int32_t GetPrimitiveSceneDataSRVIndex() const
 	{
 		return PrimitiveSceneDataSRVIndexInShaderParameterList;
@@ -271,7 +267,6 @@ protected:
 private:
 
 	// this is fast path for RenderScene
-	int32_t MeshDrawConstantBufferIndexInShaderParameterList;
 	int32_t PrimitiveSceneDataSRVIndexInShaderParameterList;
 };
 
@@ -680,8 +675,7 @@ private:
 };
 
 #define ADD_DEFAULT_SHADER_PARAMETER \
-		ADD_SHADER_CONSTANT_BUFFER(ViewConstantBuffer, ViewConstantBuffer) \
-		ADD_SHADER_SRV_VARIABLE(PrimitiveSceneData, EShaderParameterResourceType::StructuredBuffer)
+		ADD_SHADER_CONSTANT_BUFFER(ViewConstantBuffer, ViewConstantBuffer)
 
 #define DEFINE_SHADER_PARAMTERS(...) \
 	public: \
@@ -761,6 +755,10 @@ private:
 #define ADD_SHADER_SRV_VARIABLE(VariableNameStr, InShaderParameterResourceType) \
 	public: \
 	FShaderParameterShaderResourceView VariableNameStr{this, #VariableNameStr, InShaderParameterResourceType, false};
+
+#define ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(VariableNameStr, InShaderParameterResourceType) \
+	public: \
+	FShaderParameterShaderResourceView VariableNameStr{this, #VariableNameStr, InShaderParameterResourceType, true};
 
 #define ADD_SHADER_UAV_VARIABLE
 

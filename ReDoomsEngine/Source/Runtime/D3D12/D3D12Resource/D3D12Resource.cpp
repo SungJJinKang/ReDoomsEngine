@@ -71,16 +71,16 @@ void FD3D12Resource::ReleaseResource()
 #if D3D_NAME_OBJECT
 void FD3D12Resource::SetDebugNameToResource(const wchar_t* const InDebugName)
 {
+	DebugName = InDebugName;
 	bool bAny = false;
 	for (uint32_t Index = 0; Index < Resources.size(); ++Index)
 	{
 		if (Resources[Index])
 		{
-			Resources[Index]->SetName(InDebugName);
+			Resources[Index]->SetName(DebugName.c_str());
 			bAny = true;
 		}
 	}
-	DebugName = InDebugName;
 
 	EA_ASSERT(bAny);
 }

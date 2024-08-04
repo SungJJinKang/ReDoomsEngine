@@ -31,6 +31,7 @@ FRenderObject FRenderScene::AddRenderObject(
 		RenderObjectList.VisibleFlagsList[PassIndex].push_back(bInVisible);
 	}
 	RenderObjectList.TransformDirtyObjectList.push_back(true);
+	RenderObjectList.GPUSceneDirtyObjectList.push_back(true);
 	RenderObjectList.BoundingBoxList.push_back(InLocalBoundingBox);
 	RenderObjectList.PositionAndLocalBoundingSphereRadiusList.emplace_back(Position.x, Position.y, Position.z, InLocalBoundingBox.LengthOfCenterToCorner());
 	RenderObjectList.RotationList.push_back(InRotation);
@@ -99,12 +100,13 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 			PSO.CacheHash();
 		}
 
-		MeshDrawList.emplace_back(FMeshDraw{ PSO , RenderObjectList.VertexBufferViewList[ObjectIndex], RenderObjectList.IndexBufferViewList[ObjectIndex], RenderObjectList.MeshDrawArgumentList[ObjectIndex]});
+		MeshDrawList.emplace_back(FMeshDraw{ ObjectIndex, PSO , RenderObjectList.VertexBufferViewList[ObjectIndex], RenderObjectList.IndexBufferViewList[ObjectIndex], RenderObjectList.MeshDrawArgumentList[ObjectIndex]});
 	}
 	//
 
 	return MeshDrawList;
 }
+
 
 void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList)
 {
@@ -118,18 +120,7 @@ void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::arr
 
 			FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate = ShaderInstance->GetShaderParameterContainer();
 			eastl::vector<FShaderParameterTemplate*>& ShaderParameterList = ShaderParameterContainerTemplate->GetShaderParameterList();
-			if (ShaderInstanceIndex == EShaderFrequency::Vertex)
-			{
-				const int32_t MeshDrawConstantBufferIndex = ShaderParameterContainerTemplate->GetMeshDrawConstantBufferIndex();
-				EA_ASSERT_FORMATTED(
-					MeshDrawConstantBufferIndex >= 0 && MeshDrawConstantBufferIndex < ShaderParameterList.size(),
-					("Invalid MeshDrawConstantBufferIndex. You need to add ConstantBuffer \"%s\" to Shader \"%s\"", ANSI_TO_WCHAR(MeshDrawConstantBuffer.GetVariableName()), ShaderInstance->GetShaderTemplate()->GetShaderDeclaration().ShaderName)
-				);
-
-				static_cast<FConstantBufferTypeMeshDrawConstantBuffer*>(ShaderParameterList[MeshDrawConstantBufferIndex])->MemberVariables.LocalToWorldMatrix =
-					RenderObjectList.CachedLocalToWorldMatrixList[InObjectIndex];
-			}
-
+		
 			const int32_t PrimitiveSceneDataSRVIndex = ShaderParameterContainerTemplate->GetPrimitiveSceneDataSRVIndex();
 			if (PrimitiveSceneDataSRVIndex != -1)
 			{
@@ -183,11 +174,18 @@ const DirectX::SimpleMath::Vector3& FRenderObject::GetPosition() const
 
 void FRenderObject::SetPosition(const Vector3& InPosition)
 {
-	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].x = InPosition.x;
-	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].y = InPosition.y;
-	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z = InPosition.z;
+	if (
+		RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].x != InPosition.x ||
+		RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].y != InPosition.y ||
+		RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z != InPosition.z
+		)
+	{
+		RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].x = InPosition.x;
+		RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].y = InPosition.y;
+		RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z = InPosition.z;
 
-	RenderObjectList->DirtyTransform(ObjectIndex);
+		RenderObjectList->DirtyTransform(ObjectIndex);
+	}
 }
 
 float FRenderObject::GetLocalBoundingSphereRadius() const
@@ -202,9 +200,12 @@ const DirectX::SimpleMath::Quaternion& FRenderObject::GetRotation() const
 
 void FRenderObject::SetRotation(const Quaternion& InQuaternion)
 {
-	RenderObjectList->RotationList[ObjectIndex] = InQuaternion;
+	if (RenderObjectList->RotationList[ObjectIndex] != InQuaternion)
+	{
+		RenderObjectList->RotationList[ObjectIndex] = InQuaternion;
 
-	RenderObjectList->DirtyTransform(ObjectIndex);
+		RenderObjectList->DirtyTransform(ObjectIndex);
+	}
 }
 
 const DirectX::SimpleMath::Vector3& FRenderObject::GetScale() const
@@ -214,11 +215,18 @@ const DirectX::SimpleMath::Vector3& FRenderObject::GetScale() const
 
 void FRenderObject::SetScale(const Vector3& InScale)
 {
-	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].x = InScale.x;
-	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].y = InScale.y;
-	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].z = InScale.z;
+	if (
+		RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].x != InScale.x ||
+		RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].y != InScale.y ||
+		RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].z != InScale.z
+	)
+	{
+		RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].x = InScale.x;
+		RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].y = InScale.y;
+		RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].z = InScale.z;
 
-	RenderObjectList->DirtyTransform(ObjectIndex);
+		RenderObjectList->DirtyTransform(ObjectIndex);
+	}
 }
 
 float FRenderObject::GetDrawDistance() const
@@ -228,7 +236,10 @@ float FRenderObject::GetDrawDistance() const
 
 void FRenderObject::SetDrawDistance(const float InDrawDistance)
 {
-	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].w = InDrawDistance;
+	if (RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].w != InDrawDistance)
+	{
+		RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].w = InDrawDistance;
+	}
 }
 
 void FRenderObjectList::CacheLocalToWorldMatrixs()

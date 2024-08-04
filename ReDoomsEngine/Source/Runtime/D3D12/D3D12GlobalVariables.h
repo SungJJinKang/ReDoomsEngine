@@ -12,6 +12,6 @@ extern float GTimeDelta;
 inline constexpr int32_t GWindowWidth = 1024;
 inline constexpr int32_t GWindowHeight = 720;
 extern ERendererState GCurrentRendererState;
-inline constexpr int32_t GSupportedMaxPrimitiveCount = 2048;
+inline constexpr int32_t GSupportedMaxPrimitiveCount = 4096;
 
 void ResetD3D12GlobalVariablesForNewFrame();

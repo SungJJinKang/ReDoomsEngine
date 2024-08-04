@@ -100,11 +100,11 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
            
             static_assert(MAX_NUMBER_OF_TEXTURECOORDS <= AI_MAX_NUMBER_OF_TEXTURECOORDS);
             static const wchar_t* const TextureCoordsDebugName[MAX_NUMBER_OF_TEXTURECOORDS]{
-                EA_WCHAR("(TextureCoords 0)"),
-                EA_WCHAR("(TextureCoords 1)"),
-                EA_WCHAR("(TextureCoords 2)"),
-                EA_WCHAR("(TextureCoords 3)"),
-                EA_WCHAR("(TextureCoords 4)")
+                EA_WCHAR("(TextureCoords 0)")
+//              EA_WCHAR("(TextureCoords 1)"),
+//              EA_WCHAR("(TextureCoords 2)"),
+//              EA_WCHAR("(TextureCoords 3)"),
+//              EA_WCHAR("(TextureCoords 4)")
             };
             for (uint32_t UVIndex = 0; UVIndex < MAX_NUMBER_OF_TEXTURECOORDS; ++UVIndex)
             {
@@ -158,7 +158,7 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             Mesh.MaterialIndex = AssimpMesh->mMaterialIndex;
 
             {
-                eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)> VertexBufferViewList{};
+                eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> VertexBufferViewList{};
 
                 VertexBufferViewList.emplace_back(Mesh.PositionBuffer->GetVertexBufferView());
                 VertexBufferViewList.emplace_back(Mesh.NormalBuffer->GetVertexBufferView());
