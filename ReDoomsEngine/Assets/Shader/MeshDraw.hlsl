@@ -22,6 +22,9 @@ PSInput MainVS(
     float3 BiTangent : BITANGENT, 
     float3 UV0 : TEXCOORD0, // @TODO Support Multiple tex coords
     uint PrimitiveID : PRIMITIVEID
+	#if INSTANCED_DRAW
+    , uint InstanceID : SV_InstanceID
+	#endif
 )
 {
     PSInput Result;

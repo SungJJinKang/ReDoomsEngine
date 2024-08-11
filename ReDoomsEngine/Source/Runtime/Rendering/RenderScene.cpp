@@ -89,7 +89,7 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 			if (FD3D12ShaderInstance* TemplateShaderInstance = TemplateBoundShaderSet.GetShaderInstanceList()[ShaderInstanceIndex])
 			{
 				// Copy shader instance from template
-				DuplicatedShaderInstanceList[ShaderInstanceIndex] = TemplateShaderInstance->Duplicate();
+				DuplicatedShaderInstanceList[ShaderInstanceIndex] = TemplateShaderInstance;
 			}
 		}
 		SetUpShaderInstances(ObjectIndex, DuplicatedShaderInstanceList);
@@ -116,7 +116,7 @@ void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::arr
 	{
 		if (FD3D12ShaderInstance* ShaderInstance = InShaderInstanceList[ShaderInstanceIndex])
 		{
-			EA_ASSERT(!(ShaderInstance->bIsTemplateInstance));
+			//EA_ASSERT(!(ShaderInstance->bIsTemplateInstance));
 
 			FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate = ShaderInstance->GetShaderParameterContainer();
 			eastl::vector<FShaderParameterTemplate*>& ShaderParameterList = ShaderParameterContainerTemplate->GetShaderParameterList();

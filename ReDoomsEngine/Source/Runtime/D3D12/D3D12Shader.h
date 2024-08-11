@@ -6,6 +6,7 @@
 #include "D3D12Resource/D3D12Resource.h"
 #include "Common/RendererStateCallbackInterface.h"
 #include "SceneData/GPUScene.h"
+#include "D3D12VertexFactory.h"
 
 struct FD3D12CommandContext;
 class FD3D12RootSignature;
