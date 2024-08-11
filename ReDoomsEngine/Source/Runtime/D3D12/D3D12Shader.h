@@ -35,7 +35,7 @@ public:
 	FBoundShaderSet(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList);
 	
 	void Set(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList);
-	void CacheHash();
+	void CacheHash() const;
 	void Validate();
 	FD3D12RootSignature* GetRootSignature() const;
 	inline const eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency>& GetShaderTemplateList() const
@@ -56,10 +56,18 @@ public:
 	}
 	inline FShaderHash GetCachedHash() const
 	{
+		if (!IsValidHash())
+		{
+			CacheHash();
+		}
 		return CachedHash;
 	}
 	inline uint64 GetCachedHash64() const
 	{
+		if (!IsValidHash())
+		{
+			CacheHash();
+		}
 		return CachedHash64;
 	}
 
@@ -72,8 +80,8 @@ private:
 
 	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderTemplateList{ nullptr };
 	eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderInstanceList{ nullptr };
-	FShaderHash CachedHash;
-	uint64 CachedHash64;
+	mutable FShaderHash CachedHash;
+	mutable uint64 CachedHash64;
 };
 
 inline bool operator==(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 #include "D3D12Shader.h"
@@ -12,7 +12,7 @@ public:
     /// <summary>
     /// This struct should contains states changed frequently per draw
     /// </summary>
-    struct FDrawDesc
+    mutable struct FDrawDesc
     {
         FBoundShaderSet BoundShaderSet;
 
@@ -37,7 +37,7 @@ public:
     /// <summary>
     /// This struct should contains states never changed during a pass
     /// </summary>
-    struct FPassDesc
+	mutable struct FPassDesc
     {
         struct FDesc
         {
@@ -61,7 +61,10 @@ public:
 
     inline uint64 GetCachedHash() const
     {
-        EA_ASSERT(IsValidHash());
+		if (!IsValidHash())
+		{
+			CacheHash();
+		}
         return CachedHash;
     }
 
@@ -71,11 +74,11 @@ public:
 	}
 
     //void Reset();
-    void CacheHash();
+    void CacheHash() const;
     
 private:
 
-	uint64 CachedHash;
+	mutable uint64 CachedHash;
 };
 
 inline bool operator==(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)

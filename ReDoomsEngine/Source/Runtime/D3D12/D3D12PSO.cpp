@@ -1,4 +1,4 @@
-#include "D3D12PSO.h"
+﻿#include "D3D12PSO.h"
 #include "D3D12Device.h"
 #include "D3D12RootSignature.h"
 #include "ShaderCompilers/DirectXShaderCompiler/include/dxc/dxcapi.h"
@@ -10,12 +10,16 @@
 //     MEM_ZERO(CachedHash);
 // }
 
-void FD3D12PSOInitializer::CacheHash()
+void FD3D12PSOInitializer::CacheHash() const
 {
-    EA_ASSERT(DrawDesc.CachedDescHash != 0);
-    EA_ASSERT(PassDesc.CachedDescHash != 0);
-    EA_ASSERT(DrawDesc.BoundShaderSet.GetCachedHash64() != 0);
-
+	if (!DrawDesc.IsValidHash())
+	{
+		DrawDesc.CacheDescHash();
+	}
+	if (!PassDesc.IsValidHash())
+	{
+		PassDesc.CacheDescHash();
+	}
     CachedHash = DrawDesc.BoundShaderSet.GetCachedHash64() ^ DrawDesc.CachedDescHash ^ PassDesc.CachedDescHash;
 }
 

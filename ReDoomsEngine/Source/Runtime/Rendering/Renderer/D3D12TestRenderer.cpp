@@ -45,8 +45,31 @@ void D3D12TestRenderer::Init()
 	FRenderer::Init();
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+
+	UpdatePassDescIfRequired();
 }
 
+void D3D12TestRenderer::UpdatePassDescIfRequired()
+{
+	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+	if (DepthStencilTarget == nullptr ||
+		((DepthStencilTarget->GetDesc().Width != SwapChain->GetWidth()) || (DepthStencilTarget->GetDesc().Height != SwapChain->GetHeight()))
+		)
+	{
+		DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
+
+		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
+		MEM_ZERO(BasePassPSODesc);
+		BasePassPSODesc.Desc.SampleMask = UINT_MAX;
+		BasePassPSODesc.Desc.NumRenderTargets = 1;
+		BasePassPSODesc.Desc.RTVFormats[0] = SwapChain->GetFormat();
+		BasePassPSODesc.Desc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
+		BasePassPSODesc.Desc.SampleDesc.Count = 1;
+		BasePassPSODesc.CacheDescHash();
+
+		RenderScene.SetPassDesc(EPass::BasePass, BasePassPSODesc);
+	}
+}
 
 void D3D12TestRenderer::SceneSetup()
 {
@@ -135,9 +158,10 @@ void D3D12TestRenderer::SceneSetup()
 			DroneDrawDesc.BoundShaderSet = BoundShaderSet;
 
 			Vector3 OrigianlPos{ 250.0f * IndexB, 250.0f * IndexA + 10.0f, -5.0f };
-			FRenderObject RenderObject = RenderScene.AddRenderObject(
+			FPrimitive Primitive = RenderScene.AddPrimitive(
 				true,
 				DroneMesh->MeshList[0].AABB,
+				EPrimitiveFlag::CacheMeshDrawCommand | EPrimitiveFlag::AllowMergeMeshDrawCommand,
 				OrigianlPos,
 				Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f),
 				Vector3{ 0.05f, 0.05f, 0.05f },
@@ -147,7 +171,7 @@ void D3D12TestRenderer::SceneSetup()
 				DroneDrawDesc,
 				MeshDrawArgument
 			);
-			DroneList.emplace_back(FDrone{ RenderObject,OrigianlPos });
+			DroneList.emplace_back(FDrone{ Primitive,OrigianlPos });
 		}
 	}
 }
@@ -157,24 +181,7 @@ void D3D12TestRenderer::OnStartFrame()
 	FRenderer::OnStartFrame();
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
-
-	if (DepthStencilTarget == nullptr ||
-		((DepthStencilTarget->GetDesc().Width != SwapChain->GetWidth()) || (DepthStencilTarget->GetDesc().Height != SwapChain->GetHeight()))
-		)
-	{
-		DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
-
-		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
-		MEM_ZERO(BasePassPSODesc);
-		BasePassPSODesc.Desc.SampleMask = UINT_MAX;
-		BasePassPSODesc.Desc.NumRenderTargets = 1;
-		BasePassPSODesc.Desc.RTVFormats[0] = SwapChain->GetFormat();
-		BasePassPSODesc.Desc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
-		BasePassPSODesc.Desc.SampleDesc.Count = 1;
-		BasePassPSODesc.CacheDescHash();
-
-		RenderScene.SetPassDesc(EPass::BasePass, BasePassPSODesc);
-	}
+	UpdatePassDescIfRequired();
 
 	{
 		float Speed = GTimeDelta * 3.0f;
@@ -199,7 +206,7 @@ void D3D12TestRenderer::OnStartFrame()
 
 		if (FD3D12Window::WKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed*50.0f, ESpace::Self);
+			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed * 50.0f, ESpace::Self);
 		}
 		else if (FD3D12Window::SKeyPressed)
 		{
@@ -285,7 +292,7 @@ bool D3D12TestRenderer::Draw()
 			SCOPED_GPU_TIMER_DIRECT_QUEUE(CurrentFrameCommandContext, Renderer_BasePassDraw)
 			for (FMeshDraw& MeshDraw : BasePassMeshDrawList)
 			{
-				MeshDraw.Draw(CurrentFrameCommandContext, *(RenderScene.GPUSceneData.GetPrimitiveIDBuffer()), MeshDraw.PrimitiveIndex);
+				MeshDraw.Draw(CurrentFrameCommandContext, *(RenderScene.GPUSceneData.GetPrimitiveIDBuffer()));
 			}
 		}
 	}

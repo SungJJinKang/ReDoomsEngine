@@ -3,7 +3,7 @@
 
 #include "D3D12Resource/D3D12Resource.h"
 
-struct FRenderObjectList;
+struct FPrimitiveList;
 class FD3D12ConstantBufferResource;
 struct FD3D12CommandContext;
 
@@ -28,9 +28,9 @@ class GPUScene
 public:
 
 	void Init();
-	void UploadDirtyData(FD3D12CommandContext& InCommandContext, FRenderObjectList& InRenderObjectList);
+	void UploadDirtyData(FD3D12CommandContext& InCommandContext, FPrimitiveList& InPrimitiveList);
 	FD3D12ConstantBufferResource* GetGPUSceneBuffer();
-	FD3D12VertexIndexBufferResource* GetPrimitiveIDBuffer();
+	FD3D12ConstantBufferResource* GetPrimitiveIDBuffer();
 	uint32 GetPrimitiveCount() const;
 	uint32 GetSceneBufferSize() const;
 
@@ -38,7 +38,7 @@ private:
 
 	uint32 PrimitiveCount = 0;
 
-	eastl::shared_ptr<FD3D12VertexIndexBufferResource> PrimitiveIDBuffer;
+	eastl::shared_ptr<FD3D12ConstantBufferResource> PrimitiveIDBuffer;
 	eastl::shared_ptr<FD3D12ConstantBufferResource> GPUSceneBuffer;
 
 };

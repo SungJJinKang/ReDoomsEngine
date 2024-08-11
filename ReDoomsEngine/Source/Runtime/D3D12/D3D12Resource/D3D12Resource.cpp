@@ -531,10 +531,15 @@ void FD3D12ConstantBufferResource::MakeDirty()
 
 void FD3D12ConstantBufferResource::Versioning()
 {
+	Versioning(GetBufferSize());
+}
+
+void FD3D12ConstantBufferResource::Versioning(const uint64 InSize)
+{
 	EA_ASSERT(bNeedVersioning);
 	if (IsDynamicBuffer())
 	{
-		ConstantBufferRingBufferBlock = FD3D12ConstantBufferRingBuffer::GetInstance()->Allocate(GetBufferSize());
+		ConstantBufferRingBufferBlock = FD3D12ConstantBufferRingBuffer::GetInstance()->Allocate(InSize);
 
 		MappedAddress = ConstantBufferRingBufferBlock.MappedAddress;
 	}

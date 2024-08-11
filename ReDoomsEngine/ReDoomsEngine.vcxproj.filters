@@ -468,6 +468,7 @@
     <ClInclude Include="Source\Runtime\Core\Types.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12VertexFactory.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12HelperOpeartor.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\seafloor.dds" />

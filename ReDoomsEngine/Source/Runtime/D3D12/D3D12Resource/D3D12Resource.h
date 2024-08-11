@@ -311,6 +311,7 @@ public:
 		return false;
 	}
 	void MakeDirty();
+	void Versioning(const uint64 InSize);
 	void Versioning();
 
 	virtual bool IsConstantBuffer() const

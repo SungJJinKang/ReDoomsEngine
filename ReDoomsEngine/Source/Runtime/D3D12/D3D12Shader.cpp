@@ -33,7 +33,7 @@ void FBoundShaderSet::Set(const eastl::array<FD3D12ShaderInstance*, EShaderFrequ
 	#endif
 }
 
-void FBoundShaderSet::CacheHash()
+void FBoundShaderSet::CacheHash() const
 {
 	for (uint32_t ShaderIndex = 0; ShaderIndex < EShaderFrequency::NumShaderFrequency; ++ShaderIndex)
 	{

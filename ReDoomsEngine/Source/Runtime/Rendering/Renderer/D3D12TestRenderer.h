@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "Renderer/Renderer.h"
 
@@ -11,7 +11,7 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
 
 struct FDrone
 {
-	FRenderObject RenderObject;
+	FPrimitive Primitive;
 	Vector3 OriginalPos;
 };
 
@@ -20,6 +20,9 @@ class D3D12TestRenderer : public FRenderer
 public:
 
 	virtual void Init();
+
+	void UpdatePassDescIfRequired();
+
 	virtual void SceneSetup();
 	virtual void OnStartFrame();
 	virtual bool Draw();
@@ -35,6 +38,6 @@ private:
 	eastl::shared_ptr<F3DModel> DroneMesh;
 
 	eastl::vector<FDrone> DroneList;
-	eastl::vector<FRenderObject> TrinagleList;
+	eastl::vector<FPrimitive> TrinagleList;
 };
 
