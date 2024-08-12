@@ -74,7 +74,12 @@ void D3D12TestRenderer::CreateRenderTargets()
 	BasePassPSODesc.Desc.RTVFormats[0] = GBuffer.SceneColorTarget->GetDesc().Format;
 	BasePassPSODesc.Desc.DSVFormat = GBuffer.DepthStencilRenderTarget->GetDSV()->GetDesc()->Format;
 	BasePassPSODesc.Desc.SampleDesc.Count = 1;
-	BasePassPSODesc.CacheDescHash();
+	BasePassPSODesc.Desc.BlendState = CD3DX12_BLEND_DESC{ D3D12_DEFAULT };
+	BasePassPSODesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC{ D3D12_DEFAULT };
+	BasePassPSODesc.Desc.RasterizerState.FrontCounterClockwise = true;
+	BasePassPSODesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
+	BasePassPSODesc.Desc.DepthStencilState.DepthEnable = true;
+	BasePassPSODesc.Desc.DepthStencilState.StencilEnable = false;
 
 	RenderScene.SetPassDesc(EPass::BasePass, BasePassPSODesc);
 }
@@ -132,12 +137,6 @@ void D3D12TestRenderer::SceneSetup()
 	D3D12_INPUT_LAYOUT_DESC InputDesc{ FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
 	CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
 	DroneDrawDesc.Desc.InputLayout = InputDesc;
-	DroneDrawDesc.Desc.BlendState = CD3DX12_BLEND_DESC{ D3D12_DEFAULT };
-	DroneDrawDesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC{ D3D12_DEFAULT };
-	DroneDrawDesc.Desc.RasterizerState.FrontCounterClockwise = true;
-	DroneDrawDesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
-	DroneDrawDesc.Desc.DepthStencilState.DepthEnable = true;
-	DroneDrawDesc.Desc.DepthStencilState.StencilEnable = false;
 	DroneDrawDesc.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	DroneDrawDesc.CacheDescHash();
 

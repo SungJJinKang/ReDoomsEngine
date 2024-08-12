@@ -37,14 +37,14 @@ void FD3D12StateCache::SetRasterizeDesc(const CD3DX12_RASTERIZER_DESC& Rasterize
 {
 	bool bIsSame = false;
 
-	if (EA::StdC::Memcmp(&(CachedPSOInitializer.DrawDesc.Desc.RasterizerState), &RasterizeDesc, sizeof(CD3DX12_RASTERIZER_DESC)) == 0)
+	if (EA::StdC::Memcmp(&(CachedPSOInitializer.PassDesc.Desc.RasterizerState), &RasterizeDesc, sizeof(CD3DX12_RASTERIZER_DESC)) == 0)
 	{
 		bIsSame = true;
 	}
 
 	if (!bIsSame)
 	{
-		CachedPSOInitializer.DrawDesc.Desc.RasterizerState = RasterizeDesc;
+		CachedPSOInitializer.PassDesc.Desc.RasterizerState = RasterizeDesc;
 		bIsPSODirty = true;
 	}
 }
@@ -53,14 +53,14 @@ void FD3D12StateCache::SetBlendDesc(const CD3DX12_BLEND_DESC& BlendDesc)
 {
 	bool bIsSame = false;
 
-	if (EA::StdC::Memcmp(&(CachedPSOInitializer.DrawDesc.Desc.BlendState), &BlendDesc, sizeof(CD3DX12_BLEND_DESC)) == 0)
+	if (EA::StdC::Memcmp(&(CachedPSOInitializer.PassDesc.Desc.BlendState), &BlendDesc, sizeof(CD3DX12_BLEND_DESC)) == 0)
 	{
 		bIsSame = true;
 	}
 
 	if (!bIsSame)
 	{
-		CachedPSOInitializer.DrawDesc.Desc.BlendState = BlendDesc;
+		CachedPSOInitializer.PassDesc.Desc.BlendState = BlendDesc;
 		bIsPSODirty = true;
 	}
 }
@@ -69,14 +69,14 @@ void FD3D12StateCache::SetDepthEnable(const bool bInEnable)
 {
 	bool bIsSame = false;
 
-	if (CachedPSOInitializer.DrawDesc.Desc.DepthStencilState.DepthEnable == bInEnable)
+	if (CachedPSOInitializer.PassDesc.Desc.DepthStencilState.DepthEnable == bInEnable)
 	{
 		bIsSame = true;
 	}
 
 	if (!bIsSame)
 	{
-		CachedPSOInitializer.DrawDesc.Desc.DepthStencilState.DepthEnable = bInEnable;
+		CachedPSOInitializer.PassDesc.Desc.DepthStencilState.DepthEnable = bInEnable;
 		bIsPSODirty = true;
 	}
 }
@@ -85,14 +85,14 @@ void FD3D12StateCache::SetStencilEnable(const bool bInEnable)
 {
 	bool bIsSame = false;
 
-	if (CachedPSOInitializer.DrawDesc.Desc.DepthStencilState.StencilEnable == bInEnable)
+	if (CachedPSOInitializer.PassDesc.Desc.DepthStencilState.StencilEnable == bInEnable)
 	{
 		bIsSame = true;
 	}
 
 	if (!bIsSame)
 	{
-		CachedPSOInitializer.DrawDesc.Desc.DepthStencilState.StencilEnable = bInEnable;
+		CachedPSOInitializer.PassDesc.Desc.DepthStencilState.StencilEnable = bInEnable;
 		bIsPSODirty = true;
 	}
 }
@@ -612,12 +612,12 @@ void FD3D12StateCache::ResetForNewCommandlist()
 
 void FD3D12StateCache::ResetToDefault()
 {
-	CachedPSOInitializer.DrawDesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	CachedPSOInitializer.DrawDesc.Desc.RasterizerState.FrontCounterClockwise = true;
-	CachedPSOInitializer.DrawDesc.Desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-	CachedPSOInitializer.DrawDesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-	CachedPSOInitializer.DrawDesc.Desc.DepthStencilState.DepthEnable = false;
-	CachedPSOInitializer.DrawDesc.Desc.DepthStencilState.StencilEnable = false;
+	CachedPSOInitializer.PassDesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	CachedPSOInitializer.PassDesc.Desc.RasterizerState.FrontCounterClockwise = true;
+	CachedPSOInitializer.PassDesc.Desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	CachedPSOInitializer.PassDesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	CachedPSOInitializer.PassDesc.Desc.DepthStencilState.DepthEnable = false;
+	CachedPSOInitializer.PassDesc.Desc.DepthStencilState.StencilEnable = false;
 	CachedPSOInitializer.PassDesc.Desc.SampleMask = UINT_MAX;
 	CachedPSOInitializer.DrawDesc.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	CachedPSOInitializer.PassDesc.Desc.NumRenderTargets = 1;

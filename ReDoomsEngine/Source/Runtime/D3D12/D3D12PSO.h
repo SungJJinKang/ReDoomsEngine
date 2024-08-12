@@ -19,9 +19,6 @@ public:
         struct FDesc
         {
             D3D12_INPUT_LAYOUT_DESC InputLayout;
-            CD3DX12_BLEND_DESC BlendState;
-            CD3DX12_RASTERIZER_DESC RasterizerState;
-            CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
             D3D12_CACHED_PIPELINE_STATE CachedPSO;
             D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
         } Desc;
@@ -49,7 +46,10 @@ public:
             DXGI_FORMAT DSVFormat;
             DXGI_SAMPLE_DESC SampleDesc;
             UINT NodeMask;
-            D3D12_PIPELINE_STATE_FLAGS Flags;
+			D3D12_PIPELINE_STATE_FLAGS Flags;
+			CD3DX12_BLEND_DESC BlendState;
+			CD3DX12_RASTERIZER_DESC RasterizerState;
+			CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
         } Desc;
         uint64 CachedDescHash = 0;
         void CacheDescHash();

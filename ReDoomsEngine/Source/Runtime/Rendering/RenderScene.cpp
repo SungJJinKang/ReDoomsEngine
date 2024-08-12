@@ -259,7 +259,6 @@ void FRenderScene::SetUpShaderInstances(eastl::array<FD3D12ShaderInstance*, ESha
 
 void FRenderScene::SetPassDesc(const EPass InPass, const FD3D12PSOInitializer::FPassDesc& InPassDesc)
 {
-	EA_ASSERT(InPassDesc.IsValidHash());
 	PerPassData[static_cast<uint32_t>(InPass)].PassPSODesc = InPassDesc;
 
 	// @todo invalidate IsCachedMeshDrawList

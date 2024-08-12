@@ -39,10 +39,10 @@ FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     #define COPY_PASS_DESC_MEMBER(MemberName) Desc.MemberName = PSOInitializer.PassDesc.Desc.MemberName;
 
     COPY_PASS_DESC_MEMBER(StreamOutput)
-    COPY_DRAW_DESC_MEMBER(BlendState)
+	COPY_PASS_DESC_MEMBER(BlendState)
     COPY_PASS_DESC_MEMBER(SampleMask)
-    COPY_DRAW_DESC_MEMBER(RasterizerState)
-    COPY_DRAW_DESC_MEMBER(DepthStencilState)
+	COPY_PASS_DESC_MEMBER(RasterizerState)
+	COPY_PASS_DESC_MEMBER(DepthStencilState)
     COPY_DRAW_DESC_MEMBER(InputLayout)
     COPY_PASS_DESC_MEMBER(IBStripCutValue)
     COPY_DRAW_DESC_MEMBER(PrimitiveTopologyType)
