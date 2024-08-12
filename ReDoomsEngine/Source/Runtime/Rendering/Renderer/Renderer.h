@@ -10,6 +10,7 @@
 #include "View.h"
 #include "RenderScene.h"
 #include "Thread/JobSystem.h"
+#include "GBufferManager.h"
 
 class FD3D12CommandAllocator;
 

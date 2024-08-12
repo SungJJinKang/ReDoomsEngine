@@ -306,6 +306,52 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource> InRender
 	Desc.SampleDesc.Quality = InSampleQuality;
 }
 
+void FD3D12Texture2DResource::ClearRenderTargetView(FD3D12CommandContext& InCommandContext, const float InClearValue[4])
+{
+	InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*InCommandContext.GraphicsCommandList);
+	InCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearRenderTargetView(
+		GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
+		InClearValue,
+		0,
+		nullptr
+	);
+}
+
+void FD3D12Texture2DResource::ClearRenderTargetView(FD3D12CommandContext& InCommandContext)
+{
+	ClearRenderTargetView(InCommandContext, GetClearValue().Color);
+}
+
+void FD3D12Texture2DResource::ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue, const uint8 InClearStencilValue)
+{
+	InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*InCommandContext.GraphicsCommandList);
+	InCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearDepthStencilView(
+		GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
+		D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_STENCIL,
+		InClearDepthValue,
+		InClearStencilValue,
+		0,
+		nullptr
+	);
+}
+
+void FD3D12Texture2DResource::ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue)
+{
+	InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*InCommandContext.GraphicsCommandList);
+	InCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearDepthStencilView(
+		GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
+		D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH,
+		InClearDepthValue,
+		0,
+		0,
+		nullptr
+	);
+}
+
+void FD3D12Texture2DResource::ClearDepthStencilView(FD3D12CommandContext& InCommandContext)
+{
+	ClearDepthStencilView(InCommandContext, GetClearValue().DepthStencil.Depth, GetClearValue().DepthStencil.Stencil);
+}
 
 FD3D12BufferResource::FD3D12BufferResource(
 	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, const D3D12_RESOURCE_STATES InInitialResourceState,

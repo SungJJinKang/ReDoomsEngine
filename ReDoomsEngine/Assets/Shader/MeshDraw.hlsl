@@ -22,9 +22,6 @@ PSInput MainVS(
     float3 BiTangent : BITANGENT, 
     float3 UV0 : TEXCOORD0, // @TODO Support Multiple tex coords
     uint PrimitiveID : PRIMITIVEID
-	#if INSTANCED_DRAW
-    , uint InstanceID : SV_InstanceID
-	#endif
 )
 {
     PSInput Result;
@@ -49,7 +46,12 @@ PSInput MainVS(
     return Result;
 }
 
-float4 MainPS(PSInput input) : SV_TARGET
+void MainPS(
+	PSInput Input, 
+	out float4 Color : SV_Target0, 
+	out float Depth : SV_Depth
+)
 {
-    return TriangleColorTexture.Sample(StaticLinearWrapSampler, input.UV0);
+    Color = TriangleColorTexture.Sample(StaticLinearWrapSampler, Input.UV0);
+    Depth = Input.Position.z / Input.Position.w;
 }

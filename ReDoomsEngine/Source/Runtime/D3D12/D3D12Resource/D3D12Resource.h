@@ -161,6 +161,12 @@ public:
 	{
 		return true;
 	}
+
+	void ClearRenderTargetView(FD3D12CommandContext& InCommandContext, const float InClearValue[4]);
+	void ClearRenderTargetView(FD3D12CommandContext& InCommandContext);
+	void ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue, const uint8 InClearStencilValue);
+	void ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue);
+	void ClearDepthStencilView(FD3D12CommandContext& InCommandContext);
 };
 
 

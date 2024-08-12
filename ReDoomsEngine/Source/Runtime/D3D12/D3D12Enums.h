@@ -83,3 +83,9 @@ enum class EShaderParameterResourceType
 	StructuredBuffer,
 	TypedBuffer,
 };
+
+enum ETextureFormat
+{
+	SceneColor = DXGI_FORMAT::DXGI_FORMAT_R11G11B10_FLOAT,
+	DepthStencil = DXGI_FORMAT::DXGI_FORMAT_R24G8_TYPELESS
+};

@@ -1,4 +1,4 @@
-#include "D3D12ResourceAllocator.h"
+﻿#include "D3D12ResourceAllocator.h"
 
 #include "D3D12Device.h"
 #include "D3D12Resource.h"
@@ -305,53 +305,34 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 	return D3D12TextureResource;
 }
 
-eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateRenderTarget(const uint32_t InWidth, const uint32_t InHeight)
+eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateRenderTarget(
+	const uint32_t InWidth, 
+	const uint32_t InHeight,
+	const float InClearValue[4],
+	const ETextureFormat InTextureFormat
+)
 {
     FD3D12Resource::FResourceCreateProperties ResourceCreateProperties{};
     ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
     ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
-    ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	ResourceCreateProperties.ClearValue.emplace();
+	ResourceCreateProperties.ClearValue->Format = static_cast<DXGI_FORMAT>(InTextureFormat);
+	ResourceCreateProperties.ClearValue->Color[0] = InClearValue[0];
+	ResourceCreateProperties.ClearValue->Color[1] = InClearValue[1];
+	ResourceCreateProperties.ClearValue->Color[2] = InClearValue[2];
+	ResourceCreateProperties.ClearValue->Color[3] = InClearValue[3];
 
     CD3DX12_RESOURCE_DESC ResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-        DXGI_FORMAT_R32_FLOAT,
+		static_cast<DXGI_FORMAT>(InTextureFormat),
         InWidth,
         InHeight,
         1, // @todo : support mips
         0,
         1, // @todo : support msaa
         0,
-        D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
+        D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET |D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
     );
-
-    return AllocateTexture2D(ResourceCreateProperties, ResourceDesc);
-}
-
-eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateDepthTarget(
-    const uint32_t InWidth,
-    const uint32_t InHeight,
-    const float InDepthClearValue,
-    const DXGI_FORMAT InTextureFormat,
-    const DXGI_FORMAT InClearFormat
-)
-{
-    FD3D12Resource::FResourceCreateProperties ResourceCreateProperties{};
-    ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-    ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
-    ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_DEPTH_WRITE;
-    ResourceCreateProperties.ClearValue.emplace();
-    ResourceCreateProperties.ClearValue->Format = InClearFormat;
-    ResourceCreateProperties.ClearValue->DepthStencil.Depth = InDepthClearValue;
-
-        CD3DX12_RESOURCE_DESC ResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-            InTextureFormat,
-            InWidth,
-            InHeight,
-            1, // @todo : support mips
-            0,
-            1, // @todo : support msaa
-            0,
-            D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
-        );
 
     return AllocateTexture2D(ResourceCreateProperties, ResourceDesc);
 }
@@ -360,29 +341,28 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateDept
     const uint32_t InWidth, 
     const uint32_t InHeight, 
     const float InDepthClearValue,
-    const float InStencilClearValue, 
-    const DXGI_FORMAT InTextureFormat, /*= DXGI_FORMAT_R24G8_TYPELESS */
-    const DXGI_FORMAT InClearFormat
+	const float InStencilClearValue,
+	const ETextureFormat InTextureFormat
 )
 {
-    FD3D12Resource::FResourceCreateProperties ResourceCreateProperties{};
-    ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-    ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
-    ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_DEPTH_WRITE;
-    ResourceCreateProperties.ClearValue.emplace();
-    ResourceCreateProperties.ClearValue->Format = InClearFormat;
-    ResourceCreateProperties.ClearValue->DepthStencil.Depth = InDepthClearValue;
+	FD3D12Resource::FResourceCreateProperties ResourceCreateProperties{};
+	ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
+	ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+	ResourceCreateProperties.ClearValue.emplace();
+	ResourceCreateProperties.ClearValue->Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	ResourceCreateProperties.ClearValue->DepthStencil.Depth = InDepthClearValue;
     ResourceCreateProperties.ClearValue->DepthStencil.Stencil = InStencilClearValue;
 
     CD3DX12_RESOURCE_DESC ResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-        InTextureFormat,
+		static_cast<DXGI_FORMAT>(InTextureFormat),
         InWidth,
         InHeight,
         1, // @todo : support mips
         0,
         1, // @todo : support msaa
-        0,
-        D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
+		0,
+		D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
     );
 
     return AllocateTexture2D(ResourceCreateProperties, ResourceDesc);

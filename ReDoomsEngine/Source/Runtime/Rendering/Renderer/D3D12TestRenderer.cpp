@@ -46,29 +46,37 @@ void D3D12TestRenderer::Init()
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
-	UpdatePassDescIfRequired();
+	CreateRenderTargets();
 }
 
-void D3D12TestRenderer::UpdatePassDescIfRequired()
+void D3D12TestRenderer::CreateRenderTargets()
 {
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
-	if (DepthStencilTarget == nullptr ||
-		((DepthStencilTarget->GetDesc().Width != SwapChain->GetWidth()) || (DepthStencilTarget->GetDesc().Height != SwapChain->GetHeight()))
+
+	if (GBuffer.SceneColorTarget == nullptr ||
+		((GBuffer.SceneColorTarget->GetDesc().Width != SwapChain->GetWidth()) || (GBuffer.SceneColorTarget->GetDesc().Height != SwapChain->GetHeight()))
 		)
 	{
-		DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
-
-		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
-		MEM_ZERO(BasePassPSODesc);
-		BasePassPSODesc.Desc.SampleMask = UINT_MAX;
-		BasePassPSODesc.Desc.NumRenderTargets = 1;
-		BasePassPSODesc.Desc.RTVFormats[0] = SwapChain->GetFormat();
-		BasePassPSODesc.Desc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
-		BasePassPSODesc.Desc.SampleDesc.Count = 1;
-		BasePassPSODesc.CacheDescHash();
-
-		RenderScene.SetPassDesc(EPass::BasePass, BasePassPSODesc);
+		float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		GBuffer.SceneColorTarget = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
 	}
+	if (GBuffer.DepthStencilRenderTarget == nullptr ||
+		((GBuffer.DepthStencilRenderTarget->GetDesc().Width != SwapChain->GetWidth()) || (GBuffer.DepthStencilRenderTarget->GetDesc().Height != SwapChain->GetHeight()))
+		)
+	{
+		GBuffer.DepthStencilRenderTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthStencilTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
+	}
+
+	FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
+	MEM_ZERO(BasePassPSODesc);
+	BasePassPSODesc.Desc.SampleMask = UINT_MAX;
+	BasePassPSODesc.Desc.NumRenderTargets = 1;
+	BasePassPSODesc.Desc.RTVFormats[0] = GBuffer.SceneColorTarget->GetDesc().Format;
+	BasePassPSODesc.Desc.DSVFormat = GBuffer.DepthStencilRenderTarget->GetDSV()->GetDesc()->Format;
+	BasePassPSODesc.Desc.SampleDesc.Count = 1;
+	BasePassPSODesc.CacheDescHash();
+
+	RenderScene.SetPassDesc(EPass::BasePass, BasePassPSODesc);
 }
 
 void D3D12TestRenderer::SceneSetup()
@@ -181,7 +189,7 @@ void D3D12TestRenderer::OnStartFrame()
 	FRenderer::OnStartFrame();
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
-	UpdatePassDescIfRequired();
+	CreateRenderTargets();
 
 	{
 		float Speed = GTimeDelta * 3.0f;
@@ -244,35 +252,16 @@ bool D3D12TestRenderer::Draw()
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetViewports(1, &Viewport);
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
 
-	eastl::shared_ptr<FD3D12Texture2DResource>& RenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+// 	CD3DX12_RESOURCE_BARRIER ResourceBarrierA = CD3DX12_RESOURCE_BARRIER::Transition(SceneColorTarget->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+// 	CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarrierA);
 
-	// Indicate that the back buffer will be used as a render target.
-	eastl::shared_ptr<FD3D12Texture2DResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+	CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = GBuffer.SceneColorTarget->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
 
-	CD3DX12_RESOURCE_BARRIER ResourceBarrierA = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarrierA);
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = TargetRenderTarget->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->OMSetRenderTargets(1, &RTVCPUHandle, FALSE, nullptr);
-
-	CurrentFrameCommandContext.StateCache.SetRenderTargets({ RenderTarget.get() });
+	CurrentFrameCommandContext.StateCache.SetRenderTargets({ GBuffer.SceneColorTarget.get() });
  	CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
- 	CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
-
-	// Record commands.
-	const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
-	CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*CurrentFrameCommandContext.GraphicsCommandList);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearRenderTargetView(RTVCPUHandle, clearColor, 0, nullptr);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearDepthStencilView(
-		DepthStencilTarget->GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
-		D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH,
-		1.0f,
-		0.0f,
-		0,
-		nullptr
-	);
+ 	CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(GBuffer.DepthStencilRenderTarget.get());
+	GBuffer.SceneColorTarget->ClearRenderTargetView(CurrentFrameCommandContext);
+	GBuffer.DepthStencilRenderTarget->ClearDepthStencilView(CurrentFrameCommandContext);
 
 	Offset += GTimeDelta;
 	if (Offset > 5.0f)

@@ -104,6 +104,12 @@ void FRenderer::OnStartFrame()
 
 	D3D12Manager.OnStartFrame(CurrentFrameCommandContext);
 	FImguiHelperSingleton::GetInstance()->NewFrame();
+
+	eastl::shared_ptr<FD3D12Texture2DResource>& SwapChainRenderTarget = FD3D12Manager::GetInstance()->GetSwapchain()->GetRenderTarget(GCurrentBackbufferIndex);
+	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(SwapChainRenderTarget->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarrierB);
+	float ClearColor[4]{ 0.0f, 0.0f, 0.0f, 0.0f };
+	SwapChainRenderTarget->ClearRenderTargetView(CurrentFrameCommandContext, ClearColor);
 }
 
 bool FRenderer::Draw()
@@ -124,6 +130,10 @@ void FRenderer::OnPreEndFrame()
 
 	D3D12Manager.OnPreEndFrame(CurrentFrameCommandContext);
 
+	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+	eastl::shared_ptr<FD3D12Texture2DResource>& SwapChainRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+	CurrentFrameCommandContext.StateCache.SetRenderTargets({ SwapChainRenderTarget.get() });
+
 	FImguiHelperSingleton::GetInstance()->EndDraw(CurrentFrameCommandContext);
 }
 
@@ -141,13 +151,10 @@ void FRenderer::OnEndFrame()
 	D3D12Manager.OnEndFrame(CurrentFrameCommandContext);
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
-	// Indicate that the back buffer will be used as a render target.
-	eastl::shared_ptr<FD3D12Texture2DResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
-
-	// Indicate that the back buffer will now be used to present.
-	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+	eastl::shared_ptr<FD3D12Texture2DResource>& SwapChainRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+	CD3DX12_RESOURCE_BARRIER ResourceBarrierB = CD3DX12_RESOURCE_BARRIER::Transition(SwapChainRenderTarget->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 	CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarrierB);
-
+	
 	FrametimeGPUTimer.End(CurrentFrameCommandContext.GraphicsCommandList.get());
 	GPUTimerEndFrame(&CurrentFrameCommandContext);
 
