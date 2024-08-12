@@ -56,7 +56,7 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 				InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarriersBeforeUpload);
 			}
 
-			InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*InCommandContext.GraphicsCommandList);
+			InCommandContext.FlushResourceBarriers(EPipeline::Graphics);
 
 			for (FD3D12ResourceUpload& PendingResourceUpload : PendingResourceUploadList)
 			{

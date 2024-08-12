@@ -191,6 +191,11 @@ static bool CanUseSmallAlignment(const D3D12_RESOURCE_DESC& resourceDesc)
     return tileCount <= 16;
 }
 
+void FlushResourceUploadBatcher(FD3D12CommandContext& InCommandContext)
+{
+	FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.Flush(InCommandContext);
+}
+
 void FD3D12ResourceAllocator::Init()
 {
 	{

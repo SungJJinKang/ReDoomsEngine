@@ -47,7 +47,7 @@ void FImguiHelper::EndDraw(FD3D12CommandContext& InCommandContext)
 {
 	SCOPED_GPU_TIMER_DIRECT_QUEUE(InCommandContext, Imgui)
 
-	InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*InCommandContext.GraphicsCommandList);
+	InCommandContext.FlushResourceBarriers(EPipeline::Graphics);
 	InCommandContext.StateCache.Flush(InCommandContext, EPipeline::Graphics);
 
 	// Rendering

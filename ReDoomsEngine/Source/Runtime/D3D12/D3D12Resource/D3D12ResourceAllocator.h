@@ -73,3 +73,4 @@ private:
 
 };
 
+void FlushResourceUploadBatcher(FD3D12CommandContext& InCommandContext);

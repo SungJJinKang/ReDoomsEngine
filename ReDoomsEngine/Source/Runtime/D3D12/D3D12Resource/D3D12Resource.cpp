@@ -308,7 +308,7 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource> InRender
 
 void FD3D12Texture2DResource::ClearRenderTargetView(FD3D12CommandContext& InCommandContext, const float InClearValue[4])
 {
-	InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*InCommandContext.GraphicsCommandList);
+	InCommandContext.FlushResourceBarriers(EPipeline::Graphics);
 	InCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearRenderTargetView(
 		GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
 		InClearValue,
@@ -324,7 +324,7 @@ void FD3D12Texture2DResource::ClearRenderTargetView(FD3D12CommandContext& InComm
 
 void FD3D12Texture2DResource::ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue, const uint8 InClearStencilValue)
 {
-	InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*InCommandContext.GraphicsCommandList);
+	InCommandContext.FlushResourceBarriers(EPipeline::Graphics);
 	InCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearDepthStencilView(
 		GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
 		D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_STENCIL,
@@ -337,7 +337,7 @@ void FD3D12Texture2DResource::ClearDepthStencilView(FD3D12CommandContext& InComm
 
 void FD3D12Texture2DResource::ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue)
 {
-	InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*InCommandContext.GraphicsCommandList);
+	InCommandContext.FlushResourceBarriers(EPipeline::Graphics);
 	InCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearDepthStencilView(
 		GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
 		D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH,

@@ -34,6 +34,7 @@ struct FD3D12CommandContext
 		uint32_t ThreadGroupCountY,
 		uint32_t ThreadGroupCountZ);
 
+	void FlushResourceBarriers(const EPipeline InPipeline);
 	void FlushCommandList(const ED3D12QueueType InD3D12QueueType, const bool InWaitOnCompletation = false);
 	void ResetCommandList(const ED3D12QueueType InD3D12QueueType);
 };
