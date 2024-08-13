@@ -189,6 +189,13 @@ FD3D12ShaderResourceView* FD3D12Resource::GetSRV(const FD3D12SRVDesc InD3D12SRVD
 	return SRV;
 }
 
+FD3D12ShaderResourceView* FD3D12Resource::GetTextureSRV()
+{
+	FD3D12SRVDesc SRVDesc{};
+	SRVDesc.ShaderParameterResourceType = EShaderParameterResourceType::Texture;
+	return GetSRV(SRVDesc);
+}
+
 FD3D12UnorderedAccessView* FD3D12Resource::GetUAV()
 {
 	EA_ASSERT(bInit);

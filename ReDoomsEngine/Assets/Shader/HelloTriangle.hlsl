@@ -1,4 +1,5 @@
-﻿//#include "Common.hlsl"
+﻿#pragma once
+
 #include "Common.hlsl"
 
 cbuffer SceneConstantBuffer

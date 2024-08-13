@@ -775,6 +775,7 @@ private:
 	private: \
 	FShaderPreprocessorDefineAdd RD_UNIQUE_NAME(ShaderPreprocessorDefine) {*this, #DefineStr};
 
+// This should match with declaration in common.hlsl
 // @todo : this constant buffer should be allocated on default heap because it's modified once for a frame
 DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 	ViewConstantBuffer, false,
@@ -782,6 +783,7 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, ProjectionMatrix)
 	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, ViewProjectionMatrix)
 	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, PrevViewProjectionMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, DirectionalLightLocalToWorld)
 )
 
 // TODO) Need to support permutation?

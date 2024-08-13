@@ -1,4 +1,4 @@
-#include "Log.h"
+﻿#include "Log.h"
 #include "CommonInclude.h"
 
 const wchar_t* redooms::log::LogVerbosityToString(const ELogVerbosity LogVerbosity)
@@ -18,7 +18,7 @@ const wchar_t* redooms::log::LogVerbosityToString(const ELogVerbosity LogVerbosi
 	}
 }
 
-#define LOG_STRING_BUFFER_LENGTH 2048
+#define LOG_STRING_BUFFER_LENGTH 10240
 
 void redooms::log::LogInternal(const ELogVerbosity LogVerbosity, const wchar_t* const FilePath, const unsigned int CodeLine, const wchar_t* const Format, ...)
 {

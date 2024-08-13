@@ -184,16 +184,17 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
         Result->Material.resize(AssimpScene->mNumMaterials);
         for (uint32_t MaterialIndex = 0; MaterialIndex < AssimpScene->mNumMaterials; ++MaterialIndex)
         {
-            FMeshMaterial& MeshMaterial = Result->Material[MaterialIndex];
+            FPBRTexturePack& MeshMaterial = Result->Material[MaterialIndex];
 
             const aiMaterial* const AssimpMaterial = AssimpScene->mMaterials[MaterialIndex];
 
             aiTextureType TextureTypes[] = {
-                aiTextureType::aiTextureType_DIFFUSE,
-                aiTextureType::aiTextureType_EMISSIVE,
-                aiTextureType::aiTextureType_SHININESS,
-                aiTextureType::aiTextureType_METALNESS,
-                aiTextureType::aiTextureType_BASE_COLOR
+                aiTextureType::aiTextureType_BASE_COLOR,
+				aiTextureType::aiTextureType_NORMAL_CAMERA,
+				aiTextureType::aiTextureType_EMISSION_COLOR,
+				aiTextureType::aiTextureType_METALNESS,
+				aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS,
+				aiTextureType::aiTextureType_AMBIENT_OCCLUSION,
             };
 
             for (uint32_t TextureTypeIndex = 0; TextureTypeIndex < ARRAY_LENGTH(TextureTypes); ++TextureTypeIndex)
@@ -240,21 +241,24 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
 
                     switch (TextureType)
                     {
-                    case aiTextureType_DIFFUSE:
-                        MeshMaterial.DiffuseTexture = TextureResource;
-                        break;
-					case aiTextureType_EMISSIVE:
-						MeshMaterial.EmissiveTexture = TextureResource;
-                        break;
-					case aiTextureType_SHININESS:
-						MeshMaterial.ShinessTexture = TextureResource;
-                        break;
-					case aiTextureType_METALNESS:
-						MeshMaterial.MetalnessTexture = TextureResource;
-                        break;
-                    default:
-                        EA_ASSUME(false);
-                        break;
+						case aiTextureType::aiTextureType_BASE_COLOR:
+							MeshMaterial.BaseColor = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_EMISSION_COLOR:
+							MeshMaterial.Emissive = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_METALNESS:
+							MeshMaterial.Metalic = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS:
+							MeshMaterial.Roughness = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_AMBIENT_OCCLUSION:
+							MeshMaterial.AmbientOcclusion = TextureResource;
+							break;
+						default:
+							EA_ASSUME(false);
+							break;
                     }
                 }
             }

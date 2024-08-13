@@ -473,9 +473,6 @@
     <ClInclude Include="Source\Runtime\Rendering\GBufferManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\seafloor.dds" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Source\Editor\imgui\misc\debuggers\imgui.natstepfilter" />
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.inl" />
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathConvert.inl" />

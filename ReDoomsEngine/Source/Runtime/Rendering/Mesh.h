@@ -45,34 +45,18 @@ struct FMesh
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView;
 };
 
-struct FMeshMaterial
+struct FPBRTexturePack
 {
-	// Non PBR
-	eastl::shared_ptr<FD3D12Texture2DResource> DiffuseTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> SpecularTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> AmbientTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> EmissiveTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> HeightTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> ShinessTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> OpacityTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> DisplacementTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> LightmapTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> ReflectionTexture;
-
 	// PBR
-	eastl::shared_ptr<FD3D12Texture2DResource> BaseColorTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> EmissionColorTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> MetalnessTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> DiffuseRoughnessTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> AmbientOcclusionTexture;
-
-	eastl::shared_ptr<FD3D12Texture2DResource> SheenTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> ClearCoatTexture;
-	eastl::shared_ptr<FD3D12Texture2DResource> TransmissionTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> BaseColor;
+	eastl::shared_ptr<FD3D12Texture2DResource> Emissive;
+	eastl::shared_ptr<FD3D12Texture2DResource> Metalic;
+	eastl::shared_ptr<FD3D12Texture2DResource> Roughness;
+	eastl::shared_ptr<FD3D12Texture2DResource> AmbientOcclusion;
 };
 
 struct F3DModel
 {
 	eastl::vector<FMesh> MeshList;
-	eastl::vector<FMeshMaterial> Material;
+	eastl::vector<FPBRTexturePack> Material;
 };

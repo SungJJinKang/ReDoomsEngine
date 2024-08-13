@@ -1,1 +1,3 @@
-﻿#include "SceneData.hlsl"
+﻿#pragma once
+
+#include "SceneData.hlsl"

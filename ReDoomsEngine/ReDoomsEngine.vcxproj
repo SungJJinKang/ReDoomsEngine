@@ -600,9 +600,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl" />
     <None Include="Source\Runtime\Math\SimpleMath.inl" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\seafloor.dds" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

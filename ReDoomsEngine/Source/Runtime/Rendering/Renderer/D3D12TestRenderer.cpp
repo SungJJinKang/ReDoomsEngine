@@ -36,7 +36,11 @@ DEFINE_SHADER(MeshDrawVS, "MeshDraw.hlsl", "MainVS", EShaderFrequency::Vertex, E
 
 DEFINE_SHADER(MeshDrawPS, "MeshDraw.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
-		ADD_SHADER_SRV_VARIABLE(TriangleColorTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(BaseColor, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(Emissive, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(Metalic, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(Roughness, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(AmbientOcclusion, EShaderParameterResourceType::Texture)
 	)
 );
 
@@ -99,7 +103,7 @@ void D3D12TestRenderer::SceneSetup()
 	
 	DroneMesh = FMeshLoader::LoadFromMeshFile(CurrentFrameCommandContext, EA_WCHAR("Drone/Drone.fbx"));
 	//Mesh = FMeshLoader::LoadFromMeshFile(CurrentFrameCommandContext, EA_WCHAR("cabriolet-from-the-concept/source/Cabrio.fbx"));
-	DroneMesh->Material[0].DiffuseTexture = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("Drone/Drone_diff.jpg"));
+	DroneMesh->Material[0].BaseColor = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("Drone/Drone_diff.jpg"));
 	
 	float m_aspectRatio = 1.0f;
 	struct Vertex
@@ -154,9 +158,12 @@ void D3D12TestRenderer::SceneSetup()
 			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
 
-			FD3D12SRVDesc TriangleColorTextureSRV{};
-			TriangleColorTextureSRV.ShaderParameterResourceType = EShaderParameterResourceType::Texture;
-			MeshDrawPSInstance->Parameter.TriangleColorTexture = DroneMesh->Material[0].DiffuseTexture->GetSRV(TriangleColorTextureSRV);
+			// @TODO : set dummy texture if the texture doesn't exist
+			MeshDrawPSInstance->Parameter.BaseColor = DroneMesh->Material[0].BaseColor->GetTextureSRV();
+			MeshDrawPSInstance->Parameter.Emissive = DroneMesh->Material[0].Emissive->GetTextureSRV();
+			MeshDrawPSInstance->Parameter.Metalic = DroneMesh->Material[0].Metalic->GetTextureSRV();
+			MeshDrawPSInstance->Parameter.Roughness = DroneMesh->Material[0].Roughness->GetTextureSRV();
+			MeshDrawPSInstance->Parameter.AmbientOcclusion = DroneMesh->Material[0].AmbientOcclusion->GetTextureSRV();
 
 			eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 			ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;

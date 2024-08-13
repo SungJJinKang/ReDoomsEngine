@@ -72,6 +72,7 @@ public:
 
 	FD3D12ConstantBufferView* GetCBV();
 	FD3D12ShaderResourceView* GetSRV(const FD3D12SRVDesc InD3D12SRVDesc);
+	FD3D12ShaderResourceView* GetTextureSRV();
 	FD3D12UnorderedAccessView* GetUAV();
 	FD3D12RenderTargetView* GetRTV();
 	FD3D12DepthStencilView* GetDSV();
