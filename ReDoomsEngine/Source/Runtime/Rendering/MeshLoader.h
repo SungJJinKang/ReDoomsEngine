@@ -1,9 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "CommonInclude.h"
 
 #include "D3D12Resource/D3D12Resource.h"
-#include "D3D12Resource/D3D12Mesh.h"
+#include "Mesh.h"
 
 class FMeshLoader
 {

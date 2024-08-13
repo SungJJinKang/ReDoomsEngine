@@ -21,7 +21,6 @@ void FMeshDraw::PrepareDraw(FD3D12CommandContext& InCommandContext, FD3D12Consta
 	PrimitiveIDBufferView.SizeInBytes = sizeof(uint32) * PrimitiveIdList.size();
 	PrimitiveIDBufferView.StrideInBytes = sizeof(uint32);
 	UsedVertexBufferViewList.emplace_back(PrimitiveIDBufferView);
-	EA_ASSERT(UsedVertexBufferViewList.size() == (PRIMITIVE_ID_INPUT_ELEMENT_SLOT_INDEX + 1));
 
 	InCommandContext.StateCache.SetVertexBufferViewList(UsedVertexBufferViewList);
 	InCommandContext.StateCache.SetIndexBufferView(IndexBufferView);

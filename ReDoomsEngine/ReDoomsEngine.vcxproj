@@ -128,7 +128,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Utils\ConsoleVariable.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\RenderScene.cpp" />
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\Mesh.cpp" />
     <ClCompile Include="Source\Runtime\Math\SimpleMath.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\MeshLoader.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.cpp" />
@@ -209,7 +209,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Utils\ConsoleVariable.h" />
     <ClInclude Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.h" />
     <ClInclude Include="Source\Runtime\Rendering\RenderScene.h" />
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.h" />
+    <ClInclude Include="Source\Runtime\Rendering\Mesh.h" />
     <ClInclude Include="Source\Runtime\Math\SimpleMath.h" />
     <ClInclude Include="Source\Runtime\Rendering\MeshLoader.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.h" />

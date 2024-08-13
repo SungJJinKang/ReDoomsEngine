@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "D3D12Include.h"
 #include "D3D12PSO.h"
-#include "D3D12Resource/D3D12Mesh.h"
 
 struct FD3D12CommandContext;
 class FBoundShaderSet;

@@ -2,7 +2,7 @@
 
 #include "CommonInclude.h"
 #include "D3D12Include.h"
-#include "D3D12Resource.h"
+#include "D3D12Resource/D3D12Resource.h"
 
 #define MAX_NUMBER_OF_VERTEXCOLOR 8
 #define MAX_NUMBER_OF_TEXTURECOORDS 1
