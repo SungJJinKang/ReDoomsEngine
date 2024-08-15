@@ -11,6 +11,7 @@
 #include "RenderScene.h"
 #include "Thread/JobSystem.h"
 #include "GBufferManager.h"
+#include "Level.h"
 
 class FD3D12CommandAllocator;
 
@@ -78,6 +79,8 @@ protected:
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> VertexBuffer;
 
 	eastl::array<FFrameResourceContainer, GNumBackBufferCount> FrameContainerList;
+
+	FLevel Level;
 
 private :
 

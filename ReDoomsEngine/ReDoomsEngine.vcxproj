@@ -119,6 +119,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Runtime\Rendering\Level.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\GBufferManager.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12VertexFactory.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.cpp" />
@@ -196,6 +197,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Runtime\Rendering\Level.h" />
     <ClInclude Include="Source\Runtime\Rendering\GBufferManager.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12HelperOpeartor.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12VertexFactory.h" />

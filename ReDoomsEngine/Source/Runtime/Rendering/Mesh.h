@@ -5,7 +5,7 @@
 #include "D3D12Resource/D3D12Resource.h"
 
 #define MAX_NUMBER_OF_VERTEXCOLOR 8
-#define MAX_NUMBER_OF_TEXTURECOORDS 1
+#define MAX_NUMBER_OF_TEXTURECOORDS 5
 
 #define PRIMITIVE_ID_INPUT_ELEMENT_SLOT_INDEX 5
 
@@ -45,9 +45,91 @@ struct FMesh
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView;
 };
 
-struct FPBRTexturePack
+enum class EShadingModel
+{
+	Unknown,
+	Default
+};
+
+enum class ETextureMapping 
+{
+	Unknown,
+
+	UV,
+
+	/** Spherical mapping */
+	Sphere,
+
+	/** Cylindrical mapping */
+	Cylinder,
+
+	/** Cubic mapping */
+	Box,
+
+	/** Planar mapping */
+	Plane,
+
+	/** Undefined mapping. Have fun. */
+	Other,
+};
+
+enum class ETextureOp 
+{
+	Unknown,
+
+	/** T = T1 * T2 */
+	Multiply = 0x0,
+
+	/** T = T1 + T2 */
+	Add = 0x1,
+
+	/** T = T1 - T2 */
+	Subtract = 0x2,
+
+	/** T = T1 / T2 */
+	Divide = 0x3,
+
+	/** T = (T1 + T2) - (T1 * T2) */
+	SmoothAdd = 0x4,
+
+	/** T = T1 + (T2-0.5) */
+	SignedAdd = 0x5
+};
+
+enum class ETextureMapMode 
+{
+	Unknown,
+	
+	/** A texture coordinate u|v is translated to u%1|v%1
+	 */
+	Wrap,
+
+	/** Texture coordinates outside [0...1]
+	 *  are clamped to the nearest valid value.
+	 */
+	Clamp,
+
+	/** If the texture coordinates for a pixel are outside [0...1]
+	 *  the texture is not applied to that pixel
+	 */
+	Decal,
+
+	/** A texture coordinate u|v becomes u%1|v%1 if (u-(u%1))%2 is zero and
+	 *  1-(u%1)|1-(v%1) otherwise
+	 */
+	Mirror
+};
+
+struct FMaterial
 {
 	// PBR
+	EShadingModel ShadingModel = EShadingModel::Unknown;
+	ETextureMapping TextureMapping = ETextureMapping::Unknown;
+	int32 UVIndex = -1;
+	float Blend = -1.0f;
+	ETextureOp TextureOp = ETextureOp::Unknown;
+	ETextureMapMode TextureMapMode[2]{ ETextureMapMode::Unknown, ETextureMapMode::Unknown };
+
 	eastl::shared_ptr<FD3D12Texture2DResource> BaseColor;
 	eastl::shared_ptr<FD3D12Texture2DResource> Emissive;
 	eastl::shared_ptr<FD3D12Texture2DResource> Metalic;
@@ -55,8 +137,8 @@ struct FPBRTexturePack
 	eastl::shared_ptr<FD3D12Texture2DResource> AmbientOcclusion;
 };
 
-struct F3DModel
+struct FMeshModel
 {
-	eastl::vector<FMesh> MeshList;
-	eastl::vector<FPBRTexturePack> Material;
+	FMesh Mesh;
+	FMaterial Material;
 };

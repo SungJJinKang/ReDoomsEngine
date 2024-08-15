@@ -9,7 +9,7 @@ class FMeshLoader
 {
 public:
 
-	static eastl::shared_ptr<F3DModel> LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder);
+	static eastl::vector<eastl::shared_ptr<FMeshModel>> LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder);
 
 private:
 };

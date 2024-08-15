@@ -5,6 +5,7 @@
 Texture2D<float4> GBufferA;
 Texture2D<float4> GBufferB;
 Texture2D<float4> GBufferC;
+Texture2D<float4> GBufferD;
 
 struct FGBufferData
 {
@@ -22,32 +23,24 @@ FGBufferData FetchAndDecodeGBufferData(float2 UV)
 {
     FGBufferData GBufferData;
     GBufferData.WorldNormal = GBufferA.Sample(StaticPointClampSampler, UV).xyz;
+    GBufferData.Metalic = GBufferA.Sample(StaticPointClampSampler, UV).w;
+
     GBufferData.BaseColor = GBufferB.Sample(StaticPointClampSampler, UV).xyz;
-    GBufferData.Metalic = GBufferB.Sample(StaticPointClampSampler, UV).w;
-    GBufferData.Roughness = GBufferC.Sample(StaticPointClampSampler, UV).x;
-    GBufferData.AmbientOcclusion = GBufferC.Sample(StaticPointClampSampler, UV).y;
-    GBufferData.Emissive = GBufferC.Sample(StaticPointClampSampler, UV).z;
-    GBufferData.Depth = GBufferC.Sample(StaticPointClampSampler, UV).w;
-    GBufferData.ShadingModelID = 0;
+    GBufferData.Roughness = GBufferB.Sample(StaticPointClampSampler, UV).w;
+
+    GBufferData.Emissive = GBufferC.Sample(StaticPointClampSampler, UV).xyz;
+    GBufferData.AmbientOcclusion = GBufferC.Sample(StaticPointClampSampler, UV).w;
+
+    GBufferData.ShadingModelID = asuint(GBufferD.Sample(StaticPointClampSampler, UV).x);
+    GBufferData.Depth = GBufferD.Sample(StaticPointClampSampler, UV).y;
+
     return GBufferData;
 }
 
-void EncodeGBufferData(FGBufferData GBufferData, out float4 GBufferA, out float4 GBufferB, out float4 GBufferC)
+void EncodeGBufferData(FGBufferData GBufferData, out float4 GBufferA, out float4 GBufferB, out float4 GBufferC, out float4 GBufferD)
 {
-    GBufferA = float4(GBufferData.WorldNormal, 0);
-    GBufferB = float4(GBufferData.BaseColor, GBufferData.Metalic);
-    GBufferC = float4(GBufferData.Roughness, GBufferData.AmbientOcclusion, GBufferData.Emissive, GBufferData.Depth);
-}
-
-void WriteToGBuffer(FGBufferData GBufferData, float2 UV)
-{
-    float4 GBufferA;
-    float4 GBufferB;
-    float4 GBufferC;
-
-    EncodeGBufferData(GBufferData, GBufferA, GBufferB, GBufferC);
-
-    GBufferA[UV] = GBufferA;
-    GBufferB[UV] = GBufferB;
-    GBufferC[UV] = GBufferC;
+    GBufferA = float4(GBufferData.WorldNormal, asfloat(GBufferData.Metalic));
+    GBufferB = float4(GBufferData.BaseColor, GBufferData.Roughness);
+    GBufferC = float4(GBufferData.Emissive, GBufferData.AmbientOcclusion);
+    GBufferD = float4(asfloat(GBufferData.ShadingModelID), GBufferData.Depth, 0.0, 0.0);
 }

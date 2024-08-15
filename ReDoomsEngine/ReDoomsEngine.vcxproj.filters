@@ -80,6 +80,7 @@
     <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12VertexFactory.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\GBufferManager.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\Level.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Runtime\Core\Enums.h" />
@@ -471,6 +472,7 @@
     <ClInclude Include="Source\Runtime\D3D12\D3D12VertexFactory.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12HelperOpeartor.h" />
     <ClInclude Include="Source\Runtime\Rendering\GBufferManager.h" />
+    <ClInclude Include="Source\Runtime\Rendering\Level.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Editor\imgui\misc\debuggers\imgui.natstepfilter" />

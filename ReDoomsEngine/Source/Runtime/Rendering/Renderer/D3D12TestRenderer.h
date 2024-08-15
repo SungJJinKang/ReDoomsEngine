@@ -2,7 +2,7 @@
 #include "CommonInclude.h"
 #include "Renderer/Renderer.h"
 
-struct F3DModel;
+struct FMeshModel;
 
 DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
 	VertexOffset, true,
@@ -30,15 +30,6 @@ public:
 
 private:
 
-	float Offset = -2.0f;
-	eastl::shared_ptr<FD3D12TextureResource> TestTexture;
-	eastl::shared_ptr<FD3D12TextureResource> SmallTexture;
-
-	eastl::shared_ptr<F3DModel> DroneMesh;
-
-	eastl::vector<FDrone> DroneList;
-	eastl::vector<FPrimitive> TrinagleList;
-
-	GBufferManager GBuffer;
+	FGBufferManager GBufferManager;
 };
 

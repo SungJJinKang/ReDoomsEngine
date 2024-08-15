@@ -86,6 +86,6 @@ enum class EShaderParameterResourceType
 
 enum ETextureFormat
 {
-	SceneColor = DXGI_FORMAT::DXGI_FORMAT_R11G11B10_FLOAT,
+	SceneColor = DXGI_FORMAT::DXGI_FORMAT_R16G16B16A16_FLOAT,
 	DepthStencil = DXGI_FORMAT::DXGI_FORMAT_R24G8_TYPELESS
 };

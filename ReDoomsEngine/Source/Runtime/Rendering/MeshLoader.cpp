@@ -9,9 +9,71 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 
-eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder)
+
+ETextureMapping ConvertaiTextureMappingToETextureMapping(const aiTextureMapping InaiTextureMapping)
 {
-    eastl::shared_ptr<F3DModel> Result{};
+	switch (InaiTextureMapping)
+	{
+	case aiTextureMapping::aiTextureMapping_UV:
+		return ETextureMapping::UV;
+	case aiTextureMapping::aiTextureMapping_SPHERE:
+		return ETextureMapping::Sphere;
+	case aiTextureMapping::aiTextureMapping_CYLINDER:
+		return ETextureMapping::Cylinder;
+	case aiTextureMapping::aiTextureMapping_BOX:
+		return ETextureMapping::Box;
+	case aiTextureMapping::aiTextureMapping_PLANE:
+		return ETextureMapping::Plane;
+	case aiTextureMapping::aiTextureMapping_OTHER:
+		return ETextureMapping::Other;
+	default:
+		return ETextureMapping::Unknown;
+	}
+}
+
+ETextureOp ConvertaiTextureOpToETextureOp(const aiTextureOp InaiTextureOp)
+{
+	switch (InaiTextureOp)
+	{
+	case aiTextureOp::aiTextureOp_Multiply:
+		return ETextureOp::Multiply;
+	case aiTextureOp::aiTextureOp_Add:
+		return ETextureOp::Add;
+	case aiTextureOp::aiTextureOp_Subtract:
+		return ETextureOp::Subtract;
+	case aiTextureOp::aiTextureOp_Divide:
+		return ETextureOp::Divide;
+	case aiTextureOp::aiTextureOp_SmoothAdd:
+		return ETextureOp::SmoothAdd;
+	case aiTextureOp::aiTextureOp_SignedAdd:
+		return ETextureOp::SignedAdd;
+	default:
+		return ETextureOp::Unknown;
+	}
+}
+
+ETextureMapMode ConvertaiTextureMapModeToETextureMapMode(const aiTextureMapMode InaiTextureMapMode)
+{
+	switch (InaiTextureMapMode)
+	{
+	case aiTextureMapMode::aiTextureMapMode_Wrap:
+		return ETextureMapMode::Wrap;
+	case aiTextureMapMode::aiTextureMapMode_Clamp:
+		return ETextureMapMode::Clamp;
+	case aiTextureMapMode::aiTextureMapMode_Decal:
+		return ETextureMapMode::Decal;
+	case aiTextureMapMode::aiTextureMapMode_Mirror:
+		return ETextureMapMode::Mirror;
+	default:
+		return ETextureMapMode::Unknown;
+	}
+}
+
+eastl::vector<eastl::shared_ptr<FMeshModel>> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePath)
+{
+	RD_LOG(ELogVerbosity::Log, EA_WCHAR("Loading Mesh(%s)"), InRelativePath);
+
+    eastl::vector<eastl::shared_ptr<FMeshModel>> MeshModelList{};
 
     // Create an instance of the Importer class
     eastl::shared_ptr<Assimp::Importer> AssimpImporter = eastl::make_shared<Assimp::Importer>();
@@ -19,7 +81,7 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
     // And have it read the given file with some example postprocessing
     // Usually - if speed is not the most important aspect for you - you'll
     // probably to request more postprocessing than we do in this example.
-    const aiScene* const AssimpScene = AssimpImporter->ReadFile(WCHAR_TO_UTF8(FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePathToAssetFolder)),
+    const aiScene* const AssimpScene = AssimpImporter->ReadFile(WCHAR_TO_UTF8(FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePath)),
         aiProcess_CalcTangentSpace |
         aiProcess_Triangulate |
 		aiProcess_GenUVCoords |
@@ -29,15 +91,17 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
     // If the import failed, report it
     if (AssimpScene) 
     {
-        Result = eastl::make_shared<F3DModel>();
-
         for (uint32_t MeshIndex = 0; MeshIndex < AssimpScene->mNumMeshes; ++MeshIndex)
         {
-            FMesh& Mesh = Result->MeshList.emplace_back();
+			eastl::shared_ptr<FMeshModel>& MeshModel = MeshModelList.emplace_back();
+			MeshModel = eastl::make_shared<FMeshModel>();
+
+			FMesh& Mesh = MeshModel->Mesh;
+			FMaterial& Material = MeshModel->Material;
 
             const aiMesh* const AssimpMesh = AssimpScene->mMeshes[MeshIndex];
 
-            eastl::wstring MeshName = AssimpMesh->mName.C_Str() ? ANSI_TO_WCHAR(AssimpMesh->mName.C_Str()) : InRelativePathToAssetFolder;
+            eastl::wstring MeshName = AssimpMesh->mName.C_Str() ? ANSI_TO_WCHAR(AssimpMesh->mName.C_Str()) : InRelativePath;
             
             Mesh.MeshName = MeshName;
             Mesh.PositionBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext,
@@ -101,10 +165,10 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             static_assert(MAX_NUMBER_OF_TEXTURECOORDS <= AI_MAX_NUMBER_OF_TEXTURECOORDS);
             static const wchar_t* const TextureCoordsDebugName[MAX_NUMBER_OF_TEXTURECOORDS]{
                 EA_WCHAR("(TextureCoords 0)")
-//              EA_WCHAR("(TextureCoords 1)"),
-//              EA_WCHAR("(TextureCoords 2)"),
-//              EA_WCHAR("(TextureCoords 3)"),
-//              EA_WCHAR("(TextureCoords 4)")
+				EA_WCHAR("(TextureCoords 1)"),
+				EA_WCHAR("(TextureCoords 2)"),
+				EA_WCHAR("(TextureCoords 3)"),
+				EA_WCHAR("(TextureCoords 4)")
             };
             for (uint32_t UVIndex = 0; UVIndex < MAX_NUMBER_OF_TEXTURECOORDS; ++UVIndex)
             {
@@ -179,14 +243,9 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             {
                 Mesh.IndexBufferView = Mesh.IndexBuffer->GetIndexBufferView();
             }
-        }
 
-        Result->Material.resize(AssimpScene->mNumMaterials);
-        for (uint32_t MaterialIndex = 0; MaterialIndex < AssimpScene->mNumMaterials; ++MaterialIndex)
-        {
-            FPBRTexturePack& MeshMaterial = Result->Material[MaterialIndex];
-
-            const aiMaterial* const AssimpMaterial = AssimpScene->mMaterials[MaterialIndex];
+			
+			const aiMaterial* const AssimpMaterial = AssimpScene->mMaterials[AssimpMesh->mMaterialIndex];
 
             aiTextureType TextureTypes[] = {
                 aiTextureType::aiTextureType_BASE_COLOR,
@@ -197,7 +256,7 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
 				aiTextureType::aiTextureType_AMBIENT_OCCLUSION,
             };
 
-            for (uint32_t TextureTypeIndex = 0; TextureTypeIndex < ARRAY_LENGTH(TextureTypes); ++TextureTypeIndex)
+			for (uint32_t TextureTypeIndex = 0; TextureTypeIndex < ARRAY_LENGTH(TextureTypes); ++TextureTypeIndex)
             {
                 const aiTextureType TextureType = TextureTypes[TextureTypeIndex];
                 const uint32_t TextureCount = AssimpMaterial->GetTextureCount(TextureType);
@@ -216,60 +275,75 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
 
                     EA::StdC::Memset8(&MaterialProperty, 0xFF, sizeof(MaterialProperty));
 
-                    AssimpMaterial->GetTexture(TextureType, TextureIndex,
-                        &MaterialProperty.Path,
-                        &MaterialProperty.Mapping,
-                        &MaterialProperty.UVindex,
-                        &MaterialProperty.Blend,
-                        &MaterialProperty.TextureOP,
-                        MaterialProperty.MapMode
-                    );
+					if (aiReturn::aiReturn_SUCCESS == AssimpMaterial->GetTexture(TextureType, TextureIndex,
+						&MaterialProperty.Path,
+						&MaterialProperty.Mapping,
+						&MaterialProperty.UVindex,
+						&MaterialProperty.Blend,
+						&MaterialProperty.TextureOP,
+						MaterialProperty.MapMode)
+						)
+					{
 
+						Material.TextureMapping = ConvertaiTextureMappingToETextureMapping(MaterialProperty.Mapping);
+						Material.UVIndex = MaterialProperty.UVindex;
+						if (MaterialProperty.Blend >= 0.0f && MaterialProperty.Blend <= 1.0f)
+						{
+							Material.Blend = MaterialProperty.Blend;
+						}
+						else
+						{
+							Material.Blend = -1.0f;
+						}
+						Material.TextureOp = ConvertaiTextureOpToETextureOp(MaterialProperty.TextureOP);
+						Material.TextureMapMode[0] = ConvertaiTextureMapModeToETextureMapMode(MaterialProperty.MapMode[0]);
+						Material.TextureMapMode[1] = ConvertaiTextureMapModeToETextureMapMode(MaterialProperty.MapMode[1]);
 
-					std::filesystem::path ShaderTextFilePath{ InRelativePathToAssetFolder };
-                  
-                    eastl::wstring TextureRelativePath = ShaderTextFilePath.parent_path().c_str();
-                    TextureRelativePath += EA_WCHAR("/");
-                    TextureRelativePath += ANSI_TO_WCHAR(MaterialProperty.Path.C_Str());
+						eastl::wstring TextureFileRelativePath{ std::filesystem::path{ InRelativePath }.parent_path().c_str() };
+						TextureFileRelativePath += EA_WCHAR("/");
+						TextureFileRelativePath += ANSI_TO_WCHAR(MaterialProperty.Path.C_Str());
 
-                    eastl::shared_ptr<FD3D12Texture2DResource> TextureResource = FTextureLoader::LoadFromFile(InCommandContext,
-                        TextureRelativePath.c_str(),
-                        D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE,
-                        DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,
-                        D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-                    );
+						eastl::shared_ptr<FD3D12Texture2DResource> TextureResource = FTextureLoader::LoadFromFile(InCommandContext,
+							TextureFileRelativePath.c_str(),
+							D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE,
+							DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,
+							D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+						);
 
-                    switch (TextureType)
-                    {
-						case aiTextureType::aiTextureType_BASE_COLOR:
-							MeshMaterial.BaseColor = TextureResource;
-							break;
-						case aiTextureType::aiTextureType_EMISSION_COLOR:
-							MeshMaterial.Emissive = TextureResource;
-							break;
-						case aiTextureType::aiTextureType_METALNESS:
-							MeshMaterial.Metalic = TextureResource;
-							break;
-						case aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS:
-							MeshMaterial.Roughness = TextureResource;
-							break;
-						case aiTextureType::aiTextureType_AMBIENT_OCCLUSION:
-							MeshMaterial.AmbientOcclusion = TextureResource;
-							break;
-						default:
-							EA_ASSUME(false);
-							break;
-                    }
+						switch (TextureType)
+						{
+							case aiTextureType::aiTextureType_BASE_COLOR:
+								Material.BaseColor = TextureResource;
+								break;
+							case aiTextureType::aiTextureType_EMISSION_COLOR:
+								Material.Emissive = TextureResource;
+								break;
+							case aiTextureType::aiTextureType_METALNESS:
+								Material.Metalic = TextureResource;
+								break;
+							case aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS:
+								Material.Roughness = TextureResource;
+								break;
+							case aiTextureType::aiTextureType_AMBIENT_OCCLUSION:
+								Material.AmbientOcclusion = TextureResource;
+								break;
+							default:
+								EA_ASSUME(false);
+								break;
+						}
+					}
                 }
             }
 
         }
 
+		RD_LOG(ELogVerbosity::Log, EA_WCHAR("Success to load Mesh(%s)"), InRelativePath);
     }
     else
-    {
+	{
+		RD_LOG(ELogVerbosity::Log, EA_WCHAR("Fail to load Mesh(%s)"), InRelativePath);
         EA_ASSERT_FORMATTED(false, ("Assimp ReadfFile Fail : %s", AssimpImporter->GetErrorString()));
     }
 
-    return Result;
+    return MeshModelList;
 }

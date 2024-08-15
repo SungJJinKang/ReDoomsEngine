@@ -60,6 +60,7 @@ void MainPS(
     out float4 OutGBufferA : SV_Target0, 
     out float4 OutGBufferB : SV_Target1, 
     out float4 OutGBufferC : SV_Target2, 
+    out float4 OutGBufferD : SV_Target3, 
     out float Depth : SV_Depth
 )
 {
@@ -83,4 +84,5 @@ void MainPS(
 	OutGBufferA = GBufferA;
 	OutGBufferB = GBufferB;
 	OutGBufferC = GBufferC;
+	OutGBufferD = GBufferD;
 }
