@@ -1,4 +1,4 @@
-#include "D3D12PSO.h"
+﻿#include "D3D12PSO.h"
 #include "D3D12Device.h"
 #include "D3D12RootSignature.h"
 #include "ShaderCompilers/DirectXShaderCompiler/include/dxc/dxcapi.h"
@@ -10,12 +10,16 @@
 //     MEM_ZERO(CachedHash);
 // }
 
-void FD3D12PSOInitializer::CacheHash()
+void FD3D12PSOInitializer::CacheHash() const
 {
-    EA_ASSERT(DrawDesc.CachedDescHash != 0);
-    EA_ASSERT(PassDesc.CachedDescHash != 0);
-    EA_ASSERT(DrawDesc.BoundShaderSet.GetCachedHash64() != 0);
-
+	if (!DrawDesc.IsValidHash())
+	{
+		DrawDesc.CacheDescHash();
+	}
+	if (!PassDesc.IsValidHash())
+	{
+		PassDesc.CacheDescHash();
+	}
     CachedHash = DrawDesc.BoundShaderSet.GetCachedHash64() ^ DrawDesc.CachedDescHash ^ PassDesc.CachedDescHash;
 }
 
@@ -35,10 +39,10 @@ FD3D12PSO::FD3D12PSO(const FD3D12PSOInitializer& InPSOInitializer)
     #define COPY_PASS_DESC_MEMBER(MemberName) Desc.MemberName = PSOInitializer.PassDesc.Desc.MemberName;
 
     COPY_PASS_DESC_MEMBER(StreamOutput)
-    COPY_DRAW_DESC_MEMBER(BlendState)
+	COPY_PASS_DESC_MEMBER(BlendState)
     COPY_PASS_DESC_MEMBER(SampleMask)
-    COPY_DRAW_DESC_MEMBER(RasterizerState)
-    COPY_DRAW_DESC_MEMBER(DepthStencilState)
+	COPY_PASS_DESC_MEMBER(RasterizerState)
+	COPY_PASS_DESC_MEMBER(DepthStencilState)
     COPY_DRAW_DESC_MEMBER(InputLayout)
     COPY_PASS_DESC_MEMBER(IBStripCutValue)
     COPY_DRAW_DESC_MEMBER(PrimitiveTopologyType)

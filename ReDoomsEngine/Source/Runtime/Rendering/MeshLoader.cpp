@@ -1,4 +1,4 @@
-#include "MeshLoader.h"
+﻿#include "MeshLoader.h"
 
 #include "AssetManager.h"
 #include "D3D12Resource/D3D12ResourceAllocator.h"
@@ -21,7 +21,9 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
     // probably to request more postprocessing than we do in this example.
     const aiScene* const AssimpScene = AssimpImporter->ReadFile(WCHAR_TO_UTF8(FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePathToAssetFolder)),
         aiProcess_CalcTangentSpace |
-        aiProcess_Triangulate
+        aiProcess_Triangulate |
+		aiProcess_GenUVCoords |
+		aiProcess_ConvertToLeftHanded
         );
 
     // If the import failed, report it
@@ -98,11 +100,11 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
            
             static_assert(MAX_NUMBER_OF_TEXTURECOORDS <= AI_MAX_NUMBER_OF_TEXTURECOORDS);
             static const wchar_t* const TextureCoordsDebugName[MAX_NUMBER_OF_TEXTURECOORDS]{
-                EA_WCHAR("(TextureCoords 0)"),
-                EA_WCHAR("(TextureCoords 1)"),
-                EA_WCHAR("(TextureCoords 2)"),
-                EA_WCHAR("(TextureCoords 3)"),
-                EA_WCHAR("(TextureCoords 4)")
+                EA_WCHAR("(TextureCoords 0)")
+//              EA_WCHAR("(TextureCoords 1)"),
+//              EA_WCHAR("(TextureCoords 2)"),
+//              EA_WCHAR("(TextureCoords 3)"),
+//              EA_WCHAR("(TextureCoords 4)")
             };
             for (uint32_t UVIndex = 0; UVIndex < MAX_NUMBER_OF_TEXTURECOORDS; ++UVIndex)
             {
@@ -156,7 +158,7 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
             Mesh.MaterialIndex = AssimpMesh->mMaterialIndex;
 
             {
-                eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, ARRAY_LENGTH(FMesh::InputElementDescs)> VertexBufferViewList{};
+                eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> VertexBufferViewList{};
 
                 VertexBufferViewList.emplace_back(Mesh.PositionBuffer->GetVertexBufferView());
                 VertexBufferViewList.emplace_back(Mesh.NormalBuffer->GetVertexBufferView());
@@ -182,16 +184,17 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
         Result->Material.resize(AssimpScene->mNumMaterials);
         for (uint32_t MaterialIndex = 0; MaterialIndex < AssimpScene->mNumMaterials; ++MaterialIndex)
         {
-            FMeshMaterial& MeshMaterial = Result->Material[MaterialIndex];
+            FPBRTexturePack& MeshMaterial = Result->Material[MaterialIndex];
 
             const aiMaterial* const AssimpMaterial = AssimpScene->mMaterials[MaterialIndex];
 
             aiTextureType TextureTypes[] = {
-                aiTextureType::aiTextureType_DIFFUSE,
-                aiTextureType::aiTextureType_EMISSIVE,
-                aiTextureType::aiTextureType_SHININESS,
-                aiTextureType::aiTextureType_METALNESS,
-                aiTextureType::aiTextureType_BASE_COLOR
+                aiTextureType::aiTextureType_BASE_COLOR,
+				aiTextureType::aiTextureType_NORMAL_CAMERA,
+				aiTextureType::aiTextureType_EMISSION_COLOR,
+				aiTextureType::aiTextureType_METALNESS,
+				aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS,
+				aiTextureType::aiTextureType_AMBIENT_OCCLUSION,
             };
 
             for (uint32_t TextureTypeIndex = 0; TextureTypeIndex < ARRAY_LENGTH(TextureTypes); ++TextureTypeIndex)
@@ -238,21 +241,24 @@ eastl::shared_ptr<F3DModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& 
 
                     switch (TextureType)
                     {
-                    case aiTextureType_DIFFUSE:
-                        MeshMaterial.DiffuseTexture = TextureResource;
-                        break;
-					case aiTextureType_EMISSIVE:
-						MeshMaterial.EmissiveTexture = TextureResource;
-                        break;
-					case aiTextureType_SHININESS:
-						MeshMaterial.ShinessTexture = TextureResource;
-                        break;
-					case aiTextureType_METALNESS:
-						MeshMaterial.MetalnessTexture = TextureResource;
-                        break;
-                    default:
-                        EA_ASSUME(false);
-                        break;
+						case aiTextureType::aiTextureType_BASE_COLOR:
+							MeshMaterial.BaseColor = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_EMISSION_COLOR:
+							MeshMaterial.Emissive = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_METALNESS:
+							MeshMaterial.Metalic = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS:
+							MeshMaterial.Roughness = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_AMBIENT_OCCLUSION:
+							MeshMaterial.AmbientOcclusion = TextureResource;
+							break;
+						default:
+							EA_ASSUME(false);
+							break;
                     }
                 }
             }

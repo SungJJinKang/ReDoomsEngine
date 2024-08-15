@@ -5,6 +5,7 @@
 #include "EASTL/segmented_vector.h"
 #include "MeshDraw/MeshDraw.h"
 #include "D3D12Shader.h"
+#include "SceneData/GPUScene.h"
 
 struct FMesh;
 struct FD3D12CommandContext;
@@ -16,11 +17,19 @@ enum class EPass : uint32_t
 	Num
 };
 
-struct FRenderObjectList
+enum EPrimitiveFlag : uint32
+{
+	CacheMeshDrawCommand = 1 << 0,
+	AllowMergeMeshDrawCommand = 1 << 1,
+};
+
+struct FPrimitiveList
 {
 	eastl::array<eastl::bitvector<>, static_cast<uint32_t>(EPass::Num)> VisibleFlagsList;
-	eastl::bitvector<> ModelMatrixDirtyList;
+	eastl::bitvector<> TransformDirtyPrimitiveList;
+	eastl::bitvector<> GPUSceneDirtyPrimitiveList;
 	eastl::vector<BoundingBox> BoundingBoxList;
+	eastl::vector<EPrimitiveFlag> PrimitiveFlagList;
 	/// <summary>
 	/// x, y, z : World position
 	/// w : Radius of bounding sphere
@@ -28,7 +37,7 @@ struct FRenderObjectList
 	eastl::vector<AlignedVector4> PositionAndLocalBoundingSphereRadiusList;
 	eastl::vector<AlignedQuaternion> RotationList;
 	eastl::vector<AlignedVector4> ScaleAndDrawDistanceList;
-	eastl::vector<AlignedMatrix> CachedModelMatrixList;
+	eastl::vector<AlignedMatrix> CachedLocalToWorldMatrixList;
 	eastl::vector<eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>> VertexBufferViewList;
 	eastl::vector<D3D12_INDEX_BUFFER_VIEW> IndexBufferViewList;
 
@@ -36,17 +45,19 @@ struct FRenderObjectList
 	/// this can be overridden in CreateMeshDrawListForPass
 	/// Shader instances of BoundShaderSet will be duplicated for a mesh draw
 	/// </summary>
-	eastl::vector<FD3D12PSOInitializer::FDrawDesc> TemplateDrawDescList;
+	eastl::vector<FD3D12PSOInitializer::FDrawDesc> DrawDescList;
 	eastl::vector<FMeshDrawArgument> MeshDrawArgumentList;
+	eastl::array<eastl::vector<FMeshDraw>, static_cast<uint32_t>(EPass::Num)> CachedMeshDrawList;
 
-	void CacheModelMatrixs();
+	void CacheLocalToWorldMatrixs();
+	void DirtyTransform(const uint32 InPrimitiveIndex);
 	void Reserve(const size_t InSize);
 };
 
-struct FRenderObject
+struct FPrimitive
 {
-	FRenderObjectList* RenderObjectList;
-	uint32_t ObjectIndex; // This value represents index in RenderObjectList
+	FPrimitiveList* PrimitiveList;
+	uint32_t PrimitiveIndex; // This value represents index in PrimitiveList
 
 	void SetVisible(const bool bInVisible);
 	void SetVisible(const EPass InPass, const bool bInVisible);
@@ -63,15 +74,18 @@ struct FRenderObject
 	void SetDrawDistance(const float InDrawDistance);
 };
 
+bool CanMergeMeshDraw(const FMeshDraw& InMeshDrawA, const FMeshDraw& InMeshDrawB);
+
 class FRenderScene
 {
 public:
 
 	void Init();
 
-	EA_NODISCARD FRenderObject AddRenderObject(
+	EA_NODISCARD FPrimitive AddPrimitive(
 		const bool bInVisible,
 		const BoundingBox& InLocalBoundingBox, 
+		const uint32 InPrimitiveFlag,
 		const Vector3& Position, 
 		const Quaternion& InRotation, 
 		const Vector3& InScale, 
@@ -82,14 +96,19 @@ public:
 		const FMeshDrawArgument& InMeshDrawArgument
 	);
 
+	void CacheMeshDraw(const int32 InPrimitiveIndex);
+
 	// This function will be called from worker thread
-	void PrepareToCreateMeshDrawList();
+	void PrepareToCreateMeshDrawList(FD3D12CommandContext& InCommandContext);
+	FMeshDraw MergeMeshDraw(const FMeshDraw& lhs, const FMeshDraw& rhs);
+	FMeshDraw CreateMeshDrawForPass(const uint32_t InPrimitiveIndex, const EPass InPass);
 	eastl::vector<FMeshDraw> CreateMeshDrawListForPass(const EPass InPass);
-	void SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList);
+	void SetUpShaderInstances(eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList);
 
 	void SetPassDesc(const EPass InPass, const FD3D12PSOInitializer::FPassDesc& InPassDesc);
 
-	FRenderObjectList RenderObjectList;
+	FPrimitiveList PrimitiveList;
+	GPUScene GPUSceneData;
 
 	struct FPass
 	{
@@ -100,11 +119,8 @@ public:
 
 private:
 
+	eastl::array<eastl::vector<FMeshDraw>, static_cast<uint32_t>(EPass::Num)> MergedMeshDrawList;
+
+	eastl::vector<uint32> AddedPrimitiveIndexList;
 	eastl::array<FPass, static_cast<uint32_t>(EPass::Num)> PerPassData;
-
 };
-
-DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
-	MeshDrawConstantBuffer, true,
-	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ModelMatrix)
-)

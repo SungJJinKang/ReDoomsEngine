@@ -1,1411 +1,485 @@
-ï»?xml version="1.0" encoding="utf-8"?>
+ï»¿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\Runtime\STL\EASTL\source\allocator_eastl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\STL\EASTL\source\assert.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\STL\EASTL\source\atomic.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\STL\EASTL\source\fixed_pool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\STL\EASTL\source\hashtable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\STL\EASTL\source\intrusive_list.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\STL\EASTL\source\numeric_limits.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\STL\EASTL\source\red_black_tree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\STL\EASTL\source\string.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\STL\EASTL\source\thread_support.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Device.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Adapter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Core\Log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12CommandQueue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Assert.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Core\Commandline.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\Renderer\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Core\Parse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Fence.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Core\MemoryCore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Swapchain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Core\WindowsApplication.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Descriptor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12RootSignature.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12StateCache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\IO\AssetManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12PSO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Enums.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3DX12\source\d3dx12_property_format_table.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3DX12\source\dxguids.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12CommandList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12View.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12CommandContext.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\Renderer\D3D12TestRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12GlobalVariables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\TextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Common\RendererStateCallbackInterface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\imgui\imgui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\imgui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\imgui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\imgui\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\imgui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\imgui\backends\imgui_impl_dx12.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\imgui\backends\imgui_impl_win32.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Editor\ImguiHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Core\Profiling.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\MeshLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\View.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Math\Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Math\SimpleMath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\RenderScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Utils\ConsoleVariable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Thread\JobSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Runtime\Core\Thread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\call_traits.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\compressed_pair.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\fixed_ring_buffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\fixed_tuple_vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\intrusive_sdlist.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\intrusive_slist.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\list_map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\lru_cache.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\overloaded.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\ring_buffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\sort_extra.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\tuple_vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_load.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_memory_barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_store.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_thread_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_add_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_and_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_cmpxchg_strong.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_cmpxchg_weak.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_exchange.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_add.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_and.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_or.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_sub.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_xor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_load.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_memory_barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_or_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_store.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_sub_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_thread_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_xor_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_add_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_and_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cmpxchg_strong.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cmpxchg_weak.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_compiler_barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cpu_pause.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_exchange.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_add.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_and.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_or.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_sub.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_xor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_load.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_memory_barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_or_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_signal_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_store.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_sub_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_thread_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_xor_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_add_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_and_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cmpxchg_strong.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cmpxchg_weak.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_compiler_barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cpu_pause.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_exchange.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_add.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_and.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_or.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_sub.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_xor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_load.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_memory_barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_or_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_signal_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_store.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_sub_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_thread_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_xor_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_add_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_and_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cmpxchg_strong.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cmpxchg_weak.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cpu_pause.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_exchange.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_add.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_and.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_or.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_sub.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_xor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_load.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_or_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_signal_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_store.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_sub_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_thread_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_xor_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_add_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_and_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cmpxchg_strong.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cmpxchg_weak.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cpu_pause.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_exchange.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_add.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_and.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_or.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_sub.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_xor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_or_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_signal_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_sub_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_xor_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_add_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_and_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cmpxchg_strong.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cmpxchg_weak.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cpu_pause.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_exchange.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_add.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_and.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_or.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_sub.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_xor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_load.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_memory_barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_or_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_signal_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_store.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_sub_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_thread_fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_xor_fetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_asserts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_base_width.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_casts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_flag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_flag_standalone.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_integral.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_memory_order.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_pointer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_pop_compiler_options.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_push_compiler_options.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_size_aligned.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_standalone.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\char_traits.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\copy_help.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\enable_shared.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\fill_help.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\fixed_pool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\function.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\function_detail.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\function_help.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\functional_base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\generic_iterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\hashtable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\in_place_t.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\integer_sequence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\intrusive_hashtable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\mem_fn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\memory_base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\move_help.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\pair_fwd_decls.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\piecewise_construct_t.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\red_black_tree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\smart_ptr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\thread_support.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\tuple_fwd_decls.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_compound.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_detected.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_fundamental.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_pod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_properties.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_transformations.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_void_t.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\algorithm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\allocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\allocator_malloc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\any.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\atomic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bitset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bitvector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\chrono.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\compare.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\core_allocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\core_allocator_adapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\deque.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\finally.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_allocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_function.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_hash_map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_hash_set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_slist.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_string.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_substring.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\functional.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\hash_map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\hash_set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\heap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\initializer_list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_hash_map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_hash_set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_ptr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\iterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\linked_array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\linked_ptr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\memory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\meta.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\numeric.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\numeric_limits.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\optional.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\priority_queue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\queue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\ratio.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\safe_ptr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\scoped_array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\scoped_ptr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\segmented_vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\shared_array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\shared_ptr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\slist.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\sort.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\span.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\stack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string_hash_map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string_map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string_view.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\tuple.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\type_traits.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\unique_ptr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\unordered_map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\unordered_set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\variant.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_multimap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_multiset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\weak_ptr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\d3d12shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcapi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcerrors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcisense.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\CommonInclude.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Device.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Include.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Adapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\Log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandQueue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Assert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\Commandline.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\Renderer\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\Parse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Fence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc-new-delete.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc-override.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\atomic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\prim.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\track.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\MemoryCore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Swapchain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\WindowsApplication.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXColors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Descriptor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12RootSignature.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12StateCache.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Enums.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\IO\AssetManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12PSO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\TextHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\Macros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12compatibility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12sdklayers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\D3D12TokenizedProgramFormat.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12video.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dcommon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_barriers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_check_feature_support.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_default.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_pipeline_state_stream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_property_format_table.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_render_pass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_resource_helpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_root_signature.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_state_object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxcore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxcore_interface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxgicommon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxgiformat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\dxguids\dxguids.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\winadapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\wrladapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\wrl\client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\wrl\implements.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\basetsd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\oaidl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\ocidl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\rpc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\rpcndr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\unknwn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\unknwnbase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\winapifamily.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Utils\cityhash\src\city.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Utils\cityhash\src\citycrc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12View.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\RendererCommonInclude.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Math\MathUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\Renderer\D3D12TestRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Macros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12GlobalVariables.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Common\RendererStateCallbackInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\TextureLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\HLSLTypeHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Defines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\imgui\imconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\imgui\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\imgui\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\imgui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\imgui\imstb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\imgui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\imgui\backends\imgui_impl_dx12.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\imgui\backends\imgui_impl_win32.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Editor\ImguiHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\Profiling.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\MeshLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\View.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Math\Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Math\SimpleMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\RenderScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Utils\ConsoleVariable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Thread\JobSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\Enums.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Runtime\Core\Thread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
     <Natvis Include="Source\Editor\imgui\misc\debuggers\imgui.natvis" />
+    <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathConvert.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathMatrix.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathMisc.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathVector.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl">
-      <Filter>Header Files</Filter>
-    </None>
+    <ClCompile Include="Source\Runtime\Core\Thread.cpp" />
+    <ClCompile Include="Source\Runtime\Thread\JobSystem.cpp" />
+    <ClCompile Include="Source\Runtime\Utils\ConsoleVariable.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\RenderScene.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\Mesh.cpp" />
+    <ClCompile Include="Source\Runtime\Math\SimpleMath.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\MeshLoader.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.cpp" />
+    <ClCompile Include="Source\Runtime\Core\Profiling.cpp" />
+    <ClCompile Include="Source\Editor\ImguiHelper.cpp" />
+    <ClCompile Include="Source\Editor\imgui\backends\imgui_impl_dx12.cpp" />
+    <ClCompile Include="Source\Editor\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="Source\Editor\imgui\imgui.cpp" />
+    <ClCompile Include="Source\Editor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Source\Editor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Source\Editor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Source\Editor\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Runtime\Common\RendererStateCallbackInterface.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBuffer.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12GlobalVariables.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\Renderer\D3D12TestRenderer.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12CommandContext.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12CommandList.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Enums.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12PSO.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12View.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3DX12\source\d3dx12_property_format_table.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3DX12\source\dxguids.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.cpp" />
+    <ClCompile Include="Source\Runtime\IO\AssetManager.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12StateCache.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12RootSignature.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Descriptor.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Shader.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Swapchain.cpp" />
+    <ClCompile Include="Source\Runtime\Core\MemoryCore.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Fence.cpp" />
+    <ClCompile Include="Source\Runtime\Core\Parse.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\Renderer\Renderer.cpp" />
+    <ClCompile Include="Source\Runtime\Core\Commandline.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Assert.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Utils.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12CommandQueue.cpp" />
+    <ClCompile Include="Source\Runtime\Core\Log.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Adapter.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Device.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Manager.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Window.cpp" />
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\allocator_eastl.cpp" />
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\assert.cpp" />
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\atomic.cpp" />
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\fixed_pool.cpp" />
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\hashtable.cpp" />
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\intrusive_list.cpp" />
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\numeric_limits.cpp" />
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\red_black_tree.cpp" />
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\string.cpp" />
+    <ClCompile Include="Source\Runtime\STL\EASTL\source\thread_support.cpp" />
+    <ClCompile Include="Source\Runtime\Core\WindowsApplication.cpp" />
+    <ClCompile Include="Source\Runtime\Utils\cityhash\src\city.cc" />
+    <ClCompile Include="Source\Runtime\Rendering\TextureLoader.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\View.cpp" />
+    <ClCompile Include="Source\Runtime\Math\Transform.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\SceneData\GPUScene.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12VertexFactory.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\GBufferManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Runtime\Core\Enums.h" />
+    <ClInclude Include="Source\Runtime\Core\Thread.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\test\packages\EAThread\include\eathread\eathread_pool.h" />
+    <ClInclude Include="Source\Runtime\Thread\JobSystem.h" />
+    <ClInclude Include="Source\Runtime\Utils\ConsoleVariable.h" />
+    <ClInclude Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.h" />
+    <ClInclude Include="Source\Runtime\Rendering\RenderScene.h" />
+    <ClInclude Include="Source\Runtime\Rendering\Mesh.h" />
+    <ClInclude Include="Source\Runtime\Math\SimpleMath.h" />
+    <ClInclude Include="Source\Runtime\Rendering\MeshLoader.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.h" />
+    <ClInclude Include="Source\Runtime\Core\Profiling.h" />
+    <ClInclude Include="Source\Editor\ImguiHelper.h" />
+    <ClInclude Include="Source\Editor\imgui\backends\imgui_impl_dx12.h" />
+    <ClInclude Include="Source\Editor\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Source\Editor\imgui\imconfig.h" />
+    <ClInclude Include="Source\Editor\imgui\imgui.h" />
+    <ClInclude Include="Source\Editor\imgui\imgui_internal.h" />
+    <ClInclude Include="Source\Editor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Source\Editor\imgui\imstb_textedit.h" />
+    <ClInclude Include="Source\Editor\imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Defines.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferRingBuffer.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceAllocator.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourcePool.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ResourceUploadBatcher.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12GlobalVariables.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Macros.h" />
+    <ClInclude Include="Source\Runtime\Common\RendererStateCallbackInterface.h" />
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\HLSLTypeHelper.h" />
+    <ClInclude Include="Source\Runtime\Rendering\Renderer\D3D12TestRenderer.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandContext.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.h" />
+    <ClInclude Include="Source\Runtime\Rendering\RendererCommonInclude.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandList.h" />
+    <ClInclude Include="Source\Runtime\Core\Macros.h" />
+    <ClInclude Include="Source\Runtime\Core\TextHelper.h" />
+    <ClInclude Include="Source\Runtime\Core\Utils.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12PSO.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12View.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12compatibility.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12sdklayers.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12shader.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\D3D12TokenizedProgramFormat.hpp" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3d12video.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dcommon.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_barriers.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_check_feature_support.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_core.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_default.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_pipeline_state_stream.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_property_format_table.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_render_pass.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_resource_helpers.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_root_signature.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\d3dx12_state_object.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxcore.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxcore_interface.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxgicommon.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\directx\dxgiformat.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\dxguids\dxguids.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\basetsd.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\oaidl.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\ocidl.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\rpc.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\rpcndr.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\unknwn.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\unknwnbase.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\winapifamily.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\wrl\client.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\stubs\wrl\implements.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\winadapter.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3DX12\Include\wsl\wrladapter.h" />
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileStructs.h" />
+    <ClInclude Include="Source\Runtime\IO\AssetManager.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Enums.h" />
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\ShaderCompileHelper.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12StateCache.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12RootSignature.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Descriptor.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Shader.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Swapchain.h" />
+    <ClInclude Include="Source\Runtime\Core\MemoryCore.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Fence.h" />
+    <ClInclude Include="Source\Runtime\Core\Parse.h" />
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.h" />
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXColors.h" />
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMath.h" />
+    <ClInclude Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.h" />
+    <ClInclude Include="Source\Runtime\Math\MathUtils.h" />
+    <ClInclude Include="Source\Runtime\Rendering\Renderer\Renderer.h" />
+    <ClInclude Include="Source\Runtime\Core\Commandline.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Assert.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Utils.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandQueue.h" />
+    <ClInclude Include="Source\Runtime\Core\Log.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Adapter.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Device.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Include.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Manager.h" />
+    <ClInclude Include="Source\Runtime\Core\CommonInclude.h" />
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\d3d12shader.h" />
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcapi.h" />
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcerrors.h" />
+    <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\inc\dxcisense.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Window.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\algorithm.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\allocator.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\allocator_malloc.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\any.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\array.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\atomic.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bit.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bitset.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bitvector.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\adaptors.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\call_traits.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\compressed_pair.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\fixed_ring_buffer.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\fixed_tuple_vector.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\intrusive_sdlist.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\intrusive_slist.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\list_map.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\lru_cache.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\overloaded.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\ring_buffer.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\sort_extra.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\bonus\tuple_vector.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\chrono.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\compare.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\core_allocator.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\core_allocator_adapter.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\deque.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\finally.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_allocator.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_function.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_hash_map.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_hash_set.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_list.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_map.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_set.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_slist.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_string.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_substring.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\fixed_vector.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\functional.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\hash_map.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\hash_set.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\heap.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\initializer_list.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_add_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_and_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cmpxchg_strong.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cmpxchg_weak.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_compiler_barrier.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_cpu_pause.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_exchange.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_add.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_and.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_or.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_sub.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_fetch_xor.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_load.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_memory_barrier.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_or_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_signal_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_store.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_sub_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_thread_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arch_xor_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_load.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_memory_barrier.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_store.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\arm\arch_arm_thread_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_add_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_and_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_cmpxchg_strong.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_cmpxchg_weak.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_exchange.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_add.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_and.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_or.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_sub.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_fetch_xor.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_load.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_memory_barrier.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_or_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_store.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_sub_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_thread_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\arch\x86\arch_x86_xor_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_asserts.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_base_width.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_casts.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_flag.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_flag_standalone.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_integral.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_add_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_and_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_base.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cmpxchg_strong.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cmpxchg_weak.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_compiler_barrier.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_cpu_pause.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_exchange.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_add.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_and.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_or.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_sub.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_fetch_xor.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_load.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_memory_barrier.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_or_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_signal_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_store.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_sub_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_thread_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_macros\atomic_macros_xor_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_memory_order.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_pointer.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_pop_compiler_options.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_push_compiler_options.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_size_aligned.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\atomic_standalone.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_add_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_and_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_barrier.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cmpxchg_strong.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cmpxchg_weak.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_cpu_pause.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_exchange.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_add.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_and.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_or.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_sub.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_fetch_xor.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_load.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_memory_barrier.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_or_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_signal_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_store.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_sub_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_thread_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\compiler_xor_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_add_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_and_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_barrier.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cmpxchg_strong.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cmpxchg_weak.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_cpu_pause.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_exchange.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_add.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_and.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_or.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_sub.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_fetch_xor.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_load.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_or_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_signal_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_store.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_sub_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_thread_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\gcc\compiler_gcc_xor_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_add_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_and_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_barrier.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cmpxchg_strong.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cmpxchg_weak.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_cpu_pause.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_exchange.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_add.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_and.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_or.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_sub.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_fetch_xor.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_or_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_signal_fence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_sub_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\atomic\compiler\msvc\compiler_msvc_xor_fetch.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\char_traits.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\config.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\copy_help.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\enable_shared.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\fill_help.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\fixed_pool.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\function.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\functional_base.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\function_detail.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\function_help.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\generic_iterator.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\hashtable.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\integer_sequence.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\intrusive_hashtable.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\in_place_t.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\memory_base.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\mem_fn.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\move_help.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\pair_fwd_decls.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\piecewise_construct_t.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\red_black_tree.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\smart_ptr.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\thread_support.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\tuple_fwd_decls.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_compound.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_detected.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_fundamental.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_pod.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_properties.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_transformations.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\internal\type_void_t.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_hash_map.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_hash_set.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_list.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\intrusive_ptr.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\iterator.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\linked_array.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\linked_ptr.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\list.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\map.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\memory.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\meta.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\numeric.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\numeric_limits.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\optional.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\priority_queue.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\queue.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\random.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\ratio.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\safe_ptr.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\scoped_array.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\scoped_ptr.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\segmented_vector.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\set.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\shared_array.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\shared_ptr.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\slist.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\sort.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\span.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\stack.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string_hash_map.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string_map.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\string_view.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\tuple.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\type_traits.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\unique_ptr.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\unordered_map.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\unordered_set.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\utility.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\variant.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_map.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_multimap.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_multiset.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\vector_set.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\version.h" />
+    <ClInclude Include="Source\Runtime\STL\EASTL\include\EASTL\weak_ptr.h" />
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc-new-delete.h" />
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc-override.h" />
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc.h" />
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\atomic.h" />
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\internal.h" />
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\prim.h" />
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\track.h" />
+    <ClInclude Include="Source\Runtime\STL\mimalloc\include\mimalloc\types.h" />
+    <ClInclude Include="Source\Runtime\Core\WindowsApplication.h" />
+    <ClInclude Include="Source\Runtime\Utils\cityhash\src\city.h" />
+    <ClInclude Include="Source\Runtime\Utils\cityhash\src\citycrc.h" />
+    <ClInclude Include="Source\Runtime\Rendering\TextureLoader.h" />
+    <ClInclude Include="Source\Runtime\Rendering\View.h" />
+    <ClInclude Include="Source\Runtime\Math\Transform.h" />
+    <ClInclude Include="Source\Runtime\Rendering\SceneData\GPUScene.h" />
+    <ClInclude Include="Source\Runtime\Core\Types.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12VertexFactory.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12HelperOpeartor.h" />
+    <ClInclude Include="Source\Runtime\Rendering\GBufferManager.h" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Source\Editor\imgui\misc\debuggers\imgui.natstepfilter" />
-    <None Include="Source\Runtime\Math\SimpleMath.inl">
-      <Filter>Header Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\seafloor.dds" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.inl" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathConvert.inl" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathMatrix.inl" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathMisc.inl" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathVector.inl" />
+    <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl" />
+    <None Include="Source\Runtime\Math\SimpleMath.inl" />
   </ItemGroup>
 </Project>

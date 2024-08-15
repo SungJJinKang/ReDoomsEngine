@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CommonInclude.h"
 #include "D3D12Include.h"
@@ -18,6 +18,7 @@ struct FD3D12SubresourceContainer
 {
 	virtual ~FD3D12SubresourceContainer() = default;
 
+	uint64 DstOffset = 0;
 	D3D12_SUBRESOURCE_DATA SubresourceData;
 };
 

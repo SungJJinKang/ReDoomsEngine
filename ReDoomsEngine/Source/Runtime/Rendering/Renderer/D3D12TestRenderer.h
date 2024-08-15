@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "Renderer/Renderer.h"
 
@@ -11,7 +11,7 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE(
 
 struct FDrone
 {
-	FRenderObject RenderObject;
+	FPrimitive Primitive;
 	Vector3 OriginalPos;
 };
 
@@ -20,6 +20,9 @@ class D3D12TestRenderer : public FRenderer
 public:
 
 	virtual void Init();
+
+	void CreateRenderTargets();
+
 	virtual void SceneSetup();
 	virtual void OnStartFrame();
 	virtual bool Draw();
@@ -28,13 +31,14 @@ public:
 private:
 
 	float Offset = -2.0f;
-	eastl::shared_ptr<FD3D12Texture2DResource> DepthStencilTarget;
 	eastl::shared_ptr<FD3D12TextureResource> TestTexture;
 	eastl::shared_ptr<FD3D12TextureResource> SmallTexture;
 
 	eastl::shared_ptr<F3DModel> DroneMesh;
 
 	eastl::vector<FDrone> DroneList;
-	eastl::vector<FRenderObject> TrinagleList;
+	eastl::vector<FPrimitive> TrinagleList;
+
+	GBufferManager GBuffer;
 };
 

@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #ifndef UNICODE
 #error "ReDoomsEngine requires unicode"
 #endif
 
 #include "Macros.h"
+#include "Types.h"
 #include "MemoryCore.h"
 
 #include "combaseapi.h"

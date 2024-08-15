@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 
 #include "D3D12Enums.h"
@@ -12,5 +12,6 @@ extern float GTimeDelta;
 inline constexpr int32_t GWindowWidth = 1024;
 inline constexpr int32_t GWindowHeight = 720;
 extern ERendererState GCurrentRendererState;
+inline constexpr int32_t GSupportedMaxPrimitiveCount = 4096;
 
 void ResetD3D12GlobalVariablesForNewFrame();

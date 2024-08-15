@@ -1,4 +1,4 @@
-#include "imguiHelper.h"
+﻿#include "imguiHelper.h"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -46,6 +46,9 @@ void FImguiHelper::NewFrame()
 void FImguiHelper::EndDraw(FD3D12CommandContext& InCommandContext)
 {
 	SCOPED_GPU_TIMER_DIRECT_QUEUE(InCommandContext, Imgui)
+
+	InCommandContext.FlushResourceBarriers(EPipeline::Graphics);
+	InCommandContext.StateCache.Flush(InCommandContext, EPipeline::Graphics);
 
 	// Rendering
 	// (Your code clears your framebuffer, renders your other stuff etc.)

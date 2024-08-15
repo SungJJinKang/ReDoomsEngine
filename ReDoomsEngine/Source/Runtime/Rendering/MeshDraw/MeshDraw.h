@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 
 #include "D3D12Include.h"
@@ -25,11 +25,14 @@ struct FMeshDrawArgument
 /// </summary>
 struct FMeshDraw
 {
+	bool bIsValid = false;
 	FD3D12PSOInitializer PSO;
 	eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> VertexBufferViewList;
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView;
 	FMeshDrawArgument MeshDrawArgument;
+	eastl::fixed_vector<uint32, 1> PrimitiveIdList;
 
+	void PrepareDraw(FD3D12CommandContext& InCommandContext, FD3D12ConstantBufferResource& InPrimitiveIDBuffer);
 	// This function should be called from render thread
-	void Draw(FD3D12CommandContext& InCommandContext);
+	void Draw(FD3D12CommandContext& InCommandContext, FD3D12ConstantBufferResource& InPrimitiveIDBuffer);
 };

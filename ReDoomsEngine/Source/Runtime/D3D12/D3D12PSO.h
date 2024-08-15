@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 #include "D3D12Shader.h"
@@ -12,16 +12,13 @@ public:
     /// <summary>
     /// This struct should contains states changed frequently per draw
     /// </summary>
-    struct FDrawDesc
+    mutable struct FDrawDesc
     {
         FBoundShaderSet BoundShaderSet;
 
         struct FDesc
         {
             D3D12_INPUT_LAYOUT_DESC InputLayout;
-            CD3DX12_BLEND_DESC BlendState;
-            CD3DX12_RASTERIZER_DESC RasterizerState;
-            CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
             D3D12_CACHED_PIPELINE_STATE CachedPSO;
             D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
         } Desc;
@@ -37,7 +34,7 @@ public:
     /// <summary>
     /// This struct should contains states never changed during a pass
     /// </summary>
-    struct FPassDesc
+	mutable struct FPassDesc
     {
         struct FDesc
         {
@@ -49,7 +46,10 @@ public:
             DXGI_FORMAT DSVFormat;
             DXGI_SAMPLE_DESC SampleDesc;
             UINT NodeMask;
-            D3D12_PIPELINE_STATE_FLAGS Flags;
+			D3D12_PIPELINE_STATE_FLAGS Flags;
+			CD3DX12_BLEND_DESC BlendState;
+			CD3DX12_RASTERIZER_DESC RasterizerState;
+			CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
         } Desc;
         uint64 CachedDescHash = 0;
         void CacheDescHash();
@@ -61,7 +61,10 @@ public:
 
     inline uint64 GetCachedHash() const
     {
-        EA_ASSERT(IsValidHash());
+		if (!IsValidHash())
+		{
+			CacheHash();
+		}
         return CachedHash;
     }
 
@@ -71,11 +74,11 @@ public:
 	}
 
     //void Reset();
-    void CacheHash();
+    void CacheHash() const;
     
 private:
 
-	uint64 CachedHash;
+	mutable uint64 CachedHash;
 };
 
 inline bool operator==(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)

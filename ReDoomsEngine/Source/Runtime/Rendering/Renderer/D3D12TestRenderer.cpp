@@ -3,6 +3,7 @@
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "MeshLoader.h"
 #include "RenderScene.h"
+#include "SceneData/GPUScene.h"
 
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
@@ -29,13 +30,17 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 
 DEFINE_SHADER(MeshDrawVS, "MeshDraw.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
-		ADD_SHADER_CONSTANT_BUFFER(MeshDrawConstantBuffer, MeshDrawConstantBuffer)
+		ADD_SHADER_SRV_VARIABLE(GPrimitiveSceneData, EShaderParameterResourceType::StructuredBuffer)
 	)
 );
 
 DEFINE_SHADER(MeshDrawPS, "MeshDraw.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
-		ADD_SHADER_SRV_VARIABLE(TriangleColorTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(BaseColor, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(Emissive, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(Metalic, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(Roughness, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(AmbientOcclusion, EShaderParameterResourceType::Texture)
 	)
 );
 
@@ -44,8 +49,44 @@ void D3D12TestRenderer::Init()
 	FRenderer::Init();
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+
+	CreateRenderTargets();
 }
 
+void D3D12TestRenderer::CreateRenderTargets()
+{
+	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+
+	if (GBuffer.SceneColorTarget == nullptr ||
+		((GBuffer.SceneColorTarget->GetDesc().Width != SwapChain->GetWidth()) || (GBuffer.SceneColorTarget->GetDesc().Height != SwapChain->GetHeight()))
+		)
+	{
+		float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		GBuffer.SceneColorTarget = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
+	}
+	if (GBuffer.DepthStencilRenderTarget == nullptr ||
+		((GBuffer.DepthStencilRenderTarget->GetDesc().Width != SwapChain->GetWidth()) || (GBuffer.DepthStencilRenderTarget->GetDesc().Height != SwapChain->GetHeight()))
+		)
+	{
+		GBuffer.DepthStencilRenderTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthStencilTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
+	}
+
+	FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
+	MEM_ZERO(BasePassPSODesc);
+	BasePassPSODesc.Desc.SampleMask = UINT_MAX;
+	BasePassPSODesc.Desc.NumRenderTargets = 1;
+	BasePassPSODesc.Desc.RTVFormats[0] = GBuffer.SceneColorTarget->GetDesc().Format;
+	BasePassPSODesc.Desc.DSVFormat = GBuffer.DepthStencilRenderTarget->GetDSV()->GetDesc()->Format;
+	BasePassPSODesc.Desc.SampleDesc.Count = 1;
+	BasePassPSODesc.Desc.BlendState = CD3DX12_BLEND_DESC{ D3D12_DEFAULT };
+	BasePassPSODesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC{ D3D12_DEFAULT };
+	BasePassPSODesc.Desc.RasterizerState.FrontCounterClockwise = true;
+	BasePassPSODesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
+	BasePassPSODesc.Desc.DepthStencilState.DepthEnable = true;
+	BasePassPSODesc.Desc.DepthStencilState.StencilEnable = false;
+
+	RenderScene.SetPassDesc(EPass::BasePass, BasePassPSODesc);
+}
 
 void D3D12TestRenderer::SceneSetup()
 {
@@ -62,7 +103,7 @@ void D3D12TestRenderer::SceneSetup()
 	
 	DroneMesh = FMeshLoader::LoadFromMeshFile(CurrentFrameCommandContext, EA_WCHAR("Drone/Drone.fbx"));
 	//Mesh = FMeshLoader::LoadFromMeshFile(CurrentFrameCommandContext, EA_WCHAR("cabriolet-from-the-concept/source/Cabrio.fbx"));
-	DroneMesh->Material[0].DiffuseTexture = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("Drone/Drone_diff.jpg"));
+	DroneMesh->Material[0].BaseColor = FTextureLoader::LoadFromFile(CurrentFrameCommandContext, EA_WCHAR("Drone/Drone_diff.jpg"));
 	
 	float m_aspectRatio = 1.0f;
 	struct Vertex
@@ -100,12 +141,6 @@ void D3D12TestRenderer::SceneSetup()
 	D3D12_INPUT_LAYOUT_DESC InputDesc{ FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
 	CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
 	DroneDrawDesc.Desc.InputLayout = InputDesc;
-	DroneDrawDesc.Desc.BlendState = CD3DX12_BLEND_DESC{ D3D12_DEFAULT };
-	DroneDrawDesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC{ D3D12_DEFAULT };
-	DroneDrawDesc.Desc.RasterizerState.FrontCounterClockwise = true;
-	DroneDrawDesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
-	DroneDrawDesc.Desc.DepthStencilState.DepthEnable = true;
-	DroneDrawDesc.Desc.DepthStencilState.StencilEnable = false;
 	DroneDrawDesc.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	DroneDrawDesc.CacheDescHash();
 
@@ -123,7 +158,12 @@ void D3D12TestRenderer::SceneSetup()
 			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
 
-			MeshDrawPSInstance->Parameter.TriangleColorTexture = DroneMesh->Material[0].DiffuseTexture->GetSRV();
+			// @TODO : set dummy texture if the texture doesn't exist
+			MeshDrawPSInstance->Parameter.BaseColor = DroneMesh->Material[0].BaseColor->GetTextureSRV();
+			MeshDrawPSInstance->Parameter.Emissive = DroneMesh->Material[0].Emissive->GetTextureSRV();
+			MeshDrawPSInstance->Parameter.Metalic = DroneMesh->Material[0].Metalic->GetTextureSRV();
+			MeshDrawPSInstance->Parameter.Roughness = DroneMesh->Material[0].Roughness->GetTextureSRV();
+			MeshDrawPSInstance->Parameter.AmbientOcclusion = DroneMesh->Material[0].AmbientOcclusion->GetTextureSRV();
 
 			eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 			ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
@@ -132,9 +172,10 @@ void D3D12TestRenderer::SceneSetup()
 			DroneDrawDesc.BoundShaderSet = BoundShaderSet;
 
 			Vector3 OrigianlPos{ 250.0f * IndexB, 250.0f * IndexA + 10.0f, -5.0f };
-			FRenderObject RenderObject = RenderScene.AddRenderObject(
+			FPrimitive Primitive = RenderScene.AddPrimitive(
 				true,
 				DroneMesh->MeshList[0].AABB,
+				EPrimitiveFlag::CacheMeshDrawCommand | EPrimitiveFlag::AllowMergeMeshDrawCommand,
 				OrigianlPos,
 				Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f),
 				Vector3{ 0.05f, 0.05f, 0.05f },
@@ -144,7 +185,7 @@ void D3D12TestRenderer::SceneSetup()
 				DroneDrawDesc,
 				MeshDrawArgument
 			);
-			DroneList.emplace_back(FDrone{ RenderObject,OrigianlPos });
+			DroneList.emplace_back(FDrone{ Primitive,OrigianlPos });
 		}
 	}
 }
@@ -154,24 +195,7 @@ void D3D12TestRenderer::OnStartFrame()
 	FRenderer::OnStartFrame();
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
-
-	if (DepthStencilTarget == nullptr ||
-		((DepthStencilTarget->GetDesc().Width != SwapChain->GetWidth()) || (DepthStencilTarget->GetDesc().Height != SwapChain->GetHeight()))
-		)
-	{
-		DepthStencilTarget = FD3D12ResourceAllocator::GetInstance()->AllocateDepthTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
-
-		FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
-		MEM_ZERO(BasePassPSODesc);
-		BasePassPSODesc.Desc.SampleMask = UINT_MAX;
-		BasePassPSODesc.Desc.NumRenderTargets = 1;
-		BasePassPSODesc.Desc.RTVFormats[0] = SwapChain->GetFormat();
-		BasePassPSODesc.Desc.DSVFormat = DepthStencilTarget->GetDSV()->GetDesc()->Format;
-		BasePassPSODesc.Desc.SampleDesc.Count = 1;
-		BasePassPSODesc.CacheDescHash();
-
-		RenderScene.SetPassDesc(EPass::BasePass, BasePassPSODesc);
-	}
+	CreateRenderTargets();
 
 	{
 		float Speed = GTimeDelta * 3.0f;
@@ -196,7 +220,7 @@ void D3D12TestRenderer::OnStartFrame()
 
 		if (FD3D12Window::WKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed*50.0f, ESpace::Self);
+			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed * 50.0f, ESpace::Self);
 		}
 		else if (FD3D12Window::SKeyPressed)
 		{
@@ -234,35 +258,16 @@ bool D3D12TestRenderer::Draw()
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetViewports(1, &Viewport);
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
 
-	eastl::shared_ptr<FD3D12Texture2DResource>& RenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+// 	CD3DX12_RESOURCE_BARRIER ResourceBarrierA = CD3DX12_RESOURCE_BARRIER::Transition(SceneColorTarget->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+// 	CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarrierA);
 
-	// Indicate that the back buffer will be used as a render target.
-	eastl::shared_ptr<FD3D12Texture2DResource>& TargetRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+	CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = GBuffer.SceneColorTarget->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
 
-	CD3DX12_RESOURCE_BARRIER ResourceBarrierA = CD3DX12_RESOURCE_BARRIER::Transition(TargetRenderTarget->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-	CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarrierA);
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = TargetRenderTarget->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->OMSetRenderTargets(1, &RTVCPUHandle, FALSE, nullptr);
-
-	CurrentFrameCommandContext.StateCache.SetRenderTargets({ RenderTarget.get() });
+	CurrentFrameCommandContext.StateCache.SetRenderTargets({ GBuffer.SceneColorTarget.get() });
  	CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
- 	CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(DepthStencilTarget.get());
-
-	// Record commands.
-	const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
-	CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.Flush(*CurrentFrameCommandContext.GraphicsCommandList);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearRenderTargetView(RTVCPUHandle, clearColor, 0, nullptr);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearDepthStencilView(
-		DepthStencilTarget->GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
-		D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH,
-		1.0f,
-		0.0f,
-		0,
-		nullptr
-	);
+ 	CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(GBuffer.DepthStencilRenderTarget.get());
+	GBuffer.SceneColorTarget->ClearRenderTargetView(CurrentFrameCommandContext);
+	GBuffer.DepthStencilRenderTarget->ClearDepthStencilView(CurrentFrameCommandContext);
 
 	Offset += GTimeDelta;
 	if (Offset > 5.0f)
@@ -270,12 +275,7 @@ bool D3D12TestRenderer::Draw()
 		Offset = -5.0f;
 	}
 
-	for (FDrone& Drone : DroneList)
-	{
-		Drone.RenderObject.SetPosition(Drone.OriginalPos + Vector3{ Offset * 80.0f, 0.0f, 0.0f });
-	}
-
-	RenderScene.PrepareToCreateMeshDrawList();
+	PrepareDraw(CurrentFrameCommandContext);
 
 	// Base Pass
 	{
@@ -287,7 +287,7 @@ bool D3D12TestRenderer::Draw()
 			SCOPED_GPU_TIMER_DIRECT_QUEUE(CurrentFrameCommandContext, Renderer_BasePassDraw)
 			for (FMeshDraw& MeshDraw : BasePassMeshDrawList)
 			{
-				MeshDraw.Draw(CurrentFrameCommandContext);
+				MeshDraw.Draw(CurrentFrameCommandContext, *(RenderScene.GPUSceneData.GetPrimitiveIDBuffer()));
 			}
 		}
 	}

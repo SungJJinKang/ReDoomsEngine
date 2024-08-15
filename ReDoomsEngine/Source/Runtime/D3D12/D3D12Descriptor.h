@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 
@@ -6,9 +6,7 @@
 #include "Common/RendererStateCallbackInterface.h"
 
 class FD3D12DescriptorHeap;
-class FD3D12Descriptor
-{
-};
+class FD3D12DescriptorHeapContainer;
 
 struct FD3D12DescriptorHeapBlock
 {
@@ -33,7 +31,7 @@ public:
 
 	FD3D12DescriptorHeap() = delete;
 	virtual ~FD3D12DescriptorHeap() = default;
-	FD3D12DescriptorHeap(uint32_t InNumDescriptors, D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, D3D12_DESCRIPTOR_HEAP_TYPE InHeapType);
+	FD3D12DescriptorHeap(const FD3D12DescriptorHeapContainer* const InD3D12DescriptorHeapContainer, uint32_t InNumDescriptors, D3D12_DESCRIPTOR_HEAP_FLAGS InHeapFlags, D3D12_DESCRIPTOR_HEAP_TYPE InHeapType);
 	void Init();
 	
 	virtual bool IsShaderVisible() const
@@ -67,6 +65,7 @@ public:
 
 private:
 
+	const FD3D12DescriptorHeapContainer* const OwnerDescriptorHeapContainer;
 	uint32_t NumDescriptors;
 	D3D12_DESCRIPTOR_HEAP_FLAGS HeapFlags;
 	D3D12_DESCRIPTOR_HEAP_TYPE HeapType;

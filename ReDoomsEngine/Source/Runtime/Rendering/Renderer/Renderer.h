@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "D3D12Manager.h"
 #include "D3D12Window.h"
@@ -10,6 +10,7 @@
 #include "View.h"
 #include "RenderScene.h"
 #include "Thread/JobSystem.h"
+#include "GBufferManager.h"
 
 class FD3D12CommandAllocator;
 
@@ -53,6 +54,8 @@ public:
 	void OnEndFrame();
 	virtual void OnPostEndFrame();
 	virtual void Destroy();
+
+	virtual void PrepareDraw(FD3D12CommandContext& InCommandContext);
 
 	void Tick();
 

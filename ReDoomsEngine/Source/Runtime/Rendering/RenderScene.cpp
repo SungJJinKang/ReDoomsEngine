@@ -7,14 +7,70 @@
 
 static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
 
+bool CanMergeMeshDraw(const FMeshDraw& InMeshDrawA, const FMeshDraw& InMeshDrawB)
+{
+	bool bCanMerge = true;
+
+	if(InMeshDrawA.PSO.GetCachedHash() != InMeshDrawB.PSO.GetCachedHash())
+	{
+		bCanMerge = false;
+	}
+
+	if (!bCanMerge)
+	{
+		if (InMeshDrawA.VertexBufferViewList.size() != InMeshDrawB.VertexBufferViewList.size())
+		{
+			bCanMerge = false;
+		}
+		else
+		{
+			for (uint32_t VertexBufferViewIndex = 0; VertexBufferViewIndex < InMeshDrawA.VertexBufferViewList.size(); ++VertexBufferViewIndex)
+			{
+				if (InMeshDrawA.VertexBufferViewList[VertexBufferViewIndex] != InMeshDrawB.VertexBufferViewList[VertexBufferViewIndex])
+				{
+					bCanMerge = false;
+					break;
+				}
+			}
+		}
+	}
+
+	if (!bCanMerge)
+	{
+		if (InMeshDrawA.IndexBufferView != InMeshDrawB.IndexBufferView)
+		{
+			bCanMerge = false;
+		}
+	}
+
+	if (!bCanMerge)
+	{
+		if(
+			(InMeshDrawA.MeshDrawArgument.VertexCountPerInstance != InMeshDrawB.MeshDrawArgument.VertexCountPerInstance) ||
+			(InMeshDrawA.MeshDrawArgument.StartVertexLocation != InMeshDrawB.MeshDrawArgument.StartVertexLocation) ||	
+			(InMeshDrawA.MeshDrawArgument.IndexCountPerInstance != InMeshDrawB.MeshDrawArgument.IndexCountPerInstance) ||
+			(InMeshDrawA.MeshDrawArgument.StartIndexLocation != InMeshDrawB.MeshDrawArgument.StartIndexLocation) ||
+			(InMeshDrawA.MeshDrawArgument.BaseVertexLocation != InMeshDrawB.MeshDrawArgument.BaseVertexLocation) ||
+			(InMeshDrawA.MeshDrawArgument.StartInstanceLocation != InMeshDrawB.MeshDrawArgument.StartInstanceLocation)
+		)
+		{
+			bCanMerge = false;
+		}
+	}
+
+	return bCanMerge;
+}
+
 void FRenderScene::Init()
 {
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
+	GPUSceneData.Init();
 }
 
-FRenderObject FRenderScene::AddRenderObject(
+FPrimitive FRenderScene::AddPrimitive(
 	const bool bInVisible,
 	const BoundingBox& InLocalBoundingBox, 
+	const uint32 InPrimitiveFlag,
 	const Vector3& Position, 
 	const Quaternion& InRotation,
 	const Vector3& InScale,
@@ -25,35 +81,98 @@ FRenderObject FRenderScene::AddRenderObject(
 	const FMeshDrawArgument& InMeshDrawArgument
 )
 {
+	EA_ASSERT(GCurrentRendererState == ERendererState::SceneSetup);
+
+	const uint32 PrimitiveIndex = PrimitiveList.TransformDirtyPrimitiveList.size();
+
 	for (uint32_t PassIndex = 0; PassIndex < static_cast<uint32_t>(EPass::Num); ++PassIndex)
 	{
-		RenderObjectList.VisibleFlagsList[PassIndex].push_back(bInVisible);
+		PrimitiveList.VisibleFlagsList[PassIndex].push_back(bInVisible);
+		PrimitiveList.CachedMeshDrawList[PassIndex].emplace_back();
 	}
-	RenderObjectList.ModelMatrixDirtyList.push_back(true);
-	RenderObjectList.BoundingBoxList.push_back(InLocalBoundingBox);
-	RenderObjectList.PositionAndLocalBoundingSphereRadiusList.emplace_back(Position.x, Position.y, Position.z, InLocalBoundingBox.LengthOfCenterToCorner());
-	RenderObjectList.RotationList.push_back(InRotation);
-	RenderObjectList.ScaleAndDrawDistanceList.emplace_back(InScale.x, InScale.y, InScale.z, InDrawDistance);
-	RenderObjectList.CachedModelMatrixList.push_back_uninitialized();
-	RenderObjectList.VertexBufferViewList.push_back(InVertexBufferViews);
-	RenderObjectList.IndexBufferViewList.push_back(IndexBufferView);
+	PrimitiveList.TransformDirtyPrimitiveList.push_back(true);
+	PrimitiveList.GPUSceneDirtyPrimitiveList.push_back(true);
+	PrimitiveList.BoundingBoxList.push_back(InLocalBoundingBox);
+	PrimitiveList.PrimitiveFlagList.push_back(static_cast<EPrimitiveFlag>(InPrimitiveFlag));
+	PrimitiveList.PositionAndLocalBoundingSphereRadiusList.emplace_back(Position.x, Position.y, Position.z, InLocalBoundingBox.LengthOfCenterToCorner());
+	PrimitiveList.RotationList.push_back(InRotation);
+	PrimitiveList.ScaleAndDrawDistanceList.emplace_back(InScale.x, InScale.y, InScale.z, InDrawDistance);
+	PrimitiveList.CachedLocalToWorldMatrixList.push_back_uninitialized();
+	PrimitiveList.VertexBufferViewList.push_back(InVertexBufferViews);
+	PrimitiveList.IndexBufferViewList.push_back(IndexBufferView);
 	EA_ASSERT(InDrawDesc.IsValidHash());
-	RenderObjectList.TemplateDrawDescList.push_back(InDrawDesc);
-	RenderObjectList.MeshDrawArgumentList.push_back(InMeshDrawArgument);
+	PrimitiveList.DrawDescList.push_back(InDrawDesc);
+	PrimitiveList.MeshDrawArgumentList.push_back(InMeshDrawArgument);
+	
+	FPrimitive NewPrimitive{ &PrimitiveList,  PrimitiveIndex };
 
-	FRenderObject NewRenderObject{ &RenderObjectList,  RenderObjectList.ModelMatrixDirtyList.size() - 1 };
-
-	if (GCacheMeshDraw)
+	if (InPrimitiveFlag & EPrimitiveFlag::CacheMeshDrawCommand)
 	{
-
+		if (GCacheMeshDraw)
+		{
+			CacheMeshDraw(PrimitiveIndex);
+		}
 	}
 
-	return NewRenderObject;
+	return NewPrimitive;
 }
 
-void FRenderScene::PrepareToCreateMeshDrawList()
+void FRenderScene::CacheMeshDraw(const int32 InPrimitiveIndex)
 {
-	RenderObjectList.CacheModelMatrixs();
+	for (uint32 PassIndex = 0 ; PassIndex < static_cast<uint32>(EPass::Num) ; ++PassIndex)
+	{
+		FMeshDraw MeshDraw = CreateMeshDrawForPass(InPrimitiveIndex, static_cast<EPass>(PassIndex));
+		PrimitiveList.CachedMeshDrawList[PassIndex][InPrimitiveIndex] = MeshDraw;
+	}
+}
+
+void FRenderScene::PrepareToCreateMeshDrawList(FD3D12CommandContext& InCommandContext)
+{
+	SCOPED_CPU_TIMER(FRenderScene_PrepareToCreateMeshDrawList)
+
+	PrimitiveList.CacheLocalToWorldMatrixs();
+
+	GPUSceneData.UploadDirtyData(InCommandContext, PrimitiveList);
+}
+
+FMeshDraw FRenderScene::MergeMeshDraw(const FMeshDraw& lhs, const FMeshDraw& rhs)
+{
+	EA_ASSERT(CanMergeMeshDraw(lhs, rhs));
+	EA_ASSERT(lhs.MeshDrawArgument.InstanceCount == lhs.PrimitiveIdList.size());
+	EA_ASSERT(rhs.MeshDrawArgument.InstanceCount == rhs.PrimitiveIdList.size());
+
+	FMeshDraw MergedMeshDraw = lhs;
+
+	MergedMeshDraw.MeshDrawArgument.InstanceCount += rhs.MeshDrawArgument.InstanceCount;
+	MergedMeshDraw.PrimitiveIdList = lhs.PrimitiveIdList;
+    for (uint32_t PrimitiveId : rhs.PrimitiveIdList)
+    {
+        MergedMeshDraw.PrimitiveIdList.push_back(PrimitiveId);
+    }
+
+	return MergedMeshDraw;
+}
+
+FMeshDraw FRenderScene::CreateMeshDrawForPass(const uint32_t InPrimitiveIndex, const EPass InPass)
+{
+	FMeshDraw MeshDraw{};
+
+	MeshDraw.VertexBufferViewList = PrimitiveList.VertexBufferViewList[InPrimitiveIndex];
+	MeshDraw.IndexBufferView = PrimitiveList.IndexBufferViewList[InPrimitiveIndex];
+	MeshDraw.MeshDrawArgument = PrimitiveList.MeshDrawArgumentList[InPrimitiveIndex];
+
+	const FD3D12PSOInitializer::FDrawDesc& DrawDesc = PrimitiveList.DrawDescList[InPrimitiveIndex];
+
+	FD3D12PSOInitializer PSO;
+	PSO.PassDesc = PerPassData[static_cast<uint32_t>(InPass)].PassPSODesc;
+	PSO.DrawDesc = DrawDesc;
+	MeshDraw.PSO = PSO;
+
+	eastl::fixed_vector<uint32, 1> PrimitiveIdList;
+	PrimitiveIdList.emplace_back(InPrimitiveIndex);
+	MeshDraw.PrimitiveIdList = PrimitiveIdList;
+	
+	return MeshDraw;
 }
 
 eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InPass)
@@ -61,49 +180,57 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 	SCOPED_CPU_TIMER(FRenderScene_CreateMeshDrawListForPass)
 	SCOPED_MEMORY_TRACE(FRenderScene_CreateMeshDrawListForPass)
 
-	eastl::vector<FMeshDraw> MeshDrawList;
+	eastl::vector<FMeshDraw> MeshDrawList{};
 
 	FPass& Pass = PerPassData[static_cast<uint32_t>(InPass)];
 
-	const uint32_t ObjectCount = RenderObjectList.VisibleFlagsList[static_cast<uint32_t>(InPass)].size();
-	MeshDrawList.reserve(ObjectCount);
-
-	FD3D12PSOInitializer PSO;
-	PSO.PassDesc = Pass.PassPSODesc;
-
+	const uint32_t PrimitiveCount = PrimitiveList.VisibleFlagsList[static_cast<uint32_t>(InPass)].size();
+	
 	// Draw!
-	for(uint32_t ObjectIndex = 0 ; ObjectIndex < ObjectCount ; ++ObjectIndex)
+	for(uint32_t PrimitiveIndex = 0 ; PrimitiveIndex < PrimitiveCount ; ++PrimitiveIndex)
 	{
-		const FD3D12PSOInitializer::FDrawDesc& TemplateDrawDesc = RenderObjectList.TemplateDrawDescList[ObjectIndex];
-		const FBoundShaderSet& TemplateBoundShaderSet = TemplateDrawDesc.BoundShaderSet;
-		
-		PSO.DrawDesc = TemplateDrawDesc;
+		FMeshDraw NewMeshDraw{};
 
-		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> DuplicatedShaderInstanceList{};
-		for (uint32_t ShaderInstanceIndex = 0; ShaderInstanceIndex < EShaderFrequency::NumShaderFrequency; ++ShaderInstanceIndex)
+		if (GCacheMeshDraw && (PrimitiveList.PrimitiveFlagList[PrimitiveIndex] & EPrimitiveFlag::CacheMeshDrawCommand))
 		{
-			if (FD3D12ShaderInstance* TemplateShaderInstance = TemplateBoundShaderSet.GetShaderInstanceList()[ShaderInstanceIndex])
+			NewMeshDraw = PrimitiveList.CachedMeshDrawList[static_cast<uint32_t>(InPass)][PrimitiveIndex];
+		}
+		else
+		{
+			NewMeshDraw = CreateMeshDrawForPass(PrimitiveIndex, InPass);
+			NewMeshDraw.bIsValid = true;
+		}
+		NewMeshDraw.PSO.PassDesc = Pass.PassPSODesc;
+
+		bool bMerged = false;
+
+		for (FMeshDraw& MeshDraw : MeshDrawList)
+		{
+			if (CanMergeMeshDraw(MeshDraw, NewMeshDraw))
 			{
-				// Copy shader instance from template
-				DuplicatedShaderInstanceList[ShaderInstanceIndex] = TemplateShaderInstance->Duplicate();
+				MeshDraw = MergeMeshDraw(MeshDraw, NewMeshDraw);
+				bMerged = true;
+				break;
 			}
 		}
-		SetUpShaderInstances(ObjectIndex, DuplicatedShaderInstanceList);
 
+		if (!bMerged)
 		{
-			SCOPED_CPU_TIMER(FRenderScene_CreateMeshDrawListForPass_PSOSetup)
-			PSO.DrawDesc.BoundShaderSet = FBoundShaderSet{ DuplicatedShaderInstanceList };
-			PSO.CacheHash();
+			MeshDrawList.push_back(NewMeshDraw);
 		}
-
-		MeshDrawList.emplace_back(FMeshDraw{ PSO , RenderObjectList.VertexBufferViewList[ObjectIndex], RenderObjectList.IndexBufferViewList[ObjectIndex], RenderObjectList.MeshDrawArgumentList[ObjectIndex]});
 	}
 	//
+
+	for (FMeshDraw& MeshDraw : MeshDrawList)
+	{
+		SetUpShaderInstances(MeshDraw.PSO.DrawDesc.BoundShaderSet.GetShaderInstanceList());
+	}
 
 	return MeshDrawList;
 }
 
-void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList)
+
+void FRenderScene::SetUpShaderInstances(eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList)
 {
 	SCOPED_CPU_TIMER(FRenderScene_SetUpShaderInstances)
 
@@ -111,20 +238,20 @@ void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::arr
 	{
 		if (FD3D12ShaderInstance* ShaderInstance = InShaderInstanceList[ShaderInstanceIndex])
 		{
-			EA_ASSERT(!(ShaderInstance->bIsTemplateInstance));
+			//EA_ASSERT(!(ShaderInstance->bIsTemplateInstance));
 
-			if (ShaderInstanceIndex == EShaderFrequency::Vertex)
+			FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate = ShaderInstance->GetShaderParameterContainer();
+			eastl::vector<FShaderParameterTemplate*>& ShaderParameterList = ShaderParameterContainerTemplate->GetShaderParameterList();
+		
+			const int32_t PrimitiveSceneDataSRVIndex = ShaderParameterContainerTemplate->GetPrimitiveSceneDataSRVIndex();
+			if (PrimitiveSceneDataSRVIndex != -1)
 			{
-				FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate = ShaderInstance->GetShaderParameterContainer();
-				const int32_t MeshDrawConstantBufferIndex = ShaderParameterContainerTemplate->GetMeshDrawConstantBufferIndex();
-				eastl::vector<FShaderParameterTemplate*>& ShaderParameterList = ShaderParameterContainerTemplate->GetShaderParameterList();
-				EA_ASSERT_FORMATTED(
-					MeshDrawConstantBufferIndex >= 0 && MeshDrawConstantBufferIndex < ShaderParameterList.size(),
-					("Invalid MeshDrawConstantBufferIndex. You need to add ConstantBuffer \"%s\" to Shader \"%s\"", ANSI_TO_WCHAR(MeshDrawConstantBuffer.GetVariableName()), ShaderInstance->GetShaderTemplate()->GetShaderDeclaration().ShaderName)
-				);
+				FD3D12SRVDesc PrimitiveSceneDataSRV{};
+				PrimitiveSceneDataSRV.ShaderParameterResourceType = EShaderParameterResourceType::StructuredBuffer;
+				PrimitiveSceneDataSRV.StructureByteStride = 16;
+				PrimitiveSceneDataSRV.NumElements = GPUSceneData.GetSceneBufferSize() / PrimitiveSceneDataSRV.StructureByteStride;
 
-				static_cast<FConstantBufferTypeMeshDrawConstantBuffer*>(ShaderParameterList[MeshDrawConstantBufferIndex])->MemberVariables.ModelMatrix =
-					RenderObjectList.CachedModelMatrixList[InObjectIndex];
+				*static_cast<FShaderParameterShaderResourceView*>(ShaderParameterList[PrimitiveSceneDataSRVIndex]) = GPUSceneData.GetGPUSceneBuffer()->GetSRV(PrimitiveSceneDataSRV);
 			}
 		}
 	}
@@ -132,130 +259,156 @@ void FRenderScene::SetUpShaderInstances(const uint32_t InObjectIndex, eastl::arr
 
 void FRenderScene::SetPassDesc(const EPass InPass, const FD3D12PSOInitializer::FPassDesc& InPassDesc)
 {
-	EA_ASSERT(InPassDesc.IsValidHash());
 	PerPassData[static_cast<uint32_t>(InPass)].PassPSODesc = InPassDesc;
 
 	// @todo invalidate IsCachedMeshDrawList
 }
 
-void FRenderObject::SetVisible(const bool bInVisible)
+void FPrimitive::SetVisible(const bool bInVisible)
 {
 	for (uint32_t PassIndex = 0; PassIndex < static_cast<uint32_t>(EPass::Num); ++PassIndex)
 	{
-		RenderObjectList->VisibleFlagsList[PassIndex][ObjectIndex] = bInVisible;
+		PrimitiveList->VisibleFlagsList[PassIndex][PrimitiveIndex] = bInVisible;
 	}
 }
 
-void FRenderObject::SetVisible(const EPass InPass, const bool bInVisible)
+void FPrimitive::SetVisible(const EPass InPass, const bool bInVisible)
 {
-	RenderObjectList->VisibleFlagsList[static_cast<uint32_t>(InPass)][ObjectIndex] = bInVisible;
+	PrimitiveList->VisibleFlagsList[static_cast<uint32_t>(InPass)][PrimitiveIndex] = bInVisible;
 }
 
-const DirectX::BoundingBox& FRenderObject::GetBoundingBox() const
+const DirectX::BoundingBox& FPrimitive::GetBoundingBox() const
 {
-	return RenderObjectList->BoundingBoxList[ObjectIndex];
+	return PrimitiveList->BoundingBoxList[PrimitiveIndex];
 }
 
-void FRenderObject::SetBoundingBox(const BoundingBox& InBoundingBox)
+void FPrimitive::SetBoundingBox(const BoundingBox& InBoundingBox)
 {
-	RenderObjectList->BoundingBoxList[ObjectIndex] = InBoundingBox;
-	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z = InBoundingBox.LengthOfCenterToCorner();
+	PrimitiveList->BoundingBoxList[PrimitiveIndex] = InBoundingBox;
+	PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].z = InBoundingBox.LengthOfCenterToCorner();
 }
 
-const DirectX::SimpleMath::Vector3& FRenderObject::GetPosition() const
+const DirectX::SimpleMath::Vector3& FPrimitive::GetPosition() const
 {
-	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex]);
+	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex]);
 }
 
-void FRenderObject::SetPosition(const Vector3& InPosition)
+void FPrimitive::SetPosition(const Vector3& InPosition)
 {
-	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].x = InPosition.x;
-	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].y = InPosition.y;
-	RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z = InPosition.z;
+	if (
+		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].x != InPosition.x ||
+		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].y != InPosition.y ||
+		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].z != InPosition.z
+		)
+	{
+		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].x = InPosition.x;
+		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].y = InPosition.y;
+		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].z = InPosition.z;
 
-	RenderObjectList->ModelMatrixDirtyList.set(ObjectIndex, true);
+		PrimitiveList->DirtyTransform(PrimitiveIndex);
+	}
 }
 
-float FRenderObject::GetLocalBoundingSphereRadius() const
+float FPrimitive::GetLocalBoundingSphereRadius() const
 {
-	return RenderObjectList->PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z;
+	return PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].z;
 }
 
-const DirectX::SimpleMath::Quaternion& FRenderObject::GetRotation() const
+const DirectX::SimpleMath::Quaternion& FPrimitive::GetRotation() const
 {
-	return RenderObjectList->RotationList[ObjectIndex];
+	return PrimitiveList->RotationList[PrimitiveIndex];
 }
 
-void FRenderObject::SetRotation(const Quaternion& InQuaternion)
+void FPrimitive::SetRotation(const Quaternion& InQuaternion)
 {
-	RenderObjectList->RotationList[ObjectIndex] = InQuaternion;
+	if (PrimitiveList->RotationList[PrimitiveIndex] != InQuaternion)
+	{
+		PrimitiveList->RotationList[PrimitiveIndex] = InQuaternion;
 
-	RenderObjectList->ModelMatrixDirtyList.set(ObjectIndex, true);
+		PrimitiveList->DirtyTransform(PrimitiveIndex);
+	}
 }
 
-const DirectX::SimpleMath::Vector3& FRenderObject::GetScale() const
+const DirectX::SimpleMath::Vector3& FPrimitive::GetScale() const
 {
-	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex]);
+	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex]);
 }
 
-void FRenderObject::SetScale(const Vector3& InScale)
+void FPrimitive::SetScale(const Vector3& InScale)
 {
-	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].x = InScale.x;
-	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].y = InScale.y;
-	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].z = InScale.z;
+	if (
+		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].x != InScale.x ||
+		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].y != InScale.y ||
+		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].z != InScale.z
+	)
+	{
+		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].x = InScale.x;
+		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].y = InScale.y;
+		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].z = InScale.z;
 
-	RenderObjectList->ModelMatrixDirtyList.set(ObjectIndex, true);
+		PrimitiveList->DirtyTransform(PrimitiveIndex);
+	}
 }
 
-float FRenderObject::GetDrawDistance() const
+float FPrimitive::GetDrawDistance() const
 {
-	return RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].w;
+	return PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].w;
 }
 
-void FRenderObject::SetDrawDistance(const float InDrawDistance)
+void FPrimitive::SetDrawDistance(const float InDrawDistance)
 {
-	RenderObjectList->ScaleAndDrawDistanceList[ObjectIndex].w = InDrawDistance;
+	if (PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].w != InDrawDistance)
+	{
+		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].w = InDrawDistance;
+	}
 }
 
-void FRenderObjectList::CacheModelMatrixs()
+void FPrimitiveList::CacheLocalToWorldMatrixs()
 {
-	SCOPED_CPU_TIMER(FRenderObjectList_CacheModelMatrixs)
-	SCOPED_MEMORY_TRACE(FRenderObjectList_CacheModelMatrixs)
+	SCOPED_CPU_TIMER(FPrimitiveList_CacheLocalToWorldMatrixs)
+	SCOPED_MEMORY_TRACE(FPrimitiveList_CacheLocalToWorldMatrixs)
 
 	// todo : multithread?
-	for (uint32_t ObjectIndex = 0; ObjectIndex < PositionAndLocalBoundingSphereRadiusList.size(); ++ObjectIndex)
+	for (uint32_t PrimitiveIndex = 0; PrimitiveIndex < PositionAndLocalBoundingSphereRadiusList.size(); ++PrimitiveIndex)
 	{
-		if (ModelMatrixDirtyList[ObjectIndex])
+		if (TransformDirtyPrimitiveList[PrimitiveIndex])
 		{
-			const Matrix ModelMatrix = Matrix::CreateTranslation(
-				PositionAndLocalBoundingSphereRadiusList[ObjectIndex].x,
-				PositionAndLocalBoundingSphereRadiusList[ObjectIndex].y,
-				PositionAndLocalBoundingSphereRadiusList[ObjectIndex].z);
+			const Matrix LocalToWorldMatrix = Matrix::CreateTranslation(
+				PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].x,
+				PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].y,
+				PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].z);
 
-			const Matrix RotationMatrix = Matrix::CreateFromQuaternion(RotationList[ObjectIndex]);
-			const Matrix ScaleMatrix = Matrix::CreateScale(ScaleAndDrawDistanceList[ObjectIndex].x, ScaleAndDrawDistanceList[ObjectIndex].y, ScaleAndDrawDistanceList[ObjectIndex].z);
+			const Matrix RotationMatrix = Matrix::CreateFromQuaternion(RotationList[PrimitiveIndex]);
+			const Matrix ScaleMatrix = Matrix::CreateScale(ScaleAndDrawDistanceList[PrimitiveIndex].x, ScaleAndDrawDistanceList[PrimitiveIndex].y, ScaleAndDrawDistanceList[PrimitiveIndex].z);
 
-			CachedModelMatrixList[ObjectIndex] = ModelMatrix * RotationMatrix * ScaleMatrix;
+			CachedLocalToWorldMatrixList[PrimitiveIndex] = LocalToWorldMatrix * RotationMatrix * ScaleMatrix;
 
-			ModelMatrixDirtyList[ObjectIndex] = false;
+			TransformDirtyPrimitiveList[PrimitiveIndex] = false;
 		}
 	}
 }
 
-void FRenderObjectList::Reserve(const size_t InSize)
+void FPrimitiveList::DirtyTransform(const uint32 InPrimitiveIndex)
+{
+	TransformDirtyPrimitiveList.set(InPrimitiveIndex, true);
+	GPUSceneDirtyPrimitiveList.set(InPrimitiveIndex, true);
+}
+
+void FPrimitiveList::Reserve(const size_t InSize)
 {
 	for (uint32_t PassIndex = 0; PassIndex < static_cast<uint32_t>(EPass::Num); ++PassIndex)
 	{
 		VisibleFlagsList[PassIndex].reserve(InSize);
 	}
-	ModelMatrixDirtyList.reserve(InSize);
+	TransformDirtyPrimitiveList.reserve(InSize);
 	BoundingBoxList.reserve(InSize);
+	PrimitiveFlagList.reserve(InSize);
 	PositionAndLocalBoundingSphereRadiusList.reserve(InSize);
 	RotationList.reserve(InSize);
 	ScaleAndDrawDistanceList.reserve(InSize);
-	CachedModelMatrixList.reserve(InSize);
+	CachedLocalToWorldMatrixList.reserve(InSize);
 	VertexBufferViewList.reserve(InSize);
 	IndexBufferViewList.reserve(InSize);
-	TemplateDrawDescList.reserve(InSize);
+	DrawDescList.reserve(InSize);
 	MeshDrawArgumentList.reserve(InSize);
 }

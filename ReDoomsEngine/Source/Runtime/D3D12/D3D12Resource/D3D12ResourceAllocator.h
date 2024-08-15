@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CommonInclude.h"
 #include "D3D12Include.h"
@@ -30,22 +30,16 @@ public:
 
 	eastl::shared_ptr<FD3D12Texture2DResource> AllocateRenderTarget(
 		const uint32_t InWidth,
-		const uint32_t InHeight
-	);
-	eastl::shared_ptr<FD3D12Texture2DResource> AllocateDepthTarget(
-		const uint32_t InWidth,
 		const uint32_t InHeight,
-		const float InDepthClearValue = 1.0f,
-		const DXGI_FORMAT InTextureFormat = DXGI_FORMAT_R16_TYPELESS,
-		const DXGI_FORMAT InClearFormat = DXGI_FORMAT_D16_UNORM
+		const float InClearValue[4],
+		const ETextureFormat InTextureFormat = ETextureFormat::SceneColor
 	);
 	eastl::shared_ptr<FD3D12Texture2DResource> AllocateDepthStencilTarget(
 		const uint32_t InWidth,
 		const uint32_t InHeight,
 		const float InDepthClearValue = 1.0f,
 		const float InStencilClearValue = 0.0f,
-		const DXGI_FORMAT InTextureFormat = DXGI_FORMAT_R32G8X24_TYPELESS,
-		const DXGI_FORMAT InClearFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT
+		const ETextureFormat InTextureFormat = ETextureFormat::DepthStencil
 	);
 
 	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
@@ -79,3 +73,4 @@ private:
 
 };
 
+void FlushResourceUploadBatcher(FD3D12CommandContext& InCommandContext);

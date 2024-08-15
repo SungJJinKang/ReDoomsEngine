@@ -1,4 +1,4 @@
-#include "ShaderCompileHelper.h"
+﻿#include "ShaderCompileHelper.h"
 #include "DirectXShaderCompiler/include/dxc/dxcapi.h"
 #include "DirectXShaderCompiler/include/dxc/dxctools.h"
 #include  <filesystem>

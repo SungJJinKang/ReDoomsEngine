@@ -33,7 +33,7 @@ void FBoundShaderSet::Set(const eastl::array<FD3D12ShaderInstance*, EShaderFrequ
 	#endif
 }
 
-void FBoundShaderSet::CacheHash()
+void FBoundShaderSet::CacheHash() const
 {
 	for (uint32_t ShaderIndex = 0; ShaderIndex < EShaderFrequency::NumShaderFrequency; ++ShaderIndex)
 	{
@@ -210,7 +210,7 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 
 					for (const FD3D12ConstantBufferReflectionData& ReflectionData : ShaderReflectionData.ConstantBufferList)
 					{
-						if (ReflectionData.Name == Name)
+						if (STR_EQUAL(ReflectionData.Name.data(), Name))
 						{
 							Found = &ReflectionData;
 							break;
@@ -237,12 +237,77 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 			bFoundMatchingReflectionData = true; //temp
 			if (ShaderParameter->IsSRV())
 			{
-				// @todo : implement
+				const FShaderParameterResourceView* const SRV = static_cast<FShaderParameterResourceView*>(ShaderParameter);
 
+				auto FindSRVithName = [&](const char* const Name) -> const D3D12_SHADER_INPUT_BIND_DESC*{
+					const D3D12_SHADER_INPUT_BIND_DESC* Found = nullptr;
+
+                    switch (SRV->GetShaderParameterResourceType())
+                    {
+                        case EShaderParameterResourceType::Texture:
+						{
+							for (const D3D12_SHADER_INPUT_BIND_DESC& ReflectionData : ShaderReflectionData.TextureResourceBindingDescList)
+							{
+								if (STR_EQUAL(ReflectionData.Name, Name))
+								{
+									Found = &ReflectionData;
+									break;
+								}
+							}
+                            break;
+                        }
+                        case EShaderParameterResourceType::RawBuffer:
+						{
+							EA_ASSERT(false);
+                            break;
+                        }
+                        case EShaderParameterResourceType::StructuredBuffer:
+						{
+							for (const D3D12_SHADER_INPUT_BIND_DESC& ReflectionData : ShaderReflectionData.StructuredBufferResourceBindingDescList)
+							{
+								if (STR_EQUAL(ReflectionData.Name, Name))
+								{
+									Found = &ReflectionData;
+									break;
+								}
+							}
+                            break;
+						}
+						case EShaderParameterResourceType::TypedBuffer:
+						{
+							EA_ASSERT(false);
+							break;
+						}
+                        default:
+                        {
+							EA_ASSERT(false);
+                            break;
+                        }
+                    }
+
+					return Found;
+				};
+
+				const D3D12_SHADER_INPUT_BIND_DESC* const MatchingSRVReflectionData = FindSRVithName(SRV->GetVariableName());
+				if (MatchingSRVReflectionData)
+				{
+					bFoundMatchingReflectionData = true;
+				}
+				else
+				{
+					if (SRV->IsAllowCull())
+					{
+						AddValidationLog(FORMATTED_CHAR("SRV \"%s\" is culled\n", SRV->GetVariableName()), false);
+					}
+					else
+					{
+						AddValidationLog(FORMATTED_CHAR("SRV \"%s\" is culled(This variable isn't allowed to be culled)\n", SRV->GetVariableName()), true);
+					}
+				}
 			}
 			else if (ShaderParameter->IsUAV())
 			{
-				// @todo : implement
+				EA_ASSERT(false);
 
 			}
 			else if (ShaderParameter->IsRTV())
@@ -562,17 +627,9 @@ void FShaderParameterContainerTemplate::Init()
 		FShaderParameterTemplate* ShaderParameter = ShaderParameterList[ShaderParameterIndex];
 		ShaderParameter->Init();
 
-		if (ShaderParameter->IsConstantBuffer())
+		if (ShaderParameter->IsSRV() && STR_EQUAL(ShaderParameter->GetVariableName(), PRIMITIVE_SCENEDATA_VARIABLE_NAME))
 		{
-			FShaderParameterConstantBuffer* const ShaderParameterConstantBuffer = static_cast<FShaderParameterConstantBuffer*>(ShaderParameter);
-			if (!(ShaderParameterConstantBuffer->IsGlobalConstantBuffer()))
-			{
-				if (ShaderParameterConstantBuffer->GetTemplateShaderParameterConstantBuffer() == &MeshDrawConstantBuffer)
-				{
-					// If InShaderParameter is MeshDrawConstantBuffer, cache index
-					MeshDrawConstantBufferIndexInShaderParameterList = ShaderParameterIndex;
-				}
-			}
+			PrimitiveSceneDataSRVIndexInShaderParameterList = ShaderParameterIndex;
 		}
 	}
 }
@@ -619,6 +676,10 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 				// 			UAVBindPointInfoList[ShaderParameterSRV->GetReflectionData().BindPoint] = ShaderParameterSRV;
 			}
 		}
+		else
+		{
+			EA_ASSERT_FORMATTED(ShaderParamter->IsAllowCull(), ("ShaderParamter(%s) isn't allowed to be culled!", ShaderParamter->GetVariableName()));
+		}
 	}
 
 	InCommandContext.StateCache.SetSRVs(GetD3D12ShaderTemplate()->GetShaderFrequency(), SRVBindPointInfoList);
@@ -636,6 +697,21 @@ void FShaderParameterContainerTemplate::CopyFrom(const FShaderParameterContainer
 	{
 		ShaderParameterList[Index]->CopyFrom(*(InTemplate.ShaderParameterList[Index]));
 	}
+}
+
+FShaderParameterTemplate* FShaderParameterContainerTemplate::FindShaderParameterTemplate(const char* const InVariableName)
+{
+	FShaderParameterTemplate* FoundShaderParamter = nullptr;
+	for (FShaderParameterTemplate* ShaderParamter : ShaderParameterList)
+	{
+		if (STR_EQUAL(ShaderParamter->GetVariableName(), InVariableName))
+		{
+			FoundShaderParamter = ShaderParamter;
+			break;
+		}
+	}
+	
+	return FoundShaderParamter;
 }
 
 void FShaderParameterTemplate::CopyFrom(const FShaderParameterTemplate& InTemplate)
@@ -902,14 +978,42 @@ void FShaderParameterShaderResourceView::SetReflectionDataFromShaderReflectionDa
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> StructuredBufferResourceBindingDescList;
 
 	const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
-	for (const D3D12_SHADER_INPUT_BIND_DESC& TextureResourceBindingDesc : ShaderReflection.TextureResourceBindingDescList)
+
+	if (GetShaderParameterResourceType() == EShaderParameterResourceType::Texture)
 	{
-		if (EA::StdC::Strcmp(TextureResourceBindingDesc.Name, GetVariableName()) == 0)
+		for (const D3D12_SHADER_INPUT_BIND_DESC& TextureResourceBindingDesc : ShaderReflection.TextureResourceBindingDescList)
 		{
-			ReflectionData = &TextureResourceBindingDesc;
-			bFoundReflectionData = true;
-			break;
+			if (EA::StdC::Strcmp(TextureResourceBindingDesc.Name, GetVariableName()) == 0)
+			{
+				ReflectionData = &TextureResourceBindingDesc;
+				bFoundReflectionData = true;
+				break;
+			}
 		}
+	}		
+	else if (GetShaderParameterResourceType() == EShaderParameterResourceType::RawBuffer)
+	{
+		EA_ASSERT(false);
+	}
+	else if (GetShaderParameterResourceType() == EShaderParameterResourceType::StructuredBuffer)
+	{
+		for (const D3D12_SHADER_INPUT_BIND_DESC& StructuredBufferResourceBindingDesc : ShaderReflection.StructuredBufferResourceBindingDescList)
+		{
+			if (EA::StdC::Strcmp(StructuredBufferResourceBindingDesc.Name, GetVariableName()) == 0)
+			{
+				ReflectionData = &StructuredBufferResourceBindingDesc;
+				bFoundReflectionData = true;
+				break;
+			}
+		}
+	}
+	else if (GetShaderParameterResourceType() == EShaderParameterResourceType::TypedBuffer)
+	{
+		EA_ASSERT(false);
+	}
+	else
+	{
+		EA_ASSERT(false);
 	}
 }
 

@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "D3D12Include.h"
 
 #include "D3D12View.h"
 #include "D3D12ConstantBufferRingBuffer.h"
 #include "D3D12ResourcePool.h"
 #include "D3D12Fence.h"
+#include "D3D12ViewDesc.h"
 
 class FD3D12Resource : public eastl::enable_shared_from_this<FD3D12Resource>
 {
@@ -70,7 +71,8 @@ public:
 	virtual bool IsTexture() const = 0;
 
 	FD3D12ConstantBufferView* GetCBV();
-	FD3D12ShaderResourceView* GetSRV();
+	FD3D12ShaderResourceView* GetSRV(const FD3D12SRVDesc InD3D12SRVDesc);
+	FD3D12ShaderResourceView* GetTextureSRV();
 	FD3D12UnorderedAccessView* GetUAV();
 	FD3D12RenderTargetView* GetRTV();
 	FD3D12DepthStencilView* GetDSV();
@@ -95,9 +97,14 @@ private:
 
 	eastl::shared_ptr<FD3D12ConstantBufferView> DefaultCBV;
 	eastl::shared_ptr<FD3D12ShaderResourceView> DefaultSRV;
+	eastl::hash_map<FD3D12SRVDesc, eastl::shared_ptr<FD3D12ShaderResourceView>> CachedSRVMap;
 	eastl::shared_ptr<FD3D12UnorderedAccessView> DefaultUAV;
 	eastl::shared_ptr<FD3D12RenderTargetView> DefaultRTV;
 	eastl::shared_ptr<FD3D12DepthStencilView> DefaultDSV;
+
+	#if D3D_NAME_OBJECT
+	eastl::wstring DebugName;
+	#endif
 };
 
 class FD3D12TextureResource : public FD3D12Resource
@@ -155,6 +162,12 @@ public:
 	{
 		return true;
 	}
+
+	void ClearRenderTargetView(FD3D12CommandContext& InCommandContext, const float InClearValue[4]);
+	void ClearRenderTargetView(FD3D12CommandContext& InCommandContext);
+	void ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue, const uint8 InClearStencilValue);
+	void ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue);
+	void ClearDepthStencilView(FD3D12CommandContext& InCommandContext);
 };
 
 
@@ -241,10 +254,14 @@ public:
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const uint64_t InBaseOffsetInBytes, const uint32_t InSizeInBytes, const uint32_t InStrideInBytes) const;
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView(const uint64_t InBaseOffsetInBytes, const DXGI_FORMAT InFormat, const uint32_t InSizeInBytes) const;
+	inline uint32 GetDefaultStrideInBytes() const
+	{
+		return DefaultStrideInBytes;
+	}
 
 private:
 
-	uint32_t DefaultStrideInBytes;
+	uint32 DefaultStrideInBytes;
 };
 
 // template <typename BufferDataType>
@@ -301,6 +318,7 @@ public:
 		return false;
 	}
 	void MakeDirty();
+	void Versioning(const uint64 InSize);
 	void Versioning();
 
 	virtual bool IsConstantBuffer() const

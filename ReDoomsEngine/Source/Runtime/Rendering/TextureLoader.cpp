@@ -83,6 +83,7 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12Co
 		ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_COPY_DEST;
 
 		D3D12TextureResource = FD3D12ResourceAllocator::GetInstance()->AllocateTexture2D(InCommandContext, eastl::move(SubresourceDataList), ResourceCreateProperties, ResourceDesc, InResourceStateAfterUpload);
+		D3D12TextureResource->SetDebugNameToResource(InRelativePathToAssetFolder);
 	}
 	else
 	{

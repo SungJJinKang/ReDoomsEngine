@@ -119,12 +119,16 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-	<ClCompile Include="Source\Runtime\Core\Thread.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\GBufferManager.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12VertexFactory.cpp" />
+    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.cpp" />
+    <ClCompile Include="Source\Runtime\Core\Thread.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\SceneData\GPUScene.cpp" />
     <ClCompile Include="Source\Runtime\Thread\JobSystem.cpp" />
     <ClCompile Include="Source\Runtime\Utils\ConsoleVariable.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\RenderScene.cpp" />
-    <ClCompile Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.cpp" />
+    <ClCompile Include="Source\Runtime\Rendering\Mesh.cpp" />
     <ClCompile Include="Source\Runtime\Math\SimpleMath.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\MeshLoader.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.cpp" />
@@ -192,14 +196,20 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-	<ClInclude Include="Source\Runtime\Core\Enums.h" />
+    <ClInclude Include="Source\Runtime\Rendering\GBufferManager.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12HelperOpeartor.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12VertexFactory.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ViewDesc.h" />
+    <ClInclude Include="Source\Runtime\Core\Enums.h" />
     <ClInclude Include="Source\Runtime\Core\Thread.h" />
+    <ClInclude Include="Source\Runtime\Core\Types.h" />
+    <ClInclude Include="Source\Runtime\Rendering\SceneData\GPUScene.h" />
     <ClInclude Include="Source\Runtime\STL\EASTL\test\packages\EAThread\include\eathread\eathread_pool.h" />
     <ClInclude Include="Source\Runtime\Thread\JobSystem.h" />
     <ClInclude Include="Source\Runtime\Utils\ConsoleVariable.h" />
     <ClInclude Include="Source\Runtime\Rendering\MeshDraw\MeshDraw.h" />
     <ClInclude Include="Source\Runtime\Rendering\RenderScene.h" />
-    <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Mesh.h" />
+    <ClInclude Include="Source\Runtime\Rendering\Mesh.h" />
     <ClInclude Include="Source\Runtime\Math\SimpleMath.h" />
     <ClInclude Include="Source\Runtime\Rendering\MeshLoader.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12ResourceBarrierBatcher.h" />
@@ -589,9 +599,6 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathVector.inl" />
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXPackedVector.inl" />
     <None Include="Source\Runtime\Math\SimpleMath.inl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Assets\seafloor.dds" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

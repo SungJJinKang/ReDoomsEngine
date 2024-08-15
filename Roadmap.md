@@ -1,7 +1,7 @@
 ﻿- D3D12
-- Multithreaded rendering(Multithreaded commandlist recording)
-- Render Graph
+- PBR(ref : https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf)
+- Virtual Shadow Map
+- VisBuffer(ref : https://d3d3g8mu99pzk9.cloudfront.net/JamesMcLaren/AdventuresWithDeferred_McLaren_James.pptx)
+- GPU Driven Rendering(GPU Side Frustum/Occlusion Culling)
 - Dynamic Instancing
-- Compute Shader
-- Frustum, Occlusion CPU Culling(Use [EveryCulling](https://github.com/SungJJinKang/EveryCulling))
-- GPU Driven Rendering
+- Multithreaded rendering(Multithreaded commandlist recording)

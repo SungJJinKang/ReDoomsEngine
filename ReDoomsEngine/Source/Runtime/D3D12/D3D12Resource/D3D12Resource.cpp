@@ -1,4 +1,4 @@
-#include "D3D12Resource.h"
+﻿#include "D3D12Resource.h"
 
 #include "D3D12Device.h"
 #include "D3D12ConstantBufferRingBuffer.h"
@@ -7,7 +7,7 @@
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resources(),
-	DefaultCBV(), DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
+	DefaultCBV(), DefaultSRV(), CachedSRVMap(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
 	ValidateResourceProperties();
 }
@@ -26,7 +26,7 @@ FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource>& InResource)
 
 FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false),
-	DefaultSRV(), DefaultUAV(), DefaultRTV(), DefaultDSV()
+	DefaultSRV(), CachedSRVMap(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
 	Resources[0] = InResource;
 }
@@ -71,15 +71,17 @@ void FD3D12Resource::ReleaseResource()
 #if D3D_NAME_OBJECT
 void FD3D12Resource::SetDebugNameToResource(const wchar_t* const InDebugName)
 {
+	DebugName = InDebugName;
 	bool bAny = false;
 	for (uint32_t Index = 0; Index < Resources.size(); ++Index)
 	{
 		if (Resources[Index])
 		{
-			Resources[Index]->SetName(InDebugName);
+			Resources[Index]->SetName(DebugName.c_str());
 			bAny = true;
 		}
 	}
+
 	EA_ASSERT(bAny);
 }
 #endif
@@ -118,18 +120,80 @@ FD3D12ConstantBufferView* FD3D12Resource::GetCBV()
 	return DefaultCBV.get();
 }
 
-FD3D12ShaderResourceView* FD3D12Resource::GetSRV()
+FD3D12ShaderResourceView* FD3D12Resource::GetSRV(const FD3D12SRVDesc InD3D12SRVDesc)
 {
 	EA_ASSERT(bInit);
+	EA_ASSERT(InD3D12SRVDesc.ShaderParameterResourceType != EShaderParameterResourceType::Unknown);
 	EA_ASSERT(!(Desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE));
 
-	if (DefaultSRV == nullptr)
+	FD3D12ShaderResourceView* SRV{ nullptr };
+
+	auto CachedSRVIter = CachedSRVMap.find(InD3D12SRVDesc);
+	if (CachedSRVIter == CachedSRVMap.end())
 	{
-		DefaultSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this());
-		DefaultSRV->UpdateDescriptor();
+		eastl::shared_ptr<FD3D12ShaderResourceView> NewSRV{};
+		if (IsBuffer())
+		{
+			D3D12_SHADER_RESOURCE_VIEW_DESC SRVDesc{};
+
+			SRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+			SRVDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+			SRVDesc.Buffer.FirstElement = InD3D12SRVDesc.FirstElement;
+			SRVDesc.Buffer.NumElements = InD3D12SRVDesc.NumElements;
+
+			switch (InD3D12SRVDesc.ShaderParameterResourceType)
+			{
+				case EShaderParameterResourceType::RawBuffer:
+				{
+					SRVDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+					SRVDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
+					break;
+				}
+
+				case EShaderParameterResourceType::StructuredBuffer:
+				{
+					SRVDesc.Format = DXGI_FORMAT_UNKNOWN;
+					SRVDesc.Buffer.StructureByteStride = InD3D12SRVDesc.StructureByteStride;
+					break;
+				}
+
+				case EShaderParameterResourceType::TypedBuffer:
+				{
+					// Nothing more to specify
+					break;
+				}
+
+				default:
+				{
+					EA_ASSERT(false);
+				}
+			}
+
+			NewSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this(), SRVDesc);
+		}
+		else
+		{
+			NewSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this());
+		}
+
+		NewSRV->UpdateDescriptor();
+
+		CachedSRVMap.try_emplace(InD3D12SRVDesc, NewSRV);
+		SRV = NewSRV.get();
+	}
+	else
+	{
+		SRV = CachedSRVIter->second.get();
 	}
 
-	return DefaultSRV.get();
+	return SRV;
+}
+
+FD3D12ShaderResourceView* FD3D12Resource::GetTextureSRV()
+{
+	FD3D12SRVDesc SRVDesc{};
+	SRVDesc.ShaderParameterResourceType = EShaderParameterResourceType::Texture;
+	return GetSRV(SRVDesc);
 }
 
 FD3D12UnorderedAccessView* FD3D12Resource::GetUAV()
@@ -145,7 +209,7 @@ FD3D12UnorderedAccessView* FD3D12Resource::GetUAV()
 
 	return DefaultUAV.get();
 }
-
+																			
 FD3D12RenderTargetView* FD3D12Resource::GetRTV()
 {
 	EA_ASSERT(bInit);
@@ -249,6 +313,52 @@ FD3D12Texture2DResource::FD3D12Texture2DResource(ComPtr<ID3D12Resource> InRender
 	Desc.SampleDesc.Quality = InSampleQuality;
 }
 
+void FD3D12Texture2DResource::ClearRenderTargetView(FD3D12CommandContext& InCommandContext, const float InClearValue[4])
+{
+	InCommandContext.FlushResourceBarriers(EPipeline::Graphics);
+	InCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearRenderTargetView(
+		GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
+		InClearValue,
+		0,
+		nullptr
+	);
+}
+
+void FD3D12Texture2DResource::ClearRenderTargetView(FD3D12CommandContext& InCommandContext)
+{
+	ClearRenderTargetView(InCommandContext, GetClearValue().Color);
+}
+
+void FD3D12Texture2DResource::ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue, const uint8 InClearStencilValue)
+{
+	InCommandContext.FlushResourceBarriers(EPipeline::Graphics);
+	InCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearDepthStencilView(
+		GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
+		D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_STENCIL,
+		InClearDepthValue,
+		InClearStencilValue,
+		0,
+		nullptr
+	);
+}
+
+void FD3D12Texture2DResource::ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue)
+{
+	InCommandContext.FlushResourceBarriers(EPipeline::Graphics);
+	InCommandContext.GraphicsCommandList->GetD3DCommandList()->ClearDepthStencilView(
+		GetDSV()->GetDescriptorHeapBlock().CPUDescriptorHandle(),
+		D3D12_CLEAR_FLAGS::D3D12_CLEAR_FLAG_DEPTH,
+		InClearDepthValue,
+		0,
+		0,
+		nullptr
+	);
+}
+
+void FD3D12Texture2DResource::ClearDepthStencilView(FD3D12CommandContext& InCommandContext)
+{
+	ClearDepthStencilView(InCommandContext, GetClearValue().DepthStencil.Depth, GetClearValue().DepthStencil.Stencil);
+}
 
 FD3D12BufferResource::FD3D12BufferResource(
 	const uint64_t InSize, const D3D12_RESOURCE_FLAGS InFlags, const uint64_t InAlignment, const bool bInDynamic, const D3D12_RESOURCE_STATES InInitialResourceState,
@@ -474,10 +584,15 @@ void FD3D12ConstantBufferResource::MakeDirty()
 
 void FD3D12ConstantBufferResource::Versioning()
 {
+	Versioning(GetBufferSize());
+}
+
+void FD3D12ConstantBufferResource::Versioning(const uint64 InSize)
+{
 	EA_ASSERT(bNeedVersioning);
 	if (IsDynamicBuffer())
 	{
-		ConstantBufferRingBufferBlock = FD3D12ConstantBufferRingBuffer::GetInstance()->Allocate(GetBufferSize());
+		ConstantBufferRingBufferBlock = FD3D12ConstantBufferRingBuffer::GetInstance()->Allocate(InSize);
 
 		MappedAddress = ConstantBufferRingBufferBlock.MappedAddress;
 	}

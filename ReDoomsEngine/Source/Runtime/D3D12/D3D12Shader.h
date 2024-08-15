@@ -1,10 +1,12 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 #include "ShaderCompilers/ShaderCompileStructs.h"
 #include "D3D12Enums.h"
 #include "D3D12Resource/D3D12ConstantBufferHelper.h"
 #include "D3D12Resource/D3D12Resource.h"
 #include "Common/RendererStateCallbackInterface.h"
+#include "SceneData/GPUScene.h"
+#include "D3D12VertexFactory.h"
 
 struct FD3D12CommandContext;
 class FD3D12RootSignature;
@@ -33,7 +35,7 @@ public:
 	FBoundShaderSet(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList);
 	
 	void Set(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList);
-	void CacheHash();
+	void CacheHash() const;
 	void Validate();
 	FD3D12RootSignature* GetRootSignature() const;
 	inline const eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency>& GetShaderTemplateList() const
@@ -54,10 +56,18 @@ public:
 	}
 	inline FShaderHash GetCachedHash() const
 	{
+		if (!IsValidHash())
+		{
+			CacheHash();
+		}
 		return CachedHash;
 	}
 	inline uint64 GetCachedHash64() const
 	{
+		if (!IsValidHash())
+		{
+			CacheHash();
+		}
 		return CachedHash64;
 	}
 
@@ -70,8 +80,8 @@ private:
 
 	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderTemplateList{ nullptr };
 	eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderInstanceList{ nullptr };
-	FShaderHash CachedHash;
-	uint64 CachedHash64;
+	mutable FShaderHash CachedHash;
+	mutable uint64 CachedHash64;
 };
 
 inline bool operator==(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
@@ -212,11 +222,13 @@ class FShaderParameterContainerTemplate
 public:
 
 	FShaderParameterContainerTemplate(FD3D12ShaderTemplate* InD3D12ShaderTemplate)
-		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(), bIsShaderInstance(false), ShaderParameterList(), MeshDrawConstantBufferIndexInShaderParameterList(-1)
+		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(), bIsShaderInstance(false), 
+		ShaderParameterList(), PrimitiveSceneDataSRVIndexInShaderParameterList(-1)
 	{
 	}
 	FShaderParameterContainerTemplate(FD3D12ShaderTemplate* InD3D12ShaderTemplate, FD3D12ShaderInstance* InD3D12ShaderInstance)
-		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(InD3D12ShaderInstance), bIsShaderInstance(true), ShaderParameterList(), MeshDrawConstantBufferIndexInShaderParameterList(-1)
+		: D3D12ShaderTemplate(InD3D12ShaderTemplate), D3D12ShaderInstance(InD3D12ShaderInstance), bIsShaderInstance(true), 
+		ShaderParameterList(), PrimitiveSceneDataSRVIndexInShaderParameterList(-1)
 	{
 	}
 	FShaderParameterContainerTemplate(const FShaderParameterContainerTemplate&) = delete;
@@ -242,14 +254,15 @@ public:
 	{
 		return ShaderParameterList;
 	}
-	inline int32_t GetMeshDrawConstantBufferIndex() const
+	inline int32_t GetPrimitiveSceneDataSRVIndex() const
 	{
-		return MeshDrawConstantBufferIndexInShaderParameterList;
+		return PrimitiveSceneDataSRVIndexInShaderParameterList;
 	}
 
 	void AddShaderParamter(FShaderParameterTemplate* const InShaderParameter);
 	void ApplyShaderParameters(FD3D12CommandContext& InCommandContext);
 	void CopyFrom(const FShaderParameterContainerTemplate& InTemplate);
+	FShaderParameterTemplate* FindShaderParameterTemplate(const char* const InVariableName);
 
 protected:
 
@@ -263,7 +276,7 @@ protected:
 private:
 
 	// this is fast path for RenderScene
-	int32_t MeshDrawConstantBufferIndexInShaderParameterList;
+	int32_t PrimitiveSceneDataSRVIndexInShaderParameterList;
 };
 
 class FShaderParameterTemplate
@@ -349,12 +362,6 @@ protected:
 private:
 
 	virtual void SetReflectionDataFromShaderReflectionData() = 0;
-};
-
-enum class EShaderParameterResourceType
-{
-	Texture,
-	Buffer
 };
 
 class FShaderParameterResourceView : public FShaderParameterTemplate
@@ -676,6 +683,9 @@ private:
 
 };
 
+#define ADD_DEFAULT_SHADER_PARAMETER \
+		ADD_SHADER_CONSTANT_BUFFER(ViewConstantBuffer, ViewConstantBuffer)
+
 #define DEFINE_SHADER_PARAMTERS(...) \
 	public: \
 	class FShaderParameterContainer : public FShaderParameterContainerTemplate \
@@ -686,7 +696,7 @@ private:
 		FShaderParameterContainer(FD3D12ShaderTemplate* InD3D12ShaderTemplate, FD3D12ShaderInstance* InD3D12ShaderInstance) \
 			: FShaderParameterContainerTemplate(InD3D12ShaderTemplate, InD3D12ShaderInstance) {} \
 		__VA_ARGS__ \
-		ADD_SHADER_CONSTANT_BUFFER(ViewConstantBuffer, ViewConstantBuffer) \
+		ADD_DEFAULT_SHADER_PARAMETER \
 	} ShaderParameter{this};	
 
 #define SHADER_CONSTANT_BUFFER_TYPE(ConstantBufferTypeName, bInIsDynamic, bInAllowCull, ...) \
@@ -755,12 +765,17 @@ private:
 	public: \
 	FShaderParameterShaderResourceView VariableNameStr{this, #VariableNameStr, InShaderParameterResourceType, false};
 
+#define ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(VariableNameStr, InShaderParameterResourceType) \
+	public: \
+	FShaderParameterShaderResourceView VariableNameStr{this, #VariableNameStr, InShaderParameterResourceType, true};
+
 #define ADD_SHADER_UAV_VARIABLE
 
 #define ADD_PREPROCESSOR_DEFINE(DefineStr) \
 	private: \
 	FShaderPreprocessorDefineAdd RD_UNIQUE_NAME(ShaderPreprocessorDefine) {*this, #DefineStr};
 
+// This should match with declaration in common.hlsl
 // @todo : this constant buffer should be allocated on default heap because it's modified once for a frame
 DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 	ViewConstantBuffer, false,
@@ -768,6 +783,7 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, ProjectionMatrix)
 	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, ViewProjectionMatrix)
 	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, PrevViewProjectionMatrix)
+	ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE_ALLOW_CULL(Matrix, DirectionalLightLocalToWorld)
 )
 
 // TODO) Need to support permutation?
