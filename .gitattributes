@@ -11,3 +11,4 @@
 *.pdb filter=lfs diff=lfs merge=lfs -text
 ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/clang-tblgen.pdb filter=lfs diff=lfs merge=lfs -text
 ReDoomsEngine/Source/Runtime/D3D12/ShaderCompilers/DirectXShaderCompiler/out/build/x64-Debug/bin/dxilconv.pdb filter=lfs diff=lfs merge=lfs -text
+ReDoomsEngine/Assets/Main.1_Sponza/** filter=lfs diff=lfs merge=lfs -text
