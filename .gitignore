@@ -45,6 +45,7 @@ ReDoomsEngine/Source/Runtime/STL/EASTL/build/EASTL.dir
 
 CMakeCache.txt
 
+*.db
 *.log
 ReDoomsEngine/Source/Runtime/STL/EASTL/build/Debug
 ReDoomsEngine/Source/Runtime/STL/EASTL/build/test/packages/EAThread/Debug
