@@ -2,6 +2,8 @@
 Let's make toy game engine better than [DoomsEngine](https://github.com/SungJJinKang/DoomsEngine)
 
 ## How to build
+git lfs install
+git lfs pull
 Open "ReDoomsEngine/ReDoomsEngine.sln" with with visual studio 2022    
 Build!
 
@@ -12,6 +14,7 @@ Build!
 - [ ] GPU Driven Rendering(GPU Side Frustum/Occlusion Culling)
 - [ ] Dynamic Instancing
 - [ ] Multithreaded rendering(Multithreaded commandlist recording)
+
 ## Third party
 [Assimp](https://github.com/assimp/assimp)        
 [cityhash](https://github.com/google/cityhash)        
