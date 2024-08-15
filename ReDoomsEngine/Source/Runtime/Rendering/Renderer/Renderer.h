@@ -2,7 +2,7 @@
 #include "CommonInclude.h"
 #include "D3D12Manager.h"
 #include "D3D12Window.h"
-#include "RendererCommonInclude.h"
+#include "RenderingInclude.h"
 #include "D3D12Fence.h"
 #include "D3D12Descriptor.h"
 #include "Common/RendererStateCallbackInterface.h"

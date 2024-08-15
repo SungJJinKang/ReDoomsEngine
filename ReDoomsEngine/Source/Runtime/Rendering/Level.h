@@ -7,10 +7,9 @@ class FLevel
 public:
 
 	void UploadModel(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePath);
+	eastl::vector<eastl::shared_ptr<FMeshModel>> ModelList;
 
 private:
-
-	eastl::vector<eastl::shared_ptr<FMeshModel>> ModelList;
 
 };
 

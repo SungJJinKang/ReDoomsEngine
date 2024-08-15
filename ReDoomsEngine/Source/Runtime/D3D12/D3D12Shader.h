@@ -38,14 +38,6 @@ public:
 	void CacheHash() const;
 	void Validate();
 	FD3D12RootSignature* GetRootSignature() const;
-	inline const eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency>& GetShaderTemplateList() const
-	{
-		return ShaderTemplateList;
-	}
-	inline eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency>& GetShaderTemplateList()
-	{
-		return ShaderTemplateList;
-	}
 	inline const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& GetShaderInstanceList() const
 	{
 		return ShaderInstanceList;
@@ -75,22 +67,31 @@ public:
 	{
 		return CachedHash.IsValid() && (CachedHash64 != 0);
 	}
+	bool IsValid() const;
 
 private:
 
-	eastl::array<FD3D12ShaderTemplate*, EShaderFrequency::NumShaderFrequency> ShaderTemplateList{ nullptr };
 	eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderInstanceList{ nullptr };
-	mutable FShaderHash CachedHash;
-	mutable uint64 CachedHash64;
+	mutable FShaderHash CachedHash{};
+	mutable uint64 CachedHash64 = 0;
 };
 
 inline bool operator==(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
 {
-	return lhs.GetCachedHash() == rhs.GetCachedHash();
+	bool bEqual = true;
+	for(int32 Index = 0; Index < EShaderFrequency::NumShaderFrequency; Index++)
+	{
+		if (lhs.GetShaderInstanceList()[Index] != rhs.GetShaderInstanceList()[Index])
+		{
+			bEqual = false;
+			break;
+		}
+	}
+	return bEqual;
 }
 inline bool operator!=(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
 {
-	return lhs.GetCachedHash() != rhs.GetCachedHash();
+	return !(lhs == rhs);
 }
 
 struct FD3D12ConstantBufferReflectionData

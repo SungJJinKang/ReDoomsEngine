@@ -80,7 +80,6 @@ private:
 	eastl::array<eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>, EShaderFrequency::NumShaderFrequency> CachedConstantBufferBindPointInfosOfFrequencies;
 
 	bool bNeedToSetDescriptorHeaps = true;
-	eastl::shared_ptr<FD3D12DescriptorHeap> CachedSrvUavOnlineDescriptorHeap{};
 
 	bool bNeedToSetRTVAndDSV = true;
 

@@ -273,7 +273,7 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
         // Why providing pResourceBefore is faster? : https://www.gamedev.net/forums/topic/691943-resource-aliasing-barriers/5357916/
 
         // Even if doesn't issue aliasing barrier, it works well and deubg layter doesn't complain
-        ResourceUpload.ResourceBarriersBeforeUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Aliasing(nullptr, TextureResource.Get()));
+        ResourceUpload.ResourceBarriersBeforeUploadList.emplace_back(CD3DX12_RESOURCE_BARRIER::Aliasing(nullptr, TextureResource.Get()));
     }
     else
     {
@@ -300,7 +300,7 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 	ResourceUpload.SubresourceContainers = eastl::move(SubresourceDataList);
 	if (InResourceStateAfterUpload.has_value())
 	{
-		ResourceUpload.ResourceBarriersAfterUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(D3D12TextureResource->GetResource(), D3D12_RESOURCE_STATE_COPY_DEST, *InResourceStateAfterUpload));
+		ResourceUpload.ResourceBarriersAfterUploadList.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(D3D12TextureResource->GetResource(), D3D12_RESOURCE_STATE_COPY_DEST, *InResourceStateAfterUpload));
 	}
 
 	ResourceUploadBatcher.AddPendingResourceUpload(eastl::move(ResourceUpload));
@@ -406,9 +406,9 @@ eastl::shared_ptr<FD3D12VertexIndexBufferResource> FD3D12ResourceAllocator::Allo
 	FD3D12ResourceUpload ResourceUpload{};
 	ResourceUpload.Resource = VertexIndexBufferResource->GetResource();
 	ResourceUpload.SubresourceContainers.emplace_back(eastl::move(SubresourceDataList));
-    ResourceUpload.ResourceBarriersBeforeUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(VertexIndexBufferResource->GetResource(),
+    ResourceUpload.ResourceBarriersBeforeUploadList.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(VertexIndexBufferResource->GetResource(),
         bVertexBuffer ? D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER : D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_INDEX_BUFFER, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST));
-	ResourceUpload.ResourceBarriersAfterUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(VertexIndexBufferResource->GetResource(), D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST,
+	ResourceUpload.ResourceBarriersAfterUploadList.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(VertexIndexBufferResource->GetResource(), D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST,
 		bVertexBuffer ? D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER : D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_INDEX_BUFFER));
 
 	ResourceUploadBatcher.AddPendingResourceUpload(eastl::move(ResourceUpload));

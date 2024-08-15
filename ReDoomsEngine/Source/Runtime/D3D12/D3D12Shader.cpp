@@ -19,14 +19,7 @@ FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderInstance*, EShad
 void FBoundShaderSet::Set(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList)
 {
 	ShaderInstanceList = InShaderList;
-	for (uint32_t ShaderIndex = 0; ShaderIndex < EShaderFrequency::NumShaderFrequency; ++ShaderIndex)
-	{
-		if (ShaderInstanceList[ShaderIndex])
-		{
-			ShaderTemplateList[ShaderIndex] = ShaderInstanceList[ShaderIndex]->GetShaderTemplate();
-		}
-	}
-
+	
 	CacheHash();
 	#if EA_ASSERT_ENABLED
 	Validate();
@@ -70,6 +63,22 @@ void FBoundShaderSet::Validate()
 FD3D12RootSignature* FBoundShaderSet::GetRootSignature() const
 {
 	return FD3D12RootSignatureManager::GetInstance()->GetOrCreateRootSignature(*this).get();
+}
+
+bool FBoundShaderSet::IsValid() const
+{
+	bool bIsValid = false;
+
+	if(ShaderInstanceList[EShaderFrequency::Compute])
+	{
+		bIsValid = true;
+	}
+	else if(ShaderInstanceList[EShaderFrequency::Vertex] && ShaderInstanceList[EShaderFrequency::Pixel])
+	{
+		bIsValid = true;
+	}
+
+	return bIsValid;
 }
 
 FD3D12ShaderTemplate::FD3D12ShaderTemplate(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath,

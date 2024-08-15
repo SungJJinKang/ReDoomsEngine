@@ -16,7 +16,7 @@ bool CanMergeMeshDraw(const FMeshDraw& InMeshDrawA, const FMeshDraw& InMeshDrawB
 		bCanMerge = false;
 	}
 
-	if (!bCanMerge)
+	if (bCanMerge)
 	{
 		if (InMeshDrawA.VertexBufferViewList.size() != InMeshDrawB.VertexBufferViewList.size())
 		{
@@ -35,7 +35,7 @@ bool CanMergeMeshDraw(const FMeshDraw& InMeshDrawA, const FMeshDraw& InMeshDrawB
 		}
 	}
 
-	if (!bCanMerge)
+	if (bCanMerge)
 	{
 		if (InMeshDrawA.IndexBufferView != InMeshDrawB.IndexBufferView)
 		{
@@ -43,7 +43,7 @@ bool CanMergeMeshDraw(const FMeshDraw& InMeshDrawA, const FMeshDraw& InMeshDrawB
 		}
 	}
 
-	if (!bCanMerge)
+	if (bCanMerge)
 	{
 		if(
 			(InMeshDrawA.MeshDrawArgument.VertexCountPerInstance != InMeshDrawB.MeshDrawArgument.VertexCountPerInstance) ||
@@ -100,7 +100,6 @@ FPrimitive FRenderScene::AddPrimitive(
 	PrimitiveList.CachedLocalToWorldMatrixList.push_back_uninitialized();
 	PrimitiveList.VertexBufferViewList.push_back(InVertexBufferViews);
 	PrimitiveList.IndexBufferViewList.push_back(IndexBufferView);
-	EA_ASSERT(InDrawDesc.IsValidHash());
 	PrimitiveList.DrawDescList.push_back(InDrawDesc);
 	PrimitiveList.MeshDrawArgumentList.push_back(InMeshDrawArgument);
 	

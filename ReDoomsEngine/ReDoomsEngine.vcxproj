@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -119,6 +120,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Runtime\Rendering\DummyTexture.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\Level.cpp" />
     <ClCompile Include="Source\Runtime\Rendering\GBufferManager.cpp" />
     <ClCompile Include="Source\Runtime\D3D12\D3D12VertexFactory.cpp" />
@@ -197,6 +199,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClCompile Include="Source\Runtime\Math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Runtime\Rendering\DummyTexture.h" />
     <ClInclude Include="Source\Runtime\Rendering\Level.h" />
     <ClInclude Include="Source\Runtime\Rendering\GBufferManager.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12HelperOpeartor.h" />
@@ -237,7 +240,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Rendering\Renderer\D3D12TestRenderer.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12CommandContext.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.h" />
-    <ClInclude Include="Source\Runtime\Rendering\RendererCommonInclude.h" />
+    <ClInclude Include="Source\Runtime\Rendering\RenderingInclude.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12CommandList.h" />
     <ClInclude Include="Source\Runtime\Core\Macros.h" />
@@ -593,6 +596,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <Natvis Include="Source\Runtime\STL\EASTL\doc\EASTL.natvis" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Source\Editor\imgui\misc\debuggers\imgui.natstepfilter" />
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXCollision.inl" />
     <None Include="Source\Runtime\Math\DirectXMath\Inc\DirectXMathConvert.inl" />
@@ -603,5 +607,14 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <None Include="Source\Runtime\Math\SimpleMath.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+  </Target>
 </Project>

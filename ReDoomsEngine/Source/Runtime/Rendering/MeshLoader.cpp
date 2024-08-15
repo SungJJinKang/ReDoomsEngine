@@ -25,7 +25,6 @@ ETextureMapping ConvertaiTextureMappingToETextureMapping(const aiTextureMapping 
 	case aiTextureMapping::aiTextureMapping_PLANE:
 		return ETextureMapping::Plane;
 	case aiTextureMapping::aiTextureMapping_OTHER:
-		return ETextureMapping::Other;
 	default:
 		return ETextureMapping::Unknown;
 	}
@@ -83,7 +82,7 @@ eastl::vector<eastl::shared_ptr<FMeshModel>> FMeshLoader::LoadFromMeshFile(FD3D1
     // probably to request more postprocessing than we do in this example.
     const aiScene* const AssimpScene = AssimpImporter->ReadFile(WCHAR_TO_UTF8(FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePath)),
         aiProcess_CalcTangentSpace |
-        aiProcess_Triangulate |
+		aiProcess_Triangulate |
 		aiProcess_GenUVCoords |
 		aiProcess_ConvertToLeftHanded
         );
@@ -143,8 +142,6 @@ eastl::vector<eastl::shared_ptr<FMeshModel>> FMeshLoader::LoadFromMeshFile(FD3D1
             {
                 if (AssimpMesh->HasVertexColors(VertexColorIndex))
                 {
-                    EA_ASSERT(AssimpMesh->GetNumColorChannels() == 3);
-
 					eastl::vector<uint8_t> VertexColors;  // @todo : doesn't need default initialize
 					VertexColors.resize(AssimpMesh->mNumVertices * sizeof(Vector3));
 
@@ -307,7 +304,7 @@ eastl::vector<eastl::shared_ptr<FMeshModel>> FMeshLoader::LoadFromMeshFile(FD3D1
 							TextureFileRelativePath.c_str(),
 							D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE,
 							DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,
-							D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+							D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE
 						);
 
 						switch (TextureType)

@@ -514,38 +514,7 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipe
 {
 	SCOPED_CPU_TIMER(FD3D12StateCache_Flush)
 
-	FD3D12DescriptorHeapBlock BaseHeapBlcok;
-
-	if (DirtyFlagsOfSRVs.any() || DirtyFlagsOfUAVs.any() || GAlwaysInvalidateD3D12StateCache)
-	{
-		uint32_t RequiredSRVSlotCount = 0;
-		uint32_t RequiredUAVSlotCount = 0;
-		for (uint8_t FrequencyIndex = 0; FrequencyIndex < EShaderFrequency::NumShaderFrequency; ++FrequencyIndex)
-		{
-			RequiredSRVSlotCount += CachedRootSignature->Stage[FrequencyIndex].MaxSRVCount;
-			RequiredUAVSlotCount += CachedRootSignature->Stage[FrequencyIndex].MaxUAVCount;
-		}
-
-		EA_ASSERT(RequiredSRVSlotCount <= MAX_SRVS);
-		EA_ASSERT(RequiredUAVSlotCount <= MAX_UAVS);
-
-		uint32_t ReservedDescriptorCount = RequiredSRVSlotCount + RequiredUAVSlotCount;
-
-		BaseHeapBlcok = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOnlineDescriptorHeapContainer.ReserveTransientDescriptorHeapBlock(ReservedDescriptorCount);
-	}
-
-	uint32_t OutUsedBlockCount = 0;
-
-	for (uint32_t ShaderFrequencyIndex = 0; ShaderFrequencyIndex < EShaderFrequency::NumShaderFrequency; ++ShaderFrequencyIndex)
-	{
-		FD3D12ShaderInstance* ShaderInstance = CachedPSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[ShaderFrequencyIndex];
-		if (ShaderInstance)
-		{
-			ShaderInstance->ApplyShaderParameter(InCommandContext);
-		}
-	}
-
-	if (bIsPSODirty || GAlwaysInvalidateD3D12StateCache)
+	if ((bIsPSODirty || GAlwaysInvalidateD3D12StateCache) && CachedPSOInitializer.IsValid())
 	{
 		ApplyPSO(*(InCommandContext.GraphicsCommandList));
 	}
@@ -553,29 +522,13 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipe
 	{
 		ApplyPrimitiveTopologyDirty(*(InCommandContext.GraphicsCommandList));
 	}
-	if ((InPipeline == EPipeline::Graphics) && (bNeedToSetRTVAndDSV || GAlwaysInvalidateD3D12StateCache))
-	{
-		ApplyRTVAndDSV(*(InCommandContext.GraphicsCommandList));
-	}
-	if (bIsRootSignatureDirty || GAlwaysInvalidateD3D12StateCache)
-	{
-		ApplyRootSignature(*(InCommandContext.GraphicsCommandList));
-	}
 	if (bNeedToSetDescriptorHeaps || GAlwaysInvalidateD3D12StateCache)
 	{
 		ApplyDescriptorHeap(*(InCommandContext.GraphicsCommandList));
 	}
-	if (DirtyFlagsOfSRVs.any() || GAlwaysInvalidateD3D12StateCache)
+	if ((InPipeline == EPipeline::Graphics) && (bNeedToSetRTVAndDSV || GAlwaysInvalidateD3D12StateCache))
 	{
-		ApplySRVs(*(InCommandContext.GraphicsCommandList), BaseHeapBlcok, OutUsedBlockCount);
-	}
-	if (DirtyFlagsOfUAVs.any() || GAlwaysInvalidateD3D12StateCache)
-	{
-		ApplyUAVs(*(InCommandContext.GraphicsCommandList), BaseHeapBlcok, OutUsedBlockCount);
-	}
-	if (bIsRootCBVDirty || GAlwaysInvalidateD3D12StateCache)
-	{
-		ApplyConstantBuffers(*(InCommandContext.GraphicsCommandList));
+		ApplyRTVAndDSV(*(InCommandContext.GraphicsCommandList));
 	}
 	if ((InPipeline == EPipeline::Graphics) && (bNeedToSetVertexBufferView || GAlwaysInvalidateD3D12StateCache))
 	{
@@ -585,6 +538,57 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipe
 	{
 		ApplyIndexBufferView(*(InCommandContext.GraphicsCommandList));
 	}
+
+	if (CachedRootSignature)
+	{
+		FD3D12DescriptorHeapBlock BaseHeapBlcok;
+
+		if (DirtyFlagsOfSRVs.any() || DirtyFlagsOfUAVs.any() || GAlwaysInvalidateD3D12StateCache)
+		{
+			uint32_t RequiredSRVSlotCount = 0;
+			uint32_t RequiredUAVSlotCount = 0;
+			for (uint8_t FrequencyIndex = 0; FrequencyIndex < EShaderFrequency::NumShaderFrequency; ++FrequencyIndex)
+			{
+				RequiredSRVSlotCount += CachedRootSignature->Stage[FrequencyIndex].MaxSRVCount;
+				RequiredUAVSlotCount += CachedRootSignature->Stage[FrequencyIndex].MaxUAVCount;
+			}
+
+			EA_ASSERT(RequiredSRVSlotCount <= MAX_SRVS);
+			EA_ASSERT(RequiredUAVSlotCount <= MAX_UAVS);
+
+			uint32_t ReservedDescriptorCount = RequiredSRVSlotCount + RequiredUAVSlotCount;
+
+			BaseHeapBlcok = FD3D12DescriptorHeapManager::GetInstance()->CbvSrvUavOnlineDescriptorHeapContainer.ReserveTransientDescriptorHeapBlock(ReservedDescriptorCount);
+		}
+
+		uint32_t OutUsedBlockCount = 0;
+
+		for (uint32_t ShaderFrequencyIndex = 0; ShaderFrequencyIndex < EShaderFrequency::NumShaderFrequency; ++ShaderFrequencyIndex)
+		{
+			FD3D12ShaderInstance* ShaderInstance = CachedPSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[ShaderFrequencyIndex];
+			if (ShaderInstance)
+			{
+				ShaderInstance->ApplyShaderParameter(InCommandContext);
+			}
+		}
+
+		if (bIsRootSignatureDirty || GAlwaysInvalidateD3D12StateCache)
+		{
+			ApplyRootSignature(*(InCommandContext.GraphicsCommandList));
+		}
+		if (DirtyFlagsOfSRVs.any() || GAlwaysInvalidateD3D12StateCache)
+		{
+			ApplySRVs(*(InCommandContext.GraphicsCommandList), BaseHeapBlcok, OutUsedBlockCount);
+		}
+		if (DirtyFlagsOfUAVs.any() || GAlwaysInvalidateD3D12StateCache)
+		{
+			ApplyUAVs(*(InCommandContext.GraphicsCommandList), BaseHeapBlcok, OutUsedBlockCount);
+		}
+		if (bIsRootCBVDirty || GAlwaysInvalidateD3D12StateCache)
+		{
+			ApplyConstantBuffers(*(InCommandContext.GraphicsCommandList));
+		}
+	}
 }
 
 void FD3D12StateCache::ResetForNewCommandlist()
@@ -592,15 +596,14 @@ void FD3D12StateCache::ResetForNewCommandlist()
 	MEM_ZERO(CachedPSOInitializer);
 	CachedRootSignature = nullptr;
 
-	bIsPSODirty = true;
-	bIsPrimitiveTopologyDirty = true;
-	bIsRootSignatureDirty = true;
-	bIsRootCBVDirty = true;
+	bIsPSODirty = false;
+	bIsPrimitiveTopologyDirty = false;
+	bIsRootSignatureDirty = false;
+	bIsRootCBVDirty = false;
 	bNeedToSetDescriptorHeaps = true;
 	bNeedToSetRTVAndDSV = true;
-
-	bNeedToSetVertexBufferView = true;
-	bNeedToSetIndexBufferView = true;
+	bNeedToSetVertexBufferView = false;
+	bNeedToSetIndexBufferView = false;
 
 	DirtyFlagsOfSRVs.set();
 	DirtyFlagsOfUAVs.set();
@@ -608,6 +611,8 @@ void FD3D12StateCache::ResetForNewCommandlist()
 	MEM_ZERO(CachedUAVs);
 	MEM_ZERO(CachedConstantBufferGPUVirtualAddressOfFrequencies); // always set constant buffer view at first flush of new frame
 	MEM_ZERO(CachedConstantBufferBindPointInfosOfFrequencies);
+	MEM_ZERO(CachedVertexBufferViewList);
+	MEM_ZERO(CachedIndexBufferView);
 }
 
 void FD3D12StateCache::ResetToDefault()

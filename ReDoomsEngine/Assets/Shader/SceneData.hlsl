@@ -8,6 +8,8 @@ struct FPrimitiveSceneData
 	uint		Padding2;
 	float4x4	LocalToWorld;
 	float4x4	WorldToLocal;
+	float4		AABBCenterAndDrawDistance;
+	float4		AABBExtent;
 };
 
 #define PRIMITIVE_SCENEDATA_STRIDE 9
@@ -43,6 +45,9 @@ FPrimitiveSceneData GetPrimitiveIdSceneData(uint PrimitiveId)
 		LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 7),
 		LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 8)
 	);
+
+	SceneData.AABBCenterAndDrawDistance = LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 9)
+	SceneData.AABBExtent = LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 10)
 
 	return SceneData;
 }

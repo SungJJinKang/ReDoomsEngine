@@ -60,6 +60,8 @@ void FRenderer::Init()
 
 	RenderScene.Init();
 	RenderScene.PrimitiveList.Reserve(500);
+
+	InitDummyTexture(CurrentFrameCommandContext);
 }
 
 void FRenderer::SceneSetup()

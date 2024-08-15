@@ -36,24 +36,18 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 	{
 		eastl::shared_ptr<FD3D12Fence> UploadBatcherFence = eastl::make_shared<FD3D12Fence>(true);
 
-		eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersBeforeUpload;
-		eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersAfterUpload;
-
-		for (FD3D12ResourceUpload& PendingResourceUpload : PendingResourceUploadList)
-		{
-			ResourceBarriersBeforeUpload.insert(ResourceBarriersBeforeUpload.end(), PendingResourceUpload.ResourceBarriersBeforeUpload.begin(), PendingResourceUpload.ResourceBarriersBeforeUpload.end());
-			ResourceBarriersAfterUpload.insert(ResourceBarriersAfterUpload.end(), PendingResourceUpload.ResourceBarriersAfterUpload.begin(), PendingResourceUpload.ResourceBarriersAfterUpload.end());
-		}
-
 		FD3D12CommandQueue* const TargetCommandQueue = InCommandContext.CommandQueueList[ED3D12QueueType::Direct]; // @todo : use copy queue
 
 		eastl::shared_ptr<FD3D12CommandList>& CommandListForUploadBatcher = InCommandContext.GraphicsCommandList;
 		{
 			SCOPED_GPU_TIMER_DIRECT_QUEUE(InCommandContext, FD3D12ResourceUploadBatcher_Flush)
 
-			if (ResourceBarriersBeforeUpload.size() > 0)
+			for (FD3D12ResourceUpload& PendingResourceUpload : PendingResourceUploadList)
 			{
-				InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarriersBeforeUpload);
+				for (const CD3DX12_RESOURCE_BARRIER& ResourceBarriersBefore : PendingResourceUpload.ResourceBarriersBeforeUploadList)
+				{
+					InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarriersBefore);
+				}
 			}
 
 			InCommandContext.FlushResourceBarriers(EPipeline::Graphics);
@@ -138,9 +132,12 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 				UploadBufferContainer->UploadedFrameIndex = GCurrentFrameIndex;
 			}
 
-			if (ResourceBarriersAfterUpload.size() > 0)
+			for (FD3D12ResourceUpload& PendingResourceUpload : PendingResourceUploadList)
 			{
-				InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarriersAfterUpload);
+				for (const CD3DX12_RESOURCE_BARRIER& ResourceBarriersAfter : PendingResourceUpload.ResourceBarriersAfterUploadList)
+				{
+					InCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarriersAfter);
+				}
 			}
 		}
 

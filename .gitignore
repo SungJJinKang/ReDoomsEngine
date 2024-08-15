@@ -62,3 +62,5 @@ ReDoomsEngine/imgui.ini
 
 Intermediate
 ReDoomsEngine/Source/Runtime/Utils/assimp/build/.vs/Assimp/v17
+ReDoomsEngine/packages
+ReDoomsEngine/packages.config

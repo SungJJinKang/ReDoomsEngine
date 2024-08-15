@@ -3,6 +3,11 @@
 #include "D3D12RootSignature.h"
 #include "ShaderCompilers/DirectXShaderCompiler/include/dxc/dxcapi.h"
 
+bool FD3D12PSOInitializer::IsValid() const
+{
+	return DrawDesc.BoundShaderSet.IsValid();
+}
+
 // void FD3D12PSOInitializer::Reset()
 // {
 //     MEM_ZERO(BoundShaderSet);

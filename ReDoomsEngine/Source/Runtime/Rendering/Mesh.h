@@ -67,10 +67,7 @@ enum class ETextureMapping
 	Box,
 
 	/** Planar mapping */
-	Plane,
-
-	/** Undefined mapping. Have fun. */
-	Other,
+	Plane
 };
 
 enum class ETextureOp 

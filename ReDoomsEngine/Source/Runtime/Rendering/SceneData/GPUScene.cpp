@@ -31,9 +31,9 @@ void GPUScene::UploadDirtyData(FD3D12CommandContext& InCommandContext, FPrimitiv
 			FD3D12ResourceUpload GPUSceneBufferResourceUpload{};
 			auto SetupResourceUpload = [&GPUSceneBufferResourceUpload, this]() {
 				GPUSceneBufferResourceUpload.Resource = GPUSceneBuffer->GetResource();
-				GPUSceneBufferResourceUpload.ResourceBarriersBeforeUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(GPUSceneBufferResourceUpload.Resource, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+				GPUSceneBufferResourceUpload.ResourceBarriersBeforeUploadList.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(GPUSceneBufferResourceUpload.Resource, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
 					D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST));
-				GPUSceneBufferResourceUpload.ResourceBarriersAfterUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(GPUSceneBufferResourceUpload.Resource, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST,
+				GPUSceneBufferResourceUpload.ResourceBarriersAfterUploadList.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(GPUSceneBufferResourceUpload.Resource, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST,
 					D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
 				};
 			SetupResourceUpload();
@@ -103,6 +103,16 @@ void GPUScene::UploadDirtyData(FD3D12CommandContext& InCommandContext, FPrimitiv
 					PrimitiveSceneData->VisibilityFlags = VisibilityFlags;
 					PrimitiveSceneData->LocalToWorld = InPrimitiveList.CachedLocalToWorldMatrixList[PrimitiveIndex];
 					PrimitiveSceneData->WorldToLocal = InPrimitiveList.CachedLocalToWorldMatrixList[PrimitiveIndex].Invert();
+					PrimitiveSceneData->AABBCenterAndDrawDistance = Vector4{
+						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Center.x,
+						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Center.y,
+						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Center.z,
+						InPrimitiveList.ScaleAndDrawDistanceList[PrimitiveIndex].w };
+					PrimitiveSceneData->AABBExtent = Vector4{
+						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Extents.x,
+						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Extents.y,
+						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Extents.z,
+						0.0f };
 
 					InPrimitiveList.GPUSceneDirtyPrimitiveList[PrimitiveIndex] = false;
 				}

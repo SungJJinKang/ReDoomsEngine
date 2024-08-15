@@ -61,8 +61,8 @@ struct FD3D12ResourceUpload
 	ID3D12Resource* Resource;
 	eastl::vector<eastl::unique_ptr<FD3D12SubresourceContainer>> SubresourceContainers;
 
-	eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersBeforeUpload;
-	eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersAfterUpload;
+	eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersBeforeUploadList;
+	eastl::vector<CD3DX12_RESOURCE_BARRIER> ResourceBarriersAfterUploadList;
 };
 
 enum class ED3D12UploadBufferSizeType : uint32_t

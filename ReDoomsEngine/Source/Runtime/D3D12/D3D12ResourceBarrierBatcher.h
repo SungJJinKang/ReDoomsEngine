@@ -18,12 +18,14 @@ class FD3D12ResourceBarrierBatcher
 {
 public:
 
+	FD3D12ResourceBarrierBatcher(FD3D12CommandList& InOwnerCommandList);
+
 	void AddBarrier(const CD3DX12_RESOURCE_BARRIER& InBarrier);
-	void AddBarrier(const eastl::vector<CD3DX12_RESOURCE_BARRIER>& InBarriers);
-	void Flush(FD3D12CommandList& InCommandList);
+	void Flush();
 
 private:
 
+	FD3D12CommandList& OwnerCommandList;
 	eastl::vector<CD3DX12_RESOURCE_BARRIER> PendingResourceBarriers;
 
 };

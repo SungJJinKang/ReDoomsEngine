@@ -93,61 +93,54 @@ void D3D12TestRenderer::SceneSetup()
 {
 	FRenderer::SceneSetup();
 
-	Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Main.1_Sponza/NewSponza_Main_Yup_003.fbx"));
+	//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Main.1_Sponza/NewSponza_Main_Yup_003.fbx"));
+	Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Sponza/glTF/Sponza.gltf"));
+	for (eastl::shared_ptr<FMeshModel>& Model : Level.ModelList)
+	{
+		FD3D12PSOInitializer::FDrawDesc DrawDesc;
+		MEM_ZERO(DrawDesc);
 
-	FD3D12PSOInitializer::FDrawDesc DroneDrawDesc;
-	MEM_ZERO(DroneDrawDesc);
+		D3D12_INPUT_LAYOUT_DESC InputDesc{ FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
+		CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
+		DrawDesc.Desc.InputLayout = InputDesc;
+		DrawDesc.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		
+		FMeshDrawArgument MeshDrawArgument;
+		MeshDrawArgument.IndexCountPerInstance = Model->Mesh.IndexCount;
+		MeshDrawArgument.InstanceCount = 1;
+		MeshDrawArgument.StartIndexLocation = 0;
+		MeshDrawArgument.BaseVertexLocation = 0;
+		MeshDrawArgument.StartInstanceLocation = 0;
+		
+		auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
+		auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
 
-	D3D12_INPUT_LAYOUT_DESC InputDesc{ FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
-	CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
-	DroneDrawDesc.Desc.InputLayout = InputDesc;
-	DroneDrawDesc.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	DroneDrawDesc.CacheDescHash();
-// 
-// 	FMeshDrawArgument MeshDrawArgument;
-// 	MeshDrawArgument.IndexCountPerInstance = DroneMesh->MeshList[0].IndexCount;
-// 	MeshDrawArgument.InstanceCount = 1;
-// 	MeshDrawArgument.StartIndexLocation = 0;
-// 	MeshDrawArgument.BaseVertexLocation = 0;
-// 	MeshDrawArgument.StartInstanceLocation = 0;
-// 
-// 	for (int32_t IndexA = -30; IndexA < 30; ++IndexA)
-// 	{
-// 		for (int32_t IndexB = -30; IndexB < 30; ++IndexB)
-// 		{
-// 			auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
-// 			auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
-// 
-// 			// @TODO : set dummy texture if the texture doesn't exist
-// 			MeshDrawPSInstance->Parameter.BaseColor = DroneMesh->Material[0].BaseColor->GetTextureSRV();
-// 			MeshDrawPSInstance->Parameter.Emissive = DroneMesh->Material[0].Emissive->GetTextureSRV();
-// 			MeshDrawPSInstance->Parameter.Metalic = DroneMesh->Material[0].Metalic->GetTextureSRV();
-// 			MeshDrawPSInstance->Parameter.Roughness = DroneMesh->Material[0].Roughness->GetTextureSRV();
-// 			MeshDrawPSInstance->Parameter.AmbientOcclusion = DroneMesh->Material[0].AmbientOcclusion->GetTextureSRV();
-// 
-// 			eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
-// 			ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
-// 			ShaderList[EShaderFrequency::Pixel] = MeshDrawPSInstance;
-// 			FBoundShaderSet BoundShaderSet{ ShaderList };
-// 			DroneDrawDesc.BoundShaderSet = BoundShaderSet;
-// 
-// 			Vector3 OrigianlPos{ 250.0f * IndexB, 250.0f * IndexA + 10.0f, -5.0f };
-// 			FPrimitive Primitive = RenderScene.AddPrimitive(
-// 				true,
-// 				DroneMesh->MeshList[0].AABB,
-// 				EPrimitiveFlag::CacheMeshDrawCommand | EPrimitiveFlag::AllowMergeMeshDrawCommand,
-// 				OrigianlPos,
-// 				Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(180), XMConvertToRadians(-90), 0.0f),
-// 				Vector3{ 0.05f, 0.05f, 0.05f },
-// 				2000.0f,
-// 				DroneMesh->MeshList[0].VertexBufferViewList,
-// 				DroneMesh->MeshList[0].IndexBufferView,
-// 				DroneDrawDesc,
-// 				MeshDrawArgument
-// 			);
-// 			DroneList.emplace_back(FDrone{ Primitive,OrigianlPos });
-// 		}
-// 	}
+		MeshDrawPSInstance->Parameter.BaseColor = Model->Material.BaseColor ? Model->Material.BaseColor->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.Emissive = Model->Material.Emissive ? Model->Material.Emissive->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.Metalic = Model->Material.Metalic ? Model->Material.Metalic->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.Roughness = Model->Material.Roughness ? Model->Material.Roughness->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.AmbientOcclusion = Model->Material.AmbientOcclusion ? Model->Material.AmbientOcclusion->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+
+		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
+		ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
+		ShaderList[EShaderFrequency::Pixel] = MeshDrawPSInstance;
+		FBoundShaderSet BoundShaderSet{ ShaderList };
+		DrawDesc.BoundShaderSet = BoundShaderSet;
+
+		FPrimitive Primitive = RenderScene.AddPrimitive(
+			true,
+			Model->Mesh.AABB,
+			EPrimitiveFlag::CacheMeshDrawCommand | EPrimitiveFlag::AllowMergeMeshDrawCommand,
+			Vector3{ 0.0f, 0.0f, 0.0f },
+			Quaternion::Identity,
+			Vector3{ 1.0f, 1.0f, 1.0f },
+			2000.0f,
+			Model->Mesh.VertexBufferViewList,
+			Model->Mesh.IndexBufferView,
+			DrawDesc,
+			MeshDrawArgument
+		);
+	}
 }
 
 void D3D12TestRenderer::OnStartFrame()
@@ -201,7 +194,7 @@ void D3D12TestRenderer::OnStartFrame()
 		ViewConstantBuffer.MemberVariables.ViewMatrix = ViewMat;
 		ViewConstantBuffer.MemberVariables.ProjectionMatrix = ProjMat;
 		ViewConstantBuffer.MemberVariables.ViewProjectionMatrix = ViewProjMat;
-		ViewConstantBuffer.MemberVariables.ViewProjectionMatrix = ViewProjMat;
+		ViewConstantBuffer.MemberVariables.PrevViewProjectionMatrix = ViewProjMat;
 		ViewConstantBuffer.FlushShadowDataIfDirty();
 	}
 }
@@ -217,9 +210,6 @@ bool D3D12TestRenderer::Draw()
 
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetViewports(1, &Viewport);
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
-
-// 	CD3DX12_RESOURCE_BARRIER ResourceBarrierA = CD3DX12_RESOURCE_BARRIER::Transition(SceneColorTarget->GetResource(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-// 	CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(ResourceBarrierA);
 
 	CurrentFrameCommandContext.StateCache.SetRenderTargets(
 		{ GBufferManager.GBufferA.get(), GBufferManager.GBufferB.get(), GBufferManager.GBufferC.get(), GBufferManager.GBufferD.get() }

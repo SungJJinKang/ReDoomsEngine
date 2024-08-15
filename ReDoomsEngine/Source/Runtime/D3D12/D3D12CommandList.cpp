@@ -4,7 +4,7 @@
 #include "D3D12PSO.h"
 
 FD3D12CommandList::FD3D12CommandList(FD3D12CommandAllocator* const InOwnerCommandAllocator)
-	:Fence(false), ResourceBarrierBatcher(), OwnerCommandAllocator(InOwnerCommandAllocator), CommandList(), CurrentCommandListStatus(ED3D12CommandListStatus::Unknown)
+	:Fence(false), ResourceBarrierBatcher(*this), OwnerCommandAllocator(InOwnerCommandAllocator), CommandList(), CurrentCommandListStatus(ED3D12CommandListStatus::Unknown)
 {
 
 }
@@ -45,7 +45,7 @@ void FD3D12CommandList::FinishRecordingCommandList()
 
 void FD3D12CommandList::FlushResourceBarriers()
 {
-	ResourceBarrierBatcher.Flush(*this);
+	ResourceBarrierBatcher.Flush();
 }
 
 FD3D12CommandAllocator::FD3D12CommandAllocator(const ED3D12QueueType InQueueType)

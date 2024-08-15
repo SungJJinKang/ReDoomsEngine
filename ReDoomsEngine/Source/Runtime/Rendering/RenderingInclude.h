@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "D3D12Include.h"
 #include "D3D12Manager.h"
@@ -10,6 +10,9 @@
 #include "D3D12RootSignature.h"
 #include "D3D12Resource/D3D12Resource.h"
 #include "D3D12Resource/D3D12View.h"
+#include "D3D12Resource/D3D12ResourceUploadBatcher.h"
+#include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "D3D12CommandQueue.h"
 #include "D3D12CommandList.h"
 #include "TextureLoader.h"
+#include "DummyTexture.h"

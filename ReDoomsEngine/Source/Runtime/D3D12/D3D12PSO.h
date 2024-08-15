@@ -21,6 +21,17 @@ public:
             D3D12_INPUT_LAYOUT_DESC InputLayout;
             D3D12_CACHED_PIPELINE_STATE CachedPSO;
             D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
+
+            bool operator==(const FDesc& rhs) const
+            {
+                return InputLayout == rhs.InputLayout &&
+                       CachedPSO == rhs.CachedPSO &&
+                       PrimitiveTopologyType == rhs.PrimitiveTopologyType;
+            }
+            bool operator!=(const FDesc& rhs) const
+            {
+                return !(*this == rhs);
+            }
         } Desc;
         uint64 CachedDescHash = 0;
         void CacheDescHash();
@@ -29,6 +40,15 @@ public:
         {
             return BoundShaderSet.IsValidHash() && (CachedDescHash != 0);
         }
+
+		inline bool operator==(const FDrawDesc& rhs) const
+        {
+			return BoundShaderSet == rhs.BoundShaderSet && Desc == rhs.Desc;
+        }
+		inline bool operator!=(const FDrawDesc& rhs) const
+		{
+			return !(*this == rhs);
+		}
     } DrawDesc;
 
     /// <summary>
@@ -50,13 +70,43 @@ public:
 			CD3DX12_BLEND_DESC BlendState;
 			CD3DX12_RASTERIZER_DESC RasterizerState;
 			CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
+
+			inline bool operator==(const FDesc& rhs) const
+			{
+				return StreamOutput == rhs.StreamOutput &&
+					   SampleMask == rhs.SampleMask &&
+					   IBStripCutValue == rhs.IBStripCutValue &&
+					   NumRenderTargets == rhs.NumRenderTargets &&
+					   DSVFormat == rhs.DSVFormat &&
+					   SampleDesc == rhs.SampleDesc &&
+					   NodeMask == rhs.NodeMask &&
+					   Flags == rhs.Flags &&
+					   BlendState == rhs.BlendState &&
+					   RasterizerState == rhs.RasterizerState &&
+					   DepthStencilState == rhs.DepthStencilState;
+			}
+			inline bool operator!=(const FDesc& rhs) const
+			{
+				return !(*this == rhs);
+			}
         } Desc;
+
         uint64 CachedDescHash = 0;
         void CacheDescHash();
         inline bool IsValidHash() const
         {
             return (CachedDescHash != 0);
         }
+
+		inline bool operator==(const FPassDesc& rhs) const
+		{
+			return Desc == rhs.Desc;
+		}
+
+		inline bool operator!=(const FPassDesc& rhs) const
+		{
+			return !(*this == rhs);
+		}
     } PassDesc;
 
     inline uint64 GetCachedHash() const
@@ -73,6 +123,8 @@ public:
         return (CachedHash != 0) && DrawDesc.IsValidHash() && PassDesc.IsValidHash();
 	}
 
+	bool IsValid() const;
+
     //void Reset();
     void CacheHash() const;
     
@@ -83,11 +135,11 @@ private:
 
 inline bool operator==(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)
 {
-    return (lhs.GetCachedHash() == rhs.GetCachedHash());
+    return (lhs.DrawDesc == rhs.DrawDesc) && (lhs.PassDesc == rhs.PassDesc);
 }
 inline bool operator!=(const FD3D12PSOInitializer& lhs, const FD3D12PSOInitializer& rhs)
 {
-    return (lhs.GetCachedHash() != rhs.GetCachedHash());
+    return !(lhs == rhs);
 }
 
 struct FD3D12PSO

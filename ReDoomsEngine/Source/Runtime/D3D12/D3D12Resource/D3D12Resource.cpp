@@ -535,9 +535,9 @@ void FD3D12BufferResource::FlushShadowData()
 		ResourceUpload.Resource = GetResource(GCurrentBackbufferIndex);
 		EA_ASSERT(ResourceUpload.Resource);
 		ResourceUpload.SubresourceContainers.emplace_back(eastl::make_unique<FD3D12ConstantBufferSubresourceContainer>(GetShadowDataAddress(), GetShadowDataSize()));
-		ResourceUpload.ResourceBarriersBeforeUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(ResourceUpload.Resource, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+		ResourceUpload.ResourceBarriersBeforeUploadList.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(ResourceUpload.Resource, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
 			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST));
-		ResourceUpload.ResourceBarriersAfterUpload.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(ResourceUpload.Resource, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST,
+		ResourceUpload.ResourceBarriersAfterUploadList.emplace_back(CD3DX12_RESOURCE_BARRIER::Transition(ResourceUpload.Resource, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COPY_DEST,
 			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
 
 		FD3D12ResourceAllocator::GetInstance()->ResourceUploadBatcher.AddPendingResourceUpload(eastl::move(ResourceUpload));
