@@ -62,14 +62,14 @@ bool FAssetManager::SimpleReadEntireFile(const wchar_t* const FilePath, eastl::v
         }
         else
         {
-            EA_ASSERT_FORMATTED(false, ("\"ReadFile\" Fail ErrorCode : %d", GetLastError()));
+            EA_ASSERT_FORMATTED(false, ("\"ReadFile\" Fail for \"%S\". ErrorCode : %d", FilePath, GetLastError()));
         }
 
         CloseHandle(FileHandle);
     }
     else
     {
-        EA_ASSERT_FORMATTED(false, ("\"CreateFileW\" Fail ErrorCode : %d", GetLastError()));
+        EA_ASSERT_FORMATTED(false, ("\"CreateFileW\" Fail for \"%S\". ErrorCode : %d", FilePath, GetLastError()));
     }
 
     return bIsSuccess;
