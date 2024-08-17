@@ -93,8 +93,8 @@ void D3D12TestRenderer::SceneSetup()
 {
 	FRenderer::SceneSetup();
 
-	//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Main.1_Sponza/NewSponza_Main_Yup_003.fbx"));
-	Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Sponza/glTF/Sponza.gltf"));
+	Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"));
+
 	for (eastl::shared_ptr<FMeshModel>& Model : Level.ModelList)
 	{
 		FD3D12PSOInitializer::FDrawDesc DrawDesc;
