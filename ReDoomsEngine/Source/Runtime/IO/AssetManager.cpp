@@ -1,4 +1,4 @@
-#include "AssetManager.h"
+﻿#include "AssetManager.h"
 #include "WindowsApplication.h"
 #include <Windows.h>
 
@@ -7,7 +7,11 @@ const eastl::wstring& FAssetManager::GetAssetFolderDirectory()
     static eastl::wstring AssetFolderDirectory{};
     if (AssetFolderDirectory.empty())
     {
-        AssetFolderDirectory += FWindowsApplication::GetExecutableDirectory();
+		#if RD_EDITOR
+		AssetFolderDirectory += EA_WCHAR(VS_SOLUTION_DIR);
+		#else
+		AssetFolderDirectory += FWindowsApplication::GetExecutableDirectory();
+		#endif
         AssetFolderDirectory += EA_WCHAR("Assets/");
     }
     return AssetFolderDirectory;
