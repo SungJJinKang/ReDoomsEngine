@@ -12,14 +12,16 @@ struct FPrimitiveSceneData
 	float4		AABBExtent;
 };
 
-#define PRIMITIVE_SCENEDATA_STRIDE 9
+#define PRIMITIVE_SCENEDATA_STRIDE 11
 
 StructuredBuffer<float4> GPrimitiveSceneData;
 
-float4 LoadPrimitivePrimitiveSceneDataElement(uint PrimitiveIndex, uint ItemIndex)
+float4 LoadPrimitivePrimitiveSceneDataElement(uint PrimitiveId, uint ItemIndex)
 {
-	uint TargetElementIdx = PrimitiveIndex + ItemIndex;
-	return GPrimitiveSceneData[TargetElementIdx];
+	uint PrimitiveOffset = PrimitiveId * PRIMITIVE_SCENEDATA_STRIDE;
+
+	uint TargetElementOffset = PrimitiveOffset + ItemIndex;
+	return GPrimitiveSceneData[TargetElementOffset];
 }
 
 // @TODO : Support instance id
@@ -27,27 +29,25 @@ FPrimitiveSceneData GetPrimitiveIdSceneData(uint PrimitiveId)
 {
 	FPrimitiveSceneData SceneData = (FPrimitiveSceneData)0;
 
-	uint PrimitiveIndex = PrimitiveId * PRIMITIVE_SCENEDATA_STRIDE;
-
-	SceneData.Flags = asuint(LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 0).x);
-	SceneData.VisibilityFlags = asuint(LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 0).y);
+	SceneData.Flags = asuint(LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 0).x);
+	SceneData.VisibilityFlags = asuint(LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 0).y);
 		
 	SceneData.LocalToWorld = float4x4(
-		LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 1),
-		LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 2),
-		LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 3),
-		LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 4)
+		LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 1),
+		LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 2),
+		LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 3),
+		LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 4)
 	);
 
 	SceneData.WorldToLocal = float4x4(
-		LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 5),
-		LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 6),
-		LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 7),
-		LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 8)
+		LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 5),
+		LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 6),
+		LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 7),
+		LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 8)
 	);
 
-	SceneData.AABBCenterAndDrawDistance = LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 9)
-	SceneData.AABBExtent = LoadPrimitivePrimitiveSceneDataElement(PrimitiveIndex, 10)
+	SceneData.AABBCenterAndDrawDistance = LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 9);
+	SceneData.AABBExtent = LoadPrimitivePrimitiveSceneDataElement(PrimitiveId, 10);
 
 	return SceneData;
 }
