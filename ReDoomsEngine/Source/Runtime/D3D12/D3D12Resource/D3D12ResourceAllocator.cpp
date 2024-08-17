@@ -252,11 +252,11 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 
         FD3D12ResourcePool& TargetPool = TexturePoolList[TargetTexturePoolType];
         FD3D12ResourcePoolBlock OutAllocatedBlock{};
-        const bool bIsSuccess = TargetPool.AllocateBlock(AllocInfo.SizeInBytes, AllocInfo.Alignment, OutAllocatedBlock);
+        const bool bIsSuccess = TargetPool.AllocateBlock(AllocInfo.SizeInBytes, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT, OutAllocatedBlock);
         EA_ASSERT(bIsSuccess);
 
         InD3DResourceDesc.Alignment = TargetPool.HeapDesc.Alignment; // Follow heap's alignment
-        EA_ASSERT(IsAligned(OutAllocatedBlock.OffsetFromBase, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT));
+        EA_ASSERT(IsAligned(OutAllocatedBlock.OffsetFromBase, AllocInfo.Alignment));
 
         VERIFYD3D12RESULT(GetD3D12Device()->CreatePlacedResource(
             OutAllocatedBlock.OwnerResourcePoolHeapContainer.lock()->Heap.Get(),

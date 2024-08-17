@@ -119,7 +119,8 @@ enum class ETextureMapMode
 
 struct FMaterial
 {
-	// PBR
+	eastl::string MaterialName;
+
 	EShadingModel ShadingModel = EShadingModel::Unknown;
 	ETextureMapping TextureMapping = ETextureMapping::Unknown;
 	int32 UVIndex = -1;
@@ -127,11 +128,51 @@ struct FMaterial
 	ETextureOp TextureOp = ETextureOp::Unknown;
 	ETextureMapMode TextureMapMode[2]{ ETextureMapMode::Unknown, ETextureMapMode::Unknown };
 
-	eastl::shared_ptr<FD3D12Texture2DResource> BaseColor;
-	eastl::shared_ptr<FD3D12Texture2DResource> Emissive;
-	eastl::shared_ptr<FD3D12Texture2DResource> Metalic;
-	eastl::shared_ptr<FD3D12Texture2DResource> Roughness;
-	eastl::shared_ptr<FD3D12Texture2DResource> AmbientOcclusion;
+	eastl::shared_ptr<FD3D12Texture2DResource> DiffuseTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> SpecularTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> AmbientTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> EmissiveTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> HeightTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> NormalsTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> ShinessTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> OpacityTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> DisplacementTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> ReflectionTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> BaseColorTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> NormalCameraTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> EmissionColorTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> MetalnessTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> DiffuseRoughnessTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> AmbientOcclusionTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> SheenTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> ClearcoatTexture;
+	eastl::shared_ptr<FD3D12Texture2DResource> TransmissionTexture;
+
+	bool bTwoSided = false;
+	Vector3 ConstantDiffuse{ 1.0f, 1.0f, 1.0f };
+	Vector3 ConstantEmissiveColor{ 1.0f, 1.0f, 1.0f };
+	Vector3 ConstantAmbientColor{ 1.0f, 1.0f, 1.0f };
+	Vector3 ConstantSpecularColor{ 1.0f, 1.0f, 1.0f };
+	float ConstantSpecularFactor{ 1.0f };
+	float ConstantShininess{ 1.0f };
+	Vector3 ConstantTransparentColor{ 1.0f, 1.0f, 1.0f };
+	float ConstantTransparencyFactor{ 1.0f };
+	float ConstantOpacity{ 1.0f };
+	Vector3 ConstantReflectionColor{ 1.0f };
+	float ConstantReflectionFactor{ 1.0f };
+	float ConstantBumpFactor{ 1.0f };
+	float ConstantDisplacementFactor{ 1.0f };
+
+	Vector3 ConstantBaseColor{ 1.0f, 1.0f, 1.0f };
+	float ConstantMetalicFactor{ 1.0f };
+	float ConstantRoughnessFactor{ 0.73f };
+	float ConstantEmissiveIntensity{ 1.0f };
+
+	float UseColorMap{ 0.0f };
+	float UseMetalicMap{ 0.0f };
+	float UseRoughnessMap{ 0.0f };
+	float UseEmissiveMap{ 0.0f };
+	float UseAOMap{ 0.0f };
 };
 
 struct FMeshModel

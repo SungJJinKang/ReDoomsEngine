@@ -69,6 +69,13 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12Co
 				D3D12_RESOURCE_DESC desc = {};
 				desc.Width = static_cast<UINT>(Metadata.width);
 				desc.Height = static_cast<UINT>(Metadata.height);
+
+				if (DXGIFormat == DXGI_FORMAT::DXGI_FORMAT_BC5_UNORM)
+				{
+					desc.Width = Align(desc.Width, 4);
+					desc.Height = Align(desc.Height, 4);
+				}
+
 				desc.MipLevels = static_cast<UINT16>(Metadata.mipLevels);
 				desc.DepthOrArraySize = (Metadata.dimension == TEX_DIMENSION_TEXTURE3D)
 					? static_cast<UINT16>(Metadata.depth)

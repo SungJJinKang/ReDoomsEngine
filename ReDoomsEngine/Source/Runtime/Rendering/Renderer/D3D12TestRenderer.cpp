@@ -28,19 +28,27 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 );
 
 
-DEFINE_SHADER(MeshDrawVS, "MeshDraw.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
+DEFINE_SHADER(MeshDrawVS, "MeshDrawVS.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_SRV_VARIABLE(GPrimitiveSceneData, EShaderParameterResourceType::StructuredBuffer)
 	)
 );
 
-DEFINE_SHADER(MeshDrawPS, "MeshDraw.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+DEFINE_SHADER(DefaultMeshDrawPS, "DefaultMeshDrawPS.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_SRV_VARIABLE(BaseColor, EShaderParameterResourceType::Texture)
 		ADD_SHADER_SRV_VARIABLE(Emissive, EShaderParameterResourceType::Texture)
 		ADD_SHADER_SRV_VARIABLE(Metalic, EShaderParameterResourceType::Texture)
 		ADD_SHADER_SRV_VARIABLE(Roughness, EShaderParameterResourceType::Texture)
 		ADD_SHADER_SRV_VARIABLE(AmbientOcclusion, EShaderParameterResourceType::Texture)
+	)
+);
+
+DEFINE_SHADER(SponzaMeshDrawPS, "SponzaMeshDrawPS.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+		ADD_SHADER_SRV_VARIABLE(BaseColor, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(Metalic, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE(Roughness, EShaderParameterResourceType::Texture)
 	)
 );
 
@@ -113,13 +121,11 @@ void D3D12TestRenderer::SceneSetup()
 		MeshDrawArgument.StartInstanceLocation = 0;
 		
 		auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
-		auto MeshDrawPSInstance = MeshDrawPS.MakeTemplatedShaderInstance();
+		auto MeshDrawPSInstance = SponzaMeshDrawPS.MakeTemplatedShaderInstance();
 
-		MeshDrawPSInstance->Parameter.BaseColor = Model->Material.BaseColor ? Model->Material.BaseColor->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.Emissive = Model->Material.Emissive ? Model->Material.Emissive->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.Metalic = Model->Material.Metalic ? Model->Material.Metalic->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.Roughness = Model->Material.Roughness ? Model->Material.Roughness->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.AmbientOcclusion = Model->Material.AmbientOcclusion ? Model->Material.AmbientOcclusion->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.BaseColor = Model->Material.BaseColorTexture ? Model->Material.BaseColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.Metalic = Model->Material.MetalnessTexture ? Model->Material.MetalnessTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.Roughness = Model->Material.DiffuseRoughnessTexture ? Model->Material.DiffuseRoughnessTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 
 		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 		ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;

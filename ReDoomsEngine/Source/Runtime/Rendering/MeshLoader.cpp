@@ -244,13 +244,28 @@ eastl::vector<eastl::shared_ptr<FMeshModel>> FMeshLoader::LoadFromMeshFile(FD3D1
 			
 			const aiMaterial* const AssimpMaterial = AssimpScene->mMaterials[AssimpMesh->mMaterialIndex];
 
+			Material.MaterialName = AssimpMaterial->GetName().C_Str();
+
             aiTextureType TextureTypes[] = {
-                aiTextureType::aiTextureType_BASE_COLOR,
+                aiTextureType::aiTextureType_DIFFUSE,
+                aiTextureType::aiTextureType_SPECULAR,
+				aiTextureType::aiTextureType_AMBIENT,
+				aiTextureType::aiTextureType_EMISSIVE,
+				aiTextureType::aiTextureType_HEIGHT,
+				aiTextureType::aiTextureType_NORMALS,
+				aiTextureType::aiTextureType_SHININESS,
+				aiTextureType::aiTextureType_OPACITY,
+				aiTextureType::aiTextureType_DISPLACEMENT,
+				aiTextureType::aiTextureType_REFLECTION,
+				aiTextureType::aiTextureType_BASE_COLOR,
 				aiTextureType::aiTextureType_NORMAL_CAMERA,
 				aiTextureType::aiTextureType_EMISSION_COLOR,
 				aiTextureType::aiTextureType_METALNESS,
 				aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS,
 				aiTextureType::aiTextureType_AMBIENT_OCCLUSION,
+				aiTextureType::aiTextureType_SHEEN,
+				aiTextureType::aiTextureType_CLEARCOAT,
+				aiTextureType::aiTextureType_TRANSMISSION
             };
 
 			for (uint32_t TextureTypeIndex = 0; TextureTypeIndex < ARRAY_LENGTH(TextureTypes); ++TextureTypeIndex)
@@ -307,31 +322,200 @@ eastl::vector<eastl::shared_ptr<FMeshModel>> FMeshLoader::LoadFromMeshFile(FD3D1
 							D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE
 						);
 
-						switch (TextureType)
-						{
-							case aiTextureType::aiTextureType_BASE_COLOR:
-								Material.BaseColor = TextureResource;
-								break;
-							case aiTextureType::aiTextureType_EMISSION_COLOR:
-								Material.Emissive = TextureResource;
-								break;
-							case aiTextureType::aiTextureType_METALNESS:
-								Material.Metalic = TextureResource;
-								break;
-							case aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS:
-								Material.Roughness = TextureResource;
-								break;
-							case aiTextureType::aiTextureType_AMBIENT_OCCLUSION:
-								Material.AmbientOcclusion = TextureResource;
-								break;
-							default:
-								EA_ASSUME(false);
-								break;
+                        switch (TextureType)
+                        {
+						case aiTextureType::aiTextureType_DIFFUSE:
+							Material.DiffuseTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_SPECULAR:
+							Material.SpecularTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_AMBIENT:
+							Material.AmbientTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_EMISSIVE:
+							Material.EmissiveTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_HEIGHT:
+							Material.HeightTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_NORMALS:
+							Material.NormalsTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_SHININESS:
+							Material.ShinessTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_OPACITY:
+							Material.OpacityTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_DISPLACEMENT:
+							Material.DisplacementTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_REFLECTION:
+							Material.ReflectionTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_BASE_COLOR:
+							Material.BaseColorTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_NORMAL_CAMERA:
+							Material.NormalCameraTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_EMISSION_COLOR:
+							Material.EmissionColorTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_METALNESS:
+							Material.MetalnessTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS:
+							Material.DiffuseRoughnessTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_AMBIENT_OCCLUSION:
+							Material.AmbientOcclusionTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_SHEEN:
+							Material.SheenTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_CLEARCOAT:
+							Material.ClearcoatTexture = TextureResource;
+							break;
+						case aiTextureType::aiTextureType_TRANSMISSION:
+							Material.TransmissionTexture = TextureResource;
+							break;
+						default:
+							EA_ASSUME(false);
+							break;
 						}
 					}
                 }
             }
 
+			AssimpMaterial->Get(AI_MATKEY_TWOSIDED, Material.bTwoSided);
+
+			aiColor3D DiffuseColor;
+			if (AssimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, DiffuseColor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantDiffuse = Vector3(DiffuseColor.r, DiffuseColor.g, DiffuseColor.b);
+			}
+
+			aiColor3D SpecularColor;
+			if (AssimpMaterial->Get(AI_MATKEY_COLOR_SPECULAR, SpecularColor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantSpecularColor = Vector3(SpecularColor.r, SpecularColor.g, SpecularColor.b);
+			}
+
+			float SpecularFactor;
+			if (AssimpMaterial->Get(AI_MATKEY_SHININESS_STRENGTH, SpecularFactor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantSpecularFactor = SpecularFactor;
+			}
+
+			float Shiness;
+			if (AssimpMaterial->Get(AI_MATKEY_SHININESS, Shiness) == aiReturn_SUCCESS)
+			{
+				Material.ConstantShininess = Shiness;
+			}
+
+			aiColor3D Transparent;
+			if (AssimpMaterial->Get(AI_MATKEY_COLOR_TRANSPARENT, Transparent) == aiReturn_SUCCESS)
+			{
+				Material.ConstantTransparentColor = Vector3(Transparent.r, Transparent.g, Transparent.b);
+			}
+
+			float TransparentFactor;
+			if (AssimpMaterial->Get(AI_MATKEY_TRANSPARENCYFACTOR, TransparentFactor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantTransparencyFactor = TransparentFactor;
+			}
+
+			float Opacity;
+			if (AssimpMaterial->Get(AI_MATKEY_OPACITY, Opacity) == aiReturn_SUCCESS)
+			{
+				Material.ConstantOpacity = Opacity;
+			}
+
+			aiColor3D ReflectionColor;
+			if (AssimpMaterial->Get(AI_MATKEY_COLOR_REFLECTIVE, ReflectionColor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantReflectionColor = Vector3(ReflectionColor.r, ReflectionColor.g, ReflectionColor.b);
+			}
+
+			float ReflectionFactor;
+			if (AssimpMaterial->Get(AI_MATKEY_REFLECTIVITY, ReflectionFactor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantReflectionFactor = ReflectionFactor;
+			}
+
+			float BumpFactor;
+			if (AssimpMaterial->Get(AI_MATKEY_BUMPSCALING, BumpFactor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantBumpFactor = BumpFactor;
+			}
+
+			aiColor3D BaseColor;
+			if (AssimpMaterial->Get(AI_MATKEY_BASE_COLOR, BumpFactor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantBaseColor = Vector3(BaseColor.r, BaseColor.g, BaseColor.b);
+			}
+
+			float UseColorMap;
+			if (AssimpMaterial->Get(AI_MATKEY_USE_COLOR_MAP, UseColorMap) == aiReturn_SUCCESS)
+			{
+				Material.UseColorMap = UseColorMap;
+			}
+
+			float MetalicFactor;
+			if (AssimpMaterial->Get(AI_MATKEY_METALLIC_FACTOR, MetalicFactor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantMetalicFactor = MetalicFactor;
+			}
+
+			float UseMetalicMap;
+			if (AssimpMaterial->Get(AI_MATKEY_USE_METALLIC_MAP, UseMetalicMap) == aiReturn_SUCCESS)
+			{
+				Material.UseMetalicMap = UseMetalicMap;
+			}
+
+			float RoughnessFactor;
+			if (AssimpMaterial->Get(AI_MATKEY_ROUGHNESS_FACTOR, RoughnessFactor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantRoughnessFactor = RoughnessFactor;
+			}
+
+			float UseRoughnessMap;
+			if (AssimpMaterial->Get(AI_MATKEY_USE_ROUGHNESS_MAP, UseRoughnessMap) == aiReturn_SUCCESS)
+			{
+				Material.UseRoughnessMap = UseRoughnessMap;
+			}
+
+			float EmissiveIntensity;
+			if (AssimpMaterial->Get(AI_MATKEY_EMISSIVE_INTENSITY, EmissiveIntensity) == aiReturn_SUCCESS)
+			{
+				Material.ConstantEmissiveIntensity = EmissiveIntensity;
+			}
+
+			aiColor3D EmissiveColor;
+			if (AssimpMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, EmissiveColor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantEmissiveColor = Vector3(EmissiveColor.r, EmissiveColor.g, EmissiveColor.b);
+			}
+
+			float UseEmissiveMap;
+			if (AssimpMaterial->Get(AI_MATKEY_USE_EMISSIVE_MAP, UseEmissiveMap) == aiReturn_SUCCESS)
+			{
+				Material.UseEmissiveMap = UseEmissiveMap;
+			}
+
+			aiColor3D AmbientColor;
+			if (AssimpMaterial->Get(AI_MATKEY_COLOR_AMBIENT, AmbientColor) == aiReturn_SUCCESS)
+			{
+				Material.ConstantAmbientColor = Vector3(AmbientColor.r, AmbientColor.g, AmbientColor.b);
+			}
+
+			float UseAOMap;
+			if (AssimpMaterial->Get(AI_MATKEY_USE_AO_MAP, UseAOMap) == aiReturn_SUCCESS)
+			{
+				Material.UseAOMap = UseAOMap;
+			}
         }
 
 		RD_LOG(ELogVerbosity::Log, EA_WCHAR("Success to load Mesh(%s)"), InRelativePath);

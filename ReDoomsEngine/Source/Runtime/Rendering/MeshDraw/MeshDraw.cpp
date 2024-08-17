@@ -26,7 +26,6 @@ void FMeshDraw::PrepareDraw(FD3D12CommandContext& InCommandContext, FD3D12Consta
 	InCommandContext.StateCache.SetIndexBufferView(IndexBufferView);
 
 	InCommandContext.StateCache.SetPSO(PSO);
-
 }
 
 void FMeshDraw::Draw(FD3D12CommandContext& InCommandContext, FD3D12ConstantBufferResource& InPrimitiveIDBuffer)
