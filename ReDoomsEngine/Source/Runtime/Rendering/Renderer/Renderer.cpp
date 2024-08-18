@@ -2,6 +2,7 @@
 
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "Editor/ImguiHelper.h"
+#include "GlobalResources.h"
 
 void FFrameResourceContainer::Init(eastl::shared_ptr<FD3D12OnlineDescriptorHeapContainer> InOnlineDescriptorHeap)
 {
@@ -62,6 +63,7 @@ void FRenderer::Init()
 	RenderScene.PrimitiveList.Reserve(500);
 
 	InitDummyTexture(CurrentFrameCommandContext);
+	InitGlobalResources(CurrentFrameCommandContext);
 }
 
 void FRenderer::SceneSetup()

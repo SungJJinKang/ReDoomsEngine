@@ -2,7 +2,7 @@
 
 #include "Common.hlsl"
 
-#include "MeshDrawCommon.hlsl"
+#include "MeshDrawVS.hlsl"
 #include "SceneTextures.hlsl"
 
 Texture2D<float4> BaseColor;
@@ -12,7 +12,7 @@ Texture2D<float> Roughness;
 Texture2D<float> AmbientOcclusion;
 
 void MainPS(
-    PSInput Input, 
+    MeshDrawPSInput Input, 
     out float4 OutGBufferA : SV_Target0, 
     out float4 OutGBufferB : SV_Target1, 
     out float4 OutGBufferC : SV_Target2, 

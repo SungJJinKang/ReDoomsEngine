@@ -162,7 +162,7 @@ struct FMaterial
 	float ConstantDisplacementFactor{ 1.0f };
 
 	Vector3 ConstantBaseColor{ 1.0f, 1.0f, 1.0f };
-	float ConstantMetalicFactor{ 1.0f };
+	float ConstantMetalicFactor{ 0.0f };
 	float ConstantRoughnessFactor{ 0.73f };
 	float ConstantEmissiveIntensity{ 1.0f };
 

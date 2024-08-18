@@ -102,6 +102,7 @@ eastl::vector<eastl::shared_ptr<FMeshModel>> FMeshLoader::LoadFromMeshFile(FD3D1
 
             eastl::wstring MeshName = AssimpMesh->mName.C_Str() ? ANSI_TO_WCHAR(AssimpMesh->mName.C_Str()) : InRelativePath;
             
+			// @TODO : Pool mesh vertex buffer
             Mesh.MeshName = MeshName;
             Mesh.PositionBuffer = FD3D12ResourceAllocator::GetInstance()->AllocateStaticVertexBuffer(InCommandContext,
                 reinterpret_cast<const uint8_t*>(AssimpMesh->mVertices), sizeof(aiVector3D) * AssimpMesh->mNumVertices, sizeof(aiVector3D), AssimpImporter);

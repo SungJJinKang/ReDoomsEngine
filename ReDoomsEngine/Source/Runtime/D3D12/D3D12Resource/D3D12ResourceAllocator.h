@@ -44,13 +44,20 @@ public:
 
 	virtual void OnStartFrame(FD3D12CommandContext& InCommandContext);
 	virtual void OnEndFrame(FD3D12CommandContext& InCommandContext);
+	
+	eastl::shared_ptr<FD3D12VertexIndexBufferResource> AllocateStaticVertexBuffer(
+		FD3D12CommandContext& InCommandContext,
+		const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes);
+	eastl::shared_ptr<FD3D12VertexIndexBufferResource> AllocateStaticIndexBuffer(
+		FD3D12CommandContext& InCommandContext,
+		const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes);
 
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> AllocateStaticVertexBuffer(
 		FD3D12CommandContext& InCommandContext,
-		const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes, eastl::shared_ptr<Assimp::Importer> Importer = {});
+		const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes, eastl::shared_ptr<Assimp::Importer> Importer);
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> AllocateStaticIndexBuffer(
 		FD3D12CommandContext& InCommandContext,
-		const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes, eastl::shared_ptr<Assimp::Importer> Importer = {});
+		const uint8_t* const Data, const size_t InSize, const uint32_t InDefaultStrideInBytes, eastl::shared_ptr<Assimp::Importer> Importer);
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> AllocateStaticVertexBuffer(
 		FD3D12CommandContext& InCommandContext,
 		eastl::unique_ptr<FD3D12SubresourceContainer>&& SubresourceDataList, const uint32_t InDefaultStrideInBytes);

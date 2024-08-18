@@ -14,6 +14,8 @@ class FD3D12StateCache
 public:
 
 	void SetPSO(const FD3D12PSOInitializer& InPSOInitializer);
+	void SetPSODrawDesc(const FD3D12PSOInitializer::FDrawDesc& InDrawDesc);
+	void SetPSOPassDesc(const FD3D12PSOInitializer::FPassDesc& InPassDesc);
 	void SetPSOInputLayout(const D3D12_INPUT_LAYOUT_DESC& InputLayoutDesc);
 	void SetRasterizeDesc(const CD3DX12_RASTERIZER_DESC& RasterizeDesc);
 	void SetBlendDesc(const CD3DX12_BLEND_DESC& BlendDesc);

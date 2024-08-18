@@ -2,15 +2,19 @@
 
 #include "Common.hlsl"
 
-#include "MeshDrawCommon.hlsl"
+#include "MeshDrawVS.hlsl"
 #include "SceneTextures.hlsl"
 
-Texture2D<float4> BaseColor;
-Texture2D<float> Metalic;
-Texture2D<float> Roughness;
+Texture2D<float3> DiffuseTexture;
+Texture2D<float3> SpecularTexture;
+Texture2D<float2> NormalTexture;
+Texture2D<float3> EmissiveTexture;
+
+float Metalic;
+float Roughness;
 
 void MainPS(
-    PSInput Input, 
+    MeshDrawPSInput Input, 
     out float4 OutGBufferA : SV_Target0, 
     out float4 OutGBufferB : SV_Target1, 
     out float4 OutGBufferC : SV_Target2, 
@@ -22,9 +26,11 @@ void MainPS(
 
     FGBufferData GBufferData;
     GBufferData.WorldNormal = Input.WorldNormal;
-    GBufferData.BaseColor = BaseColor.Sample(StaticPointClampSampler, Input.UV0).xyz;
-    GBufferData.Metalic = Metalic.Sample(StaticPointClampSampler, Input.UV0).x;
-    GBufferData.Roughness = Roughness.Sample(StaticPointClampSampler, Input.UV0).x;
+    GBufferData.DiffuseColor = DiffuseTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
+    GBufferData.SpecularColor = SpecularTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
+    GBufferData.EmissiveColor = EmissiveTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
+    GBufferData.Metalic = Metalic;
+    GBufferData.Roughness = Roughness;
     GBufferData.Depth = Depth;
 
     float4 GBufferA;

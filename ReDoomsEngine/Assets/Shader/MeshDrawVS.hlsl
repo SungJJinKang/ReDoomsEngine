@@ -5,7 +5,7 @@
 #include "MeshDrawCommon.hlsl"
 #include "SceneTextures.hlsl"
 
-PSInput MainVS(
+MeshDrawPSInput MeshDrawVS(
     float3 Position : POSITION, 
     float3 Normal : NORMAL, 
     float3 Tangent : TANGENT, 
@@ -18,7 +18,7 @@ PSInput MainVS(
     uint PrimitiveID : PRIMITIVEID
 )
 {
-    PSInput Result;
+    MeshDrawPSInput Result;
 
     FPrimitiveSceneData PrimitiveSceneData = GetPrimitiveIdSceneData(PrimitiveID);
     float4 NewPosition = float4(Position, 1.0f);

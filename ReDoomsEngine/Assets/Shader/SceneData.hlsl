@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿#ifndef __SCENEDATA_HLSLI__
+#define __SCENEDATA_HLSLI__
 
 struct FPrimitiveSceneData
 {
@@ -51,3 +52,5 @@ FPrimitiveSceneData GetPrimitiveIdSceneData(uint PrimitiveId)
 
 	return SceneData;
 }
+
+#endif // __SCENEDATA_HLSLI__

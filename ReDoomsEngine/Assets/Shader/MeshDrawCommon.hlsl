@@ -2,7 +2,7 @@
 
 #include "SceneData.hlsl"
 
-struct PSInput
+struct MeshDrawPSInput
 {
     float4 Position : SV_POSITION;
     float3 WorldPosition : POSITION;

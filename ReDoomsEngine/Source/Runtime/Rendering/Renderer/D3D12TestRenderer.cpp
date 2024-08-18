@@ -4,6 +4,7 @@
 #include "MeshLoader.h"
 #include "RenderScene.h"
 #include "SceneData/GPUScene.h"
+#include "GlobalResources.h"
 
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
@@ -27,28 +28,49 @@ DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShad
 	)
 );
 
-
-DEFINE_SHADER(MeshDrawVS, "MeshDrawVS.hlsl", "MainVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
+DEFINE_SHADER(MeshDrawVS, "MeshDrawVS.hlsl", "MeshDrawVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_SRV_VARIABLE(GPrimitiveSceneData, EShaderParameterResourceType::StructuredBuffer)
 	)
 );
 
-DEFINE_SHADER(DefaultMeshDrawPS, "DefaultMeshDrawPS.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
-	DEFINE_SHADER_PARAMTERS(
-		ADD_SHADER_SRV_VARIABLE(BaseColor, EShaderParameterResourceType::Texture)
-		ADD_SHADER_SRV_VARIABLE(Emissive, EShaderParameterResourceType::Texture)
-		ADD_SHADER_SRV_VARIABLE(Metalic, EShaderParameterResourceType::Texture)
-		ADD_SHADER_SRV_VARIABLE(Roughness, EShaderParameterResourceType::Texture)
-		ADD_SHADER_SRV_VARIABLE(AmbientOcclusion, EShaderParameterResourceType::Texture)
-	)
-);
+// 
+// DEFINE_SHADER(DefaultMeshDrawPS, "DefaultMeshDrawPS.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+// 	DEFINE_SHADER_PARAMTERS(
+// 		ADD_SHADER_SRV_VARIABLE(BaseColor, EShaderParameterResourceType::Texture)
+// 		ADD_SHADER_SRV_VARIABLE(Emissive, EShaderParameterResourceType::Texture)
+// 		ADD_SHADER_SRV_VARIABLE(Metalic, EShaderParameterResourceType::Texture)
+// 		ADD_SHADER_SRV_VARIABLE(Roughness, EShaderParameterResourceType::Texture)
+// 		ADD_SHADER_SRV_VARIABLE(AmbientOcclusion, EShaderParameterResourceType::Texture)
+// 	)
+// );
 
 DEFINE_SHADER(SponzaMeshDrawPS, "SponzaMeshDrawPS.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
-		ADD_SHADER_SRV_VARIABLE(BaseColor, EShaderParameterResourceType::Texture)
-		ADD_SHADER_SRV_VARIABLE(Metalic, EShaderParameterResourceType::Texture)
-		ADD_SHADER_SRV_VARIABLE(Roughness, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(DiffuseTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(SpecularTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(NormalTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(EmissiveTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(float, Metalic)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(float, Roughness)
+		)
+	)
+);
+
+
+DEFINE_SHADER(ScreenDrawVS, "ScreenDrawVS.hlsl", "ScreenDrawVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, PosScaleUVScale)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, InvTargetSizeAndTextureSize)
+		)
+	)
+);
+
+DEFINE_SHADER(DeferredShadingPS, "DeferredShadingPS.hlsl", "DeferredShadingPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+		ADD_GBUFFER_SHADER_SRV()
 	)
 );
 
@@ -71,14 +93,18 @@ void D3D12TestRenderer::CreateRenderTargets()
 	{
 		float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		GBufferManager.GBufferA = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
+		GBufferManager.GBufferA->SetDebugNameToResource(EA_WCHAR("GBufferA"));
 		GBufferManager.GBufferB = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
+		GBufferManager.GBufferB->SetDebugNameToResource(EA_WCHAR("GBufferB"));
 		GBufferManager.GBufferC = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
+		GBufferManager.GBufferC->SetDebugNameToResource(EA_WCHAR("GBufferC"));
 		GBufferManager.GBufferD = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
+		GBufferManager.GBufferD->SetDebugNameToResource(EA_WCHAR("GBufferD"));
 		GBufferManager.Depth = FD3D12ResourceAllocator::GetInstance()->AllocateDepthStencilTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
+		GBufferManager.Depth->SetDebugNameToResource(EA_WCHAR("Depth"));
 	}
 	
-	FD3D12PSOInitializer::FPassDesc BasePassPSODesc;
-	MEM_ZERO(BasePassPSODesc);
+	FD3D12PSOInitializer::FPassDesc BasePassPSODesc{};
 	BasePassPSODesc.Desc.SampleMask = UINT_MAX;
 	BasePassPSODesc.Desc.NumRenderTargets = 4;
 	BasePassPSODesc.Desc.RTVFormats[0] = GBufferManager.GBufferA->GetDesc().Format;
@@ -101,12 +127,22 @@ void D3D12TestRenderer::SceneSetup()
 {
 	FRenderer::SceneSetup();
 
-	Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"));
+	{
+		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"));
+		for (eastl::shared_ptr<FMeshModel>& Model : Level.ModelList)
+		{
+			if (Model->Material.MaterialName.find("Metal") != Model->Material.MaterialName.npos)
+			{
+				// Bistro.fbx doesn't contains metal texture and factor.
+				// So if material name contains "Metal", we set metalic factor to 1.0f.
+				Model->Material.ConstantMetalicFactor = 1.0f;
+			}
+		}
+	}
 
 	for (eastl::shared_ptr<FMeshModel>& Model : Level.ModelList)
 	{
-		FD3D12PSOInitializer::FDrawDesc DrawDesc;
-		MEM_ZERO(DrawDesc);
+		FD3D12PSOInitializer::FDrawDesc DrawDesc{};
 
 		D3D12_INPUT_LAYOUT_DESC InputDesc{ FMesh::InputElementDescs, _countof(FMesh::InputElementDescs) };
 		CurrentFrameCommandContext.StateCache.SetPSOInputLayout(InputDesc);
@@ -120,12 +156,18 @@ void D3D12TestRenderer::SceneSetup()
 		MeshDrawArgument.BaseVertexLocation = 0;
 		MeshDrawArgument.StartInstanceLocation = 0;
 		
+		// @TODO : Pool shader instance
 		auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 		auto MeshDrawPSInstance = SponzaMeshDrawPS.MakeTemplatedShaderInstance();
 
-		MeshDrawPSInstance->Parameter.BaseColor = Model->Material.BaseColorTexture ? Model->Material.BaseColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.Metalic = Model->Material.MetalnessTexture ? Model->Material.MetalnessTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.Roughness = Model->Material.DiffuseRoughnessTexture ? Model->Material.DiffuseRoughnessTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.DiffuseTexture = Model->Material.DiffuseTexture ? Model->Material.DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.SpecularTexture = Model->Material.SpecularTexture ? Model->Material.SpecularTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.NormalTexture = Model->Material.NormalsTexture ? Model->Material.NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.EmissiveTexture = Model->Material.EmissionColorTexture ? Model->Material.EmissionColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Metalic
+			= Model->Material.ConstantMetalicFactor;
+		MeshDrawPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Roughness
+			= Model->Material.ConstantRoughnessFactor;
 
 		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 		ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
@@ -244,6 +286,101 @@ bool D3D12TestRenderer::Draw()
 			}
 		}
 	}
+
+	{
+		eastl::shared_ptr<FD3D12Texture2DResource>& SwapChainRenderTarget = SwapChain->GetRenderTarget(GCurrentBackbufferIndex);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = SwapChainRenderTarget->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
+		CurrentFrameCommandContext.StateCache.SetRenderTargets({ SwapChainRenderTarget.get() });
+		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(nullptr);
+		
+		eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> VertexBufferViewList{};
+		VertexBufferViewList.emplace_back(GScreenDrawPositionBuffer->GetVertexBufferView());
+		VertexBufferViewList.emplace_back(GScreenDrawUVBuffer->GetVertexBufferView());
+
+		CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(VertexBufferViewList);
+		CurrentFrameCommandContext.StateCache.SetIndexBufferView(GScreenDrawIndexBuffer->GetIndexBufferView());
+
+		FD3D12PSOInitializer::FDrawDesc DrawDesc;
+
+		static const D3D12_INPUT_ELEMENT_DESC ScreenDrawInputElementDescs[]{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		};
+
+		D3D12_INPUT_LAYOUT_DESC InputDesc{ ScreenDrawInputElementDescs, _countof(ScreenDrawInputElementDescs) };
+		DrawDesc.Desc.InputLayout = InputDesc;
+		DrawDesc.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+		FMeshDrawArgument MeshDrawArgument;
+		MeshDrawArgument.IndexCountPerInstance = 6;
+		MeshDrawArgument.InstanceCount = 1;
+		MeshDrawArgument.StartIndexLocation = 0;
+		MeshDrawArgument.BaseVertexLocation = 0;
+		MeshDrawArgument.StartInstanceLocation = 0;
+
+		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
+			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferA->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
+			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferB->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
+			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferC->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
+			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferD->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+
+		auto ScreenDrawVSInstance = ScreenDrawVS.MakeTemplatedShaderInstance();
+		auto DeferredShadingPSInstance = DeferredShadingPS.MakeTemplatedShaderInstance();
+
+		ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
+			= Vector4{ static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()), static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
+
+		ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.InvTargetSizeAndTextureSize 
+			= Vector4{ 1.0f / SwapChain->GetWidth(), 1.0f / SwapChain->GetHeight(), 1.0f / static_cast<float>(GBufferManager.GBufferA->GetDesc().Width), 1.0f / static_cast<float>(GBufferManager.GBufferA->GetDesc().Height) };
+		DeferredShadingPSInstance->Parameter.GBufferATexture = GBufferManager.GBufferA->GetTextureSRV();
+		DeferredShadingPSInstance->Parameter.GBufferBTexture = GBufferManager.GBufferB->GetTextureSRV();
+		DeferredShadingPSInstance->Parameter.GBufferCTexture = GBufferManager.GBufferC->GetTextureSRV();
+		DeferredShadingPSInstance->Parameter.GBufferDTexture = GBufferManager.GBufferD->GetTextureSRV();
+
+		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
+		ShaderList[EShaderFrequency::Vertex] = ScreenDrawVSInstance;
+		ShaderList[EShaderFrequency::Pixel] = DeferredShadingPSInstance;
+		FBoundShaderSet BoundShaderSet{ ShaderList };
+		DrawDesc.BoundShaderSet = BoundShaderSet;
+		CurrentFrameCommandContext.StateCache.SetPSODrawDesc(DrawDesc);
+
+		FD3D12PSOInitializer::FPassDesc BasePassPSODesc{};
+		BasePassPSODesc.Desc.SampleMask = UINT_MAX;
+		BasePassPSODesc.Desc.NumRenderTargets = 1;
+		BasePassPSODesc.Desc.RTVFormats[0] = SwapChainRenderTarget->GetDesc().Format;
+		BasePassPSODesc.Desc.SampleDesc.Count = 1;
+		BasePassPSODesc.Desc.BlendState = CD3DX12_BLEND_DESC{ D3D12_DEFAULT };
+		BasePassPSODesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC{ D3D12_DEFAULT };
+		BasePassPSODesc.Desc.RasterizerState.FrontCounterClockwise = true;
+		BasePassPSODesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
+		BasePassPSODesc.Desc.DepthStencilState.DepthEnable = true;
+		BasePassPSODesc.Desc.DepthStencilState.StencilEnable = false;
+
+		CurrentFrameCommandContext.StateCache.SetPSOPassDesc(BasePassPSODesc);
+		CurrentFrameCommandContext.StateCache.SetDepthEnable(false);
+
+		CurrentFrameCommandContext.DrawIndexedInstanced(
+			MeshDrawArgument.IndexCountPerInstance,
+			MeshDrawArgument.InstanceCount,
+			MeshDrawArgument.StartIndexLocation,
+			MeshDrawArgument.BaseVertexLocation,
+			MeshDrawArgument.StartInstanceLocation
+		);
+
+		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
+			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferA->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
+			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferB->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
+			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferC->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
+			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferD->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	}
+
+
 	return true;
 }
 

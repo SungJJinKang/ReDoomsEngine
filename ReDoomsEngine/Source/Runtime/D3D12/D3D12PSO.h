@@ -18,9 +18,9 @@ public:
 
         struct FDesc
         {
-            D3D12_INPUT_LAYOUT_DESC InputLayout;
-            D3D12_CACHED_PIPELINE_STATE CachedPSO;
-            D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType;
+			D3D12_INPUT_LAYOUT_DESC InputLayout{};
+			D3D12_CACHED_PIPELINE_STATE CachedPSO{};
+			D3D12_PRIMITIVE_TOPOLOGY_TYPE PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
             bool operator==(const FDesc& rhs) const
             {
@@ -61,15 +61,15 @@ public:
             D3D12_STREAM_OUTPUT_DESC StreamOutput;
             UINT SampleMask;
             D3D12_INDEX_BUFFER_STRIP_CUT_VALUE IBStripCutValue;
-            UINT NumRenderTargets;
-            DXGI_FORMAT RTVFormats[8];
-            DXGI_FORMAT DSVFormat;
+            UINT NumRenderTargets = 0;
+			DXGI_FORMAT RTVFormats[8]{ DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN };
+            DXGI_FORMAT DSVFormat = DXGI_FORMAT_UNKNOWN;
             DXGI_SAMPLE_DESC SampleDesc;
             UINT NodeMask;
 			D3D12_PIPELINE_STATE_FLAGS Flags;
-			CD3DX12_BLEND_DESC BlendState;
-			CD3DX12_RASTERIZER_DESC RasterizerState;
-			CD3DX12_DEPTH_STENCIL_DESC DepthStencilState;
+			CD3DX12_BLEND_DESC BlendState{ D3D12_DEFAULT };
+			CD3DX12_RASTERIZER_DESC RasterizerState{ D3D12_DEFAULT };
+			CD3DX12_DEPTH_STENCIL_DESC DepthStencilState{ D3D12_DEFAULT };
 
 			inline bool operator==(const FDesc& rhs) const
 			{

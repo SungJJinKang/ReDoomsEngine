@@ -5,10 +5,17 @@
 #include "Renderer/Renderer.h"
 #include "D3D12CommandList.h"
 
+FD3D12VertexIndexBufferSubresourceContainer::FD3D12VertexIndexBufferSubresourceContainer(const uint8_t* const InData, const size_t InSize)
+	: ShadowDataStorage(InSize), Data(ShadowDataStorage.data()), Size(InSize), AssimpImporter()
+{
+	EA::StdC::Memcpy(ShadowDataStorage.data(), InData, InSize);
+
+	InitSubresourceData();
+}
+
 FD3D12VertexIndexBufferSubresourceContainer::FD3D12VertexIndexBufferSubresourceContainer(const uint8_t* const InData, const size_t InSize, eastl::shared_ptr<Assimp::Importer>& InAssimpImporter)
 	: ShadowDataStorage(), Data(InData), Size(InSize), AssimpImporter(InAssimpImporter)
 {
-	EA_ASSERT_MSG(AssimpImporter, "AssimpImporter is null. To prevent data variable from being dangling pointer, original data should be maintained");
 	InitSubresourceData();
 }
 

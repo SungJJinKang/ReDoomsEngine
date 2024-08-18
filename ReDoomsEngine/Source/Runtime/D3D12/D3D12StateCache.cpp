@@ -99,8 +99,7 @@ void FD3D12StateCache::SetStencilEnable(const bool bInEnable)
 
 void FD3D12StateCache::SetBoundShaderSet(const FBoundShaderSet& InBoundShaderSet)
 {
-	EA_ASSERT(InBoundShaderSet.GetCachedHash().IsValid());
-	if (CachedPSOInitializer.DrawDesc.BoundShaderSet.GetCachedHash() != InBoundShaderSet.GetCachedHash())
+	if (CachedPSOInitializer.DrawDesc.BoundShaderSet != InBoundShaderSet)
 	{
 		CachedPSOInitializer.DrawDesc.BoundShaderSet = InBoundShaderSet;
 		bIsPSODirty = true;
@@ -116,18 +115,33 @@ void FD3D12StateCache::SetPSO(const FD3D12PSOInitializer& InPSOInitializer)
 {
 	SCOPED_CPU_TIMER(FD3D12StateCache_SetPSO)
 
-	EA_ASSERT(InPSOInitializer.GetCachedHash() != 0);
-	if (!(CachedPSOInitializer.IsValidHash()) || (CachedPSOInitializer.GetCachedHash() != InPSOInitializer.GetCachedHash()))
+	SetPSODrawDesc(InPSOInitializer.DrawDesc);
+	SetPSOPassDesc(InPSOInitializer.PassDesc);
+	SetBoundShaderSet(InPSOInitializer.DrawDesc.BoundShaderSet);
+}
+
+void FD3D12StateCache::SetPSODrawDesc(const FD3D12PSOInitializer::FDrawDesc& InDrawDesc)
+{
+	if (CachedPSOInitializer.DrawDesc != InDrawDesc)
 	{
-		if (CachedPSOInitializer.DrawDesc.Desc.PrimitiveTopologyType != InPSOInitializer.DrawDesc.Desc.PrimitiveTopologyType)
+		if (CachedPSOInitializer.DrawDesc.Desc.PrimitiveTopologyType != InDrawDesc.Desc.PrimitiveTopologyType)
 		{
 			bIsPrimitiveTopologyDirty = true;
 		}
+		SetBoundShaderSet(InDrawDesc.BoundShaderSet);
 
-		CachedPSOInitializer = InPSOInitializer;
+		CachedPSOInitializer.DrawDesc = InDrawDesc;
 		bIsPSODirty = true;
 	}
-	SetBoundShaderSet(InPSOInitializer.DrawDesc.BoundShaderSet);
+}
+
+void FD3D12StateCache::SetPSOPassDesc(const FD3D12PSOInitializer::FPassDesc& InPassDesc)
+{
+	if (CachedPSOInitializer.PassDesc != InPassDesc)
+	{
+		CachedPSOInitializer.PassDesc = InPassDesc;
+		bIsPSODirty = true;
+	}
 }
 
 void FD3D12StateCache::SetRenderTargets(const eastl::array<FD3D12Texture2DResource*, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT>& InRenderTargets)

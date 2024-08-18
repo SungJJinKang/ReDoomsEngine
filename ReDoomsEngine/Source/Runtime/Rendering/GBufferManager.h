@@ -15,3 +15,8 @@ public:
 
 };
 
+#define ADD_GBUFFER_SHADER_SRV() \
+	ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(GBufferATexture, EShaderParameterResourceType::Texture) \
+	ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(GBufferBTexture, EShaderParameterResourceType::Texture) \
+	ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(GBufferCTexture, EShaderParameterResourceType::Texture) \
+	ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(GBufferDTexture, EShaderParameterResourceType::Texture)
