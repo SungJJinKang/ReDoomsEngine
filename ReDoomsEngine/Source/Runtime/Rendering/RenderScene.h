@@ -55,8 +55,6 @@ struct FPrimitive
 	void SetVisible(const EPass InPass, const bool bInVisible);
 };
 
-bool CanMergeMeshDraw(const FMeshDraw& InMeshDrawA, const FMeshDraw& InMeshDrawB);
-
 class FRenderScene
 {
 public:

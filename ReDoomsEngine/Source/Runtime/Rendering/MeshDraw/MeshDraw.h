@@ -32,7 +32,16 @@ struct FMeshDraw
 	FMeshDrawArgument MeshDrawArgument;
 	eastl::fixed_vector<uint32, 1> PrimitiveIdList;
 
+	uint64 CachedHash;
+
+	void CacheHash();
+
 	void PrepareDraw(FD3D12CommandContext& InCommandContext, FD3D12ConstantBufferResource& InPrimitiveIDBuffer);
 	// This function should be called from render thread
 	void Draw(FD3D12CommandContext& InCommandContext, FD3D12ConstantBufferResource& InPrimitiveIDBuffer);
+
+	bool operator==(const FMeshDraw& rhs) const;
 };
+
+bool CanMergeMeshDraw(const FMeshDraw& InMeshDrawA, const FMeshDraw& InMeshDrawB);
+

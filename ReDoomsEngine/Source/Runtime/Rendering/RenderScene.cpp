@@ -6,60 +6,7 @@
 #include "D3D12Manager.h"
 
 static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
-
-bool CanMergeMeshDraw(const FMeshDraw& InMeshDrawA, const FMeshDraw& InMeshDrawB)
-{
-	bool bCanMerge = true;
-
-	if(InMeshDrawA.PSO.GetCachedHash() != InMeshDrawB.PSO.GetCachedHash())
-	{
-		bCanMerge = false;
-	}
-
-	if (bCanMerge)
-	{
-		if (InMeshDrawA.VertexBufferViewList.size() != InMeshDrawB.VertexBufferViewList.size())
-		{
-			bCanMerge = false;
-		}
-		else
-		{
-			for (uint32_t VertexBufferViewIndex = 0; VertexBufferViewIndex < InMeshDrawA.VertexBufferViewList.size(); ++VertexBufferViewIndex)
-			{
-				if (InMeshDrawA.VertexBufferViewList[VertexBufferViewIndex] != InMeshDrawB.VertexBufferViewList[VertexBufferViewIndex])
-				{
-					bCanMerge = false;
-					break;
-				}
-			}
-		}
-	}
-
-	if (bCanMerge)
-	{
-		if (InMeshDrawA.IndexBufferView != InMeshDrawB.IndexBufferView)
-		{
-			bCanMerge = false;
-		}
-	}
-
-	if (bCanMerge)
-	{
-		if(
-			(InMeshDrawA.MeshDrawArgument.VertexCountPerInstance != InMeshDrawB.MeshDrawArgument.VertexCountPerInstance) ||
-			(InMeshDrawA.MeshDrawArgument.StartVertexLocation != InMeshDrawB.MeshDrawArgument.StartVertexLocation) ||	
-			(InMeshDrawA.MeshDrawArgument.IndexCountPerInstance != InMeshDrawB.MeshDrawArgument.IndexCountPerInstance) ||
-			(InMeshDrawA.MeshDrawArgument.StartIndexLocation != InMeshDrawB.MeshDrawArgument.StartIndexLocation) ||
-			(InMeshDrawA.MeshDrawArgument.BaseVertexLocation != InMeshDrawB.MeshDrawArgument.BaseVertexLocation) ||
-			(InMeshDrawA.MeshDrawArgument.StartInstanceLocation != InMeshDrawB.MeshDrawArgument.StartInstanceLocation)
-		)
-		{
-			bCanMerge = false;
-		}
-	}
-
-	return bCanMerge;
-}
+static TConsoleVariable<bool> GAutoInstancing{ "r.AutoInstancing", false };
 
 void FRenderScene::Init()
 {
@@ -168,6 +115,8 @@ FMeshDraw FRenderScene::CreateMeshDrawForPass(const uint32_t InPrimitiveIndex, c
 	PrimitiveIdList.emplace_back(InPrimitiveIndex);
 	MeshDraw.PrimitiveIdList = PrimitiveIdList;
 	
+	MeshDraw.CacheHash();
+
 	return MeshDraw;
 }
 
@@ -183,43 +132,55 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 	const uint32_t PrimitiveCount = PrimitiveList.VisibleFlagsList[static_cast<uint32_t>(InPass)].size();
 	
 	// Draw!
-	for(uint32_t PrimitiveIndex = 0 ; PrimitiveIndex < PrimitiveCount ; ++PrimitiveIndex)
 	{
-		FMeshDraw NewMeshDraw{};
+		SCOPED_CPU_TIMER(FRenderScene_CreateMeshDrawListForPass_CreateMeshDraw)
 
-		if (GCacheMeshDraw && (PrimitiveList.PrimitiveFlagList[PrimitiveIndex] & EPrimitiveFlag::CacheMeshDrawCommand))
-		{
-			NewMeshDraw = PrimitiveList.CachedMeshDrawList[static_cast<uint32_t>(InPass)][PrimitiveIndex];
-		}
-		else
-		{
-			NewMeshDraw = CreateMeshDrawForPass(PrimitiveIndex, InPass);
-			NewMeshDraw.bIsValid = true;
-		}
-		NewMeshDraw.PSO.PassDesc = Pass.PassPSODesc;
+		eastl::vector_map<FMeshDraw, uint32> MeshDrawMap{};
 
-		bool bMerged = false;
-
-		for (FMeshDraw& MeshDraw : MeshDrawList)
+		for (uint32_t PrimitiveIndex = 0; PrimitiveIndex < PrimitiveCount; ++PrimitiveIndex)
 		{
-			if (CanMergeMeshDraw(MeshDraw, NewMeshDraw))
+			FMeshDraw NewMeshDraw{};
+
+			if (GCacheMeshDraw && (PrimitiveList.PrimitiveFlagList[PrimitiveIndex] & EPrimitiveFlag::CacheMeshDrawCommand))
 			{
-				MeshDraw = MergeMeshDraw(MeshDraw, NewMeshDraw);
-				bMerged = true;
-				break;
+				NewMeshDraw = PrimitiveList.CachedMeshDrawList[static_cast<uint32_t>(InPass)][PrimitiveIndex];
+			}
+			else
+			{
+				NewMeshDraw = CreateMeshDrawForPass(PrimitiveIndex, InPass);
+				NewMeshDraw.bIsValid = true;
+			}
+			NewMeshDraw.PSO.PassDesc = Pass.PassPSODesc;
+
+			bool bMerged = false;
+
+			if (GAutoInstancing)
+			{
+				// TODO : This code is pretty slow. Need to optimize
+				for (FMeshDraw& MeshDraw : MeshDrawList)
+				{
+					if (CanMergeMeshDraw(MeshDraw, NewMeshDraw))
+					{
+						MeshDraw = MergeMeshDraw(MeshDraw, NewMeshDraw);
+						bMerged = true;
+						break;
+					}
+				}
+			}
+
+			if (!bMerged)
+			{
+				MeshDrawList.push_back(NewMeshDraw);
 			}
 		}
-
-		if (!bMerged)
-		{
-			MeshDrawList.push_back(NewMeshDraw);
-		}
 	}
-	//
 
-	for (FMeshDraw& MeshDraw : MeshDrawList)
 	{
-		SetUpShaderInstances(MeshDraw.PSO.DrawDesc.BoundShaderSet.GetShaderInstanceList());
+		SCOPED_CPU_TIMER(FRenderScene_CreateMeshDrawListForPass_SetUpShaderInstances)
+		for (FMeshDraw& MeshDraw : MeshDrawList)
+		{
+			SetUpShaderInstances(MeshDraw.PSO.DrawDesc.BoundShaderSet.GetShaderInstanceList());
+		}
 	}
 
 	return MeshDrawList;

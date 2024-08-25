@@ -87,7 +87,7 @@ public:
 
 	}
 
-	operator Type() const
+	inline operator Type() const
 	{
 		return Data;
 	}
