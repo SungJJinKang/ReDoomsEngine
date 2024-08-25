@@ -101,17 +101,18 @@ void GPUScene::UploadDirtyData(FD3D12CommandContext& InCommandContext, FPrimitiv
 					}
 					PrimitiveSceneData->Flags = InPrimitiveList.PrimitiveFlagList[PrimitiveIndex];
 					PrimitiveSceneData->VisibilityFlags = VisibilityFlags;
-					PrimitiveSceneData->LocalToWorld = InPrimitiveList.CachedLocalToWorldMatrixList[PrimitiveIndex];
-					PrimitiveSceneData->WorldToLocal = InPrimitiveList.CachedLocalToWorldMatrixList[PrimitiveIndex].Invert();
-					PrimitiveSceneData->AABBCenterAndDrawDistance = Vector4{
-						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Center.x,
-						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Center.y,
-						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Center.z,
-						InPrimitiveList.ScaleAndDrawDistanceList[PrimitiveIndex].w };
-					PrimitiveSceneData->AABBExtent = Vector4{
-						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Extents.x,
-						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Extents.y,
-						InPrimitiveList.BoundingBoxList[PrimitiveIndex].Extents.z,
+					PrimitiveSceneData->LocalToWorld = InPrimitiveList.LocalToWorldMatrixList[PrimitiveIndex];
+					PrimitiveSceneData->WorldToLocal = InPrimitiveList.LocalToWorldMatrixList[PrimitiveIndex].Invert();
+
+					PrimitiveSceneData->WorldAABBCenterAndDrawDistance = Vector4{
+						InPrimitiveList.WorldSpaceBoundingBoxList[PrimitiveIndex].Center.x,
+						InPrimitiveList.WorldSpaceBoundingBoxList[PrimitiveIndex].Center.y,
+						InPrimitiveList.WorldSpaceBoundingBoxList[PrimitiveIndex].Center.z,
+						0.0f };
+					PrimitiveSceneData->WorldAABBExtent = Vector4{
+						InPrimitiveList.WorldSpaceBoundingBoxList[PrimitiveIndex].Extents.x,
+						InPrimitiveList.WorldSpaceBoundingBoxList[PrimitiveIndex].Extents.y,
+						InPrimitiveList.WorldSpaceBoundingBoxList[PrimitiveIndex].Extents.z,
 						0.0f };
 
 					InPrimitiveList.GPUSceneDirtyPrimitiveList[PrimitiveIndex] = false;

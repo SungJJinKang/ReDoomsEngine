@@ -296,7 +296,6 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 	FD3D12ResourceUpload ResourceUpload{};
 
 	ResourceUpload.Resource = D3D12TextureResource->GetResource();
-	EA_ASSERT(SubresourceDataList.size() == 1); // @todo : support mips
 	ResourceUpload.SubresourceContainers = eastl::move(SubresourceDataList);
 	if (InResourceStateAfterUpload.has_value())
 	{

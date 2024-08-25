@@ -37,7 +37,7 @@ public:
 	eastl::shared_ptr<FD3D12Texture2DResource> AllocateDepthStencilTarget(
 		const uint32_t InWidth,
 		const uint32_t InHeight,
-		const float InDepthClearValue = 1.0f,
+		const float InDepthClearValue = 0.0f,
 		const float InStencilClearValue = 0.0f,
 		const ETextureFormat InTextureFormat = ETextureFormat::DepthStencil
 	);

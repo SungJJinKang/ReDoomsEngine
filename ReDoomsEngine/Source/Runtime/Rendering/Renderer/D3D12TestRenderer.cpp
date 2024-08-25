@@ -117,6 +117,7 @@ void D3D12TestRenderer::CreateRenderTargets()
 	BasePassPSODesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC{ D3D12_DEFAULT };
 	BasePassPSODesc.Desc.RasterizerState.FrontCounterClockwise = true;
 	BasePassPSODesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
+	BasePassPSODesc.Desc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_GREATER;
 	BasePassPSODesc.Desc.DepthStencilState.DepthEnable = true;
 	BasePassPSODesc.Desc.DepthStencilState.StencilEnable = false;
 
@@ -129,18 +130,19 @@ void D3D12TestRenderer::SceneSetup()
 
 	{
 		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"));
-		for (eastl::shared_ptr<FMeshModel>& Model : Level.ModelList)
+		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"));
+		for (FMeshModel& Model : Level.ModelList)
 		{
-			if (Model->Material.MaterialName.find("Metal") != Model->Material.MaterialName.npos)
+			if (Model.Material->MaterialName.find("Metal") != Model.Material->MaterialName.npos)
 			{
 				// Bistro.fbx doesn't contains metal texture and factor.
 				// So if material name contains "Metal", we set metalic factor to 1.0f.
-				Model->Material.ConstantMetalicFactor = 1.0f;
+				Model.Material->ConstantMetalicFactor = 1.0f;
 			}
 		}
 	}
 
-	for (eastl::shared_ptr<FMeshModel>& Model : Level.ModelList)
+	for (FMeshModel& Model : Level.ModelList)
 	{
 		FD3D12PSOInitializer::FDrawDesc DrawDesc{};
 
@@ -150,7 +152,7 @@ void D3D12TestRenderer::SceneSetup()
 		DrawDesc.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		
 		FMeshDrawArgument MeshDrawArgument;
-		MeshDrawArgument.IndexCountPerInstance = Model->Mesh.IndexCount;
+		MeshDrawArgument.IndexCountPerInstance = Model.Mesh->IndexCount;
 		MeshDrawArgument.InstanceCount = 1;
 		MeshDrawArgument.StartIndexLocation = 0;
 		MeshDrawArgument.BaseVertexLocation = 0;
@@ -160,14 +162,14 @@ void D3D12TestRenderer::SceneSetup()
 		auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
 		auto MeshDrawPSInstance = SponzaMeshDrawPS.MakeTemplatedShaderInstance();
 
-		MeshDrawPSInstance->Parameter.DiffuseTexture = Model->Material.DiffuseTexture ? Model->Material.DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.SpecularTexture = Model->Material.SpecularTexture ? Model->Material.SpecularTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.NormalTexture = Model->Material.NormalsTexture ? Model->Material.NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.EmissiveTexture = Model->Material.EmissionColorTexture ? Model->Material.EmissionColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.DiffuseTexture = Model.Material->DiffuseTexture ? Model.Material->DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.SpecularTexture = Model.Material->SpecularTexture ? Model.Material->SpecularTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.NormalTexture = Model.Material->NormalsTexture ? Model.Material->NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+		MeshDrawPSInstance->Parameter.EmissiveTexture = Model.Material->EmissionColorTexture ? Model.Material->EmissionColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 		MeshDrawPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Metalic
-			= Model->Material.ConstantMetalicFactor;
+			= Model.Material->ConstantMetalicFactor;
 		MeshDrawPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Roughness
-			= Model->Material.ConstantRoughnessFactor;
+			= Model.Material->ConstantRoughnessFactor;
 
 		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 		ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
@@ -175,19 +177,30 @@ void D3D12TestRenderer::SceneSetup()
 		FBoundShaderSet BoundShaderSet{ ShaderList };
 		DrawDesc.BoundShaderSet = BoundShaderSet;
 
-		FPrimitive Primitive = RenderScene.AddPrimitive(
-			true,
-			Model->Mesh.AABB,
-			EPrimitiveFlag::CacheMeshDrawCommand | EPrimitiveFlag::AllowMergeMeshDrawCommand,
-			Vector3{ 0.0f, 0.0f, 0.0f },
-			Quaternion::Identity,
-			Vector3{ 1.0f, 1.0f, 1.0f },
-			2000.0f,
-			Model->Mesh.VertexBufferViewList,
-			Model->Mesh.IndexBufferView,
-			DrawDesc,
-			MeshDrawArgument
-		);
+		for(uint32_t InstanceIndex = 0; InstanceIndex < Model.InstanceLocalToWorldMatrixList.size(); ++InstanceIndex)
+		{
+			const Matrix LocalToWorldMatrix = Matrix::CreateTranslation(
+				0.0f,
+				0.0f,
+				0.0f);
+
+			const Matrix RotationMatrix = Matrix::CreateFromQuaternion(Quaternion::Identity);
+			const Matrix ScaleMatrix = Matrix::CreateScale(1.0f, 1.0f, 1.0f);
+
+			//
+			RenderScene.AddPrimitive(
+				true,
+				Model.Mesh->AABB,
+				EPrimitiveFlag::CacheMeshDrawCommand | EPrimitiveFlag::AllowMergeMeshDrawCommand,
+				//Model.InstanceLocalToWorldMatrixList[InstanceIndex], @ TODO : Bistro asset has wrong matrix data, so we use this temporally
+				LocalToWorldMatrix * RotationMatrix * ScaleMatrix,
+				2000.0f,
+				Model.Mesh->VertexBufferViewList,
+				Model.Mesh->IndexBufferView,
+				DrawDesc,
+				MeshDrawArgument
+			);
+		}
 	}
 }
 

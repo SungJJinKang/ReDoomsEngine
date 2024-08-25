@@ -55,7 +55,8 @@ struct FD3D12ConstantBufferSubresourceContainer : public FD3D12SubresourceContai
 
 struct FD3D12TextureSubresourceContainer : public FD3D12SubresourceContainer
 {
-	DirectX::ScratchImage ScreatchImage;
+	eastl::shared_ptr<DirectX::ScratchImage> ScreatchImage;
+	int32 MipIndex = -1;
 };
 
 struct FD3D12ResourceUpload

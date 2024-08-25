@@ -19,8 +19,8 @@ struct FPrimitiveSceneData
 	uint32	Padding2;
 	Matrix	LocalToWorld;
 	Matrix	WorldToLocal;
-	Vector4 AABBCenterAndDrawDistance;
-	Vector4 AABBExtent;
+	Vector4 WorldAABBCenterAndDrawDistance;
+	Vector4 WorldAABBExtent;
 };
 
 static_assert(sizeof(FPrimitiveSceneData) % 16 == 0);

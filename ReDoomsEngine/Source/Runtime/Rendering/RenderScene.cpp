@@ -71,9 +71,7 @@ FPrimitive FRenderScene::AddPrimitive(
 	const bool bInVisible,
 	const BoundingBox& InLocalBoundingBox, 
 	const uint32 InPrimitiveFlag,
-	const Vector3& Position, 
-	const Quaternion& InRotation,
-	const Vector3& InScale,
+	const Matrix& InLocalToWorldMatirx,
 	const float InDrawDistance,
 	const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViews,
 	const D3D12_INDEX_BUFFER_VIEW& IndexBufferView, 
@@ -92,12 +90,13 @@ FPrimitive FRenderScene::AddPrimitive(
 	}
 	PrimitiveList.TransformDirtyPrimitiveList.push_back(true);
 	PrimitiveList.GPUSceneDirtyPrimitiveList.push_back(true);
-	PrimitiveList.BoundingBoxList.push_back(InLocalBoundingBox);
+
+	BoundingBox TransformedBoundingBox{};
+	InLocalBoundingBox.Transform(TransformedBoundingBox, InLocalToWorldMatirx);
+	PrimitiveList.WorldSpaceBoundingBoxList.push_back(TransformedBoundingBox);
+
 	PrimitiveList.PrimitiveFlagList.push_back(static_cast<EPrimitiveFlag>(InPrimitiveFlag));
-	PrimitiveList.PositionAndLocalBoundingSphereRadiusList.emplace_back(Position.x, Position.y, Position.z, InLocalBoundingBox.LengthOfCenterToCorner());
-	PrimitiveList.RotationList.push_back(InRotation);
-	PrimitiveList.ScaleAndDrawDistanceList.emplace_back(InScale.x, InScale.y, InScale.z, InDrawDistance);
-	PrimitiveList.CachedLocalToWorldMatrixList.push_back_uninitialized();
+	PrimitiveList.LocalToWorldMatrixList.push_back(InLocalToWorldMatirx);
 	PrimitiveList.VertexBufferViewList.push_back(InVertexBufferViews);
 	PrimitiveList.IndexBufferViewList.push_back(IndexBufferView);
 	PrimitiveList.DrawDescList.push_back(InDrawDesc);
@@ -128,8 +127,6 @@ void FRenderScene::CacheMeshDraw(const int32 InPrimitiveIndex)
 void FRenderScene::PrepareToCreateMeshDrawList(FD3D12CommandContext& InCommandContext)
 {
 	SCOPED_CPU_TIMER(FRenderScene_PrepareToCreateMeshDrawList)
-
-	PrimitiveList.CacheLocalToWorldMatrixs();
 
 	GPUSceneData.UploadDirtyData(InCommandContext, PrimitiveList);
 }
@@ -276,117 +273,6 @@ void FPrimitive::SetVisible(const EPass InPass, const bool bInVisible)
 	PrimitiveList->VisibleFlagsList[static_cast<uint32_t>(InPass)][PrimitiveIndex] = bInVisible;
 }
 
-const DirectX::BoundingBox& FPrimitive::GetBoundingBox() const
-{
-	return PrimitiveList->BoundingBoxList[PrimitiveIndex];
-}
-
-void FPrimitive::SetBoundingBox(const BoundingBox& InBoundingBox)
-{
-	PrimitiveList->BoundingBoxList[PrimitiveIndex] = InBoundingBox;
-	PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].z = InBoundingBox.LengthOfCenterToCorner();
-}
-
-const DirectX::SimpleMath::Vector3& FPrimitive::GetPosition() const
-{
-	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex]);
-}
-
-void FPrimitive::SetPosition(const Vector3& InPosition)
-{
-	if (
-		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].x != InPosition.x ||
-		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].y != InPosition.y ||
-		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].z != InPosition.z
-		)
-	{
-		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].x = InPosition.x;
-		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].y = InPosition.y;
-		PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].z = InPosition.z;
-
-		PrimitiveList->DirtyTransform(PrimitiveIndex);
-	}
-}
-
-float FPrimitive::GetLocalBoundingSphereRadius() const
-{
-	return PrimitiveList->PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].z;
-}
-
-const DirectX::SimpleMath::Quaternion& FPrimitive::GetRotation() const
-{
-	return PrimitiveList->RotationList[PrimitiveIndex];
-}
-
-void FPrimitive::SetRotation(const Quaternion& InQuaternion)
-{
-	if (PrimitiveList->RotationList[PrimitiveIndex] != InQuaternion)
-	{
-		PrimitiveList->RotationList[PrimitiveIndex] = InQuaternion;
-
-		PrimitiveList->DirtyTransform(PrimitiveIndex);
-	}
-}
-
-const DirectX::SimpleMath::Vector3& FPrimitive::GetScale() const
-{
-	return reinterpret_cast<const DirectX::SimpleMath::Vector3&>(PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex]);
-}
-
-void FPrimitive::SetScale(const Vector3& InScale)
-{
-	if (
-		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].x != InScale.x ||
-		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].y != InScale.y ||
-		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].z != InScale.z
-	)
-	{
-		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].x = InScale.x;
-		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].y = InScale.y;
-		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].z = InScale.z;
-
-		PrimitiveList->DirtyTransform(PrimitiveIndex);
-	}
-}
-
-float FPrimitive::GetDrawDistance() const
-{
-	return PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].w;
-}
-
-void FPrimitive::SetDrawDistance(const float InDrawDistance)
-{
-	if (PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].w != InDrawDistance)
-	{
-		PrimitiveList->ScaleAndDrawDistanceList[PrimitiveIndex].w = InDrawDistance;
-	}
-}
-
-void FPrimitiveList::CacheLocalToWorldMatrixs()
-{
-	SCOPED_CPU_TIMER(FPrimitiveList_CacheLocalToWorldMatrixs)
-	SCOPED_MEMORY_TRACE(FPrimitiveList_CacheLocalToWorldMatrixs)
-
-	// todo : multithread?
-	for (uint32_t PrimitiveIndex = 0; PrimitiveIndex < PositionAndLocalBoundingSphereRadiusList.size(); ++PrimitiveIndex)
-	{
-		if (TransformDirtyPrimitiveList[PrimitiveIndex])
-		{
-			const Matrix LocalToWorldMatrix = Matrix::CreateTranslation(
-				PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].x,
-				PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].y,
-				PositionAndLocalBoundingSphereRadiusList[PrimitiveIndex].z);
-
-			const Matrix RotationMatrix = Matrix::CreateFromQuaternion(RotationList[PrimitiveIndex]);
-			const Matrix ScaleMatrix = Matrix::CreateScale(ScaleAndDrawDistanceList[PrimitiveIndex].x, ScaleAndDrawDistanceList[PrimitiveIndex].y, ScaleAndDrawDistanceList[PrimitiveIndex].z);
-
-			CachedLocalToWorldMatrixList[PrimitiveIndex] = LocalToWorldMatrix * RotationMatrix * ScaleMatrix;
-
-			TransformDirtyPrimitiveList[PrimitiveIndex] = false;
-		}
-	}
-}
-
 void FPrimitiveList::DirtyTransform(const uint32 InPrimitiveIndex)
 {
 	TransformDirtyPrimitiveList.set(InPrimitiveIndex, true);
@@ -400,12 +286,9 @@ void FPrimitiveList::Reserve(const size_t InSize)
 		VisibleFlagsList[PassIndex].reserve(InSize);
 	}
 	TransformDirtyPrimitiveList.reserve(InSize);
-	BoundingBoxList.reserve(InSize);
+	WorldSpaceBoundingBoxList.reserve(InSize);
 	PrimitiveFlagList.reserve(InSize);
-	PositionAndLocalBoundingSphereRadiusList.reserve(InSize);
-	RotationList.reserve(InSize);
-	ScaleAndDrawDistanceList.reserve(InSize);
-	CachedLocalToWorldMatrixList.reserve(InSize);
+	LocalToWorldMatrixList.reserve(InSize);
 	VertexBufferViewList.reserve(InSize);
 	IndexBufferViewList.reserve(InSize);
 	DrawDescList.reserve(InSize);

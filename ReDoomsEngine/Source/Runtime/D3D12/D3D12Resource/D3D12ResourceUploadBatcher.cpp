@@ -63,78 +63,25 @@ void FD3D12ResourceUploadBatcher::Flush(FD3D12CommandContext& InCommandContext)
 			{
 				FD3D12UploadBufferContainer* UploadBufferContainer = AllocateUploadBuffer(PendingResourceUpload.Resource);
 				const uint32_t SubresourceCount = PendingResourceUpload.SubresourceContainers.size();
-				for (uint32_t SubresourceIndex = 0; SubresourceIndex < SubresourceCount; ++SubresourceIndex)
+				if (SubresourceCount != 1)
 				{
-					if (PendingResourceUpload.SubresourceContainers[SubresourceIndex]->DstOffset != 0)
+					EA_ASSERT(SubresourceCount <= MAX_SUBRESOURCE_COUNT);
+					D3D12_SUBRESOURCE_DATA SubresourceDataList[MAX_SUBRESOURCE_COUNT] = {};
+					for (uint32_t SubresourceIndex = 0; SubresourceIndex < SubresourceCount; ++SubresourceIndex)
 					{
-						UINT64 RequiredSize;
-						D3D12_PLACED_SUBRESOURCE_FOOTPRINT Layouts[1];
-						UINT NumRows[1];
-						UINT64 RowSizesInBytes[1];
-
-						const auto Desc = PendingResourceUpload.Resource->GetDesc();
-
-						ID3D12Device* pDevice = GetD3D12Device();
-						PendingResourceUpload.Resource->GetDevice(IID_ID3D12Device, reinterpret_cast<void**>(&pDevice));
-						pDevice->GetCopyableFootprints(&Desc, SubresourceIndex, SubresourceCount, 0, Layouts, NumRows, RowSizesInBytes, &RequiredSize);
-						pDevice->Release();
-
-						ID3D12Resource* const pIntermediate = UploadBufferContainer->UploadBuffer->GetResource();
-
-						const auto IntermediateDesc = pIntermediate->GetDesc();
-						const auto DestinationDesc = PendingResourceUpload.Resource->GetDesc();
-
-						if (IntermediateDesc.Dimension != D3D12_RESOURCE_DIMENSION_BUFFER ||
-							IntermediateDesc.Width < RequiredSize + Layouts[0].Offset ||
-							RequiredSize > SIZE_T(-1) ||
-							(DestinationDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER &&
-								(SubresourceIndex != 0 || SubresourceCount != 1)))
-						{
-							continue;
-						}
-
-						BYTE* pData;
-						HRESULT hr = pIntermediate->Map(0, nullptr, reinterpret_cast<void**>(&pData));
-						if (FAILED(hr))
-						{
-							continue;
-						}
-
-						for (UINT i = 0; i < SubresourceCount; ++i)
-						{
-							if (RowSizesInBytes[i] > SIZE_T(-1))
-							{
-								continue;
-							}
-							D3D12_MEMCPY_DEST DestData = { pData + Layouts[i].Offset, Layouts[i].Footprint.RowPitch, SIZE_T(Layouts[i].Footprint.RowPitch) * SIZE_T(NumRows[i]) };
-							MemcpySubresource(&DestData, &PendingResourceUpload.SubresourceContainers[SubresourceIndex]->SubresourceData, static_cast<SIZE_T>(RowSizesInBytes[i]), NumRows[i], Layouts[i].Footprint.Depth);
-						}
-						pIntermediate->Unmap(0, nullptr);
-
-						if (DestinationDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER)
-						{
-							CommandListForUploadBatcher->GetD3DCommandList()->CopyBufferRegion(
-								PendingResourceUpload.Resource, PendingResourceUpload.SubresourceContainers[SubresourceIndex]->DstOffset, pIntermediate, Layouts[0].Offset, Layouts[0].Footprint.Width);
-						}
-						else
-						{
-							for (UINT i = 0; i < SubresourceCount; ++i)
-							{
-								EA_ASSERT(PendingResourceUpload.SubresourceContainers[SubresourceIndex]->DstOffset == 0);
-								const CD3DX12_TEXTURE_COPY_LOCATION Dst(PendingResourceUpload.Resource, i + SubresourceIndex);
-								const CD3DX12_TEXTURE_COPY_LOCATION Src(pIntermediate, Layouts[i]);
-								CommandListForUploadBatcher->GetD3DCommandList()->CopyTextureRegion(&Dst, 0, 0, 0, &Src, nullptr);
-							}
-						}
+						SubresourceDataList[SubresourceIndex] = PendingResourceUpload.SubresourceContainers[SubresourceIndex]->SubresourceData;
 					}
-					else
-					{
-						// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-updatesubresource
-						// @todo : support mips. change UpdateSubresources's template paramter value
-						UpdateSubresources<1>(CommandListForUploadBatcher->GetD3DCommandList(), PendingResourceUpload.Resource, UploadBufferContainer->UploadBuffer->GetResource(),
-							0, SubresourceIndex, SubresourceCount, &PendingResourceUpload.SubresourceContainers[SubresourceIndex]->SubresourceData);
-					}
+					UpdateSubresources<MAX_SUBRESOURCE_COUNT>(CommandListForUploadBatcher->GetD3DCommandList(), PendingResourceUpload.Resource, UploadBufferContainer->UploadBuffer->GetResource(),
+						0, 0, SubresourceCount, SubresourceDataList);
 				}
+				else
+				{
+					// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-updatesubresource
+					// @todo : support mips. change UpdateSubresources's template paramter value
+					UpdateSubresources<1>(CommandListForUploadBatcher->GetD3DCommandList(), PendingResourceUpload.Resource, UploadBufferContainer->UploadBuffer->GetResource(),
+						0, 0, SubresourceCount, &PendingResourceUpload.SubresourceContainers[0]->SubresourceData);
+				}
+				
 				UploadBufferContainer->Fence = InCommandContext.FrameResourceCounter->FrameWorkEndFence;
 				UploadBufferContainer->UploadedFrameIndex = GCurrentFrameIndex;
 			}

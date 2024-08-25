@@ -175,6 +175,7 @@ struct FMaterial
 
 struct FMeshModel
 {
-	FMesh Mesh;
-	FMaterial Material;
+	eastl::shared_ptr<FMesh> Mesh;
+	eastl::shared_ptr<FMaterial> Material;
+	eastl::vector<Matrix> InstanceLocalToWorldMatrixList;
 };

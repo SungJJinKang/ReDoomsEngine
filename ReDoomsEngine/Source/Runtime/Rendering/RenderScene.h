@@ -28,16 +28,9 @@ struct FPrimitiveList
 	eastl::array<eastl::bitvector<>, static_cast<uint32_t>(EPass::Num)> VisibleFlagsList;
 	eastl::bitvector<> TransformDirtyPrimitiveList;
 	eastl::bitvector<> GPUSceneDirtyPrimitiveList;
-	eastl::vector<BoundingBox> BoundingBoxList;
+	eastl::vector<BoundingBox> WorldSpaceBoundingBoxList;
 	eastl::vector<EPrimitiveFlag> PrimitiveFlagList;
-	/// <summary>
-	/// x, y, z : World position
-	/// w : Radius of bounding sphere
-	/// </summary>
-	eastl::vector<AlignedVector4> PositionAndLocalBoundingSphereRadiusList;
-	eastl::vector<AlignedQuaternion> RotationList;
-	eastl::vector<AlignedVector4> ScaleAndDrawDistanceList;
-	eastl::vector<AlignedMatrix> CachedLocalToWorldMatrixList;
+	eastl::vector<AlignedMatrix> LocalToWorldMatrixList;
 	eastl::vector<eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>> VertexBufferViewList;
 	eastl::vector<D3D12_INDEX_BUFFER_VIEW> IndexBufferViewList;
 
@@ -49,7 +42,6 @@ struct FPrimitiveList
 	eastl::vector<FMeshDrawArgument> MeshDrawArgumentList;
 	eastl::array<eastl::vector<FMeshDraw>, static_cast<uint32_t>(EPass::Num)> CachedMeshDrawList;
 
-	void CacheLocalToWorldMatrixs();
 	void DirtyTransform(const uint32 InPrimitiveIndex);
 	void Reserve(const size_t InSize);
 };
@@ -61,17 +53,6 @@ struct FPrimitive
 
 	void SetVisible(const bool bInVisible);
 	void SetVisible(const EPass InPass, const bool bInVisible);
-	const BoundingBox& GetBoundingBox() const;
-	void SetBoundingBox(const BoundingBox& InBoundingBox);
-	const Vector3& GetPosition() const;
-	void SetPosition(const Vector3& InPosition);
-	float GetLocalBoundingSphereRadius() const;
-	const Quaternion& GetRotation() const;
-	void SetRotation(const Quaternion& InQuaternion);
-	const Vector3& GetScale() const;
-	void SetScale(const Vector3& InScale);
-	float GetDrawDistance() const;
-	void SetDrawDistance(const float InDrawDistance);
 };
 
 bool CanMergeMeshDraw(const FMeshDraw& InMeshDrawA, const FMeshDraw& InMeshDrawB);
@@ -86,9 +67,7 @@ public:
 		const bool bInVisible,
 		const BoundingBox& InLocalBoundingBox, 
 		const uint32 InPrimitiveFlag,
-		const Vector3& Position, 
-		const Quaternion& InRotation, 
-		const Vector3& InScale, 
+		const Matrix& InLocalToWorldMatirx, 
 		const float InDrawDistance, 
 		const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViews,
 		const D3D12_INDEX_BUFFER_VIEW& IndexBufferView,

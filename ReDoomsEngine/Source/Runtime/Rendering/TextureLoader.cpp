@@ -9,6 +9,8 @@
 #include "D3D12Resource/D3D12Resource.h"
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 
+static TConsoleVariable<bool> GSupportTextureMips{ "r.SupportTextureMips", false };
+
 eastl::hash_map<FTextureLoadInfo, eastl::shared_ptr<FD3D12Texture2DResource>> FTextureLoader::LoadedTextureResourceMap{};
 
 eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder, 
@@ -55,6 +57,11 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12Co
 
 			CD3DX12_RESOURCE_DESC ResourceDesc;
 
+			if (!GSupportTextureMips)
+			{
+				Metadata.mipLevels = 1;
+			}
+
 			{
 				DXGI_FORMAT DXGIFormat = Metadata.format;
 				if (InCreateTexFlag & CREATETEX_FORCE_SRGB)
@@ -89,12 +96,17 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12Co
 
 			eastl::vector<eastl::unique_ptr<FD3D12SubresourceContainer>> SubresourceDataList{};
 
+			eastl::shared_ptr<DirectX::ScratchImage> ScratchImageSharedPtr
+				= eastl::make_shared<DirectX::ScratchImage>(eastl::move(ScreatchImage));
+			
+			for(int32 MipIndex = 0 ; MipIndex < Metadata.mipLevels ; ++MipIndex)
 			{
 				eastl::unique_ptr<FD3D12TextureSubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12TextureSubresourceContainer>();
-				SubresourceContainer->ScreatchImage = eastl::move(ScreatchImage);
-				SubresourceContainer->SubresourceData.pData = DXImage->pixels;
-				SubresourceContainer->SubresourceData.RowPitch = static_cast<LONG_PTR>(DXImage->rowPitch);
-				SubresourceContainer->SubresourceData.SlicePitch = static_cast<LONG_PTR>(DXImage->slicePitch);
+				SubresourceContainer->ScreatchImage = ScratchImageSharedPtr;
+				SubresourceContainer->SubresourceData.pData = DXImage[MipIndex].pixels;
+				SubresourceContainer->SubresourceData.RowPitch = static_cast<LONG_PTR>(DXImage[MipIndex].rowPitch);
+				SubresourceContainer->SubresourceData.SlicePitch = static_cast<LONG_PTR>(DXImage[MipIndex].slicePitch);
+				SubresourceContainer->MipIndex = MipIndex;
 
 				SubresourceDataList.emplace_back(eastl::move(SubresourceContainer));
 			}
