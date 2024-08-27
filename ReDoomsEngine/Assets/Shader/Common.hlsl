@@ -1,6 +1,8 @@
 ﻿#ifndef __COMMON_HLSLI__
 #define __COMMON_HLSLI__
 
+#define PI 3.14159265359
+
 // Allow only below samplers.
 // if you need other sampler, add sampler at here and add proper desc to MakeStaticSamplerDescFromByName function
 SamplerState StaticPointWrapSampler;
