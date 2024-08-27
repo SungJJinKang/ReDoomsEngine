@@ -72,9 +72,17 @@ bool CanMergeMeshDraw(const FMeshDraw& InMeshDrawA, const FMeshDraw& InMeshDrawB
 {
 	bool bCanMerge = true;
 
-	if (InMeshDrawA.PSO.GetCachedHash() != InMeshDrawB.PSO.GetCachedHash())
+	if (InMeshDrawA.CachedHash != InMeshDrawB.CachedHash)
 	{
 		bCanMerge = false;
+	}
+
+	if (bCanMerge)
+	{
+		if (InMeshDrawA.PSO.GetCachedHash() != InMeshDrawB.PSO.GetCachedHash())
+		{
+			bCanMerge = false;
+		}
 	}
 
 	if (bCanMerge)
