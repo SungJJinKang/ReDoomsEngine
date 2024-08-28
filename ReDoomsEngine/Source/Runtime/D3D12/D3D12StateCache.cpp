@@ -11,6 +11,7 @@
 #include "D3D12CommandList.h"
 #include "Renderer/Renderer.h"
 #include "EASTL/sort.h"
+#include "Utils/ConsoleVariable.h"
 
 static TConsoleVariable<bool> GAlwaysInvalidateD3D12StateCache{ "r.AlwaysInvalidateD3D12StateCache", false };
 

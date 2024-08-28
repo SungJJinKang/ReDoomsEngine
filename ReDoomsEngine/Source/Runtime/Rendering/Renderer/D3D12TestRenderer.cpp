@@ -5,6 +5,7 @@
 #include "RenderScene.h"
 #include "SceneData/GPUScene.h"
 #include "GlobalResources.h"
+#include "Utils/ConsoleVariable.h"
 
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(

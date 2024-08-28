@@ -1,6 +1,7 @@
 ﻿#include "D3D12ResourceBarrierBatcher.h"
 #include "D3D12CommandContext.h"
 #include "D3D12CommandList.h"
+#include "Utils/ConsoleVariable.h"
 
 static TConsoleVariable<bool> GImmediatelyFlushResourceBarrierBatcher{ "r.ImmediatelyFlushResourceBarrierBatcher", true };
 

@@ -1,8 +1,9 @@
-#include "D3D12Fence.h"
+﻿#include "D3D12Fence.h"
 
 #include "D3D12Device.h"
 #include "D3D12Fence.h"
 #include "D3D12CommandQueue.h"
+#include "Utils/ConsoleVariable.h"
 
 static TConsoleVariable<bool> GD3D12CPUSpinWaitOnFence{ "r.D3D12.CPUSpinWaitOnFence", true };
 

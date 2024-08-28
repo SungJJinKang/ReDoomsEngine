@@ -1,6 +1,7 @@
 ﻿#include "JobSystem.h"
 
 #include "sysinfoapi.h"
+#include "Utils/ConsoleVariable.h"
 
 void FJobContainer::DoJob()
 {

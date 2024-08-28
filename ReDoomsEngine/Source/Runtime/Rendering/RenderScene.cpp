@@ -4,6 +4,7 @@
 #include "Thread/JobSystem.h"
 #include "D3D12Swapchain.h"
 #include "D3D12Manager.h"
+#include "Utils/ConsoleVariable.h"
 
 static TConsoleVariable<bool> GCacheMeshDraw{ "r.CacheMeshDraw", true };
 static TConsoleVariable<bool> GAutoInstancing{ "r.AutoInstancing", false };

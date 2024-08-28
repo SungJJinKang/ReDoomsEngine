@@ -8,6 +8,7 @@
 #include "D3D12CommandList.h"
 #include "D3D12Resource/D3D12Resource.h"
 #include "D3D12Resource/D3D12ResourceAllocator.h"
+#include "Utils/ConsoleVariable.h"
 
 static TConsoleVariable<bool> GSupportTextureMips{ "r.SupportTextureMips", false };
 

@@ -53,5 +53,3 @@ using namespace DirectX;
 #include "Utils.h"
 #include "Profiling.h"
 #include "Thread.h"
-
-#include "Utils/ConsoleVariable.h"

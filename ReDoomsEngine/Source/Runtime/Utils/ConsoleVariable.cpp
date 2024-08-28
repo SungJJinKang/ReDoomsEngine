@@ -40,58 +40,92 @@ static struct FRegisterConsoleVariableImguiCallback
 					{
 						if (ConsoleVariable.second->IsBoolean())
 						{
-							bool bIsChecked = ConsoleVariable.second->GetBool();
+							TConsoleVariable<bool>* TemplateConsoleVar = static_cast<TConsoleVariable<bool>*>(ConsoleVariable.second);
+							bool bIsChecked = *TemplateConsoleVar;
 							if (ImGui::Checkbox(ConsoleVariable.first, &bIsChecked))
 							{
-								ConsoleVariable.second->SetBool(bIsChecked);
+								*TemplateConsoleVar = bIsChecked;
 							}
 						}
 						else if (ConsoleVariable.second->IsInt32())
 						{
-							int32_t Value = ConsoleVariable.second->GetInt();
+							TConsoleVariable<int32>* TemplateConsoleVar = static_cast<TConsoleVariable<int32>*>(ConsoleVariable.second);
+							int32_t Value = *TemplateConsoleVar;
 							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_S32, &Value))
 							{
-								ConsoleVariable.second->SetInt(Value);
+								*TemplateConsoleVar = Value;
 							}
 						}
 						else if (ConsoleVariable.second->IsUInt32())
 						{
-							uint32_t Value = ConsoleVariable.second->GetUInt();
+							TConsoleVariable<uint32>* TemplateConsoleVar = static_cast<TConsoleVariable<uint32>*>(ConsoleVariable.second);
+							uint32_t Value = *TemplateConsoleVar;
 							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_U32, &Value))
 							{
-								ConsoleVariable.second->SetUInt(Value);
+								*TemplateConsoleVar = Value;
 							}
 						}
 						else if (ConsoleVariable.second->IsInt64())
 						{
-							int64_t Value = ConsoleVariable.second->GetInt64();
+							TConsoleVariable<int64>* TemplateConsoleVar = static_cast<TConsoleVariable<int64>*>(ConsoleVariable.second);
+							int64_t Value = *TemplateConsoleVar;
 							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_S64, &Value))
 							{
-								ConsoleVariable.second->SetInt64(Value);
+								*TemplateConsoleVar = Value;
 							}
 						}
 						else if (ConsoleVariable.second->IsUInt64())
 						{
-							uint64_t Value = ConsoleVariable.second->GetUInt64();
+							TConsoleVariable<uint64>* TemplateConsoleVar = static_cast<TConsoleVariable<uint64>*>(ConsoleVariable.second);
+							uint64_t Value = *TemplateConsoleVar;
 							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_U64, &Value))
 							{
-								ConsoleVariable.second->SetUInt64(Value);
+								*TemplateConsoleVar = Value;
 							}
 						}
 						else if (ConsoleVariable.second->IsFloat())
 						{
-							float Value = ConsoleVariable.second->GetFloat();
+							TConsoleVariable<float>* TemplateConsoleVar = static_cast<TConsoleVariable<float>*>(ConsoleVariable.second);
+							float Value = *TemplateConsoleVar;
 							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_Float, &Value))
 							{
-								ConsoleVariable.second->SetFloat(Value);
+								*TemplateConsoleVar = Value;
 							}
 						}
 						else if (ConsoleVariable.second->IsDouble())
 						{
-							double Value = ConsoleVariable.second->GetDouble();
+							TConsoleVariable<double>* TemplateConsoleVar = static_cast<TConsoleVariable<double>*>(ConsoleVariable.second);
+							double Value = *TemplateConsoleVar;
 							if (ImGui::DragScalar(ConsoleVariable.first, ImGuiDataType_Double, &Value))
 							{
-								ConsoleVariable.second->SetDouble(Value);
+								*TemplateConsoleVar = Value;
+							}
+						}
+						else if (ConsoleVariable.second->IsVector2())
+						{
+							TConsoleVariable<Vector2>* TemplateConsoleVar = static_cast<TConsoleVariable<Vector2>*>(ConsoleVariable.second);
+							Vector2 Value = *TemplateConsoleVar;
+							if (ImGui::DragScalarN(ConsoleVariable.first, ImGuiDataType_Float, &Value, 2))
+							{
+								*TemplateConsoleVar = Value;
+							}
+						}
+						else if (ConsoleVariable.second->IsVector3())
+						{
+							TConsoleVariable<Vector3>* TemplateConsoleVar = static_cast<TConsoleVariable<Vector3>*>(ConsoleVariable.second);
+							Vector3 Value = *TemplateConsoleVar;
+							if (ImGui::DragScalarN(ConsoleVariable.first, ImGuiDataType_Float, &Value, 3))
+							{
+								*TemplateConsoleVar = Value;
+							}
+						}
+						else if (ConsoleVariable.second->IsVector4())
+						{
+							TConsoleVariable<Vector4>* TemplateConsoleVar = static_cast<TConsoleVariable<Vector4>*>(ConsoleVariable.second);
+							Vector4 Value = *TemplateConsoleVar;
+							if (ImGui::DragScalarN(ConsoleVariable.first, ImGuiDataType_Float, &Value, 4))
+							{
+								*TemplateConsoleVar = Value;
 							}
 						}
 						else
