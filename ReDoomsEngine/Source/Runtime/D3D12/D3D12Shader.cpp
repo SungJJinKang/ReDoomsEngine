@@ -208,8 +208,15 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 
 			if (ConstantBuffer->IsGlobalConstantBuffer())
 			{
-				ValidateConstantBuffer(*ConstantBuffer, ShaderReflectionData.GlobalConstantBuffer);
-				bFoundMatchingReflectionData = true;
+				if (!ConstantBuffer->IsCulled())
+				{
+					ValidateConstantBuffer(*ConstantBuffer, ShaderReflectionData.GlobalConstantBuffer);
+					bFoundMatchingReflectionData = true;
+				}
+				else
+				{
+					AddValidationLog(FORMATTED_CHAR("GlobalConstantBuffer is culled\n"), !(ConstantBuffer->IsAllowCull()));
+				}
 			}
 			else
 			{
@@ -931,8 +938,11 @@ bool FShaderParameterConstantBuffer::SetReflectionDataFromShaderReflectionData(c
 
 	if (IsGlobalConstantBuffer())
 	{
-		ReflectionData = &InShaderReflection.GlobalConstantBuffer;
-		bFoundReflectionData = true;
+		if (InShaderReflection.GlobalConstantBuffer.Desc.Size > 0)
+		{
+			ReflectionData = &InShaderReflection.GlobalConstantBuffer;
+			bFoundReflectionData = true;
+		}
 	}
 	else
 	{
