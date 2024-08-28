@@ -7,7 +7,7 @@
 
 Texture2D<float3> DiffuseTexture;
 Texture2D<float3> SpecularTexture;
-Texture2D<float2> NormalTexture;
+Texture2D<float3> NormalTexture;
 Texture2D<float3> EmissiveTexture;
 
 float Metalic;
@@ -24,8 +24,12 @@ void MainPS(
 {
     Depth = Input.Position.z / Input.Position.w;
 
+    float3 NormalMapValue = NormalTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
+    NormalMapValue = NormalMapValue * 2.0f - 1.0f; // Transform from [0,1] to [-1,1]
+    float3x3 TBN = float3x3(Input.Tangent, Input.BiTangent, Input.Normal);
+
     FGBufferData GBufferData;
-    GBufferData.WorldNormal = Input.WorldNormal;
+    GBufferData.WorldNormal = normalize(mul(NormalMapValue, TBN));
     GBufferData.DiffuseColor = DiffuseTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
     GBufferData.SpecularColor = SpecularTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
     GBufferData.EmissiveColor = EmissiveTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;

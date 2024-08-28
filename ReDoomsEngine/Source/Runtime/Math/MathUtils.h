@@ -9,6 +9,10 @@
 using namespace DirectX::SimpleMath;
 using namespace DirectX;
 
+inline double PI = 3.14159265358979323846264338327950288;
+inline double DEGREE_TO_RADIAN = PI / 180.0;
+inline double RADIAN_TO_DEGREE = 180.0 / PI;
+
 template <typename T>
 EASTL_FORCE_INLINE constexpr T Align(T Val, uint64_t Alignment)
 {

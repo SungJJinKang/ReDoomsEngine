@@ -7,12 +7,15 @@
 #include "GlobalResources.h"
 #include "Utils/ConsoleVariable.h"
 
+static TConsoleVariable<Vector3> GDirectionalLightYawPitchRoll{ "r.DirectionalLightYawPitchRoll", Vector3{ 0.0f, 0.0f, -150.0f } };
+static TConsoleVariable<Vector3> GDirectionLightColor{ "r.DirectionLightColor", Vector3{ 3.0f, 3.0f, 3.0f } };
+
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(bool, AddOffset)
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, ColorOffset1)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, ColorOffset2)
 		)
 		ADD_SHADER_CONSTANT_BUFFER(VertexOffset, VertexOffset)
 	)
@@ -21,9 +24,9 @@ DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, ESha
 DEFINE_SHADER(TestPS, "Test/Test.hlsl", "PSMain", EShaderFrequency::Pixel, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset1)
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset3)
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, ColorOffset2)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, ColorOffset1)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, ColorOffset3)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, ColorOffset2)
 		)
 		ADD_SHADER_SRV_VARIABLE(TestTexture, EShaderParameterResourceType::Texture)
 	)
@@ -63,8 +66,8 @@ DEFINE_SHADER(SponzaMeshDrawPS, "SponzaMeshDrawPS.hlsl", "MainPS", EShaderFreque
 DEFINE_SHADER(ScreenDrawVS, "ScreenDrawVS.hlsl", "ScreenDrawVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, PosScaleUVScale)
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(XMVECTOR, InvTargetSizeAndTextureSize)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, PosScaleUVScale)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, InvTargetSizeAndTextureSize)
 		)
 	)
 );
@@ -72,6 +75,10 @@ DEFINE_SHADER(ScreenDrawVS, "ScreenDrawVS.hlsl", "ScreenDrawVS", EShaderFrequenc
 DEFINE_SHADER(DeferredShadingPS, "DeferredShadingPS.hlsl", "DeferredShadingPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_GBUFFER_SHADER_SRV()
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector3, LightDirection)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector3, LightColor)
+		)
 	)
 );
 
@@ -131,7 +138,7 @@ void D3D12TestRenderer::SceneSetup()
 
 	{
 		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"));
-		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"));
+		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"));
 		for (FMeshModel& Model : Level.ModelList)
 		{
 			if (Model.Material->MaterialName.find("Metal") != Model.Material->MaterialName.npos)
@@ -253,7 +260,9 @@ void D3D12TestRenderer::OnStartFrame()
 		Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
 		Matrix ViewMat = View.Get3DViewMatrices();
 		Matrix ProjMat = View.GetPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
+		ViewConstantBuffer.MemberVariables.ViewWorldPosition = Vector4{ View.Transform.Position.x, View.Transform.Position.y, View.Transform.Position.z, 0.0f };
 		ViewConstantBuffer.MemberVariables.ViewMatrix = ViewMat;
+		ViewConstantBuffer.MemberVariables.InvViewProjectionMatrix = ViewMat.Invert();
 		ViewConstantBuffer.MemberVariables.ProjectionMatrix = ProjMat;
 		ViewConstantBuffer.MemberVariables.ViewProjectionMatrix = ViewProjMat;
 		ViewConstantBuffer.MemberVariables.PrevViewProjectionMatrix = ViewProjMat;
@@ -353,6 +362,12 @@ bool D3D12TestRenderer::Draw()
 		DeferredShadingPSInstance->Parameter.GBufferBTexture = GBufferManager.GBufferB->GetTextureSRV();
 		DeferredShadingPSInstance->Parameter.GBufferCTexture = GBufferManager.GBufferC->GetTextureSRV();
 		DeferredShadingPSInstance->Parameter.GBufferDTexture = GBufferManager.GBufferD->GetTextureSRV();
+
+		Vector3 DirectionalLightYawPitchRoll = GDirectionalLightYawPitchRoll * DEGREE_TO_RADIAN;
+		Vector3 LightDirection = Quaternion::CreateFromYawPitchRoll(DirectionalLightYawPitchRoll.x, DirectionalLightYawPitchRoll.y, DirectionalLightYawPitchRoll.z) * Vector3::Forward;
+		
+		DeferredShadingPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.LightDirection = LightDirection;
+		DeferredShadingPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.LightColor = GDirectionLightColor;
 
 		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 		ShaderList[EShaderFrequency::Vertex] = ScreenDrawVSInstance;

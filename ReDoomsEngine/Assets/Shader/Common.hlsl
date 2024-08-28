@@ -14,11 +14,12 @@ SamplerState StaticAnisotropicClampSampler;
 
 cbuffer ViewConstantBuffer : register(b0)
 {
+	float4 ViewWorldPosition;
 	float4x4 ViewMatrix;
 	float4x4 ProjectionMatrix;
 	float4x4 ViewProjectionMatrix;
+	float4x4 InvViewProjectionMatrix;
 	float4x4 PrevViewProjectionMatrix;
-	float4x4 DirectionalLightLocalToWorld;
 };
 
 #endif // __COMMON_HLSLI__

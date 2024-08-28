@@ -7,6 +7,9 @@
 
 static const float3 F0OfDielectric = 0.04;
 
+float3 LightDirection;
+float3 LightColor;
+
 // references : https://cdn2.unrealengine.com/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 
 // normal distribution function
@@ -62,5 +65,29 @@ void DeferredShadingPS(
 {
     FGBufferData GBufferData = FetchAndDecodeGBufferData(Input.UV0);
 
-	Output = float4(GBufferData.DiffuseColor, 1);
+	// Step 2: Convert screen coordinates to NDC
+    float2 NDCPos = (Input.ScreenPosition.xy / Input.ScreenPosition.xy) * 2.0f - 1.0f;
+
+    // Step 3: Reconstruct view space position
+    float4 ViewSpacePos = float4(NDCPos, GBufferData.Depth, 1.0f);
+
+    // Step 4: Transform to world space
+    float4 WorldPos = mul(ViewSpacePos, InvViewProjectionMatrix);
+    WorldPos /= WorldPos.w; // Perform perspective divide
+
+	float3 ViewDirection = normalize(ViewWorldPosition.xyz - WorldPos);
+	float3 HalfVector = normalize(-LightDirection + ViewDirection);
+
+	float3 F0 = lerp(F0OfDielectric, GBufferData.SpecularColor, GBufferData.Metalic);
+	float3 Frensnel = FresnelSchlick(max(dot(GBufferData.WorldNormal, ViewDirection), 0.0), F0);
+	float NDF = DistributionGGX(GBufferData.WorldNormal, HalfVector, GBufferData.Roughness);
+	float Geometry = GeometrySmith(GBufferData.WorldNormal, ViewDirection, -LightDirection, (GBufferData.Roughness + 1) * (GBufferData.Roughness + 1) / 8);
+
+	float3 SpecularReflection = NDF * Geometry * Frensnel / (4.0 * max(dot(GBufferData.WorldNormal, ViewDirection), 0.0) * max(dot(GBufferData.WorldNormal, -LightDirection), 0.0)  + 0.0001);  
+	float3 DiffuseReflection = ((1.0 - Frensnel) * (1.0 - GBufferData.Metalic) * GBufferData.DiffuseColor) / PI;
+	float3 Radiance = LightColor * max(dot(GBufferData.WorldNormal, -LightDirection), 0.0);
+
+	float3 Color = (DiffuseReflection + SpecularReflection) * Radiance * dot(GBufferData.WorldNormal, -LightDirection);
+
+	Output = float4(Color, 1);
 }

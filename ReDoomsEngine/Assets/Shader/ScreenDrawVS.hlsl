@@ -27,7 +27,7 @@ ScreenDrawPSInput ScreenDrawVS(
 )
 {
 	ScreenDrawPSInput Result;
-	DrawFullScreenRect(float4(Position.xy, 0, 1), UV0, Result.Position, Result.UV0);
+	DrawFullScreenRect(float4(Position.xy, 0, 1), UV0, Result.ScreenPosition, Result.UV0);
 
     return Result;
 }
