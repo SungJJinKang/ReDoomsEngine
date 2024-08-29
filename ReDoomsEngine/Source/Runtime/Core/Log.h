@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Macros.h"
 
@@ -16,7 +16,9 @@ namespace redooms::log
 	void LogInternal(const ELogVerbosity LogVerbosity, const wchar_t* const FilePath, const unsigned int CodeLine, const wchar_t* const Format, ...);
 }
 
-#if RD_DEBUG
+#define RD_ENABLE_LOG (RD_DEBUG || RD_EDITOR)
+
+#if RD_ENABLE_LOG
 
 #define RD_LOG(LogVerbosity, Format, ...) \
 { \

@@ -78,13 +78,13 @@ void DeferredShadingPS(
 	float3 ViewDirection = normalize(ViewWorldPosition.xyz - WorldPos);
 	float3 HalfVector = normalize(-LightDirection + ViewDirection);
 
-	float3 F0 = lerp(F0OfDielectric, GBufferData.SpecularColor, GBufferData.Metalic);
-	float3 Frensnel = FresnelSchlick(max(dot(GBufferData.WorldNormal, ViewDirection), 0.0), F0);
+	float3 F0 = lerp(F0OfDielectric, GBufferData.DiffuseColor, GBufferData.Metalic);
+	float3 Frensnel = FresnelSchlick(max(dot(HalfVector, ViewDirection), 0.0), F0);
 	float NDF = DistributionGGX(GBufferData.WorldNormal, HalfVector, GBufferData.Roughness);
 	float Geometry = GeometrySmith(GBufferData.WorldNormal, ViewDirection, -LightDirection, (GBufferData.Roughness + 1) * (GBufferData.Roughness + 1) / 8);
 
-	float3 SpecularReflection = NDF * Geometry * Frensnel / (4.0 * max(dot(GBufferData.WorldNormal, ViewDirection), 0.0) * max(dot(GBufferData.WorldNormal, -LightDirection), 0.0)  + 0.0001);  
-	float3 DiffuseReflection = ((1.0 - Frensnel) * (1.0 - GBufferData.Metalic) * GBufferData.DiffuseColor) / PI;
+	float3 SpecularReflection = (Frensnel * NDF * Geometry) / max(EPSILON, 4.0 * max(dot(GBufferData.WorldNormal, -LightDirection), 0.0) * max(dot(GBufferData.WorldNormal, ViewDirection), 0.0));
+	float3 DiffuseReflection = (lerp(float3(1, 1, 1) - Frensnel, float3(0, 0, 0), GBufferData.Metalic) * GBufferData.DiffuseColor) / PI;
 	float3 Radiance = LightColor * max(dot(GBufferData.WorldNormal, -LightDirection), 0.0);
 
 	float3 Color = (DiffuseReflection + SpecularReflection) * Radiance * dot(GBufferData.WorldNormal, -LightDirection);

@@ -10,7 +10,6 @@ public:
 	eastl::shared_ptr<FD3D12Texture2DResource> GBufferA;
 	eastl::shared_ptr<FD3D12Texture2DResource> GBufferB;
 	eastl::shared_ptr<FD3D12Texture2DResource> GBufferC;
-	eastl::shared_ptr<FD3D12Texture2DResource> GBufferD;
 	eastl::shared_ptr<FD3D12Texture2DResource> Depth;
 
 };
@@ -19,4 +18,4 @@ public:
 	ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(GBufferATexture, EShaderParameterResourceType::Texture) \
 	ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(GBufferBTexture, EShaderParameterResourceType::Texture) \
 	ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(GBufferCTexture, EShaderParameterResourceType::Texture) \
-	ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(GBufferDTexture, EShaderParameterResourceType::Texture)
+	ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(DepthTexture, EShaderParameterResourceType::Texture)

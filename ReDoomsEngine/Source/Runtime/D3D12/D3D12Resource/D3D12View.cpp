@@ -1,4 +1,4 @@
-#include "D3D12View.h"
+﻿#include "D3D12View.h"
 #include "D3D12Device.h"
 #include "D3D12Resource.h"
 #include "D3D12Descriptor.h"
@@ -14,7 +14,7 @@ FD3D12Resource* FD3D12View::GetUnderlyingResource() const
 	return LockedResource ? LockedResource.get() : nullptr;
 }
 
-FD3D12DescriptorHeapBlock FD3D12View::GetDescriptorHeapBlock() const
+const FD3D12DescriptorHeapBlock& FD3D12View::GetDescriptorHeapBlock() const
 {
 	return OfflineDescriptorHeapBlock;
 }

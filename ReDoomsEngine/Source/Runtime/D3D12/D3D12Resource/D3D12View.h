@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "D3D12Include.h"
 
 #include "D3D12Descriptor.h"
@@ -27,7 +27,7 @@ public:
 
 	FD3D12Resource* GetUnderlyingResource() const;
 
-	FD3D12DescriptorHeapBlock GetDescriptorHeapBlock() const;
+	const FD3D12DescriptorHeapBlock& GetDescriptorHeapBlock() const;
 
 	virtual void UpdateDescriptor() = 0;
 	void FreeDescriptorHeapBlock();

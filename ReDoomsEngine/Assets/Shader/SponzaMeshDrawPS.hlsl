@@ -6,7 +6,6 @@
 #include "SceneTextures.hlsl"
 
 Texture2D<float3> DiffuseTexture;
-Texture2D<float3> SpecularTexture;
 Texture2D<float3> NormalTexture;
 Texture2D<float3> EmissiveTexture;
 
@@ -18,7 +17,6 @@ void MainPS(
     out float4 OutGBufferA : SV_Target0, 
     out float4 OutGBufferB : SV_Target1, 
     out float4 OutGBufferC : SV_Target2, 
-    out float4 OutGBufferD : SV_Target3, 
     out float Depth : SV_Depth
 )
 {
@@ -31,7 +29,6 @@ void MainPS(
     FGBufferData GBufferData;
     GBufferData.WorldNormal = normalize(mul(NormalMapValue, TBN));
     GBufferData.DiffuseColor = DiffuseTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
-    GBufferData.SpecularColor = SpecularTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
     GBufferData.EmissiveColor = EmissiveTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
     GBufferData.Metalic = Metalic;
     GBufferData.Roughness = Roughness;
@@ -40,11 +37,9 @@ void MainPS(
     float4 GBufferA;
     float4 GBufferB;
     float4 GBufferC;
-    float4 GBufferD;
-    EncodeGBufferData(GBufferData, GBufferA, GBufferB, GBufferC, GBufferD);
+    EncodeGBufferData(GBufferData, GBufferA, GBufferB, GBufferC);
 	
 	OutGBufferA = GBufferA;
 	OutGBufferB = GBufferB;
 	OutGBufferC = GBufferC;
-	OutGBufferD = GBufferD;
 }

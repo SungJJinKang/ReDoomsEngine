@@ -32,10 +32,10 @@ MeshDrawPSInput MeshDrawVS(
 
     Result.Position = NewPosition;
     Result.UV0 = UV0;
-    Result.Normal = Normal;
+    Result.Normal = mul(Normal, PrimitiveSceneData.LocalToWorld);
     Result.WorldNormal = normalize(mul(Normal, PrimitiveSceneData.LocalToWorld));
-    Result.Tangent = Tangent;
-    Result.BiTangent = BiTangent;
+    Result.Tangent = mul(Tangent, PrimitiveSceneData.LocalToWorld);
+    Result.BiTangent = mul(BiTangent, PrimitiveSceneData.LocalToWorld);
     Result.PrimitiveSceneData = PrimitiveSceneData;
 
     return Result;

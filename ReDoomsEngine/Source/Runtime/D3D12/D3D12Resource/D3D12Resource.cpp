@@ -173,7 +173,14 @@ FD3D12ShaderResourceView* FD3D12Resource::GetSRV(const FD3D12SRVDesc InD3D12SRVD
 		}
 		else
 		{
-			NewSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this());
+			if (InD3D12SRVDesc.Desc)
+			{
+				NewSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this(), *InD3D12SRVDesc.Desc);
+			}
+			else
+			{
+				NewSRV = eastl::make_shared<FD3D12ShaderResourceView>(weak_from_this());
+			}
 		}
 
 		NewSRV->UpdateDescriptor();

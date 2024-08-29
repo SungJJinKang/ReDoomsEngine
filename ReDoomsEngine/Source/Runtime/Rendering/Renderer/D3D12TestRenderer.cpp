@@ -38,21 +38,9 @@ DEFINE_SHADER(MeshDrawVS, "MeshDrawVS.hlsl", "MeshDrawVS", EShaderFrequency::Ver
 	)
 );
 
-// 
-// DEFINE_SHADER(DefaultMeshDrawPS, "DefaultMeshDrawPS.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
-// 	DEFINE_SHADER_PARAMTERS(
-// 		ADD_SHADER_SRV_VARIABLE(BaseColor, EShaderParameterResourceType::Texture)
-// 		ADD_SHADER_SRV_VARIABLE(Emissive, EShaderParameterResourceType::Texture)
-// 		ADD_SHADER_SRV_VARIABLE(Metalic, EShaderParameterResourceType::Texture)
-// 		ADD_SHADER_SRV_VARIABLE(Roughness, EShaderParameterResourceType::Texture)
-// 		ADD_SHADER_SRV_VARIABLE(AmbientOcclusion, EShaderParameterResourceType::Texture)
-// 	)
-// );
-
 DEFINE_SHADER(SponzaMeshDrawPS, "SponzaMeshDrawPS.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(DiffuseTexture, EShaderParameterResourceType::Texture)
-		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(SpecularTexture, EShaderParameterResourceType::Texture)
 		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(NormalTexture, EShaderParameterResourceType::Texture)
 		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(EmissiveTexture, EShaderParameterResourceType::Texture)
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
@@ -106,8 +94,6 @@ void D3D12TestRenderer::CreateRenderTargets()
 		GBufferManager.GBufferB->SetDebugNameToResource(EA_WCHAR("GBufferB"));
 		GBufferManager.GBufferC = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
 		GBufferManager.GBufferC->SetDebugNameToResource(EA_WCHAR("GBufferC"));
-		GBufferManager.GBufferD = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
-		GBufferManager.GBufferD->SetDebugNameToResource(EA_WCHAR("GBufferD"));
 		GBufferManager.Depth = FD3D12ResourceAllocator::GetInstance()->AllocateDepthStencilTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
 		GBufferManager.Depth->SetDebugNameToResource(EA_WCHAR("Depth"));
 	}
@@ -118,7 +104,6 @@ void D3D12TestRenderer::CreateRenderTargets()
 	BasePassPSODesc.Desc.RTVFormats[0] = GBufferManager.GBufferA->GetDesc().Format;
 	BasePassPSODesc.Desc.RTVFormats[1] = GBufferManager.GBufferB->GetDesc().Format;
 	BasePassPSODesc.Desc.RTVFormats[2] = GBufferManager.GBufferC->GetDesc().Format;
-	BasePassPSODesc.Desc.RTVFormats[3] = GBufferManager.GBufferD->GetDesc().Format;
 	BasePassPSODesc.Desc.DSVFormat = GBufferManager.Depth->GetDSV()->GetDesc()->Format;
 	BasePassPSODesc.Desc.SampleDesc.Count = 1;
 	BasePassPSODesc.Desc.BlendState = CD3DX12_BLEND_DESC{ D3D12_DEFAULT };
@@ -137,7 +122,8 @@ void D3D12TestRenderer::SceneSetup()
 	FRenderer::SceneSetup();
 
 	{
-		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"));
+		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("DamagedHelmet/DamagedHelmet.gltf"), EMeshLoadFlags::SubstractOneFromV);
+		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"));
 		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"));
 		for (FMeshModel& Model : Level.ModelList)
 		{
@@ -171,7 +157,6 @@ void D3D12TestRenderer::SceneSetup()
 		auto MeshDrawPSInstance = SponzaMeshDrawPS.MakeTemplatedShaderInstance();
 
 		MeshDrawPSInstance->Parameter.DiffuseTexture = Model.Material->DiffuseTexture ? Model.Material->DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.SpecularTexture = Model.Material->SpecularTexture ? Model.Material->SpecularTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 		MeshDrawPSInstance->Parameter.NormalTexture = Model.Material->NormalsTexture ? Model.Material->NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 		MeshDrawPSInstance->Parameter.EmissiveTexture = Model.Material->EmissionColorTexture ? Model.Material->EmissionColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 		MeshDrawPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Metalic
@@ -220,7 +205,7 @@ void D3D12TestRenderer::OnStartFrame()
 	CreateRenderTargets();
 
 	{
-		float Speed = GTimeDelta * 3.0f;
+		float Speed = GTimeDelta * 1.0f;
 
 		if (FD3D12Window::LeftArrowKeyPressed)
 		{
@@ -283,14 +268,13 @@ bool D3D12TestRenderer::Draw()
 	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
 
 	CurrentFrameCommandContext.StateCache.SetRenderTargets(
-		{ GBufferManager.GBufferA.get(), GBufferManager.GBufferB.get(), GBufferManager.GBufferC.get(), GBufferManager.GBufferD.get() }
+		{ GBufferManager.GBufferA.get(), GBufferManager.GBufferB.get(), GBufferManager.GBufferC.get() }
 	);
  	CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
  	CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(GBufferManager.Depth.get());
 	GBufferManager.GBufferA->ClearRenderTargetView(CurrentFrameCommandContext);
 	GBufferManager.GBufferB->ClearRenderTargetView(CurrentFrameCommandContext);
 	GBufferManager.GBufferC->ClearRenderTargetView(CurrentFrameCommandContext);
-	GBufferManager.GBufferD->ClearRenderTargetView(CurrentFrameCommandContext);
 	GBufferManager.Depth->ClearDepthStencilView(CurrentFrameCommandContext);
 
 	PrepareDraw(CurrentFrameCommandContext);
@@ -348,7 +332,7 @@ bool D3D12TestRenderer::Draw()
 		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
 			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferC->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
-			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferD->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.Depth->GetResource(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 
 		auto ScreenDrawVSInstance = ScreenDrawVS.MakeTemplatedShaderInstance();
 		auto DeferredShadingPSInstance = DeferredShadingPS.MakeTemplatedShaderInstance();
@@ -361,7 +345,20 @@ bool D3D12TestRenderer::Draw()
 		DeferredShadingPSInstance->Parameter.GBufferATexture = GBufferManager.GBufferA->GetTextureSRV();
 		DeferredShadingPSInstance->Parameter.GBufferBTexture = GBufferManager.GBufferB->GetTextureSRV();
 		DeferredShadingPSInstance->Parameter.GBufferCTexture = GBufferManager.GBufferC->GetTextureSRV();
-		DeferredShadingPSInstance->Parameter.GBufferDTexture = GBufferManager.GBufferD->GetTextureSRV();
+		
+		FD3D12SRVDesc SRVDesc{};
+		SRVDesc.ShaderParameterResourceType = EShaderParameterResourceType::Texture;
+		D3D12_SHADER_RESOURCE_VIEW_DESC Desc{};
+		MEM_ZERO(Desc);
+		Desc.Format = DXGI_FORMAT::DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		Desc.ViewDimension = D3D12_SRV_DIMENSION::D3D12_SRV_DIMENSION_TEXTURE2D;
+		Desc.Shader4ComponentMapping = D3D12_ENCODE_SHADER_4_COMPONENT_MAPPING(0,0,0,0);
+		Desc.Texture2D.MostDetailedMip = 0;
+		Desc.Texture2D.MipLevels = -1;
+		Desc.Texture2D.PlaneSlice = 0;
+		Desc.Texture2D.ResourceMinLODClamp = 0.0f;
+		SRVDesc.Desc = Desc;
+		DeferredShadingPSInstance->Parameter.DepthTexture = GBufferManager.Depth->GetSRV(SRVDesc);
 
 		Vector3 DirectionalLightYawPitchRoll = GDirectionalLightYawPitchRoll * DEGREE_TO_RADIAN;
 		Vector3 LightDirection = Quaternion::CreateFromYawPitchRoll(DirectionalLightYawPitchRoll.x, DirectionalLightYawPitchRoll.y, DirectionalLightYawPitchRoll.z) * Vector3::Forward;
@@ -406,7 +403,7 @@ bool D3D12TestRenderer::Draw()
 		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
 			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferC->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET));
 		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
-			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.GBufferD->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET));
+			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.Depth->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_DEPTH_WRITE));
 	}
 
 
