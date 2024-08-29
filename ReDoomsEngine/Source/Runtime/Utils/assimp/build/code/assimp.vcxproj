@@ -12,6 +12,10 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseEditor|x64">
+      <Configuration>ReleaseEditor</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
@@ -41,6 +45,11 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -59,9 +68,13 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='DebugEditor|x64'">.lib</TargetExt>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\Intermediate\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">$(Platform)\$(Configuration)\Intermediate\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">assimp</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">assimp</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -144,6 +157,46 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\pugixml\src;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\rapidjson\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\unzip;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\openddlparser\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\build\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;OPENDDL_STATIC_LIBARY;ASSIMP_BUILD_NO_M3D_IMPORTER;ASSIMP_BUILD_NO_M3D_EXPORTER;WIN32_LEAN_AND_MEAN;UNICODE;_UNICODE;ASSIMP_BUILD_NO_C4D_IMPORTER;MINIZ_USE_UNALIGNED_LOADS_AND_STORES=0;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;RAPIDJSON_HAS_STDSTRING=1;RAPIDJSON_NOMEMBERITERATORCLASS;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(SolutionDir)Source\Runtime\Utils\assimp\build\code\Release\assimp-vc143-mt.pdb</ProgramDataBaseFileName>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;OPENDDL_STATIC_LIBARY;ASSIMP_BUILD_NO_M3D_IMPORTER;ASSIMP_BUILD_NO_M3D_EXPORTER;WIN32_LEAN_AND_MEAN;UNICODE;_UNICODE;ASSIMP_BUILD_NO_C4D_IMPORTER;MINIZ_USE_UNALIGNED_LOADS_AND_STORES=0;ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC=1;RAPIDJSON_HAS_STDSTRING=1;RAPIDJSON_NOMEMBERITERATORCLASS;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;OPENDDLPARSER_BUILD;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\pugixml\src;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\rapidjson\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\unzip;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\openddlparser\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\build\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\pugixml\src;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\rapidjson\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\unzip;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\openddlparser\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\build\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\Utils\assimp\build\include;$(SolutionDir)Source\Runtime\Utils\assimp\build;$(SolutionDir)Source\Runtime\Utils\assimp\include;$(SolutionDir)Source\Runtime\Utils\assimp\code;$(SolutionDir)Source\Runtime\Utils\assimp\.;$(SolutionDir)Source\Runtime\Utils\assimp\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\build\contrib\zlib;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\pugixml\src;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\rapidjson\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\unzip;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\contrib\openddlparser\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\build\code\..\include;$(SolutionDir)Source\Runtime\Utils\assimp\code\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>

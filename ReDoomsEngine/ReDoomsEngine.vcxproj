@@ -10,6 +10,10 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseEditor|x64">
+      <Configuration>ReleaseEditor</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
@@ -42,6 +46,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -54,6 +65,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -70,6 +84,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>
     </LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <IntDir>$(Platform)\$(Configuration)\Intermediate\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">
+    <LinkIncremental />
     <IncludePath>$(IncludePath)</IncludePath>
     <IntDir>$(Platform)\$(Configuration)\Intermediate\</IntDir>
   </PropertyGroup>
@@ -163,6 +182,40 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     </Link>
     <FxCompile>
       <EntryPointName />
+    </FxCompile>
+    <PostBuildEvent>
+      <Command>xcopy /y /d /E /H /C /I "$(ProjectDir)Assets" "$(TargetDir)Assets"
+xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\out\build\x64-Debug\bin" "$(TargetDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);CHAR16T;CRT_SECURE_NO_WARNINGS;SCL_SECURE_NO_WARNINGS;EASTL_OPENSOURCE=1;EASTL_STD_ITERATOR_CATEGORY_ENABLED=1;_CHAR16T;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;_HAS_EXCEPTIONS=0;RD_EDITOR=1;VS_SOLUTION_DIR=R"($(SolutionDir))"</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include;$(SolutionDir)Source\Runtime\D3D12\D3DX12\Include\directx;$(SolutionDir)Source;$(SolutionDir)Source\Editor\imgui;$(SolutionDir)Source\Editor\imgui\backends;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\include;$(SolutionDir)Source\Runtime\Math\DirectXMath\Inc;$(SolutionDir)Source\Runtime\STL\mimalloc\include;$(SolutionDir)Source\Runtime\STL\EASTL\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAAssert\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EABase\include\Common;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAMain\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAStdC\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EATest\include;$(SolutionDir)Source\Runtime\STL\EASTL\test\packages\EAThread\include;$(SolutionDir)Source\Runtime\Core;$(SolutionDir)Source\Runtime\Rendering;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\DirectXTex;$(SolutionDir)Source\Runtime\D3D12;$(SolutionDir)Source\Runtime\Engine;$(SolutionDir)Source\Runtime\IO;$(SolutionDir)Source\Runtime\;$(SolutionDir)Source\Runtime\Utils\cityhash;$(SolutionDir)Source\Runtime\Utils\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>mimalloc-override.lib;dxcompiler.lib;d3d12.lib;dxguid.lib;dxgi.lib;EASTL.lib;EAAssert.lib;EAStdC.lib;EAThread.lib;DirectXTex.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\Runtime\STL\mimalloc\out\msvc-x64\Release;$(SolutionDir)Source\Runtime\STL\mimalloc\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAThread\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAStdC\Release;$(SolutionDir)Source\Runtime\STL\EASTL\build\test\packages\EAAssert\Release;$(SolutionDir)Source\Runtime\D3D12\ShaderCompilers\DirectXShaderCompiler\lib\x64;$(SolutionDir)Source\Runtime\Rendering\DirectXTex\build\bin\CMake\Release;$(SolutionDir)$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <ForceSymbolReferences>%(ForceSymbolReferences)</ForceSymbolReferences>
+    </Link>
+    <FxCompile>
+      <EntryPointName>
+      </EntryPointName>
     </FxCompile>
     <PostBuildEvent>
       <Command>xcopy /y /d /E /H /C /I "$(ProjectDir)Assets" "$(TargetDir)Assets"
