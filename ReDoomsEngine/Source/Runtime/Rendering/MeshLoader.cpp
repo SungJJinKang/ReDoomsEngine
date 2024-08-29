@@ -75,7 +75,8 @@ eastl::shared_ptr<FMesh> CreateMesh(
 	FD3D12CommandContext& InCommandContext, 
 	const wchar_t* const InRelativePath, 
 	eastl::shared_ptr<Assimp::Importer>& AssimpImporter, 
-	const aiMesh* const AssimpMesh
+	const aiMesh* const AssimpMesh,
+	const EMeshLoadFlags InMeshLoadFlags
 )
 {
 	eastl::shared_ptr<FMesh> Mesh{};
@@ -165,7 +166,12 @@ eastl::shared_ptr<FMesh> CreateMesh(
 
 				for (uint32_t TextureCoordIndex = 0; TextureCoordIndex < AssimpMesh->mNumVertices; ++TextureCoordIndex)
 				{
-					EA::StdC::Memcpy(TextureCoords.data() + TextureCoordIndex * sizeof(Vector2), AssimpMesh->mTextureCoords[UVIndex] + TextureCoordIndex, sizeof(Vector2));
+					Vector2 TexCoord{ AssimpMesh->mTextureCoords[UVIndex][TextureCoordIndex].x, AssimpMesh->mTextureCoords[UVIndex][TextureCoordIndex].y };
+					if(InMeshLoadFlags & EMeshLoadFlags::SubstractOneFromV)
+					{
+						TexCoord.y -= 1;
+					}
+					EA::StdC::Memcpy(TextureCoords.data() + TextureCoordIndex * sizeof(Vector2), &TexCoord, sizeof(Vector2));
 				}
 
 				eastl::unique_ptr<FD3D12SubresourceContainer> SubresourceContainer = eastl::make_unique<FD3D12VertexIndexBufferSubresourceContainer>(eastl::move(TextureCoords));
@@ -235,7 +241,7 @@ eastl::shared_ptr<FMesh> CreateMesh(
 	return Mesh;
 }
 
-eastl::shared_ptr<FMaterial> CreateMaterial(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePath, const aiMaterial* const AssimpMaterial)
+eastl::shared_ptr<FMaterial> CreateMaterial(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePath, const aiMaterial* const AssimpMaterial, const EMeshLoadFlags InMeshLoadFlags)
 {
 	eastl::shared_ptr<FMaterial> Material{};
 
@@ -455,7 +461,7 @@ eastl::shared_ptr<FMaterial> CreateMaterial(FD3D12CommandContext& InCommandConte
 		}
 
 		aiColor3D BaseColor;
-		if (AssimpMaterial->Get(AI_MATKEY_BASE_COLOR, BumpFactor) == aiReturn_SUCCESS)
+		if (AssimpMaterial->Get(AI_MATKEY_BASE_COLOR, BaseColor) == aiReturn_SUCCESS)
 		{
 			Material->ConstantBaseColor = Vector3(BaseColor.r, BaseColor.g, BaseColor.b);
 		}
@@ -533,6 +539,7 @@ void TraverseAssimpScene(
 	const aiScene* const InAssimpScene, 
 	eastl::shared_ptr<Assimp::Importer>& AssimpImporter,
 	const aiNode* const InAiNode, 
+	const EMeshLoadFlags InMeshLoadFlags,
 	eastl::vector<FMeshModel>& OutMeshModelList
 )
 {
@@ -551,8 +558,8 @@ void TraverseAssimpScene(
 			const aiMaterial* const AssimpMaterial = InAssimpScene->mMaterials[AssimpMesh->mMaterialIndex];
 
 			NewMeshModel = &OutMeshModelList.emplace_back();
-			NewMeshModel->Mesh = CreateMesh(InCommandContext, InRelativePath, AssimpImporter, AssimpMesh);
-			NewMeshModel->Material = CreateMaterial(InCommandContext, InRelativePath, AssimpMaterial);
+			NewMeshModel->Mesh = CreateMesh(InCommandContext, InRelativePath, AssimpImporter, AssimpMesh, InMeshLoadFlags);
+			NewMeshModel->Material = CreateMaterial(InCommandContext, InRelativePath, AssimpMaterial, InMeshLoadFlags);
 
 			CachedMeshModelMap.emplace(AssimpMesh, OutMeshModelList.size() - 1);
 		}
@@ -569,11 +576,11 @@ void TraverseAssimpScene(
 
 	for(int32 ChildIndex = 0 ; ChildIndex < InAiNode->mNumChildren ; ++ChildIndex)
 	{
-		TraverseAssimpScene(CachedMeshModelMap, InCommandContext, InRelativePath, InAssimpScene, AssimpImporter, InAiNode->mChildren[ChildIndex], OutMeshModelList);
+		TraverseAssimpScene(CachedMeshModelMap, InCommandContext, InRelativePath, InAssimpScene, AssimpImporter, InAiNode->mChildren[ChildIndex], InMeshLoadFlags, OutMeshModelList);
 	}
 }
 
-eastl::vector<FMeshModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePath)
+eastl::vector<FMeshModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePath, const EMeshLoadFlags InMeshLoadFlags)
 {
 	RD_LOG(ELogVerbosity::Log, EA_WCHAR("Loading Mesh(%s)"), InRelativePath);
 
@@ -582,23 +589,28 @@ eastl::vector<FMeshModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& In
     // Create an instance of the Importer class
     eastl::shared_ptr<Assimp::Importer> AssimpImporter = eastl::make_shared<Assimp::Importer>();
 
-    // And have it read the given file with some example postprocessing
-    // Usually - if speed is not the most important aspect for you - you'll
-    // probably to request more postprocessing than we do in this example.
-    const aiScene* const AssimpScene = AssimpImporter->ReadFile(WCHAR_TO_UTF8(FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePath)),
-        aiProcess_CalcTangentSpace |
+	unsigned int PostProcessSteps = aiProcess_CalcTangentSpace |
 		aiProcess_Triangulate |
 		aiProcess_GenUVCoords |
 		aiProcess_ConvertToLeftHanded |
-		aiProcess_GenBoundingBoxes
-        );
+		aiProcess_GenBoundingBoxes;
+
+	if (InMeshLoadFlags & EMeshLoadFlags::DontFlipUVs)
+	{
+		PostProcessSteps &= ~aiProcess_FlipUVs;
+	}
+
+    // And have it read the given file with some example postprocessing
+    // Usually - if speed is not the most important aspect for you - you'll
+    // probably to request more postprocessing than we do in this example.
+	const aiScene* const AssimpScene = AssimpImporter->ReadFile(WCHAR_TO_UTF8(FAssetManager::MakeAbsolutePathFromAssetFolder(InRelativePath)), PostProcessSteps);
 
     // If the import failed, report it
     if (AssimpScene) 
 	{
 		eastl::hash_map<const aiMesh*, int32> CachedMeshModelMap{};
 
-		TraverseAssimpScene(CachedMeshModelMap, InCommandContext, InRelativePath, AssimpScene, AssimpImporter, AssimpScene->mRootNode, MeshModelList);
+		TraverseAssimpScene(CachedMeshModelMap, InCommandContext, InRelativePath, AssimpScene, AssimpImporter, AssimpScene->mRootNode, InMeshLoadFlags, MeshModelList);
 
 		RD_LOG(ELogVerbosity::Log, EA_WCHAR("Success to load Mesh(%s)"), InRelativePath);
     }
