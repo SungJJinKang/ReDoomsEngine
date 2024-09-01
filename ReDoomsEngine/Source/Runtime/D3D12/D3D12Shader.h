@@ -807,6 +807,7 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 			TemplateVariable = this; \
 		} \
 		__VA_ARGS__ \
+	public: \
 		virtual void OnFinishShaderCompile() { FD3D12ShaderTemplate::OnFinishShaderCompile(); ShaderParameter.Init(); } \
 		TD3D12ShaderInstance<F##ShaderName>* MakeTemplatedShaderInstance() { return MakeShaderInstance(true); } \
 		virtual FD3D12ShaderInstance* MakeShaderInstanceForCurrentFrame() { return static_cast<FD3D12ShaderInstance*>(MakeShaderInstance(false)); } \

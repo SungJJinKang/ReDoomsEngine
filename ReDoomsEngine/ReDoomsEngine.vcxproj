@@ -349,7 +349,7 @@ xcopy /y /d /E /H /C /I "$(ProjectDir)Source\Runtime\D3D12\ShaderCompilers\Direc
     <ClInclude Include="Source\Runtime\Common\RendererStateCallbackInterface.h" />
     <ClInclude Include="Source\Runtime\D3D12\ShaderCompilers\HLSLTypeHelper.h" />
     <ClInclude Include="Source\Runtime\Rendering\Renderer\D3D12TestRenderer.h" />
-    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandContext.h" />
+    <ClInclude Include="Source\D3D12CommandContext.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12ConstantBufferHelper.h" />
     <ClInclude Include="Source\Runtime\Rendering\RenderingInclude.h" />
     <ClInclude Include="Source\Runtime\D3D12\D3D12Resource\D3D12Resource.h" />

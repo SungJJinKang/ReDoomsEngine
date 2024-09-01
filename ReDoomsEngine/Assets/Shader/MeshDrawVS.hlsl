@@ -10,7 +10,7 @@ MeshDrawPSInput MeshDrawVS(
     float3 Normal : NORMAL, 
     float3 Tangent : TANGENT, 
     float3 BiTangent : BITANGENT, 
-    float3 UV0 : TEXCOORD, // @TODO Support Multiple tex coords
+    float2 UV0 : TEXCOORD, // @TODO Support Multiple tex coords
     //float3 UV1 : TEXCOORD1, // @TODO Support Multiple tex coords
     //float3 UV2 : TEXCOORD2, // @TODO Support Multiple tex coords
     //float3 UV3 : TEXCOORD3, // @TODO Support Multiple tex coords

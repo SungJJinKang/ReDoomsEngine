@@ -50,6 +50,18 @@ DEFINE_SHADER(SponzaMeshDrawPS, "SponzaMeshDrawPS.hlsl", "MainPS", EShaderFreque
 	)
 );
 
+DEFINE_SHADER(SponzaMeshDrawMirrorSamplerPS, "SponzaMeshDrawPS.hlsl", "MainPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(DiffuseTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(NormalTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_SRV_VARIABLE_ALLOW_CULL(EmissiveTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(float, Metalic)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(float, Roughness)
+		)
+	)
+	ADD_PREPROCESSOR_DEFINE(MIRROR_SAMPLER=1)
+);
 
 DEFINE_SHADER(ScreenDrawVS, "ScreenDrawVS.hlsl", "ScreenDrawVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
@@ -131,7 +143,7 @@ void D3D12TestRenderer::SceneSetup()
 			EMeshLoadFlags::SubstractOneFromV
 		);
 
-		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro_v5_2/BistroExterior.fbx"), {});
+		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"), {}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
 		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"));
 		for (FMeshModel& Model : Level.ModelList)
 		{
@@ -162,15 +174,34 @@ void D3D12TestRenderer::SceneSetup()
 		
 		// @TODO : Pool shader instance
 		auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
-		auto MeshDrawPSInstance = SponzaMeshDrawPS.MakeTemplatedShaderInstance();
+		FD3D12ShaderInstance* MeshDrawPSInstance = nullptr;
 
-		MeshDrawPSInstance->Parameter.DiffuseTexture = Model.Material->DiffuseTexture ? Model.Material->DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.NormalTexture = Model.Material->NormalsTexture ? Model.Material->NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.EmissiveTexture = Model.Material->EmissionColorTexture ? Model.Material->EmissionColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
-		MeshDrawPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Metalic
-			= Model.Material->ConstantMetalicFactor;
-		MeshDrawPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Roughness
-			= Model.Material->ConstantRoughnessFactor;
+		// @TODO : Support shader permutation
+		if (Model.Material->TextureMapMode[0] == ETextureMapMode::Mirror)
+		{
+			auto SponzaMeshDrawMirrorSamplerPSInstance = SponzaMeshDrawMirrorSamplerPS.MakeTemplatedShaderInstance();
+
+			SponzaMeshDrawMirrorSamplerPSInstance->Parameter.DiffuseTexture = Model.Material->DiffuseTexture ? Model.Material->DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+			SponzaMeshDrawMirrorSamplerPSInstance->Parameter.NormalTexture = Model.Material->NormalsTexture ? Model.Material->NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+			SponzaMeshDrawMirrorSamplerPSInstance->Parameter.EmissiveTexture = Model.Material->EmissionColorTexture ? Model.Material->EmissionColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+			SponzaMeshDrawMirrorSamplerPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Metalic
+				= Model.Material->ConstantMetalicFactor;
+			SponzaMeshDrawMirrorSamplerPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Roughness
+				= Model.Material->ConstantRoughnessFactor;
+			MeshDrawPSInstance = SponzaMeshDrawMirrorSamplerPSInstance;
+		}
+		else
+		{
+			auto SponzaMeshDrawPSInstance = SponzaMeshDrawPS.MakeTemplatedShaderInstance();
+			SponzaMeshDrawPSInstance->Parameter.DiffuseTexture = Model.Material->DiffuseTexture ? Model.Material->DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+			SponzaMeshDrawPSInstance->Parameter.NormalTexture = Model.Material->NormalsTexture ? Model.Material->NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+			SponzaMeshDrawPSInstance->Parameter.EmissiveTexture = Model.Material->EmissionColorTexture ? Model.Material->EmissionColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
+			SponzaMeshDrawPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Metalic
+				= Model.Material->ConstantMetalicFactor;
+			SponzaMeshDrawPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.Roughness
+				= Model.Material->ConstantRoughnessFactor;
+			MeshDrawPSInstance = SponzaMeshDrawPSInstance;
+		}
 
 		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 		ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;

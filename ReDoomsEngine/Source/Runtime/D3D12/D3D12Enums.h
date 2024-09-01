@@ -59,10 +59,13 @@ enum EStaticSamplerType
 {
 	StaticPointWrapSampler = 0,
 	StaticPointClampSampler,
+	StaticPointMirrorSampler,
 	StaticLinearWrapSampler,
 	StaticLinearClampSampler,
+	StaticLinearMirrorSampler,
 	StaticAnisotropicWrapSampler,
 	StaticAnisotropicClampSampler,
+	StaticAnisotropicMirrorSampler,
 	NumStaticSamplerType,
 	DynamicSampler,
 	UnknownStaticSamplerType,

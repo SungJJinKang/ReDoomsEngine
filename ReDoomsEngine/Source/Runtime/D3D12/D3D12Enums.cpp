@@ -82,6 +82,10 @@ EStaticSamplerType NameToEStaticSamplerType(const char* const InName)
 	{
 		return EStaticSamplerType::StaticPointClampSampler;
 	}
+	else if (EA::StdC::Strcmp(InName, "StaticPointMirrorSampler") == 0)
+	{
+		return EStaticSamplerType::StaticPointMirrorSampler;
+	}
 	else if (EA::StdC::Strcmp(InName, "StaticLinearWrapSampler") == 0)
 	{
 		return EStaticSamplerType::StaticLinearWrapSampler;
@@ -90,6 +94,10 @@ EStaticSamplerType NameToEStaticSamplerType(const char* const InName)
 	{
 		return EStaticSamplerType::StaticLinearClampSampler;
 	}
+	else if (EA::StdC::Strcmp(InName, "StaticLinearMirrorSampler") == 0)
+	{
+		return EStaticSamplerType::StaticLinearMirrorSampler;
+	}
 	else if (EA::StdC::Strcmp(InName, "StaticAnisotropicWrapSampler") == 0)
 	{
 		return EStaticSamplerType::StaticAnisotropicWrapSampler;
@@ -97,6 +105,10 @@ EStaticSamplerType NameToEStaticSamplerType(const char* const InName)
 	else if (EA::StdC::Strcmp(InName, "StaticAnisotropicClampSampler") == 0)
 	{
 		return EStaticSamplerType::StaticAnisotropicClampSampler;
+	}
+	else if (EA::StdC::Strcmp(InName, "StaticAnisotropicMirrorSampler") == 0)
+	{
+		return EStaticSamplerType::StaticAnisotropicMirrorSampler;
 	}
 	else
 	{

@@ -8,10 +8,13 @@
 // if you need other sampler, add sampler at here and add proper desc to MakeStaticSamplerDescFromByName function
 SamplerState StaticPointWrapSampler;
 SamplerState StaticPointClampSampler;
+SamplerState StaticPointMirrorSampler;
 SamplerState StaticLinearWrapSampler;
 SamplerState StaticLinearClampSampler;
+SamplerState StaticLinearMirrorSampler;
 SamplerState StaticAnisotropicWrapSampler;
 SamplerState StaticAnisotropicClampSampler;
+SamplerState StaticAnisotropicMirrorSampler;
 
 cbuffer ViewConstantBuffer : register(b0)
 {

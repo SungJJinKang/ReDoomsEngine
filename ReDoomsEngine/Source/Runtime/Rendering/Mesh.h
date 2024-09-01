@@ -32,6 +32,7 @@ struct FMesh
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> BiTangentBuffer;
 	eastl::array<eastl::shared_ptr<FD3D12VertexIndexBufferResource>, MAX_NUMBER_OF_VERTEXCOLOR> VertexColorBuffer;
 	eastl::array<eastl::shared_ptr<FD3D12VertexIndexBufferResource>, MAX_NUMBER_OF_TEXTURECOORDS> TexCoordBuffers;
+	bool TexCoordOutOfRange = false;
 
 	uint32_t IndexCount;
 	eastl::shared_ptr<FD3D12VertexIndexBufferResource> IndexBuffer;

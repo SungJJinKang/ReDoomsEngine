@@ -21,15 +21,25 @@ void MainPS(
 )
 {
     Depth = Input.Position.z / Input.Position.w;
-
+	
+	#ifdef MIRROR_SAMPLER
+    float3 NormalMapValue = NormalTexture.Sample(StaticPointMirrorSampler, Input.UV0).xyz;
+	#else
     float3 NormalMapValue = NormalTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
+	#endif
     NormalMapValue = NormalMapValue * 2.0f - 1.0f; // Transform from [0,1] to [-1,1]
     float3x3 TBN = float3x3(Input.WorldTangent, Input.WorldBiTangent, Input.WorldNormal);
 
     FGBufferData GBufferData;
+	#ifdef MIRROR_SAMPLER
+    GBufferData.WorldNormal = normalize(mul(NormalMapValue, TBN));
+    GBufferData.DiffuseColor = DiffuseTexture.Sample(StaticPointMirrorSampler, Input.UV0).xyz;
+    GBufferData.EmissiveColor = EmissiveTexture.Sample(StaticPointMirrorSampler, Input.UV0).xyz;
+	#else
     GBufferData.WorldNormal = normalize(mul(NormalMapValue, TBN));
     GBufferData.DiffuseColor = DiffuseTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
     GBufferData.EmissiveColor = EmissiveTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
+	#endif
     GBufferData.Metalic = Metalic;
     GBufferData.Roughness = Roughness;
     GBufferData.Depth = Depth;
