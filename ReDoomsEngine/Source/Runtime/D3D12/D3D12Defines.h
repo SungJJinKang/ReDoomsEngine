@@ -12,6 +12,7 @@
 #define MAX_SRVS		32
 #define MAX_UAVS		16
 #define MAX_ROOT_CBV	16 // if increase this, Bit count of "CBVRegisterMask" variable should be changed properly
+#define MAX_SAMPLERS	32
 
 #define MAX_BOUND_VERTEX_BUFFER_VIEW 7
 

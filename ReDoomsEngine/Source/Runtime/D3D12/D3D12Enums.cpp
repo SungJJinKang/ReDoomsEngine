@@ -1,4 +1,4 @@
-#include "D3D12Enums.h"
+﻿#include "D3D12Enums.h"
 
 #include "D3D12Include.h"
 
@@ -100,6 +100,6 @@ EStaticSamplerType NameToEStaticSamplerType(const char* const InName)
 	}
 	else
 	{
-		return EStaticSamplerType::UnknownStaticSamplerType;
+		return EStaticSamplerType::DynamicSampler;
 	}
 }

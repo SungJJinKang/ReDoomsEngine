@@ -389,9 +389,22 @@ FD3D12RootSignature FD3D12RootSignature::CreateRootSignature(const FBoundShaderS
 						for (const FSamplerResourceBindingDesc& SamplerResourceBindingDesc : ReflectionData.SamplerResourceBindingDescList)
 						{
 							EA_ASSERT(SamplerResourceBindingDesc.SamplerType < EStaticSamplerType::NumStaticSamplerType);
-							D3D12_STATIC_SAMPLER_DESC StaticSamplerDesc = GStaticSamplerDescList[SamplerResourceBindingDesc.SamplerType];
-							StaticSamplerDesc.ShaderRegister = SamplerResourceBindingDesc.Desc.BindPoint;
-							StaticSamplerDescList.emplace_back(StaticSamplerDesc);
+							if(SamplerResourceBindingDesc.SamplerType < EStaticSamplerType::NumStaticSamplerType)
+							{
+								D3D12_STATIC_SAMPLER_DESC StaticSamplerDesc = GStaticSamplerDescList[SamplerResourceBindingDesc.SamplerType];
+								StaticSamplerDesc.ShaderRegister = SamplerResourceBindingDesc.Desc.BindPoint;
+								StaticSamplerDescList.emplace_back(StaticSamplerDesc);
+							}
+							else if(SamplerResourceBindingDesc.SamplerType == EStaticSamplerType::DynamicSampler)
+							{
+								RootSignature.DescriptorRanges[RootSignature.RootParameterCount].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, ReflectionData.SamplerCount, 0u, RootSignature.BindingSpace, SamplerDescriptorRangeFlags);
+								RootSignature.TableSlots[RootSignature.RootParameterCount].InitAsDescriptorTable(1, &RootSignature.DescriptorRanges[RootSignature.RootParameterCount], Visibility);
+								RootSignature.RootParameterCount++;
+							}
+							else
+							{
+								EA_ASSERT(false);
+							}
 						}
 						
 					}

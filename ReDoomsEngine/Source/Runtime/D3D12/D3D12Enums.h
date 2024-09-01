@@ -64,6 +64,7 @@ enum EStaticSamplerType
 	StaticAnisotropicWrapSampler,
 	StaticAnisotropicClampSampler,
 	NumStaticSamplerType,
+	DynamicSampler,
 	UnknownStaticSamplerType,
 };
 

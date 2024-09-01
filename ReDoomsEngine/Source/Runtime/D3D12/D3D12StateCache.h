@@ -27,6 +27,7 @@ public:
 	void SetSRVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_SRVS>& BindPointInfos);
 	void SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>& BindPointInfos);
 	void SetConstantBuffer(const EShaderFrequency InShaderFrequency, const eastl::array<FShaderParameterConstantBuffer*, MAX_ROOT_CBV>& BindPointInfos);
+	void SetSampler(const EShaderFrequency InShaderFrequency, const eastl::array<FSamplerResourceBindingDesc, MAX_SAMPLERS>& SamplerResourceBindingDescs);
 
 	void SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViewList);
 	void SetIndexBufferView(const D3D12_INDEX_BUFFER_VIEW InIndexBufferView);
@@ -47,6 +48,7 @@ private:
 	void ApplySRVs(FD3D12CommandList& InCommandList, const FD3D12DescriptorHeapBlock& BaseHeapBlcok, uint32_t& OutUsedBlockCount);
 	void ApplyUAVs(FD3D12CommandList& InCommandList, const FD3D12DescriptorHeapBlock& BaseHeapBlcok, uint32_t& OutUsedBlockCount);
 	void ApplyConstantBuffers(FD3D12CommandList& InCommandList);
+	void ApplySamplers(FD3D12CommandList& InCommandList);
 	void ApplyVertexBufferViewList(FD3D12CommandList& InCommandList);
 	void ApplyIndexBufferView(FD3D12CommandList& InCommandList);
 

@@ -288,6 +288,11 @@ void FD3D12StateCache::SetConstantBuffer(const EShaderFrequency InShaderFrequenc
 	bIsRootCBVDirty = true;
 }
 
+void FD3D12StateCache::SetSampler(const EShaderFrequency InShaderFrequency, const eastl::array<FSamplerResourceBindingDesc, MAX_SAMPLERS>& SamplerResourceBindingDescs)
+{
+
+}
+
 void FD3D12StateCache::SetVertexBufferViewList(const eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW>& InVertexBufferViewList)
 {
 	SCOPED_CPU_TIMER(FD3D12StateCache_SetVertexBufferViewList)
@@ -511,6 +516,11 @@ void FD3D12StateCache::ApplyConstantBuffers(FD3D12CommandList& InCommandList)
 	bIsRootCBVDirty = false;
 }
 
+
+void FD3D12StateCache::ApplySamplers(FD3D12CommandList& InCommandList)
+{
+
+}
 
 void FD3D12StateCache::ApplyVertexBufferViewList(FD3D12CommandList& InCommandList)
 {
