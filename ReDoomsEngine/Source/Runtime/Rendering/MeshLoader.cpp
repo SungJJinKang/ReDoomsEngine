@@ -170,11 +170,11 @@ eastl::shared_ptr<FMesh> CreateMesh(
 					
 					if(InMeshLoadFlags & EMeshLoadFlags::SubstractOneFromU)
 					{
-						TexCoord.y -= 1;
+						TexCoord.x -= 1;
 					}
 					if (InMeshLoadFlags & EMeshLoadFlags::SubstractOneFromV)
 					{
-						TexCoord.x -= 1;
+						TexCoord.y -= 1;
 					}
 					if (InMeshLoadFlags & EMeshLoadFlags::FlipU)
 					{

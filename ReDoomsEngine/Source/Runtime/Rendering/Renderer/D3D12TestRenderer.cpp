@@ -7,7 +7,7 @@
 #include "GlobalResources.h"
 #include "Utils/ConsoleVariable.h"
 
-static TConsoleVariable<Vector3> GDirectionalLightYawPitchRoll{ "r.DirectionalLightYawPitchRoll", Vector3{ 0.0f, 0.0f, -150.0f } };
+static TConsoleVariable<Vector3> GDirectionalLightYawPitchRoll{ "r.DirectionalLightYawPitchRoll", Vector3{ 75.0f, 1.0f, 75.0f } };
 static TConsoleVariable<Vector3> GDirectionLightColor{ "r.DirectionLightColor", Vector3{ 3.0f, 3.0f, 3.0f } };
 
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
@@ -78,6 +78,7 @@ DEFINE_SHADER(DeferredShadingPS, "DeferredShadingPS.hlsl", "DeferredShadingPS", 
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector3, LightDirection)
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector3, LightColor)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, PosScaleUVScale)
 		)
 	)
 );
@@ -143,7 +144,7 @@ void D3D12TestRenderer::SceneSetup()
 			EMeshLoadFlags::SubstractOneFromV
 		);
 
-		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"), {}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
+		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"), {}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
 		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"));
 		for (FMeshModel& Model : Level.ModelList)
 		{
@@ -240,7 +241,7 @@ void D3D12TestRenderer::OnStartFrame()
 	CreateRenderTargets();
 
 	{
-		float Speed = GTimeDelta * 1.0f;
+		float Speed = GTimeDelta * 0.5f;
 
 		if (FD3D12Window::LeftArrowKeyPressed)
 		{
@@ -282,8 +283,10 @@ void D3D12TestRenderer::OnStartFrame()
 		Matrix ProjMat = View.GetPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
 		ViewConstantBuffer.MemberVariables.ViewWorldPosition = Vector4{ View.Transform.Position.x, View.Transform.Position.y, View.Transform.Position.z, 0.0f };
 		ViewConstantBuffer.MemberVariables.ViewMatrix = ViewMat;
+		ViewConstantBuffer.MemberVariables.InvViewMatrix = ViewMat.Invert();
 		ViewConstantBuffer.MemberVariables.InvViewProjectionMatrix = ViewMat.Invert();
 		ViewConstantBuffer.MemberVariables.ProjectionMatrix = ProjMat;
+		ViewConstantBuffer.MemberVariables.InvProjectionMatrix = ProjMat.Invert();
 		ViewConstantBuffer.MemberVariables.ViewProjectionMatrix = ViewProjMat;
 		ViewConstantBuffer.MemberVariables.PrevViewProjectionMatrix = ViewProjMat;
 		ViewConstantBuffer.FlushShadowDataIfDirty();
@@ -395,11 +398,17 @@ bool D3D12TestRenderer::Draw()
 		SRVDesc.Desc = Desc;
 		DeferredShadingPSInstance->Parameter.DepthTexture = GBufferManager.Depth->GetSRV(SRVDesc);
 
-		Vector3 DirectionalLightYawPitchRoll = GDirectionalLightYawPitchRoll * DEGREE_TO_RADIAN;
-		Vector3 LightDirection = Quaternion::CreateFromYawPitchRoll(DirectionalLightYawPitchRoll.x, DirectionalLightYawPitchRoll.y, DirectionalLightYawPitchRoll.z) * Vector3::Forward;
-		
+		Vector3 DirectionalLightYawPitchRoll = GDirectionalLightYawPitchRoll;
+		Vector3 LightDirection = Vector3::Transform(
+			Vector3::Up,
+			Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(DirectionalLightYawPitchRoll.x), XMConvertToRadians(DirectionalLightYawPitchRoll.y), XMConvertToRadians(DirectionalLightYawPitchRoll.z))
+		);
+		LightDirection.Normalize();
+
 		DeferredShadingPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.LightDirection = LightDirection;
 		DeferredShadingPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.LightColor = GDirectionLightColor;
+		DeferredShadingPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale =
+			Vector4{ static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()), static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
 
 		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 		ShaderList[EShaderFrequency::Vertex] = ScreenDrawVSInstance;

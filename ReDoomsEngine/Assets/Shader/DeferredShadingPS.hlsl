@@ -65,15 +65,12 @@ void DeferredShadingPS(
 {
     FGBufferData GBufferData = FetchAndDecodeGBufferData(Input.UV0);
 	
-	// Step 2: Convert screen coordinates to NDC
-    float2 NDCPos = (Input.ScreenPosition.xy / Input.ScreenPosition.xy) * 2.0f - 1.0f;
-
-    // Step 3: Reconstruct view space position
-    float4 ViewSpacePos = float4(NDCPos, GBufferData.Depth, 1.0f);
-
-    // Step 4: Transform to world space
-    float4 WorldPos = mul(ViewSpacePos, InvViewProjectionMatrix);
+    float2 NDCPos = (Input.ScreenPosition.xy / PosScaleUVScale.xy) * 2.0f - 1.0f;
+	NDCPos.y *= -1.0f;
+    float4 ClipSpacePos = float4(NDCPos, GBufferData.Depth, 1.0f);
+    float4 WorldPos = mul(ClipSpacePos, InvProjectionMatrix);
     WorldPos /= WorldPos.w; // Perform perspective divide
+    WorldPos = mul(WorldPos, InvViewMatrix);
 
 	float3 ViewDirection = normalize(ViewWorldPosition.xyz - WorldPos);
 	float3 HalfVector = normalize(-LightDirection + ViewDirection);
@@ -81,13 +78,13 @@ void DeferredShadingPS(
 	float3 F0 = lerp(F0OfDielectric, GBufferData.DiffuseColor, GBufferData.Metalic);
 	float3 Frensnel = FresnelSchlick(max(dot(HalfVector, ViewDirection), 0.0), F0);
 	float NDF = DistributionGGX(GBufferData.WorldNormal, HalfVector, GBufferData.Roughness);
-	float Geometry = GeometrySmith(GBufferData.WorldNormal, ViewDirection, -LightDirection, (GBufferData.Roughness + 1) * (GBufferData.Roughness + 1) / 8);
+	float Geometry = GeometrySmith(GBufferData.WorldNormal, ViewDirection, -LightDirection, ((GBufferData.Roughness + 1) * (GBufferData.Roughness + 1)) / 8);
 
 	float3 SpecularReflection = (Frensnel * NDF * Geometry) / max(EPSILON, 4.0 * max(dot(GBufferData.WorldNormal, -LightDirection), 0.0) * max(dot(GBufferData.WorldNormal, ViewDirection), 0.0));
 	float3 DiffuseReflection = (lerp(float3(1, 1, 1) - Frensnel, float3(0, 0, 0), GBufferData.Metalic) * GBufferData.DiffuseColor) / PI;
-	float3 Radiance = LightColor * max(dot(GBufferData.WorldNormal, -LightDirection), 0.0);
+	float3 Radiance = LightColor;
 
-	float3 Color = (DiffuseReflection + SpecularReflection) * Radiance * dot(GBufferData.WorldNormal, -LightDirection);
+	float3 Color = (DiffuseReflection) * Radiance * dot(GBufferData.WorldNormal, -LightDirection);
 
-	Output = float4(Color, 1);
+	Output = float4(WorldPos.xyz, 1);
 }

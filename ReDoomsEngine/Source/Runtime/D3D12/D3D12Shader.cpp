@@ -784,12 +784,12 @@ void FShaderParameterConstantBuffer::Init()
 	if (!IsCulled())
 	{
 		const uint32_t ConstantBufferSize = GetConstantBufferReflectionData()->Desc.Size;
+		const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
+		FShaderParameterConstantBuffer* const TemplateShaderParameterConstantBuffer = GetTemplateShaderParameterConstantBuffer();
+		const bool bFoundReflectionData = TemplateShaderParameterConstantBuffer->SetReflectionDataFromShaderReflectionData(ShaderReflection);
+
 		if (!IsDynamicConstantBuffer())
 		{
-			const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
-			FShaderParameterConstantBuffer* const TemplateShaderParameterConstantBuffer = GetTemplateShaderParameterConstantBuffer();
-			const bool bFoundReflectionData = TemplateShaderParameterConstantBuffer->SetReflectionDataFromShaderReflectionData(ShaderReflection);
-
 			if (bFoundReflectionData && TemplateShaderParameterConstantBuffer->ConstantBufferResource == nullptr)
 			{
 				TemplateShaderParameterConstantBuffer->ShadowData.resize(ConstantBufferSize);
@@ -802,8 +802,10 @@ void FShaderParameterConstantBuffer::Init()
 
 				for (FMemberVariableContainer& MemberVariablePair : TemplateShaderParameterConstantBuffer->MemberVariableMap)
 				{
+					auto ReflectionIter = TemplateShaderParameterConstantBuffer->ReflectionData->VariableList.find(MemberVariablePair.VariableName);
+					EA_ASSERT_FORMATTED(ReflectionIter != TemplateShaderParameterConstantBuffer->ReflectionData->VariableList.end(), ("Reflection data of variable(%s) isn't found(Maybe it's culled)", MemberVariablePair.VariableName));
 					const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBufferReflectionData =
-						TemplateShaderParameterConstantBuffer->ReflectionData->VariableList.find(MemberVariablePair.VariableName)->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
+						ReflectionIter->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
 
 					MemberVariablePair.ShaderParameterConstantBufferMemberVariableTemplate->SetOffset(VariableOfConstantBufferReflectionData.Desc.StartOffset);
 				}
@@ -819,8 +821,10 @@ void FShaderParameterConstantBuffer::Init()
 
 				for (FMemberVariableContainer& MemberVariablePair : MemberVariableMap)
 				{
+					auto ReflectionIter = ReflectionData->VariableList.find(MemberVariablePair.VariableName);
+					EA_ASSERT_FORMATTED(ReflectionIter != ReflectionData->VariableList.end(), ("Reflection data of variable(%s) isn't found(Maybe it's culled)", MemberVariablePair.VariableName));
 					const FD3D12ConstantBufferReflectionData::FD3D12VariableOfConstantBufferReflectionData& VariableOfConstantBufferReflectionData =
-						ReflectionData->VariableList.find(MemberVariablePair.VariableName)->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
+						ReflectionIter->second; // @todo need to optimize this. #1 use vector instead of hash map. At init time, match element index with bind point from reflection data
 
 					MemberVariablePair.ShaderParameterConstantBufferMemberVariableTemplate->SetOffset(VariableOfConstantBufferReflectionData.Desc.StartOffset);
 				}
