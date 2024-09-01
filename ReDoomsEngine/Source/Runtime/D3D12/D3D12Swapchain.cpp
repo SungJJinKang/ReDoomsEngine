@@ -32,10 +32,10 @@ FD3D12Swapchain::FD3D12Swapchain(
 
 void FD3D12Swapchain::Init()
 {
-    {
-        // Describe and create the swap chain.
         DXGI_SWAP_CHAIN_DESC1 Desc;
         MEM_ZERO(Desc);
+    {
+        // Describe and create the swap chain.
         Desc.BufferCount = NumBuffer;
         Desc.Width = Width;
         Desc.Height = Height;

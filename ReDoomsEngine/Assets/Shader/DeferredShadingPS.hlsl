@@ -64,7 +64,7 @@ void DeferredShadingPS(
 )
 {
     FGBufferData GBufferData = FetchAndDecodeGBufferData(Input.UV0);
-
+	
 	// Step 2: Convert screen coordinates to NDC
     float2 NDCPos = (Input.ScreenPosition.xy / Input.ScreenPosition.xy) * 2.0f - 1.0f;
 

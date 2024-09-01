@@ -23,7 +23,6 @@ MeshDrawPSInput MeshDrawVS(
     FPrimitiveSceneData PrimitiveSceneData = GetPrimitiveIdSceneData(PrimitiveID);
     float4 NewPosition = float4(Position, 1.0f);
 
-    Normal.z *= -1.0f;
     NewPosition = mul(NewPosition, PrimitiveSceneData.LocalToWorld);
 
     Result.WorldPosition = NewPosition;
@@ -32,10 +31,12 @@ MeshDrawPSInput MeshDrawVS(
 
     Result.Position = NewPosition;
     Result.UV0 = UV0;
-    Result.Normal = mul(Normal, PrimitiveSceneData.LocalToWorld);
-    Result.WorldNormal = normalize(mul(Normal, PrimitiveSceneData.LocalToWorld));
-    Result.Tangent = mul(Tangent, PrimitiveSceneData.LocalToWorld);
-    Result.BiTangent = mul(BiTangent, PrimitiveSceneData.LocalToWorld);
+    Result.Normal = Normal;
+    float3 WorldNormal = normalize(mul(Normal, PrimitiveSceneData.LocalToWorld));
+    WorldNormal.z *= -1.0f;
+    Result.WorldNormal = WorldNormal;
+    Result.WorldTangent = normalize(mul(Tangent, PrimitiveSceneData.LocalToWorld));
+    Result.WorldBiTangent = normalize(mul(BiTangent, PrimitiveSceneData.LocalToWorld));
     Result.PrimitiveSceneData = PrimitiveSceneData;
 
     return Result;

@@ -122,8 +122,16 @@ void D3D12TestRenderer::SceneSetup()
 	FRenderer::SceneSetup();
 
 	{
-		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("DamagedHelmet/DamagedHelmet.gltf"), EMeshLoadFlags::SubstractOneFromV);
-		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"));
+		FMeshModelCustomData MeshModelCustomDataForHelmet{};
+		MeshModelCustomDataForHelmet.Transform.Rotate({ -90.0f, 180.0f, 0.0f });
+		Level.UploadModel(
+			CurrentFrameCommandContext, 
+			EA_WCHAR("DamagedHelmet/DamagedHelmet.gltf"), 
+			MeshModelCustomDataForHelmet,
+			EMeshLoadFlags::SubstractOneFromV
+		);
+
+		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro_v5_2/BistroExterior.fbx"), {});
 		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"));
 		for (FMeshModel& Model : Level.ModelList)
 		{
@@ -172,13 +180,9 @@ void D3D12TestRenderer::SceneSetup()
 
 		for(uint32_t InstanceIndex = 0; InstanceIndex < Model.InstanceLocalToWorldMatrixList.size(); ++InstanceIndex)
 		{
-			const Matrix LocalToWorldMatrix = Matrix::CreateTranslation(
-				0.0f,
-				0.0f,
-				0.0f);
-
-			const Matrix RotationMatrix = Matrix::CreateFromQuaternion(Quaternion::Identity);
-			const Matrix ScaleMatrix = Matrix::CreateScale(1.0f, 1.0f, 1.0f);
+			const Matrix TranslationMatrix = Matrix::CreateTranslation(Model.CustomData.Transform.Position);
+			const Matrix RotationMatrix = Matrix::CreateFromQuaternion(Model.CustomData.Transform.Rotation);
+			const Matrix ScaleMatrix = Matrix::CreateScale(Model.CustomData.Transform.Scale);
 
 			//
 			RenderScene.AddPrimitive(
@@ -186,7 +190,7 @@ void D3D12TestRenderer::SceneSetup()
 				Model.Mesh->AABB,
 				EPrimitiveFlag::CacheMeshDrawCommand | EPrimitiveFlag::AllowMergeMeshDrawCommand,
 				//Model.InstanceLocalToWorldMatrixList[InstanceIndex], @ TODO : Bistro asset has wrong matrix data, so we use this temporally
-				LocalToWorldMatrix * RotationMatrix * ScaleMatrix,
+				ScaleMatrix * RotationMatrix * TranslationMatrix,
 				2000.0f,
 				Model.Mesh->VertexBufferViewList,
 				Model.Mesh->IndexBufferView,

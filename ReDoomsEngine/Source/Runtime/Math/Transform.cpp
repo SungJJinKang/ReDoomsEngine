@@ -1,4 +1,4 @@
-#include "Transform.h"
+﻿#include "Transform.h"
 
 void FTransform::LookAt(const FTransform& Target, const Vector3& Up)
 {
@@ -32,6 +32,11 @@ void FTransform::RotateYaw(const float EulerAngle, const ESpace& RelativeTo)
 void FTransform::RotatePitch(const float EulerAngle, const ESpace& RelativeTo)
 {
 	Rotate(Quaternion::CreateFromAxisAngle((RelativeTo == ESpace::World) ? Vector3::Right : Right(), EulerAngle));
+}
+
+void FTransform::RotateRoll(const float EulerAngle, const ESpace& RelativeTo)
+{
+	Rotate(Quaternion::CreateFromAxisAngle((RelativeTo == ESpace::World) ? Vector3::Forward : Forward(), EulerAngle));
 }
 
 void FTransform::RotateAround(const Vector3& CenterPoint, const Vector3& Axis, const float Angle)

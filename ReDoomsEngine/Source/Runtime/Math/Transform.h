@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "CommonInclude.h"
 
 enum ESpace
@@ -9,9 +9,9 @@ enum ESpace
 
 struct FTransform
 {
-	Vector3 Position;
-	Vector3 Scale;
-	Quaternion Rotation;
+	Vector3 Position{ 0.0f };
+	Vector3 Scale{ 1.0 };
+	Quaternion Rotation{ Quaternion::Identity };
 
 	inline Vector3 Up()
 	{
@@ -34,6 +34,7 @@ struct FTransform
 	void Rotate(const Vector3 EulerAngle);
 	void RotateYaw(const float EulerAngle, const ESpace& RelativeTo);
 	void RotatePitch(const float EulerAngle, const ESpace& RelativeTo);
+	void RotateRoll(const float EulerAngle, const ESpace& RelativeTo);
 	void RotateAround(const Vector3& CenterPoint, const Vector3& Axis, const float Angle);
 
 	Vector3 TransformDirection(Vector3 Direction) const

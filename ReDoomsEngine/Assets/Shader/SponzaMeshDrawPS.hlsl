@@ -24,7 +24,7 @@ void MainPS(
 
     float3 NormalMapValue = NormalTexture.Sample(StaticPointClampSampler, Input.UV0).xyz;
     NormalMapValue = NormalMapValue * 2.0f - 1.0f; // Transform from [0,1] to [-1,1]
-    float3x3 TBN = float3x3(Input.Tangent, Input.BiTangent, Input.Normal);
+    float3x3 TBN = float3x3(Input.WorldTangent, Input.WorldBiTangent, Input.WorldNormal);
 
     FGBufferData GBufferData;
     GBufferData.WorldNormal = normalize(mul(NormalMapValue, TBN));

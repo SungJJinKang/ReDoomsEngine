@@ -3,6 +3,7 @@
 #include "CommonInclude.h"
 #include "D3D12Include.h"
 #include "D3D12Resource/D3D12Resource.h"
+#include "Math/Transform.h"
 
 #define MAX_NUMBER_OF_VERTEXCOLOR 8
 #define MAX_NUMBER_OF_TEXTURECOORDS 1
@@ -173,9 +174,16 @@ struct FMaterial
 	float UseAOMap{ 0.0f };
 };
 
+struct FMeshModelCustomData
+{
+	FTransform Transform;
+};
+
 struct FMeshModel
 {
 	eastl::shared_ptr<FMesh> Mesh;
 	eastl::shared_ptr<FMaterial> Material;
 	eastl::vector<Matrix> InstanceLocalToWorldMatrixList;
+
+	FMeshModelCustomData CustomData;
 };

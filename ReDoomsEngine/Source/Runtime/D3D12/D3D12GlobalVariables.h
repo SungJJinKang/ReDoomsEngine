@@ -9,8 +9,8 @@ extern uint64_t GCurrentBackbufferIndex;
 extern uint64_t GPreviousFrameDrawCallCount;
 extern uint64_t GDrawCallCount;
 extern float GTimeDelta;
-inline constexpr int32_t GWindowWidth = 1920;
-inline constexpr int32_t GWindowHeight = 1080;
+inline constexpr int32_t GWindowWidth = 1366;
+inline constexpr int32_t GWindowHeight = 768;
 extern ERendererState GCurrentRendererState;
 inline constexpr int32_t GSupportedMaxPrimitiveCount = 4096;
 

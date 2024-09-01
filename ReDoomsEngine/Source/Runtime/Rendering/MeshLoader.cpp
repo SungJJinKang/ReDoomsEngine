@@ -3,12 +3,14 @@
 #include "AssetManager.h"
 #include "D3D12Resource/D3D12ResourceAllocator.h"
 #include "TextureLoader.h"
+#include "Utils/ConsoleVariable.h"
 
 #include  <filesystem>
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 
+static TConsoleVariable<bool> GClampTextureCoordinate{ "r.ClampTextureCoordinate", true };
 
 ETextureMapping ConvertaiTextureMappingToETextureMapping(const aiTextureMapping InaiTextureMapping)
 {
@@ -167,10 +169,32 @@ eastl::shared_ptr<FMesh> CreateMesh(
 				for (uint32_t TextureCoordIndex = 0; TextureCoordIndex < AssimpMesh->mNumVertices; ++TextureCoordIndex)
 				{
 					Vector2 TexCoord{ AssimpMesh->mTextureCoords[UVIndex][TextureCoordIndex].x, AssimpMesh->mTextureCoords[UVIndex][TextureCoordIndex].y };
+					
 					if(InMeshLoadFlags & EMeshLoadFlags::SubstractOneFromV)
 					{
 						TexCoord.y -= 1;
 					}
+					if (InMeshLoadFlags & EMeshLoadFlags::FlipU)
+					{
+						TexCoord.x -= 1;
+						TexCoord.x *= -1;
+					}
+					if (InMeshLoadFlags & EMeshLoadFlags::FlipV)
+					{
+						TexCoord.y -= 1;
+						TexCoord.y *= -1;
+					}
+
+					if (GClampTextureCoordinate)
+					{
+						TexCoord.Clamp(Vector2{ 0.0f }, Vector2{ 1.0f });
+					}
+					else
+					{
+						EA_ASSERT(TexCoord.x >= 0.0f && TexCoord.x <= 1.0f);
+						EA_ASSERT(TexCoord.y >= 0.0f && TexCoord.y <= 1.0f);
+					}
+
 					EA::StdC::Memcpy(TextureCoords.data() + TextureCoordIndex * sizeof(Vector2), &TexCoord, sizeof(Vector2));
 				}
 
@@ -540,6 +564,7 @@ void TraverseAssimpScene(
 	eastl::shared_ptr<Assimp::Importer>& AssimpImporter,
 	const aiNode* const InAiNode, 
 	const EMeshLoadFlags InMeshLoadFlags,
+	const FMeshModelCustomData& InCustomData,
 	eastl::vector<FMeshModel>& OutMeshModelList
 )
 {
@@ -560,6 +585,7 @@ void TraverseAssimpScene(
 			NewMeshModel = &OutMeshModelList.emplace_back();
 			NewMeshModel->Mesh = CreateMesh(InCommandContext, InRelativePath, AssimpImporter, AssimpMesh, InMeshLoadFlags);
 			NewMeshModel->Material = CreateMaterial(InCommandContext, InRelativePath, AssimpMaterial, InMeshLoadFlags);
+			NewMeshModel->CustomData = InCustomData;
 
 			CachedMeshModelMap.emplace(AssimpMesh, OutMeshModelList.size() - 1);
 		}
@@ -576,11 +602,26 @@ void TraverseAssimpScene(
 
 	for(int32 ChildIndex = 0 ; ChildIndex < InAiNode->mNumChildren ; ++ChildIndex)
 	{
-		TraverseAssimpScene(CachedMeshModelMap, InCommandContext, InRelativePath, InAssimpScene, AssimpImporter, InAiNode->mChildren[ChildIndex], InMeshLoadFlags, OutMeshModelList);
+		TraverseAssimpScene(
+			CachedMeshModelMap,
+			InCommandContext, 
+			InRelativePath, 
+			InAssimpScene, 
+			AssimpImporter, 
+			InAiNode->mChildren[ChildIndex],
+			InMeshLoadFlags, 
+			InCustomData,
+			OutMeshModelList
+		);
 	}
 }
 
-eastl::vector<FMeshModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePath, const EMeshLoadFlags InMeshLoadFlags)
+eastl::vector<FMeshModel> FMeshLoader::LoadFromMeshFile(
+	FD3D12CommandContext& InCommandContext,
+	const wchar_t* const InRelativePath,
+	const FMeshModelCustomData& InCustomData,
+	const EMeshLoadFlags InMeshLoadFlags
+)
 {
 	RD_LOG(ELogVerbosity::Log, EA_WCHAR("Loading Mesh(%s)"), InRelativePath);
 
@@ -591,9 +632,13 @@ eastl::vector<FMeshModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& In
 
 	unsigned int PostProcessSteps = aiProcess_CalcTangentSpace |
 		aiProcess_Triangulate |
-		aiProcess_GenUVCoords |
 		aiProcess_ConvertToLeftHanded |
 		aiProcess_GenBoundingBoxes;
+
+	if (InMeshLoadFlags & EMeshLoadFlags::DontConvertToLeftHand)
+	{
+		PostProcessSteps &= ~aiProcess_ConvertToLeftHanded;
+	}
 
 	if (InMeshLoadFlags & EMeshLoadFlags::DontFlipUVs)
 	{
@@ -610,7 +655,17 @@ eastl::vector<FMeshModel> FMeshLoader::LoadFromMeshFile(FD3D12CommandContext& In
 	{
 		eastl::hash_map<const aiMesh*, int32> CachedMeshModelMap{};
 
-		TraverseAssimpScene(CachedMeshModelMap, InCommandContext, InRelativePath, AssimpScene, AssimpImporter, AssimpScene->mRootNode, InMeshLoadFlags, MeshModelList);
+		TraverseAssimpScene(
+			CachedMeshModelMap, 
+			InCommandContext, 
+			InRelativePath, 
+			AssimpScene, 
+			AssimpImporter, 
+			AssimpScene->mRootNode,
+			InMeshLoadFlags,
+			InCustomData,
+			MeshModelList
+		);
 
 		RD_LOG(ELogVerbosity::Log, EA_WCHAR("Success to load Mesh(%s)"), InRelativePath);
     }

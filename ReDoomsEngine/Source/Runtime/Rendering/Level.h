@@ -7,7 +7,12 @@ class FLevel
 {
 public:
 
-	void UploadModel(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePath, const EMeshLoadFlags InMeshLoadFlags = EMeshLoadFlags::MeshLoadFlags_None);
+	void UploadModel(
+		FD3D12CommandContext& InCommandContext,
+		const wchar_t* const InRelativePath,
+		const FMeshModelCustomData& InMeshModelCustomData = FMeshModelCustomData{},
+		const EMeshLoadFlags InMeshLoadFlags = EMeshLoadFlags::MeshLoadFlags_None
+	);
 	eastl::vector<FMeshModel> ModelList;
 
 private:
