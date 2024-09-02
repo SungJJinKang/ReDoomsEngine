@@ -33,7 +33,6 @@ MeshDrawPSInput MeshDrawVS(
     Result.UV0 = UV0;
     Result.Normal = Normal;
     float3 WorldNormal = normalize(mul(Normal, PrimitiveSceneData.LocalToWorld));
-    WorldNormal.z *= -1.0f;
     Result.WorldNormal = WorldNormal;
     Result.WorldTangent = normalize(mul(Tangent, PrimitiveSceneData.LocalToWorld));
     Result.WorldBiTangent = normalize(mul(BiTangent, PrimitiveSceneData.LocalToWorld));

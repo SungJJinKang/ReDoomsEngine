@@ -7,7 +7,7 @@
 #include "GlobalResources.h"
 #include "Utils/ConsoleVariable.h"
 
-static TConsoleVariable<Vector3> GDirectionalLightYawPitchRoll{ "r.DirectionalLightYawPitchRoll", Vector3{ 75.0f, 1.0f, 75.0f } };
+static TConsoleVariable<Vector3> GDirectionalLightYawPitchRoll{ "r.DirectionalLightYawPitchRoll", Vector3{ 250.0f, 1.0f, 75.0f } };
 static TConsoleVariable<Vector3> GDirectionLightColor{ "r.DirectionLightColor", Vector3{ 3.0f, 3.0f, 3.0f } };
 
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
@@ -136,7 +136,8 @@ void D3D12TestRenderer::SceneSetup()
 
 	{
 		FMeshModelCustomData MeshModelCustomDataForHelmet{};
-		MeshModelCustomDataForHelmet.Transform.Rotate({ -90.0f, 180.0f, 0.0f });
+		MeshModelCustomDataForHelmet.Transform.Position = Vector3{ 0.0f, 0.0f, 0.0f };
+		MeshModelCustomDataForHelmet.Transform.Rotate({ -270.0f, 0.0, 0.0f });
 		Level.UploadModel(
 			CurrentFrameCommandContext, 
 			EA_WCHAR("DamagedHelmet/DamagedHelmet.gltf"), 
@@ -145,7 +146,7 @@ void D3D12TestRenderer::SceneSetup()
 		);
 
 		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"), {}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
-		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"));
+		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"{}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
 		for (FMeshModel& Model : Level.ModelList)
 		{
 			if (Model.Material->MaterialName.find("Metal") != Model.Material->MaterialName.npos)
@@ -263,20 +264,20 @@ void D3D12TestRenderer::OnStartFrame()
 
 		if (FD3D12Window::WKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 0.0f, 0.0f, -1.0f } *Speed * 50.0f, ESpace::Self);
+			View.Transform.Translate(Vector3::Forward *Speed * 50.0f, ESpace::Self);
 		}
 		else if (FD3D12Window::SKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 0.0f, 0.0f, 1.0f } *Speed * 50.0f, ESpace::Self);
+			View.Transform.Translate(Vector3::Backward *Speed * 50.0f, ESpace::Self);
 		}
 
 		if (FD3D12Window::AKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ -1.0f , 0.0f, 0.0f } *Speed * 50.0f, ESpace::Self);
+			View.Transform.Translate(Vector3::Left *Speed * 50.0f, ESpace::Self);
 		}
 		else if (FD3D12Window::DKeyPressed)
 		{
-			View.Transform.Translate(Vector3{ 1.0f, 0.0f, 0.0f } *Speed * 50.0f, ESpace::Self);
+			View.Transform.Translate(Vector3::Right *Speed * 50.0f, ESpace::Self);
 		}
 		Matrix ViewProjMat = View.GetViewPerspectiveProjectionMatrix(90.0f, SwapChain->GetWidth(), SwapChain->GetHeight());
 		Matrix ViewMat = View.Get3DViewMatrices();
@@ -284,10 +285,10 @@ void D3D12TestRenderer::OnStartFrame()
 		ViewConstantBuffer.MemberVariables.ViewWorldPosition = Vector4{ View.Transform.Position.x, View.Transform.Position.y, View.Transform.Position.z, 0.0f };
 		ViewConstantBuffer.MemberVariables.ViewMatrix = ViewMat;
 		ViewConstantBuffer.MemberVariables.InvViewMatrix = ViewMat.Invert();
-		ViewConstantBuffer.MemberVariables.InvViewProjectionMatrix = ViewMat.Invert();
 		ViewConstantBuffer.MemberVariables.ProjectionMatrix = ProjMat;
 		ViewConstantBuffer.MemberVariables.InvProjectionMatrix = ProjMat.Invert();
 		ViewConstantBuffer.MemberVariables.ViewProjectionMatrix = ViewProjMat;
+		ViewConstantBuffer.MemberVariables.InvViewProjectionMatrix = ViewProjMat.Invert();
 		ViewConstantBuffer.MemberVariables.PrevViewProjectionMatrix = ViewProjMat;
 		ViewConstantBuffer.FlushShadowDataIfDirty();
 	}

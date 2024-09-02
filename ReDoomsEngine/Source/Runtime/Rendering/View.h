@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CommonInclude.h"
 
@@ -20,8 +20,8 @@ public:
 
 private:
 
-	float NearPlane = 0.01f;
-	float FarPlane = 12000.0f;
+	float NearPlane = 0.1f;
+	float FarPlane = 1000.0f;
 
 };
 

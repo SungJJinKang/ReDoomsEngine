@@ -642,8 +642,8 @@ eastl::vector<FMeshModel> FMeshLoader::LoadFromMeshFile(
 
 	unsigned int PostProcessSteps = aiProcess_CalcTangentSpace |
 		aiProcess_Triangulate |
-		aiProcess_ConvertToLeftHanded |
 		aiProcess_GenUVCoords |
+		aiProcess_FlipUVs |
 		aiProcess_GenBoundingBoxes;
 
 	if (InMeshLoadFlags & EMeshLoadFlags::DontConvertToLeftHand)

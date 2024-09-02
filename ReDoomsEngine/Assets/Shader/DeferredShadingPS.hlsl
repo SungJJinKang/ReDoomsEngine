@@ -84,7 +84,7 @@ void DeferredShadingPS(
 	float3 DiffuseReflection = (lerp(float3(1, 1, 1) - Frensnel, float3(0, 0, 0), GBufferData.Metalic) * GBufferData.DiffuseColor) / PI;
 	float3 Radiance = LightColor;
 
-	float3 Color = (DiffuseReflection) * Radiance * dot(GBufferData.WorldNormal, -LightDirection);
+	float3 Color = (DiffuseReflection + SpecularReflection) * Radiance * dot(GBufferData.WorldNormal, -LightDirection);
 
-	Output = float4(WorldPos.xyz, 1);
+	Output = float4(Color, 1);
 }
