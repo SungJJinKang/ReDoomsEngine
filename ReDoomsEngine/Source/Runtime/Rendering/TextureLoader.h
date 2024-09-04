@@ -7,6 +7,7 @@
 struct FD3D12CommandContext;
 class FD3D12CommandQueue;
 class FD3D12Texture2DResource;
+class FD3D12Texture3DResource;
 
 struct FTextureLoadInfo
 {
@@ -52,7 +53,7 @@ class FTextureLoader
 {
 public:
 
-	static eastl::shared_ptr<FD3D12Texture2DResource> LoadFromFile(FD3D12CommandContext& InCommandContext,
+	static eastl::shared_ptr<FD3D12Texture2DResource> LoadTexture2DFromFile(FD3D12CommandContext& InCommandContext,
 		const wchar_t* const InRelativePathToAssetFolder,
 		const D3D12_RESOURCE_FLAGS InD3DResourceFlags = D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE,
 		const DirectX::CREATETEX_FLAGS InCreateTexFlag = DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,
@@ -61,6 +62,6 @@ public:
 
 private:
 
-	static eastl::hash_map<FTextureLoadInfo, eastl::shared_ptr<FD3D12Texture2DResource>> LoadedTextureResourceMap;
+	static eastl::hash_map<FTextureLoadInfo, eastl::shared_ptr<FD3D12Texture2DResource>> LoadedTexture2DResourceMap;
 };
 

@@ -345,7 +345,7 @@ eastl::shared_ptr<FMaterial> CreateMaterial(FD3D12CommandContext& InCommandConte
 					TextureFileRelativePath += EA_WCHAR("/");
 					TextureFileRelativePath += ANSI_TO_WCHAR(MaterialProperty.Path.C_Str());
 
-					eastl::shared_ptr<FD3D12Texture2DResource> TextureResource = FTextureLoader::LoadFromFile(InCommandContext,
+					eastl::shared_ptr<FD3D12Texture2DResource> TextureResource = FTextureLoader::LoadTexture2DFromFile(InCommandContext,
 						TextureFileRelativePath.c_str(),
 						D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE,
 						DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,

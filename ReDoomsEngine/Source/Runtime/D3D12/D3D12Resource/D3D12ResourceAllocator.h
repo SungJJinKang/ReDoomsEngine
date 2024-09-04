@@ -28,12 +28,24 @@ public:
 		const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties,
 		CD3DX12_RESOURCE_DESC InD3DResourceDesc, const eastl::optional<D3D12_RESOURCE_STATES>& InResourceStateAfterUpload);
 
-	eastl::shared_ptr<FD3D12Texture2DResource> AllocateRenderTarget(
+	eastl::shared_ptr<FD3D12Texture3DResource> AllocateTexture3D(
+		const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties,
+		CD3DX12_RESOURCE_DESC InD3DResourceDesc);
+
+	eastl::shared_ptr<FD3D12Texture2DResource> AllocateRenderTarget2D(
 		const uint32_t InWidth,
 		const uint32_t InHeight,
 		const float InClearValue[4],
 		const ETextureFormat InTextureFormat = ETextureFormat::SceneColor
 	);
+	eastl::shared_ptr<FD3D12Texture3DResource> AllocateRenderTarget3D(
+		const uint32_t InWidth,
+		const uint32_t InHeight,
+		const uint32_t InDepth,
+		const float InClearValue[4],
+		const ETextureFormat InTextureFormat = ETextureFormat::SceneColor
+	);
+
 	eastl::shared_ptr<FD3D12Texture2DResource> AllocateDepthStencilTarget(
 		const uint32_t InWidth,
 		const uint32_t InHeight,

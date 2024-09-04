@@ -46,3 +46,14 @@ namespace eastl
 		}
 	};
 }
+
+namespace eastl
+{
+	template <> struct hash<D3D12_RENDER_TARGET_VIEW_DESC>
+	{
+		size_t operator()(D3D12_RENDER_TARGET_VIEW_DESC val) const
+		{
+			return CityHash64(reinterpret_cast<const char*>(&val), sizeof(D3D12_SHADER_RESOURCE_VIEW_DESC));
+		}
+	};
+}

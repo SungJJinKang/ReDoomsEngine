@@ -10,6 +10,11 @@
 static TConsoleVariable<Vector3> GDirectionalLightYawPitchRoll{ "r.DirectionalLightYawPitchRoll", Vector3{ 250.0f, 1.0f, 75.0f } };
 static TConsoleVariable<Vector3> GDirectionLightColor{ "r.DirectionLightColor", Vector3{ 3.0f, 3.0f, 3.0f } };
 
+static const D3D12_INPUT_ELEMENT_DESC ScreenDrawInputElementDescs[]{
+	{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+};
+
 DEFINE_SHADER(TestVS, "Test/Test.hlsl", "VSMain", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
@@ -83,6 +88,15 @@ DEFINE_SHADER(DeferredShadingPS, "DeferredShadingPS.hlsl", "DeferredShadingPS", 
 	)
 );
 
+DEFINE_SHADER(SetupEnvCubemapPS, "SetupEnvCubemapPS.hlsl", "SetupEnvCubemapPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+		ADD_SHADER_SRV_VARIABLE(HDREnvMapTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ViewProjectionMatrixForCubemap)
+		)
+	)
+);
+
 void D3D12TestRenderer::Init()
 {
 	FRenderer::Init();
@@ -101,11 +115,11 @@ void D3D12TestRenderer::CreateRenderTargets()
 		)
 	{
 		float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		GBufferManager.GBufferA = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
+		GBufferManager.GBufferA = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget2D(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
 		GBufferManager.GBufferA->SetDebugNameToResource(EA_WCHAR("GBufferA"));
-		GBufferManager.GBufferB = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
+		GBufferManager.GBufferB = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget2D(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
 		GBufferManager.GBufferB->SetDebugNameToResource(EA_WCHAR("GBufferB"));
-		GBufferManager.GBufferC = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
+		GBufferManager.GBufferC = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget2D(SwapChain->GetWidth(), SwapChain->GetHeight(), ClearColor);
 		GBufferManager.GBufferC->SetDebugNameToResource(EA_WCHAR("GBufferC"));
 		GBufferManager.Depth = FD3D12ResourceAllocator::GetInstance()->AllocateDepthStencilTarget(SwapChain->GetWidth(), SwapChain->GetHeight());
 		GBufferManager.Depth->SetDebugNameToResource(EA_WCHAR("Depth"));
@@ -144,6 +158,21 @@ void D3D12TestRenderer::SceneSetup()
 			MeshModelCustomDataForHelmet,
 			EMeshLoadFlags::SubstractOneFromV
 		);
+		for (FMeshModel& Model : Level.ModelList)
+		{
+			Model.Material->ConstantMetalicFactor = 1.0f;
+		}
+
+		HDREnvMapTexture = FTextureLoader::LoadTexture2DFromFile(CurrentFrameCommandContext,
+			EA_WCHAR("Bistro/san_giuseppe_bridge_4k.hdr"),
+			D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE,
+			DirectX::CREATETEX_FLAGS::CREATETEX_DEFAULT,
+			D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE
+		);
+
+		float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		EnvCubemap = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget3D(512, 512, 512, ClearColor);
+		EnvCubemap->SetDebugNameToResource(EA_WCHAR("EnvironmentMap"));
 
 		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"), {}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
 		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"{}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
@@ -316,6 +345,102 @@ bool D3D12TestRenderer::Draw()
 	GBufferManager.GBufferC->ClearRenderTargetView(CurrentFrameCommandContext);
 	GBufferManager.Depth->ClearDepthStencilView(CurrentFrameCommandContext);
 
+	if (!bSetupEnvCubemap)
+	{
+		for (int32 CubeMapFace = 0; CubeMapFace < 6; ++CubeMapFace)
+		{
+			D3D12_RENDER_TARGET_VIEW_DESC EnvCubemapRTVDesc{};
+			MEM_ZERO(EnvCubemapRTVDesc);
+			EnvCubemapRTVDesc.Format = EnvCubemap->GetDesc().Format;
+			EnvCubemapRTVDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE3D;
+			EnvCubemapRTVDesc.Texture3D.MipSlice = 0;
+			EnvCubemapRTVDesc.Texture3D.MipSlice = 0;
+			EnvCubemapRTVDesc.Texture3D.WSize = 0;
+
+			CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = EnvCubemap->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
+			// set each cube face to render target
+			CurrentFrameCommandContext.StateCache.SetRenderTargets({ EnvCubemap.get() });
+			CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(nullptr);
+
+			eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> VertexBufferViewList{};
+			VertexBufferViewList.emplace_back(GScreenDrawPositionBuffer->GetVertexBufferView());
+			VertexBufferViewList.emplace_back(GScreenDrawUVBuffer->GetVertexBufferView());
+
+			CurrentFrameCommandContext.StateCache.SetVertexBufferViewList(VertexBufferViewList);
+			CurrentFrameCommandContext.StateCache.SetIndexBufferView(GScreenDrawIndexBuffer->GetIndexBufferView());
+
+			FD3D12PSOInitializer::FDrawDesc DrawDesc;
+
+			D3D12_INPUT_LAYOUT_DESC InputDesc{ ScreenDrawInputElementDescs, _countof(ScreenDrawInputElementDescs) };
+			DrawDesc.Desc.InputLayout = InputDesc;
+			DrawDesc.Desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+			FMeshDrawArgument MeshDrawArgument;
+			MeshDrawArgument.IndexCountPerInstance = 6;
+			MeshDrawArgument.InstanceCount = 1;
+			MeshDrawArgument.StartIndexLocation = 0;
+			MeshDrawArgument.BaseVertexLocation = 0;
+			MeshDrawArgument.StartInstanceLocation = 0;
+
+			auto ScreenDrawVSInstance = ScreenDrawVS.MakeTemplatedShaderInstance();
+			auto SetupEnvCubemapPSInstance = SetupEnvCubemapPS.MakeTemplatedShaderInstance();
+
+			ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
+				= Vector4{ static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height), static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height) };
+
+			ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.InvTargetSizeAndTextureSize
+				= Vector4{ 1.0f / EnvCubemap->GetDesc().Width, 1.0f / EnvCubemap->GetDesc().Height, 1.0f / static_cast<float>(EnvCubemap->GetDesc().Width), 1.0f / static_cast<float>(EnvCubemap->GetDesc().Height) };
+			SetupEnvCubemapPSInstance->Parameter.HDREnvMapTexture = HDREnvMapTexture->GetTextureSRV();
+
+			FD3D12SRVDesc SRVDesc{};
+			SRVDesc.ShaderParameterResourceType = EShaderParameterResourceType::Texture;
+			D3D12_SHADER_RESOURCE_VIEW_DESC Desc{};
+			MEM_ZERO(Desc);
+			Desc.Format = DXGI_FORMAT::DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+			Desc.ViewDimension = D3D12_SRV_DIMENSION::D3D12_SRV_DIMENSION_TEXTURE2D;
+			Desc.Shader4ComponentMapping = D3D12_ENCODE_SHADER_4_COMPONENT_MAPPING(0, 0, 0, 0);
+			Desc.Texture2D.MostDetailedMip = 0;
+			Desc.Texture2D.MipLevels = -1;
+			Desc.Texture2D.PlaneSlice = 0;
+			Desc.Texture2D.ResourceMinLODClamp = 0.0f;
+			SRVDesc.Desc = Desc;
+
+			eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
+			ShaderList[EShaderFrequency::Vertex] = ScreenDrawVSInstance;
+			ShaderList[EShaderFrequency::Pixel] = SetupEnvCubemapPSInstance;
+			FBoundShaderSet BoundShaderSet{ ShaderList };
+			DrawDesc.BoundShaderSet = BoundShaderSet;
+			CurrentFrameCommandContext.StateCache.SetPSODrawDesc(DrawDesc);
+
+			FD3D12PSOInitializer::FPassDesc BasePassPSODesc{};
+			BasePassPSODesc.Desc.SampleMask = UINT_MAX;
+			BasePassPSODesc.Desc.NumRenderTargets = 1;
+			BasePassPSODesc.Desc.RTVFormats[0] = EnvCubemap->GetDesc().Format;
+			BasePassPSODesc.Desc.SampleDesc.Count = 1;
+			BasePassPSODesc.Desc.BlendState = CD3DX12_BLEND_DESC{ D3D12_DEFAULT };
+			BasePassPSODesc.Desc.RasterizerState = CD3DX12_RASTERIZER_DESC{ D3D12_DEFAULT };
+			BasePassPSODesc.Desc.RasterizerState.FrontCounterClockwise = true;
+			BasePassPSODesc.Desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC{ D3D12_DEFAULT };
+			BasePassPSODesc.Desc.DepthStencilState.DepthEnable = false;
+			BasePassPSODesc.Desc.DepthStencilState.StencilEnable = false;
+
+			CurrentFrameCommandContext.StateCache.SetPSOPassDesc(BasePassPSODesc);
+			CurrentFrameCommandContext.StateCache.SetDepthEnable(false);
+
+			CurrentFrameCommandContext.DrawIndexedInstanced(
+				MeshDrawArgument.IndexCountPerInstance,
+				MeshDrawArgument.InstanceCount,
+				MeshDrawArgument.StartIndexLocation,
+				MeshDrawArgument.BaseVertexLocation,
+				MeshDrawArgument.StartInstanceLocation
+			);
+		}
+
+		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
+			CD3DX12_RESOURCE_BARRIER::Transition(EnvCubemap->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+		bSetupEnvCubemap = true;
+	}
+
 	PrepareDraw(CurrentFrameCommandContext);
 
 	// Base Pass
@@ -338,7 +463,7 @@ bool D3D12TestRenderer::Draw()
 		CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = SwapChainRenderTarget->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
 		CurrentFrameCommandContext.StateCache.SetRenderTargets({ SwapChainRenderTarget.get() });
 		CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(nullptr);
-		
+
 		eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> VertexBufferViewList{};
 		VertexBufferViewList.emplace_back(GScreenDrawPositionBuffer->GetVertexBufferView());
 		VertexBufferViewList.emplace_back(GScreenDrawUVBuffer->GetVertexBufferView());
@@ -347,11 +472,6 @@ bool D3D12TestRenderer::Draw()
 		CurrentFrameCommandContext.StateCache.SetIndexBufferView(GScreenDrawIndexBuffer->GetIndexBufferView());
 
 		FD3D12PSOInitializer::FDrawDesc DrawDesc;
-
-		static const D3D12_INPUT_ELEMENT_DESC ScreenDrawInputElementDescs[]{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 1, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		};
 
 		D3D12_INPUT_LAYOUT_DESC InputDesc{ ScreenDrawInputElementDescs, _countof(ScreenDrawInputElementDescs) };
 		DrawDesc.Desc.InputLayout = InputDesc;
@@ -379,19 +499,19 @@ bool D3D12TestRenderer::Draw()
 		ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
 			= Vector4{ static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()), static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
 
-		ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.InvTargetSizeAndTextureSize 
+		ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.InvTargetSizeAndTextureSize
 			= Vector4{ 1.0f / SwapChain->GetWidth(), 1.0f / SwapChain->GetHeight(), 1.0f / static_cast<float>(GBufferManager.GBufferA->GetDesc().Width), 1.0f / static_cast<float>(GBufferManager.GBufferA->GetDesc().Height) };
 		DeferredShadingPSInstance->Parameter.GBufferATexture = GBufferManager.GBufferA->GetTextureSRV();
 		DeferredShadingPSInstance->Parameter.GBufferBTexture = GBufferManager.GBufferB->GetTextureSRV();
 		DeferredShadingPSInstance->Parameter.GBufferCTexture = GBufferManager.GBufferC->GetTextureSRV();
-		
+
 		FD3D12SRVDesc SRVDesc{};
 		SRVDesc.ShaderParameterResourceType = EShaderParameterResourceType::Texture;
 		D3D12_SHADER_RESOURCE_VIEW_DESC Desc{};
 		MEM_ZERO(Desc);
 		Desc.Format = DXGI_FORMAT::DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 		Desc.ViewDimension = D3D12_SRV_DIMENSION::D3D12_SRV_DIMENSION_TEXTURE2D;
-		Desc.Shader4ComponentMapping = D3D12_ENCODE_SHADER_4_COMPONENT_MAPPING(0,0,0,0);
+		Desc.Shader4ComponentMapping = D3D12_ENCODE_SHADER_4_COMPONENT_MAPPING(0, 0, 0, 0);
 		Desc.Texture2D.MostDetailedMip = 0;
 		Desc.Texture2D.MipLevels = -1;
 		Desc.Texture2D.PlaneSlice = 0;

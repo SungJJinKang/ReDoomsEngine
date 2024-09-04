@@ -12,9 +12,9 @@
 
 static TConsoleVariable<bool> GSupportTextureMips{ "r.SupportTextureMips", false };
 
-eastl::hash_map<FTextureLoadInfo, eastl::shared_ptr<FD3D12Texture2DResource>> FTextureLoader::LoadedTextureResourceMap{};
+eastl::hash_map<FTextureLoadInfo, eastl::shared_ptr<FD3D12Texture2DResource>> FTextureLoader::LoadedTexture2DResourceMap{};
 
-eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder, 
+eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadTexture2DFromFile(FD3D12CommandContext& InCommandContext, const wchar_t* const InRelativePathToAssetFolder,
 	const D3D12_RESOURCE_FLAGS InD3DResourceFlags, const DirectX::CREATETEX_FLAGS InCreateTexFlag, const eastl::optional<D3D12_RESOURCE_STATES>& InResourceStateAfterUpload)
 {
 	EA_ASSERT(!(InD3DResourceFlags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET));
@@ -28,8 +28,8 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12Co
 	TextureLoadInfo.CreateTexFlag = InCreateTexFlag;
 	TextureLoadInfo.ResourceStateAfterUpload = InResourceStateAfterUpload;
 
-	auto LoadedTextureResourceIter = LoadedTextureResourceMap.find(TextureLoadInfo);
-	if(LoadedTextureResourceIter != LoadedTextureResourceMap.end())
+	auto LoadedTextureResourceIter = LoadedTexture2DResourceMap.find(TextureLoadInfo);
+	if(LoadedTextureResourceIter != LoadedTexture2DResourceMap.end())
 	{
 		D3D12TextureResource = LoadedTextureResourceIter->second;
 	}
@@ -46,6 +46,10 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12Co
 		{
 			HR = DirectX::LoadFromDDSFile(AbsoluePath.c_str(), DDS_FLAGS::DDS_FLAGS_NONE, &Metadata, ScreatchImage);
 		}
+		else if (AbsoluePath.extension().string() == ".hdr")
+		{
+			HR = DirectX::LoadFromHDRFile(AbsoluePath.c_str(), &Metadata, ScreatchImage);
+		}
 		else
 		{
 			HR = DirectX::LoadFromWICFile(AbsoluePath.c_str(), WIC_FLAGS::WIC_FLAGS_NONE, &Metadata, ScreatchImage);
@@ -53,6 +57,8 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12Co
 
 		if (!FAILED(HR))
 		{
+			EA_ASSERT(Metadata.dimension != TEX_DIMENSION_TEXTURE3D);
+
 			// Get the first image from the scratch image
 			const DirectX::Image* const DXImage = ScreatchImage.GetImages();
 
@@ -120,7 +126,7 @@ eastl::shared_ptr<FD3D12Texture2DResource> FTextureLoader::LoadFromFile(FD3D12Co
 			D3D12TextureResource = FD3D12ResourceAllocator::GetInstance()->AllocateTexture2D(InCommandContext, eastl::move(SubresourceDataList), ResourceCreateProperties, ResourceDesc, InResourceStateAfterUpload);
 			D3D12TextureResource->SetDebugNameToResource(InRelativePathToAssetFolder);
 
-			LoadedTextureResourceMap.emplace(TextureLoadInfo, D3D12TextureResource);
+			LoadedTexture2DResourceMap.emplace(TextureLoadInfo, D3D12TextureResource);
 		}
 		else
 		{

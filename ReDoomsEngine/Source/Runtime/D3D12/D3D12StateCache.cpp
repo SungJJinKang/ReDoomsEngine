@@ -147,30 +147,35 @@ void FD3D12StateCache::SetPSOPassDesc(const FD3D12PSOInitializer::FPassDesc& InP
 
 void FD3D12StateCache::SetRenderTargets(const eastl::array<FD3D12Texture2DResource*, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT>& InRenderTargets)
 {
+	eastl::array<FD3D12RenderTargetView*, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> RTVList{};
+	for (uint32_t RenderTargetIndex = 0; RenderTargetIndex < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++RenderTargetIndex)
+	{
+		if (InRenderTargets[RenderTargetIndex])
+		{
+			RTVList[RenderTargetIndex] = InRenderTargets[RenderTargetIndex]->GetRTV();
+		}
+	}
+	SetRenderTargets(RTVList);
+}
+
+void FD3D12StateCache::SetRenderTargets(const eastl::array<FD3D12RenderTargetView*, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT>& InRTVs)
+{
 	CachedRTVCount = 0;
 	for (uint32_t RenderTargetIndex = 0; RenderTargetIndex < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++RenderTargetIndex)
 	{
-		FD3D12View* ResourceView = InRenderTargets[RenderTargetIndex] ? InRenderTargets[RenderTargetIndex]->GetRTV() : nullptr;
-		CD3DX12_CPU_DESCRIPTOR_HANDLE InputRTVCPUHandle = InRenderTargets[RenderTargetIndex] ? ResourceView->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
+		CD3DX12_CPU_DESCRIPTOR_HANDLE InputRTVCPUHandle = InRTVs[RenderTargetIndex] ? InRTVs[RenderTargetIndex]->GetDescriptorHeapBlock().CPUDescriptorHandle() : CD3DX12_CPU_DESCRIPTOR_HANDLE{};
 		if (CachedRTVCPUHandleList[RenderTargetIndex].CPUDescriptorHandle != InputRTVCPUHandle)
 		{
 			CachedRTVCPUHandleList[RenderTargetIndex].CPUDescriptorHandle = InputRTVCPUHandle;
-			CachedRTVCPUHandleList[RenderTargetIndex].ResourceView = ResourceView;
+			CachedRTVCPUHandleList[RenderTargetIndex].ResourceView = InRTVs[RenderTargetIndex];
 			bNeedToSetRTVAndDSV = true;
 		}
 
 		DXGI_FORMAT RTVFormat = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
-		if (InRenderTargets[RenderTargetIndex])
+		if (InRTVs[RenderTargetIndex])
 		{
-			const eastl::optional<D3D12_RENDER_TARGET_VIEW_DESC> RTVDesc = InRenderTargets[RenderTargetIndex]->GetRTV()->GetDesc();
-			if (RTVDesc.has_value())
-			{
-				RTVFormat = RTVDesc->Format;
-			}
-			else
-			{
-				RTVFormat = InRenderTargets[RenderTargetIndex]->GetDesc().Format;
-			}
+			const eastl::optional<D3D12_RENDER_TARGET_VIEW_DESC> RTVDesc = InRTVs[RenderTargetIndex]->GetDesc();
+			RTVFormat = RTVDesc->Format;
 		}
 
 		if (CachedPSOInitializer.PassDesc.Desc.RTVFormats[RenderTargetIndex] != RTVFormat)
@@ -179,7 +184,7 @@ void FD3D12StateCache::SetRenderTargets(const eastl::array<FD3D12Texture2DResour
 			CachedPSOInitializer.PassDesc.Desc.NumRenderTargets = RenderTargetIndex + 1;
 			bIsPSODirty = true;
 		}
-		
+
 		if (InputRTVCPUHandle.ptr)
 		{
 			CachedRTVCount = RenderTargetIndex + 1;

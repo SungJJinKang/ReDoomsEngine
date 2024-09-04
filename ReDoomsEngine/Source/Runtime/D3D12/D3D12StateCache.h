@@ -23,6 +23,7 @@ public:
 	void SetStencilEnable(const bool bInEnable);
 	void SetBoundShaderSet(const FBoundShaderSet& InBoundShaderSet);
 	void SetRenderTargets(const eastl::array<FD3D12Texture2DResource*, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT>& InRenderTargets);
+	void SetRenderTargets(const eastl::array<FD3D12RenderTargetView*, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT>& InRTVs);
 	void SetDepthStencilTarget(FD3D12Texture2DResource* const InDepthStencilTarget);
 	void SetSRVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_SRVS>& BindPointInfos);
 	void SetUAVs(const EShaderFrequency InShaderFrequency, const eastl::array<FD3D12ShaderResourceView*, MAX_UAVS>& BindPointInfos);

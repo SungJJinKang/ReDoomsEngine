@@ -7,7 +7,7 @@
 
 FD3D12Resource::FD3D12Resource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false), Resources(),
-	DefaultCBV(), DefaultSRV(), CachedSRVMap(), DefaultUAV(), DefaultRTV(), DefaultDSV()
+	DefaultCBV(), DefaultSRV(), CachedSRVMap(), CachedRTVMap(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
 	ValidateResourceProperties();
 }
@@ -26,7 +26,7 @@ FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource>& InResource)
 
 FD3D12Resource::FD3D12Resource(ComPtr<ID3D12Resource>& InResource, const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
 	: Fence(), ResourceCreateProperties(InResourceCreateProperties), Desc(InDesc), bInit(false),
-	DefaultSRV(), CachedSRVMap(), DefaultUAV(), DefaultRTV(), DefaultDSV()
+	DefaultSRV(), CachedSRVMap(), CachedRTVMap(), DefaultUAV(), DefaultRTV(), DefaultDSV()
 {
 	Resources[0] = InResource;
 }
@@ -229,6 +229,30 @@ FD3D12RenderTargetView* FD3D12Resource::GetRTV()
 	}
 
 	return DefaultRTV.get();
+}
+
+FD3D12RenderTargetView* FD3D12Resource::GetRTV(const D3D12_RENDER_TARGET_VIEW_DESC InD3D12RTVDesc)
+{
+	EA_ASSERT(bInit);
+	EA_ASSERT(!(Desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE));
+
+	FD3D12RenderTargetView* RTV{ nullptr };
+
+	auto CachedRTVIter = CachedRTVMap.find(InD3D12RTVDesc);
+	if (CachedRTVIter == CachedRTVMap.end())
+	{
+		eastl::shared_ptr<FD3D12RenderTargetView> NewRTV = eastl::make_shared<FD3D12RenderTargetView>(weak_from_this(), InD3D12RTVDesc);
+		NewRTV->UpdateDescriptor();
+
+		CachedRTVMap.try_emplace(InD3D12RTVDesc, NewRTV);
+		RTV = NewRTV.get();
+	}
+	else
+	{
+		RTV = CachedRTVIter->second.get();
+	}
+
+	return RTV;
 }
 
 FD3D12DepthStencilView* FD3D12Resource::GetDSV()
@@ -623,4 +647,10 @@ D3D12_GPU_VIRTUAL_ADDRESS FD3D12ConstantBufferResource::GPUVirtualAddress() cons
 		EA_ASSERT(ConstantBufferRingBufferBlock.GPUVirtualAddress != 0);
 		return ConstantBufferRingBufferBlock.GPUVirtualAddress;
 	}
+}
+
+FD3D12Texture3DResource::FD3D12Texture3DResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc)
+	: FD3D12TextureResource(InResourceCreateProperties, InDesc)
+{
+
 }

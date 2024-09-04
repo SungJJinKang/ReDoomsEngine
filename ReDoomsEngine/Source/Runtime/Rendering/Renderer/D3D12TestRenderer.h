@@ -31,5 +31,9 @@ public:
 private:
 
 	FGBufferManager GBufferManager;
+	bool bSetupEnvCubemap = false;
+
+	eastl::shared_ptr<FD3D12Texture3DResource> EnvCubemap;
+	eastl::shared_ptr<FD3D12Texture2DResource> HDREnvMapTexture;
 };
 

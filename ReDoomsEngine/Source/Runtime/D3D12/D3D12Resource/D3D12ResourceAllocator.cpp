@@ -217,23 +217,24 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 
     FD3D12ResourceUpload ResourceUpload{};
 
-    if (!(InD3DResourceDesc.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS)))
+	D3D12_RESOURCE_ALLOCATION_INFO AllocInfo;
+
+	if (CanUseSmallAlignment(InD3DResourceDesc))
+	{
+		InD3DResourceDesc.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+	}
+	else
+	{
+		InD3DResourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+	}
+	AllocInfo = GetD3D12Device()->GetResourceAllocationInfo(0, 1, &InD3DResourceDesc);
+
+	const bool bUsePlacedResource = AllocInfo.SizeInBytes < (D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 1024);
+    if (bUsePlacedResource && !(InD3DResourceDesc.Flags & (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS)))
     {
         // https://learn.microsoft.com/en-us/windows/win32/direct3d12/upload-and-readback-of-texture-data
 
         FD3D12ResourcePool::EResourcePoolType TargetTexturePoolType = FD3D12ResourcePool::EResourcePoolType::ReadOnlyTexture;
-
-        D3D12_RESOURCE_ALLOCATION_INFO AllocInfo;
-
-        if (CanUseSmallAlignment(InD3DResourceDesc))
-        {
-            InD3DResourceDesc.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
-        }
-        else
-        {
-            InD3DResourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
-        }
-        AllocInfo = GetD3D12Device()->GetResourceAllocationInfo(0, 1, &InD3DResourceDesc);
 
         // Below code doesn't work for now.. Debug layer complains about invalid alignment
         // https://www.asawicki.info/news_1726_secrets_of_direct3d_12_resource_alignment
@@ -309,7 +310,19 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateText
 	return D3D12TextureResource;
 }
 
-eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateRenderTarget(
+eastl::shared_ptr<FD3D12Texture3DResource> FD3D12ResourceAllocator::AllocateTexture3D(const FD3D12Resource::FResourceCreateProperties& InResourceCreateProperties, CD3DX12_RESOURCE_DESC InD3DResourceDesc)
+{
+
+	EA_ASSERT(InD3DResourceDesc.SampleDesc.Count == 1); // doesn't support msaa for now
+
+	// create committed resource
+	eastl::shared_ptr<FD3D12Texture3DResource> D3D12TextureResource = eastl::make_shared<FD3D12Texture3DResource>(InResourceCreateProperties, InD3DResourceDesc);
+	D3D12TextureResource->InitResource();
+
+	return D3D12TextureResource;
+}
+
+eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateRenderTarget2D(
 	const uint32_t InWidth, 
 	const uint32_t InHeight,
 	const float InClearValue[4],
@@ -339,6 +352,37 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateRend
     );
 
     return AllocateTexture2D(ResourceCreateProperties, ResourceDesc);
+}
+
+eastl::shared_ptr<FD3D12Texture3DResource> FD3D12ResourceAllocator::AllocateRenderTarget3D(
+	const uint32_t InWidth,
+	const uint32_t InHeight,
+	const uint32_t InDepth,
+	const float InClearValue[4],
+	const ETextureFormat InTextureFormat
+)
+{
+	FD3D12Resource::FResourceCreateProperties ResourceCreateProperties{};
+	ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
+	ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	ResourceCreateProperties.ClearValue.emplace();
+	ResourceCreateProperties.ClearValue->Format = static_cast<DXGI_FORMAT>(InTextureFormat);
+	ResourceCreateProperties.ClearValue->Color[0] = InClearValue[0];
+	ResourceCreateProperties.ClearValue->Color[1] = InClearValue[1];
+	ResourceCreateProperties.ClearValue->Color[2] = InClearValue[2];
+	ResourceCreateProperties.ClearValue->Color[3] = InClearValue[3];
+
+	CD3DX12_RESOURCE_DESC ResourceDesc = CD3DX12_RESOURCE_DESC::Tex3D(
+		static_cast<DXGI_FORMAT>(InTextureFormat),
+		InWidth,
+		InHeight,
+		InDepth,
+		0, // @todo : support mips
+		D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
+	);
+
+	return AllocateTexture3D(ResourceCreateProperties, ResourceDesc);
 }
 
 eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateDepthStencilTarget(

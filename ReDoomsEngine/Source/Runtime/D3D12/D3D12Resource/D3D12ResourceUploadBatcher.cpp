@@ -167,6 +167,8 @@ uint64_t FD3D12ResourceUploadBatcher::ConvertUploadBufferSizeTypeToSize(const ED
 		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 64;
 	case ED3D12UploadBufferSizeType::FourK:
 		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 1024;
+	case ED3D12UploadBufferSizeType::ForHDR:
+		return D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT * 2048;
 	default:
 		RD_ASSUME(0);
 		break;

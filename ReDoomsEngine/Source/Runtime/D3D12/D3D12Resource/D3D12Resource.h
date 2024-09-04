@@ -75,6 +75,7 @@ public:
 	FD3D12ShaderResourceView* GetTextureSRV();
 	FD3D12UnorderedAccessView* GetUAV();
 	FD3D12RenderTargetView* GetRTV();
+	FD3D12RenderTargetView* GetRTV(const D3D12_RENDER_TARGET_VIEW_DESC InD3D12RTVDesc);
 	FD3D12DepthStencilView* GetDSV();
 
 	FD3D12Fence Fence;
@@ -98,6 +99,7 @@ private:
 	eastl::shared_ptr<FD3D12ConstantBufferView> DefaultCBV;
 	eastl::shared_ptr<FD3D12ShaderResourceView> DefaultSRV;
 	eastl::hash_map<FD3D12SRVDesc, eastl::shared_ptr<FD3D12ShaderResourceView>> CachedSRVMap;
+	eastl::hash_map<D3D12_RENDER_TARGET_VIEW_DESC, eastl::shared_ptr<FD3D12RenderTargetView>> CachedRTVMap;
 	eastl::shared_ptr<FD3D12UnorderedAccessView> DefaultUAV;
 	eastl::shared_ptr<FD3D12RenderTargetView> DefaultRTV;
 	eastl::shared_ptr<FD3D12DepthStencilView> DefaultDSV;
@@ -130,6 +132,7 @@ protected:
 		return true;
 	}
 	virtual bool Is2DTexture() const = 0;
+	virtual bool Is3DTexture() const = 0;
 
 	eastl::optional<FD3D12ResourcePoolBlock> ResourcePoolBlock;
 };
@@ -163,6 +166,11 @@ public:
 		return true;
 	}
 
+	virtual bool Is3DTexture() const
+	{
+		return false;
+	}
+
 	void ClearRenderTargetView(FD3D12CommandContext& InCommandContext, const float InClearValue[4]);
 	void ClearRenderTargetView(FD3D12CommandContext& InCommandContext);
 	void ClearDepthStencilView(FD3D12CommandContext& InCommandContext, const float InClearDepthValue, const uint8 InClearStencilValue);
@@ -170,6 +178,23 @@ public:
 	void ClearDepthStencilView(FD3D12CommandContext& InCommandContext);
 };
 
+
+class FD3D12Texture3DResource : public FD3D12TextureResource
+{
+public:
+
+	FD3D12Texture3DResource(const FResourceCreateProperties& InResourceCreateProperties, const CD3DX12_RESOURCE_DESC& InDesc);
+
+	virtual bool Is2DTexture() const
+	{
+		return false;
+	}
+
+	virtual bool Is3DTexture() const
+	{
+		return true;
+	}
+};
 
 class FD3D12BufferResource : public FD3D12Resource
 {

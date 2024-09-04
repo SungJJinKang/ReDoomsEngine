@@ -74,6 +74,7 @@ enum class ED3D12UploadBufferSizeType : uint32_t
 	Medium,
 	Large,
 	FourK,
+	ForHDR,
 	Num
 };
 

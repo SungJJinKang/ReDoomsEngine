@@ -185,6 +185,7 @@ FD3D12RenderTargetView* FD3D12RenderTargetView::NullRTV()
 	static eastl::unique_ptr<FD3D12RenderTargetView> DefaultRTV = nullptr;
 	if (DefaultRTV == nullptr)
 	{
+		// @TODO : Do we need the version for D3D12_RTV_DIMENSION_TEXTURE3D
 		D3D12_RENDER_TARGET_VIEW_DESC NullRTVDesc{};
 		NullRTVDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		NullRTVDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
