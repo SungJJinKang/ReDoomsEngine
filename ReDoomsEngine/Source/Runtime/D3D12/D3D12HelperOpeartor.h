@@ -210,3 +210,12 @@ inline bool operator!=(const D3D12_DEPTH_STENCIL_DESC& A, const D3D12_DEPTH_STEN
 	return !(A == B);
 }
 
+inline bool operator==(const D3D12_RENDER_TARGET_VIEW_DESC& A, const D3D12_RENDER_TARGET_VIEW_DESC& B)
+{
+	return EA::StdC::Memcmp(&A, &B, sizeof(D3D12_RENDER_TARGET_VIEW_DESC)) == 0;
+}
+
+inline bool operator!=(const D3D12_RENDER_TARGET_VIEW_DESC& A, const D3D12_RENDER_TARGET_VIEW_DESC& B)
+{
+	return !(A == B);
+}

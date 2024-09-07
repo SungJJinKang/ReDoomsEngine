@@ -354,6 +354,38 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateRend
     return AllocateTexture2D(ResourceCreateProperties, ResourceDesc);
 }
 
+eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateRenderTargetCube(
+	const uint32_t InWidth,
+	const uint32_t InHeight,
+	const float InClearValue[4], 
+	const ETextureFormat InTextureFormat /*= ETextureFormat::SceneColor */
+)
+{
+	FD3D12Resource::FResourceCreateProperties ResourceCreateProperties{};
+	ResourceCreateProperties.HeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	ResourceCreateProperties.HeapFlags = D3D12_HEAP_FLAG_NONE;
+	ResourceCreateProperties.InitialResourceStates = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	ResourceCreateProperties.ClearValue.emplace();
+	ResourceCreateProperties.ClearValue->Format = static_cast<DXGI_FORMAT>(InTextureFormat);
+	ResourceCreateProperties.ClearValue->Color[0] = InClearValue[0];
+	ResourceCreateProperties.ClearValue->Color[1] = InClearValue[1];
+	ResourceCreateProperties.ClearValue->Color[2] = InClearValue[2];
+	ResourceCreateProperties.ClearValue->Color[3] = InClearValue[3];
+
+	CD3DX12_RESOURCE_DESC ResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+		static_cast<DXGI_FORMAT>(InTextureFormat),
+		InWidth,
+		InHeight,
+		CUBEMAP_FACE_COUNT,
+		0,
+		1, // @todo : support msaa
+		0,
+		D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
+	);
+
+	return AllocateTexture2D(ResourceCreateProperties, ResourceDesc);
+}
+
 eastl::shared_ptr<FD3D12Texture3DResource> FD3D12ResourceAllocator::AllocateRenderTarget3D(
 	const uint32_t InWidth,
 	const uint32_t InHeight,

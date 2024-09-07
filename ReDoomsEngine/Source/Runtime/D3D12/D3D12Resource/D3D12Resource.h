@@ -7,6 +7,8 @@
 #include "D3D12Fence.h"
 #include "D3D12ViewDesc.h"
 
+#define CUBEMAP_FACE_COUNT 6
+
 class FD3D12Resource : public eastl::enable_shared_from_this<FD3D12Resource>
 {
 public:

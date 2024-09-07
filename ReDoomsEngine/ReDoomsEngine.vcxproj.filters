@@ -477,6 +477,7 @@
     <ClInclude Include="Source\Runtime\Rendering\Level.h" />
     <ClInclude Include="Source\Runtime\Rendering\DummyTexture.h" />
     <ClInclude Include="Source\Runtime\Rendering\GlobalResources.h" />
+    <ClInclude Include="Source\Runtime\D3D12\D3D12CommandContext.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Editor\imgui\misc\debuggers\imgui.natstepfilter" />

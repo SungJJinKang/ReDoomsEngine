@@ -9,6 +9,7 @@
 
 static TConsoleVariable<Vector3> GDirectionalLightYawPitchRoll{ "r.DirectionalLightYawPitchRoll", Vector3{ 250.0f, 1.0f, 75.0f } };
 static TConsoleVariable<Vector3> GDirectionLightColor{ "r.DirectionLightColor", Vector3{ 3.0f, 3.0f, 3.0f } };
+static TConsoleVariable<int32> GCubemapSize{ "r.CubemapSize", 512 };
 
 static const D3D12_INPUT_ELEMENT_DESC ScreenDrawInputElementDescs[]{
 	{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -92,7 +93,25 @@ DEFINE_SHADER(SetupEnvCubemapPS, "SetupEnvCubemapPS.hlsl", "SetupEnvCubemapPS", 
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_SRV_VARIABLE(HDREnvMapTexture, EShaderParameterResourceType::Texture)
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ViewProjectionMatrixForCubemap)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ViewMatrixForCubemap)
+		)
+	)
+);
+
+DEFINE_SHADER(ScreenDrawVS, "RenderCubemap.hlsl", "RenderCubemapVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, PosScaleUVScale)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, InvTargetSizeAndTextureSize)
+		)
+	)
+);
+DEFINE_SHADER(RenderCubemapPS, "RenderCubemap.hlsl", "RenderCubemapPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+		ADD_SHADER_SRV_VARIABLE(HDREnvMapTexture, EShaderParameterResourceType::Texture)
+		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ViewMatrixForCubemap)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(int32, CubemapFaceIndex)
 		)
 	)
 );
@@ -171,7 +190,7 @@ void D3D12TestRenderer::SceneSetup()
 		);
 
 		float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		EnvCubemap = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTarget3D(512, 512, 512, ClearColor);
+		EnvCubemap = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTargetCube(GCubemapSize, GCubemapSize, ClearColor);
 		EnvCubemap->SetDebugNameToResource(EA_WCHAR("EnvironmentMap"));
 
 		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"), {}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
@@ -329,12 +348,6 @@ bool D3D12TestRenderer::Draw()
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
-	CD3DX12_VIEWPORT Viewport{ 0.0f, 0.0f, static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
-	CD3DX12_RECT Rect{ 0, 0, static_cast<LONG>(SwapChain->GetWidth()), static_cast<LONG>(SwapChain->GetHeight()) };
-
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetViewports(1, &Viewport);
-	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
-
 	CurrentFrameCommandContext.StateCache.SetRenderTargets(
 		{ GBufferManager.GBufferA.get(), GBufferManager.GBufferB.get(), GBufferManager.GBufferC.get() }
 	);
@@ -347,19 +360,25 @@ bool D3D12TestRenderer::Draw()
 
 	if (!bSetupEnvCubemap)
 	{
-		for (int32 CubeMapFace = 0; CubeMapFace < 6; ++CubeMapFace)
+		CD3DX12_VIEWPORT Viewport{ 0.0f, 0.0f, static_cast<float>(GCubemapSize), static_cast<float>(GCubemapSize) };
+		CD3DX12_RECT Rect{ 0, 0, static_cast<LONG>(GCubemapSize), static_cast<LONG>(GCubemapSize) };
+
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetViewports(1, &Viewport);
+		CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
+
+		for (int32 CubeMapFaceIndex = 0; CubeMapFaceIndex < CUBEMAP_FACE_COUNT; ++CubeMapFaceIndex)
 		{
 			D3D12_RENDER_TARGET_VIEW_DESC EnvCubemapRTVDesc{};
 			MEM_ZERO(EnvCubemapRTVDesc);
 			EnvCubemapRTVDesc.Format = EnvCubemap->GetDesc().Format;
 			EnvCubemapRTVDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE3D;
-			EnvCubemapRTVDesc.Texture3D.MipSlice = 0;
-			EnvCubemapRTVDesc.Texture3D.MipSlice = 0;
-			EnvCubemapRTVDesc.Texture3D.WSize = 0;
+			EnvCubemapRTVDesc.Texture2DArray.MipSlice = 0;
+			EnvCubemapRTVDesc.Texture2DArray.FirstArraySlice = CubeMapFaceIndex;
+			EnvCubemapRTVDesc.Texture2DArray.ArraySize = 1;
+			EnvCubemapRTVDesc.Texture2DArray.PlaneSlice = 0;
 
-			CD3DX12_CPU_DESCRIPTOR_HANDLE RTVCPUHandle = EnvCubemap->GetRTV()->GetDescriptorHeapBlock().CPUDescriptorHandle();
 			// set each cube face to render target
-			CurrentFrameCommandContext.StateCache.SetRenderTargets({ EnvCubemap.get() });
+			CurrentFrameCommandContext.StateCache.SetRenderTargets({ EnvCubemap->GetRTV(EnvCubemapRTVDesc) });
 			CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(nullptr);
 
 			eastl::fixed_vector<D3D12_VERTEX_BUFFER_VIEW, MAX_BOUND_VERTEX_BUFFER_VIEW> VertexBufferViewList{};
@@ -383,14 +402,35 @@ bool D3D12TestRenderer::Draw()
 			MeshDrawArgument.StartInstanceLocation = 0;
 
 			auto ScreenDrawVSInstance = ScreenDrawVS.MakeTemplatedShaderInstance();
-			auto SetupEnvCubemapPSInstance = SetupEnvCubemapPS.MakeTemplatedShaderInstance();
+			auto RenderCubemapPSInstance = RenderCubemapPS.MakeTemplatedShaderInstance();
 
 			ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
 				= Vector4{ static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height), static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height) };
 
 			ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.InvTargetSizeAndTextureSize
 				= Vector4{ 1.0f / EnvCubemap->GetDesc().Width, 1.0f / EnvCubemap->GetDesc().Height, 1.0f / static_cast<float>(EnvCubemap->GetDesc().Width), 1.0f / static_cast<float>(EnvCubemap->GetDesc().Height) };
-			SetupEnvCubemapPSInstance->Parameter.HDREnvMapTexture = HDREnvMapTexture->GetTextureSRV();
+			RenderCubemapPSInstance->Parameter.HDREnvMapTexture = HDREnvMapTexture->GetTextureSRV();
+
+			Vector3 CubemapTarget[CUBEMAP_FACE_COUNT]{
+				Vector3::Forward,
+				Vector3::Backward,
+				Vector3::Right,
+				Vector3::Left,
+				Vector3::Up,
+				Vector3::Down
+			};
+
+			Vector3 CubemapUp[CUBEMAP_FACE_COUNT]{
+				Vector3::Up,
+				Vector3::Up,
+				Vector3::Up,
+				Vector3::Up,
+				Vector3::Backward,
+				Vector3::Forward
+			};
+
+			RenderCubemapPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ViewMatrixForCubemap = Matrix::CreateLookAt(Vector3{ 0.0f }, CubemapTarget[CubeMapFaceIndex], CubemapUp[CubeMapFaceIndex]);
+			RenderCubemapPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.CubemapFaceIndex = CubeMapFaceIndex;
 
 			FD3D12SRVDesc SRVDesc{};
 			SRVDesc.ShaderParameterResourceType = EShaderParameterResourceType::Texture;
@@ -407,7 +447,7 @@ bool D3D12TestRenderer::Draw()
 
 			eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 			ShaderList[EShaderFrequency::Vertex] = ScreenDrawVSInstance;
-			ShaderList[EShaderFrequency::Pixel] = SetupEnvCubemapPSInstance;
+			ShaderList[EShaderFrequency::Pixel] = RenderCubemapPSInstance;
 			FBoundShaderSet BoundShaderSet{ ShaderList };
 			DrawDesc.BoundShaderSet = BoundShaderSet;
 			CurrentFrameCommandContext.StateCache.SetPSODrawDesc(DrawDesc);
@@ -438,8 +478,16 @@ bool D3D12TestRenderer::Draw()
 
 		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
 			CD3DX12_RESOURCE_BARRIER::Transition(EnvCubemap->GetResource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+
 		bSetupEnvCubemap = true;
 	}
+
+
+	CD3DX12_VIEWPORT Viewport{ 0.0f, 0.0f, static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
+	CD3DX12_RECT Rect{ 0, 0, static_cast<LONG>(SwapChain->GetWidth()), static_cast<LONG>(SwapChain->GetHeight()) };
+
+	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetViewports(1, &Viewport);
+	CurrentFrameCommandContext.GraphicsCommandList->GetD3DCommandList()->RSSetScissorRects(1, &Rect);
 
 	PrepareDraw(CurrentFrameCommandContext);
 

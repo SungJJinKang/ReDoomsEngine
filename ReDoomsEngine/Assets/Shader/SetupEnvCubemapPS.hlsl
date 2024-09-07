@@ -2,10 +2,10 @@
 
 #include "Common.hlsl"
 
-#include "ScreenDrawVS.hlsl"
+#include "ScreenDrawCommon.hlsl"
 
 Texture2D<float3> HDREnvMapTexture;
-float4x4 ViewProjectionMatrixForCubemap;
+float4x4 ViewMatrixForCubemap;
 
 void SetupEnvCubemapPS(
     ScreenDrawPSInput Input, 
