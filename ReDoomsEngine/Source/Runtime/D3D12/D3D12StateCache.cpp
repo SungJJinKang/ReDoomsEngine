@@ -175,7 +175,14 @@ void FD3D12StateCache::SetRenderTargets(const eastl::array<FD3D12RenderTargetVie
 		if (InRTVs[RenderTargetIndex])
 		{
 			const eastl::optional<D3D12_RENDER_TARGET_VIEW_DESC> RTVDesc = InRTVs[RenderTargetIndex]->GetDesc();
-			RTVFormat = RTVDesc->Format;
+			if (RTVDesc.has_value())
+			{
+				RTVFormat = RTVDesc->Format;
+			}
+			else
+			{
+				InRTVs[RenderTargetIndex]->GetUnderlyingResource()->GetDesc().Format;
+			}
 		}
 
 		if (CachedPSOInitializer.PassDesc.Desc.RTVFormats[RenderTargetIndex] != RTVFormat)

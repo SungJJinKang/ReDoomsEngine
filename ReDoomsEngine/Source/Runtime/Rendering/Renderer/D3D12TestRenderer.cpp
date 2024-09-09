@@ -89,16 +89,17 @@ DEFINE_SHADER(DeferredShadingPS, "DeferredShadingPS.hlsl", "DeferredShadingPS", 
 	)
 );
 
-DEFINE_SHADER(SetupEnvCubemapPS, "SetupEnvCubemapPS.hlsl", "SetupEnvCubemapPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
-	DEFINE_SHADER_PARAMTERS(
-		ADD_SHADER_SRV_VARIABLE(HDREnvMapTexture, EShaderParameterResourceType::Texture)
-		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ViewMatrixForCubemap)
-		)
-	)
-);
+// 
+// DEFINE_SHADER(SetupEnvCubemapPS, "SetupEnvCubemapPS.hlsl", "SetupEnvCubemapPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+// 	DEFINE_SHADER_PARAMTERS(
+// 		ADD_SHADER_SRV_VARIABLE(HDREnvMapTexture, EShaderParameterResourceType::Texture)
+// 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
+// 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ViewMatrixForCubemap)
+// 		)
+// 	)
+// );
 
-DEFINE_SHADER(ScreenDrawVS, "RenderCubemap.hlsl", "RenderCubemapVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
+DEFINE_SHADER(RenderCubemapVS, "RenderCubemap.hlsl", "RenderCubemapVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, PosScaleUVScale)
@@ -110,7 +111,7 @@ DEFINE_SHADER(RenderCubemapPS, "RenderCubemap.hlsl", "RenderCubemapPS", EShaderF
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_SRV_VARIABLE(HDREnvMapTexture, EShaderParameterResourceType::Texture)
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
-			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ViewMatrixForCubemap)
+			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector2, CubemapSize)
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(int32, CubemapFaceIndex)
 		)
 	)
@@ -348,16 +349,6 @@ bool D3D12TestRenderer::Draw()
 
 	FD3D12Swapchain* const SwapChain = FD3D12Manager::GetInstance()->GetSwapchain();
 
-	CurrentFrameCommandContext.StateCache.SetRenderTargets(
-		{ GBufferManager.GBufferA.get(), GBufferManager.GBufferB.get(), GBufferManager.GBufferC.get() }
-	);
- 	CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
- 	CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(GBufferManager.Depth.get());
-	GBufferManager.GBufferA->ClearRenderTargetView(CurrentFrameCommandContext);
-	GBufferManager.GBufferB->ClearRenderTargetView(CurrentFrameCommandContext);
-	GBufferManager.GBufferC->ClearRenderTargetView(CurrentFrameCommandContext);
-	GBufferManager.Depth->ClearDepthStencilView(CurrentFrameCommandContext);
-
 	if (!bSetupEnvCubemap)
 	{
 		CD3DX12_VIEWPORT Viewport{ 0.0f, 0.0f, static_cast<float>(GCubemapSize), static_cast<float>(GCubemapSize) };
@@ -371,7 +362,7 @@ bool D3D12TestRenderer::Draw()
 			D3D12_RENDER_TARGET_VIEW_DESC EnvCubemapRTVDesc{};
 			MEM_ZERO(EnvCubemapRTVDesc);
 			EnvCubemapRTVDesc.Format = EnvCubemap->GetDesc().Format;
-			EnvCubemapRTVDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE3D;
+			EnvCubemapRTVDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DARRAY;
 			EnvCubemapRTVDesc.Texture2DArray.MipSlice = 0;
 			EnvCubemapRTVDesc.Texture2DArray.FirstArraySlice = CubeMapFaceIndex;
 			EnvCubemapRTVDesc.Texture2DArray.ArraySize = 1;
@@ -401,13 +392,13 @@ bool D3D12TestRenderer::Draw()
 			MeshDrawArgument.BaseVertexLocation = 0;
 			MeshDrawArgument.StartInstanceLocation = 0;
 
-			auto ScreenDrawVSInstance = ScreenDrawVS.MakeTemplatedShaderInstance();
+			auto RenderCubemapVSInstance = RenderCubemapVS.MakeTemplatedShaderInstance();
 			auto RenderCubemapPSInstance = RenderCubemapPS.MakeTemplatedShaderInstance();
 
-			ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
+			RenderCubemapVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
 				= Vector4{ static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height), static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height) };
 
-			ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.InvTargetSizeAndTextureSize
+			RenderCubemapVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.InvTargetSizeAndTextureSize
 				= Vector4{ 1.0f / EnvCubemap->GetDesc().Width, 1.0f / EnvCubemap->GetDesc().Height, 1.0f / static_cast<float>(EnvCubemap->GetDesc().Width), 1.0f / static_cast<float>(EnvCubemap->GetDesc().Height) };
 			RenderCubemapPSInstance->Parameter.HDREnvMapTexture = HDREnvMapTexture->GetTextureSRV();
 
@@ -429,7 +420,7 @@ bool D3D12TestRenderer::Draw()
 				Vector3::Forward
 			};
 
-			RenderCubemapPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.ViewMatrixForCubemap = Matrix::CreateLookAt(Vector3{ 0.0f }, CubemapTarget[CubeMapFaceIndex], CubemapUp[CubeMapFaceIndex]);
+			RenderCubemapPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.CubemapSize = Vector2(GCubemapSize, GCubemapSize);
 			RenderCubemapPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.CubemapFaceIndex = CubeMapFaceIndex;
 
 			FD3D12SRVDesc SRVDesc{};
@@ -446,7 +437,7 @@ bool D3D12TestRenderer::Draw()
 			SRVDesc.Desc = Desc;
 
 			eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
-			ShaderList[EShaderFrequency::Vertex] = ScreenDrawVSInstance;
+			ShaderList[EShaderFrequency::Vertex] = RenderCubemapVSInstance;
 			ShaderList[EShaderFrequency::Pixel] = RenderCubemapPSInstance;
 			FBoundShaderSet BoundShaderSet{ ShaderList };
 			DrawDesc.BoundShaderSet = BoundShaderSet;
@@ -482,6 +473,16 @@ bool D3D12TestRenderer::Draw()
 		bSetupEnvCubemap = true;
 	}
 
+
+	CurrentFrameCommandContext.StateCache.SetRenderTargets(
+		{ GBufferManager.GBufferA.get(), GBufferManager.GBufferB.get(), GBufferManager.GBufferC.get() }
+	);
+	CurrentFrameCommandContext.StateCache.SetDepthEnable(true);
+	CurrentFrameCommandContext.StateCache.SetDepthStencilTarget(GBufferManager.Depth.get());
+	GBufferManager.GBufferA->ClearRenderTargetView(CurrentFrameCommandContext);
+	GBufferManager.GBufferB->ClearRenderTargetView(CurrentFrameCommandContext);
+	GBufferManager.GBufferC->ClearRenderTargetView(CurrentFrameCommandContext);
+	GBufferManager.Depth->ClearDepthStencilView(CurrentFrameCommandContext);
 
 	CD3DX12_VIEWPORT Viewport{ 0.0f, 0.0f, static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
 	CD3DX12_RECT Rect{ 0, 0, static_cast<LONG>(SwapChain->GetWidth()), static_cast<LONG>(SwapChain->GetHeight()) };
