@@ -29,6 +29,7 @@ public:
 	}
 	virtual void InitResource();
 	void DeferredRelease();
+	void VerifyDesc();
 	virtual void CreateD3D12Resource();
 	virtual bool IsCreateD3D12ResourceOnInitResource() const
 	{

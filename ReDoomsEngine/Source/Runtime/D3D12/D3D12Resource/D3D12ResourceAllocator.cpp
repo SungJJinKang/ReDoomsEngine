@@ -345,7 +345,7 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateRend
         InWidth,
         InHeight,
         1, // @todo : support mips
-        0,
+        1,
         1, // @todo : support msaa
         0,
         D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET |D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
@@ -377,7 +377,7 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateRend
 		InWidth,
 		InHeight,
 		CUBEMAP_FACE_COUNT,
-		0,
+		1,
 		1, // @todo : support msaa
 		0,
 		D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
@@ -410,7 +410,7 @@ eastl::shared_ptr<FD3D12Texture3DResource> FD3D12ResourceAllocator::AllocateRend
 		InWidth,
 		InHeight,
 		InDepth,
-		0, // @todo : support mips
+		1, // @todo : support mips
 		D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS
 	);
 
@@ -439,7 +439,7 @@ eastl::shared_ptr<FD3D12Texture2DResource> FD3D12ResourceAllocator::AllocateDept
         InWidth,
         InHeight,
         1, // @todo : support mips
-        0,
+        1,
         1, // @todo : support msaa
 		0,
 		D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL

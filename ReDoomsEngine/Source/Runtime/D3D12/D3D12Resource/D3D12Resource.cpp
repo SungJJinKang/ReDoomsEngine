@@ -46,10 +46,16 @@ void FD3D12Resource::DeferredRelease()
 	FRenderer::GetInstance()->GetCurrentFrameResourceContainer().DeferredDeletedResourceList.push_back(weak_from_this());
 }
 
+void FD3D12Resource::VerifyDesc()
+{
+	EA_ASSERT(Desc.MipLevels != 0);
+}
+
 void FD3D12Resource::CreateD3D12Resource()
 {
 	EA_ASSERT(bInit);
 	EA_ASSERT(Resources[0] == nullptr);
+	VerifyDesc();
 
 	VERIFYD3D12RESULT(GetD3D12Device()->CreateCommittedResource(
 		&ResourceCreateProperties.HeapProperties,
