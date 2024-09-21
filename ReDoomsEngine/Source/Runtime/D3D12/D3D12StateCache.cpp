@@ -98,12 +98,45 @@ void FD3D12StateCache::SetStencilEnable(const bool bInEnable)
 	}
 }
 
+static bool RequireUpdatePSO(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
+{
+	bool bRequireUpdatePSO = false;
+	const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& LhsShaderInstanceList = lhs.GetShaderInstanceList();
+	const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& RhsShaderInstanceList = rhs.GetShaderInstanceList();
+
+	for (int32 Index = 0; Index < EShaderFrequency::NumShaderFrequency; ++Index)
+	{
+		if (LhsShaderInstanceList[Index] != RhsShaderInstanceList[Index])
+		{
+			bRequireUpdatePSO = true;
+			break;
+		}
+		else
+		{
+			if (LhsShaderInstanceList[Index] && RhsShaderInstanceList[Index])
+			{
+				if (LhsShaderInstanceList[Index]->GetShaderTemplate() != RhsShaderInstanceList[Index]->GetShaderTemplate())
+				{
+					bRequireUpdatePSO = true;
+					break;
+				}
+			}
+		}
+	}
+
+	return bRequireUpdatePSO;
+}
+
 void FD3D12StateCache::SetBoundShaderSet(const FBoundShaderSet& InBoundShaderSet)
 {
 	if (CachedPSOInitializer.DrawDesc.BoundShaderSet != InBoundShaderSet)
 	{
+		if (RequireUpdatePSO(CachedPSOInitializer.DrawDesc.BoundShaderSet, InBoundShaderSet))
+		{
+			bIsPSODirty = true;
+		}
+
 		CachedPSOInitializer.DrawDesc.BoundShaderSet = InBoundShaderSet;
-		bIsPSODirty = true;
 	}
 	else
 	{
