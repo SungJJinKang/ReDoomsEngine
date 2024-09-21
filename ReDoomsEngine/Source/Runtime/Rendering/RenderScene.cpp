@@ -177,10 +177,10 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 	}
 
 	{
-		SCOPED_CPU_TIMER(FRenderScene_CreateMeshDrawListForPass_SetUpShaderInstances)
+		SCOPED_CPU_TIMER(FRenderScene_CreateMeshDrawListForPass_SetUpMaterials)
 		for (FMeshDraw& MeshDraw : MeshDrawList)
 		{
-			SetUpShaderInstances(MeshDraw.PSO.DrawDesc.BoundShaderSet.GetShaderInstanceList());
+			SetUpMaterials(MeshDraw.PSO.DrawDesc.BoundShaderSet.GetMaterialList());
 		}
 	}
 
@@ -188,17 +188,17 @@ eastl::vector<FMeshDraw> FRenderScene::CreateMeshDrawListForPass(const EPass InP
 }
 
 
-void FRenderScene::SetUpShaderInstances(eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList)
+void FRenderScene::SetUpMaterials(eastl::array<FD3D12Material*, EShaderFrequency::NumShaderFrequency>& InMaterialList)
 {
-	SCOPED_CPU_TIMER(FRenderScene_SetUpShaderInstances)
+	SCOPED_CPU_TIMER(FRenderScene_SetUpMaterials)
 
-	for (uint32_t ShaderInstanceIndex = 0; ShaderInstanceIndex < EShaderFrequency::NumShaderFrequency; ++ShaderInstanceIndex)
+	for (uint32_t MaterialIndex = 0; MaterialIndex < EShaderFrequency::NumShaderFrequency; ++MaterialIndex)
 	{
-		if (FD3D12ShaderInstance* ShaderInstance = InShaderInstanceList[ShaderInstanceIndex])
+		if (FD3D12Material* Material = InMaterialList[MaterialIndex])
 		{
-			//EA_ASSERT(!(ShaderInstance->bIsTemplateInstance));
+			//EA_ASSERT(!(Material->bIsTemplateInstance));
 
-			FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate = ShaderInstance->GetShaderParameterContainer();
+			FShaderParameterContainerTemplate* const ShaderParameterContainerTemplate = Material->GetShaderParameterContainer();
 			eastl::vector<FShaderParameterTemplate*>& ShaderParameterList = ShaderParameterContainerTemplate->GetShaderParameterList();
 		
 			const int32_t PrimitiveSceneDataSRVIndex = ShaderParameterContainerTemplate->GetPrimitiveSceneDataSRVIndex();

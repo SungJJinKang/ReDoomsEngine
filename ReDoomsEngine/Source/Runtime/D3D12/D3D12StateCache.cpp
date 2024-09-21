@@ -101,21 +101,21 @@ void FD3D12StateCache::SetStencilEnable(const bool bInEnable)
 static bool RequireUpdatePSO(const FBoundShaderSet& lhs, const FBoundShaderSet& rhs)
 {
 	bool bRequireUpdatePSO = false;
-	const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& LhsShaderInstanceList = lhs.GetShaderInstanceList();
-	const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& RhsShaderInstanceList = rhs.GetShaderInstanceList();
+	const eastl::array<FD3D12Material*, EShaderFrequency::NumShaderFrequency>& LhsMaterialList = lhs.GetMaterialList();
+	const eastl::array<FD3D12Material*, EShaderFrequency::NumShaderFrequency>& RhsMaterialList = rhs.GetMaterialList();
 
 	for (int32 Index = 0; Index < EShaderFrequency::NumShaderFrequency; ++Index)
 	{
-		if (LhsShaderInstanceList[Index] != RhsShaderInstanceList[Index])
+		if (LhsMaterialList[Index] != RhsMaterialList[Index])
 		{
 			bRequireUpdatePSO = true;
 			break;
 		}
 		else
 		{
-			if (LhsShaderInstanceList[Index] && RhsShaderInstanceList[Index])
+			if (LhsMaterialList[Index] && RhsMaterialList[Index])
 			{
-				if (LhsShaderInstanceList[Index]->GetShaderTemplate() != RhsShaderInstanceList[Index]->GetShaderTemplate())
+				if (LhsMaterialList[Index]->GetShader() != RhsMaterialList[Index]->GetShader())
 				{
 					bRequireUpdatePSO = true;
 					break;
@@ -140,7 +140,7 @@ void FD3D12StateCache::SetBoundShaderSet(const FBoundShaderSet& InBoundShaderSet
 	}
 	else
 	{
-		CachedPSOInitializer.DrawDesc.BoundShaderSet = InBoundShaderSet; // Different shader instances can have same hash when its ShaderTemplate is same
+		CachedPSOInitializer.DrawDesc.BoundShaderSet = InBoundShaderSet; // Different shader instances can have same hash when its Shader is same
 	}
 	SetRootSignature(CachedPSOInitializer.DrawDesc.BoundShaderSet.GetRootSignature());
 }
@@ -635,10 +635,10 @@ void FD3D12StateCache::Flush(FD3D12CommandContext& InCommandContext, const EPipe
 
 		for (uint32_t ShaderFrequencyIndex = 0; ShaderFrequencyIndex < EShaderFrequency::NumShaderFrequency; ++ShaderFrequencyIndex)
 		{
-			FD3D12ShaderInstance* ShaderInstance = CachedPSOInitializer.DrawDesc.BoundShaderSet.GetShaderInstanceList()[ShaderFrequencyIndex];
-			if (ShaderInstance)
+			FD3D12Material* Material = CachedPSOInitializer.DrawDesc.BoundShaderSet.GetMaterialList()[ShaderFrequencyIndex];
+			if (Material)
 			{
-				ShaderInstance->ApplyShaderParameter(InCommandContext);
+				Material->ApplyShaderParameter(InCommandContext);
 			}
 		}
 

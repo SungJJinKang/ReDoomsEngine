@@ -224,13 +224,13 @@ void D3D12TestRenderer::SceneSetup()
 		MeshDrawArgument.StartInstanceLocation = 0;
 		
 		// @TODO : Pool shader instance
-		auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedShaderInstance();
-		FD3D12ShaderInstance* MeshDrawPSInstance = nullptr;
+		auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedMaterial();
+		FD3D12Material* MeshDrawPSInstance = nullptr;
 
 		// @TODO : Support shader permutation
 		if (Model.Material->TextureMapMode[0] == ETextureMapMode::Mirror)
 		{
-			auto SponzaMeshDrawMirrorSamplerPSInstance = SponzaMeshDrawMirrorSamplerPS.MakeTemplatedShaderInstance();
+			auto SponzaMeshDrawMirrorSamplerPSInstance = SponzaMeshDrawMirrorSamplerPS.MakeTemplatedMaterial();
 
 			SponzaMeshDrawMirrorSamplerPSInstance->Parameter.DiffuseTexture = Model.Material->DiffuseTexture ? Model.Material->DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 			SponzaMeshDrawMirrorSamplerPSInstance->Parameter.NormalTexture = Model.Material->NormalsTexture ? Model.Material->NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
@@ -243,7 +243,7 @@ void D3D12TestRenderer::SceneSetup()
 		}
 		else
 		{
-			auto SponzaMeshDrawPSInstance = SponzaMeshDrawPS.MakeTemplatedShaderInstance();
+			auto SponzaMeshDrawPSInstance = SponzaMeshDrawPS.MakeTemplatedMaterial();
 			SponzaMeshDrawPSInstance->Parameter.DiffuseTexture = Model.Material->DiffuseTexture ? Model.Material->DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 			SponzaMeshDrawPSInstance->Parameter.NormalTexture = Model.Material->NormalsTexture ? Model.Material->NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 			SponzaMeshDrawPSInstance->Parameter.EmissiveTexture = Model.Material->EmissionColorTexture ? Model.Material->EmissionColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
@@ -254,7 +254,7 @@ void D3D12TestRenderer::SceneSetup()
 			MeshDrawPSInstance = SponzaMeshDrawPSInstance;
 		}
 
-		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
+		eastl::array<FD3D12Material*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 		ShaderList[EShaderFrequency::Vertex] = MeshDrawVSInstance;
 		ShaderList[EShaderFrequency::Pixel] = MeshDrawPSInstance;
 		FBoundShaderSet BoundShaderSet{ ShaderList };
@@ -392,8 +392,8 @@ bool D3D12TestRenderer::Draw()
 			MeshDrawArgument.BaseVertexLocation = 0;
 			MeshDrawArgument.StartInstanceLocation = 0;
 
-			auto RenderCubemapVSInstance = RenderCubemapVS.MakeTemplatedShaderInstance();
-			auto RenderCubemapPSInstance = RenderCubemapPS.MakeTemplatedShaderInstance();
+			auto RenderCubemapVSInstance = RenderCubemapVS.MakeTemplatedMaterial();
+			auto RenderCubemapPSInstance = RenderCubemapPS.MakeTemplatedMaterial();
 
 			RenderCubemapVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
 				= Vector4{ static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height), static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height) };
@@ -436,7 +436,7 @@ bool D3D12TestRenderer::Draw()
 			Desc.Texture2D.ResourceMinLODClamp = 0.0f;
 			SRVDesc.Desc = Desc;
 
-			eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
+			eastl::array<FD3D12Material*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 			ShaderList[EShaderFrequency::Vertex] = RenderCubemapVSInstance;
 			ShaderList[EShaderFrequency::Pixel] = RenderCubemapPSInstance;
 			FBoundShaderSet BoundShaderSet{ ShaderList };
@@ -542,8 +542,8 @@ bool D3D12TestRenderer::Draw()
 		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
 			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.Depth->GetResource(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 
-		auto ScreenDrawVSInstance = ScreenDrawVS.MakeTemplatedShaderInstance();
-		auto DeferredShadingPSInstance = DeferredShadingPS.MakeTemplatedShaderInstance();
+		auto ScreenDrawVSInstance = ScreenDrawVS.MakeTemplatedMaterial();
+		auto DeferredShadingPSInstance = DeferredShadingPS.MakeTemplatedMaterial();
 
 		ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
 			= Vector4{ static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()), static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
@@ -580,7 +580,7 @@ bool D3D12TestRenderer::Draw()
 		DeferredShadingPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale =
 			Vector4{ static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()), static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };
 
-		eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency> ShaderList{};
+		eastl::array<FD3D12Material*, EShaderFrequency::NumShaderFrequency> ShaderList{};
 		ShaderList[EShaderFrequency::Vertex] = ScreenDrawVSInstance;
 		ShaderList[EShaderFrequency::Pixel] = DeferredShadingPSInstance;
 		FBoundShaderSet BoundShaderSet{ ShaderList };

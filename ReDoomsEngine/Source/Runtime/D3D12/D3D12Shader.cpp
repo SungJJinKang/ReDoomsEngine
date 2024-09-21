@@ -10,15 +10,15 @@
 #include "ShaderCompilers/HLSLTypeHelper.h"
 #include "RenderScene.h"
 
-FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList)
-	: ShaderInstanceList()
+FBoundShaderSet::FBoundShaderSet(const eastl::array<FD3D12Material*, EShaderFrequency::NumShaderFrequency>& InShaderList)
+	: MaterialList()
 {
 	Set(InShaderList);
 }
 
-void FBoundShaderSet::Set(const eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderList)
+void FBoundShaderSet::Set(const eastl::array<FD3D12Material*, EShaderFrequency::NumShaderFrequency>& InShaderList)
 {
-	ShaderInstanceList = InShaderList;
+	MaterialList = InShaderList;
 	
 	CacheHash();
 	#if EA_ASSERT_ENABLED
@@ -30,9 +30,9 @@ void FBoundShaderSet::CacheHash() const
 {
 	for (uint32_t ShaderIndex = 0; ShaderIndex < EShaderFrequency::NumShaderFrequency; ++ShaderIndex)
 	{
-		if (ShaderInstanceList[ShaderIndex])
+		if (MaterialList[ShaderIndex])
 		{
-			CachedHash = CombineHash(CachedHash, ShaderInstanceList[ShaderIndex]->GetShaderTemplate()->GetShaderHash());
+			CachedHash = CombineHash(CachedHash, MaterialList[ShaderIndex]->GetShader()->GetShaderHash());
 		}
 	}
 
@@ -46,11 +46,11 @@ void FBoundShaderSet::Validate()
 {
 	bool bFound = false;
 
-	for (FD3D12ShaderInstance*& Shader : ShaderInstanceList)
+	for (FD3D12Material*& Shader : MaterialList)
 	{
 		if (Shader)
 		{
-			EA_ASSERT(Shader->GetShaderTemplate());
+			EA_ASSERT(Shader->GetShader());
 
 			bFound = true;
 			break;
@@ -69,11 +69,11 @@ bool FBoundShaderSet::IsValid() const
 {
 	bool bIsValid = false;
 
-	if(ShaderInstanceList[EShaderFrequency::Compute])
+	if(MaterialList[EShaderFrequency::Compute])
 	{
 		bIsValid = true;
 	}
-	else if(ShaderInstanceList[EShaderFrequency::Vertex] && ShaderInstanceList[EShaderFrequency::Pixel])
+	else if(MaterialList[EShaderFrequency::Vertex] && MaterialList[EShaderFrequency::Pixel])
 	{
 		bIsValid = true;
 	}
@@ -81,7 +81,7 @@ bool FBoundShaderSet::IsValid() const
 	return bIsValid;
 }
 
-FD3D12ShaderTemplate::FD3D12ShaderTemplate(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath,
+FD3D12Shader::FD3D12Shader(const wchar_t* const InShaderName, const wchar_t* const InShaderTextFileRelativePath,
 	const wchar_t* const InShaderEntryPoint, const EShaderFrequency InShaderFrequency, const uint64_t InShaderCompileFlags)
 	: bFinishToCompile(false), ShaderDeclaration(), ShaderBlobData(), ShaderReflectionData(), ShaderHash(), ShaderParameterMap()
 {
@@ -94,7 +94,7 @@ FD3D12ShaderTemplate::FD3D12ShaderTemplate(const wchar_t* const InShaderName, co
 	FD3D12ShaderManager::AddCompilePendingShader(*this);
 }
 
-void FD3D12ShaderTemplate::SetShaderCompileResult(FShaderCompileResult& InShaderCompileResult)
+void FD3D12Shader::SetShaderCompileResult(FShaderCompileResult& InShaderCompileResult)
 {
 	EA_ASSERT(InShaderCompileResult.bIsValid); // Shouldn't overwrite
 
@@ -103,20 +103,20 @@ void FD3D12ShaderTemplate::SetShaderCompileResult(FShaderCompileResult& InShader
 
 }
 
-void FD3D12ShaderTemplate::OnFinishShaderCompile()
+void FD3D12Shader::OnFinishShaderCompile()
 {
 	bFinishToCompile = true;
 	ValidateShaderParameter();
 }
 
-void FD3D12ShaderTemplate::AddShaderParameter(FShaderParameterTemplate* InShaderParameter, const char* const InVariableName)
+void FD3D12Shader::AddShaderParameter(FShaderParameterTemplate* InShaderParameter, const char* const InVariableName)
 {
 	ShaderParameterMap.emplace(InVariableName, InShaderParameter);
 
 	// Important : Never call virtual function of InShaderParameter at here because this function is called from constructor of InShaderParameter's base class
 }
 
-void FD3D12ShaderTemplate::AddShaderPreprocessorDefine(const FShaderPreprocessorDefine& InShaderPreprocessorDefine)
+void FD3D12Shader::AddShaderPreprocessorDefine(const FShaderPreprocessorDefine& InShaderPreprocessorDefine)
 {
 #if RD_DEBUG
 	EA_ASSERT(eastl::find(ShaderDeclaration.AdditionalPreprocessorDefineList.begin(), ShaderDeclaration.AdditionalPreprocessorDefineList.end(), InShaderPreprocessorDefine)
@@ -125,7 +125,7 @@ void FD3D12ShaderTemplate::AddShaderPreprocessorDefine(const FShaderPreprocessor
 	ShaderDeclaration.AdditionalPreprocessorDefineList.push_back(InShaderPreprocessorDefine);
 }
 
-void FD3D12ShaderTemplate::ValidateShaderParameter()
+void FD3D12Shader::ValidateShaderParameter()
 {
 	eastl::wstring ShaderParameterValidationLog{};
 
@@ -343,7 +343,7 @@ void FD3D12ShaderTemplate::ValidateShaderParameter()
 	RD_LOG(ELogVerbosity::Log, EA_WCHAR("%s"), ShaderParameterValidationLog.c_str());
 }
 
-void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection)
+void FD3D12Shader::PopulateShaderReflectionData(ID3D12ShaderReflection* const InD3D12ShaderReflection)
 {
 	// ref https://rtarun9.github.io/blogs/shader_reflection/
 
@@ -525,7 +525,7 @@ void FD3D12ShaderTemplate::PopulateShaderReflectionData(ID3D12ShaderReflection* 
 	ShaderReflectionData.bPopulated = true;
 }
 
-FShaderPreprocessorDefineAdd::FShaderPreprocessorDefineAdd(FD3D12ShaderTemplate& D3D12Shader, const char* const InDefineStr)
+FShaderPreprocessorDefineAdd::FShaderPreprocessorDefineAdd(FD3D12Shader& D3D12Shader, const char* const InDefineStr)
 	: DefineStr(InDefineStr)
 {
 	EA_ASSERT_FORMATTED(EA::StdC::Strstr(InDefineStr, " ") == NULL, ("White space char is detected ( %s )", InDefineStr));
@@ -540,7 +540,7 @@ void FD3D12ShaderManager::Init()
 
 void FD3D12ShaderManager::OnStartFrame(FD3D12CommandContext& InCommandContext)
 {
-	ResetShaderInstancePoolOfAllShadersForCurrentFrame();
+	ResetMaterialPoolOfAllShadersForCurrentFrame();
 }
 
 void FD3D12ShaderManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
@@ -548,7 +548,7 @@ void FD3D12ShaderManager::OnEndFrame(FD3D12CommandContext& InCommandContext)
 
 }
 
-bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12ShaderTemplate& Shader, const FShaderCompileArguments& InShaderCompileArguments)
+bool FD3D12ShaderManager::CompileAndAddNewShader(FD3D12Shader& Shader, const FShaderCompileArguments& InShaderCompileArguments)
 {
 	bool bIsSuccess = false;
 	FShaderCompileArguments FinalShaderCompileArguments = InShaderCompileArguments;
@@ -590,49 +590,49 @@ void FD3D12ShaderManager::CompileAllPendingShader()
 	FShaderCompileArguments DeafulatShaderCompileArguments{};
 
 	CompiledShaderList.reserve(GetCompilePendingShaderList().size());
-	for (FD3D12ShaderTemplate* D3D12Shader : GetCompilePendingShaderList())
+	for (FD3D12Shader* D3D12Shader : GetCompilePendingShaderList())
 	{
 		CompileAndAddNewShader(*D3D12Shader, DeafulatShaderCompileArguments);
 	}
 	GetCompilePendingShaderList().resize(0);
 }
 
-eastl::vector<FD3D12ShaderTemplate*>& FD3D12ShaderManager::GetCompilePendingShaderList()
+eastl::vector<FD3D12Shader*>& FD3D12ShaderManager::GetCompilePendingShaderList()
 {
-	static eastl::vector<FD3D12ShaderTemplate*> CompilePendingShaderList{};
+	static eastl::vector<FD3D12Shader*> CompilePendingShaderList{};
 	return CompilePendingShaderList;
 }
 
-void FD3D12ShaderManager::AddCompilePendingShader(FD3D12ShaderTemplate& CompilePendingShader)
+void FD3D12ShaderManager::AddCompilePendingShader(FD3D12Shader& CompilePendingShader)
 {
 	GetCompilePendingShaderList().push_back(&CompilePendingShader);
 }
 
-void FD3D12ShaderManager::ResetShaderInstancePoolOfAllShadersForCurrentFrame()
+void FD3D12ShaderManager::ResetMaterialPoolOfAllShadersForCurrentFrame()
 {
-	for (FD3D12ShaderTemplate* Shader : CompiledShaderList)
+	for (FD3D12Shader* Shader : CompiledShaderList)
 	{
-		Shader->ResetUsedShaderInstanceCountForCurrentFrame();
+		Shader->ResetUsedMaterialCountForCurrentFrame();
 	}
 }
 
-void FD3D12ShaderInstance::ApplyShaderParameter(FD3D12CommandContext& InCommandContext)
+void FD3D12Material::ApplyShaderParameter(FD3D12CommandContext& InCommandContext)
 {
 	ShaderParameterContainerTemplate->ApplyShaderParameters(InCommandContext);
 }
 
-void FD3D12ShaderInstance::ResetForReuse()
+void FD3D12Material::ResetForReuse()
 {
 
 }
 
-FD3D12ShaderInstance* FD3D12ShaderInstance::Duplicate() const
+FD3D12Material* FD3D12Material::Duplicate() const
 {
-	SCOPED_CPU_TIMER(FD3D12ShaderInstance_Duplicate)
+	SCOPED_CPU_TIMER(FD3D12Material_Duplicate)
 
-	FD3D12ShaderInstance* const DuplicatedShaderInstance = ShaderTemplate->MakeShaderInstanceForCurrentFrame();
-	DuplicatedShaderInstance->ShaderParameterContainerTemplate->CopyFrom(*ShaderParameterContainerTemplate);
-	return DuplicatedShaderInstance;
+	FD3D12Material* const DuplicatedMaterial = Shader->MakeMaterialForCurrentFrame();
+	DuplicatedMaterial->ShaderParameterContainerTemplate->CopyFrom(*ShaderParameterContainerTemplate);
+	return DuplicatedMaterial;
 }
 
 void FShaderParameterContainerTemplate::Init()
@@ -658,7 +658,7 @@ void FShaderParameterContainerTemplate::AddShaderParamter(FShaderParameterTempla
 
 void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandContext& InCommandContext)
 {
-	EA_ASSERT(IsShaderInstance());
+	EA_ASSERT(IsMaterial());
 
 	eastl::array<FD3D12ShaderResourceView*, MAX_SRVS> SRVBindPointInfoList;
 	MEM_ZERO(SRVBindPointInfoList);
@@ -697,16 +697,16 @@ void FShaderParameterContainerTemplate::ApplyShaderParameters(FD3D12CommandConte
 		}
 	}
 
-	InCommandContext.StateCache.SetSRVs(GetD3D12ShaderTemplate()->GetShaderFrequency(), SRVBindPointInfoList);
-	//InCommandContext.StateCache.SetUAVs(GetD3D12ShaderTemplate()->GetShaderFrequency(), UAVBindPointInfoList);
-	InCommandContext.StateCache.SetConstantBuffer(GetD3D12ShaderTemplate()->GetShaderFrequency(), ConstantBufferBindPointInfoList);
+	InCommandContext.StateCache.SetSRVs(GetD3D12Shader()->GetShaderFrequency(), SRVBindPointInfoList);
+	//InCommandContext.StateCache.SetUAVs(GetD3D12Shader()->GetShaderFrequency(), UAVBindPointInfoList);
+	InCommandContext.StateCache.SetConstantBuffer(GetD3D12Shader()->GetShaderFrequency(), ConstantBufferBindPointInfoList);
 
 }
 
 void FShaderParameterContainerTemplate::CopyFrom(const FShaderParameterContainerTemplate& InTemplate)
 {
 	// Validate if this variable and passed one is referencing ShaderParameterContainerTemplate
-	EA_ASSERT(GetD3D12ShaderTemplate() == InTemplate.GetD3D12ShaderTemplate());
+	EA_ASSERT(GetD3D12Shader() == InTemplate.GetD3D12Shader());
 	EA_ASSERT(ShaderParameterList.size() == InTemplate.ShaderParameterList.size());
 	for (uint32_t Index = 0; Index < ShaderParameterList.size(); ++Index)
 	{
@@ -784,7 +784,7 @@ void FShaderParameterConstantBuffer::Init()
 	if (!IsCulled())
 	{
 		const uint32_t ConstantBufferSize = GetConstantBufferReflectionData()->Desc.Size;
-		const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
+		const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12Shader()->GetD3D12ShaderReflection();
 		FShaderParameterConstantBuffer* const TemplateShaderParameterConstantBuffer = GetTemplateShaderParameterConstantBuffer();
 		const bool bFoundReflectionData = TemplateShaderParameterConstantBuffer->SetReflectionDataFromShaderReflectionData(ShaderReflection);
 
@@ -969,7 +969,7 @@ void FShaderParameterConstantBuffer::SetReflectionDataFromShaderReflectionData()
 	 
 	bool bFoundReflectionData = false;
 
-	const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
+	const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12Shader()->GetD3D12ShaderReflection();
 	SetReflectionDataFromShaderReflectionData(ShaderReflection);
 }
 
@@ -999,7 +999,7 @@ void FShaderParameterShaderResourceView::SetReflectionDataFromShaderReflectionDa
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> ByteAddressBufferResourceBindingDescList;
 	eastl::vector<D3D12_SHADER_INPUT_BIND_DESC> StructuredBufferResourceBindingDescList;
 
-	const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12ShaderTemplate()->GetD3D12ShaderReflection();
+	const FD3D12ShaderReflectionData& ShaderReflection = ShaderParameterContainerTemplate->GetD3D12Shader()->GetD3D12ShaderReflection();
 
 	if (GetShaderParameterResourceType() == EShaderParameterResourceType::Texture)
 	{

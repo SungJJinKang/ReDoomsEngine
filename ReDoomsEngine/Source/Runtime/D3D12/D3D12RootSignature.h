@@ -5,7 +5,7 @@
 #include "D3D12Enums.h"
 #include "Common/RendererStateCallbackInterface.h"
 
-class FD3D12ShaderTemplate;
+class FD3D12Shader;
 
 // ref : https://learn.microsoft.com/en-us/windows/win32/direct3d12/creating-a-root-signature, UE5 FD3D12RootSignatureDesc::FD3D12RootSignatureDesc
 class FD3D12RootSignature

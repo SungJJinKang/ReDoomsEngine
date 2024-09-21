@@ -80,7 +80,7 @@ public:
 	FMeshDraw MergeMeshDraw(const FMeshDraw& lhs, const FMeshDraw& rhs);
 	FMeshDraw CreateMeshDrawForPass(const uint32_t InPrimitiveIndex, const EPass InPass);
 	eastl::vector<FMeshDraw> CreateMeshDrawListForPass(const EPass InPass);
-	void SetUpShaderInstances(eastl::array<FD3D12ShaderInstance*, EShaderFrequency::NumShaderFrequency>& InShaderInstanceList);
+	void SetUpMaterials(eastl::array<FD3D12Material*, EShaderFrequency::NumShaderFrequency>& InMaterialList);
 
 	void SetPassDesc(const EPass InPass, const FD3D12PSOInitializer::FPassDesc& InPassDesc);
 
