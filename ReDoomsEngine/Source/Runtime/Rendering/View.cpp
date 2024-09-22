@@ -1,4 +1,8 @@
 ﻿#include "View.h"
+#include "Utils/ConsoleVariable.h"
+
+static TConsoleVariable<float> GNearPlane{ "r.NearPlane", 0.01f };
+static TConsoleVariable<float> GFarPlane{ "r.FarPlane", 8000.0f };
 
 FView::FView()
 {
@@ -23,7 +27,7 @@ Matrix FView::GetPerspectiveProjectionMatrix(const float InFovInDegrees, const f
 		FovAngleY /= AspectRatio;
 	}
 
-	return Matrix::CreatePerspectiveFieldOfView(FovAngleY, AspectRatio, NearPlane, FarPlane);
+	return Matrix::CreatePerspectiveFieldOfView(FovAngleY, AspectRatio, GNearPlane, GFarPlane);
 }
 
 Matrix FView::GetViewPerspectiveProjectionMatrix(const float InFovInDegrees, const float InScreenWidth, const float InScreenHeight)
@@ -33,7 +37,7 @@ Matrix FView::GetViewPerspectiveProjectionMatrix(const float InFovInDegrees, con
 
 Matrix FView::GetOrthoProjMatrices(const float InWidth, const float InHeight)
 {
-	return Matrix::CreateOrthographic(InWidth, InHeight, NearPlane, FarPlane);
+	return Matrix::CreateOrthographic(InWidth, InHeight, GNearPlane, GFarPlane);
 }
 
 void FView::Reset()
