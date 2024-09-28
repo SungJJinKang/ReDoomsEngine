@@ -196,8 +196,6 @@ public:
 	void AddShaderParameter(FShaderParameterTemplate* InShaderParameter, const char* const InVariableName);
 	void AddShaderPreprocessorDefine(const FShaderPreprocessorDefine& InShaderPreprocessorDefine);
 
-	virtual FD3D12Material* MakeMaterialForCurrentFrame() = 0;
-
 	void ValidateShaderParameter();
 
 	inline bool IsFinishToCompile() const 
@@ -650,8 +648,6 @@ public:
 
 	void ApplyShaderParameter(FD3D12CommandContext& InCommandContext);
 	void ResetForReuse();
-	FD3D12Material* Duplicate() const;
-	
 	bool bIsTemplateInstance;
 
 protected:
@@ -811,39 +807,18 @@ DEFINE_SHADER_CONSTANT_BUFFER_TYPE_ALLOW_CULL(
 		__VA_ARGS__ \
 	public: \
 		virtual void OnFinishShaderCompile() { FD3D12Shader::OnFinishShaderCompile(); ShaderParameter.Init(); } \
-		TD3D12Material<F##ShaderName>* MakeTemplatedMaterial() { return MakeMaterial(true); } \
-		virtual FD3D12Material* MakeMaterialForCurrentFrame() { return static_cast<FD3D12Material*>(MakeMaterial(false)); } \
 		virtual void ResetUsedMaterialCountForCurrentFrame() { AllocatedPerFrameMaterialCounts[GCurrentBackbufferIndex] = 0; } \
-		private: \
-		TD3D12Material<F##ShaderName>* MakeMaterial(const bool bIsTemplate)  \
+		TD3D12Material<F##ShaderName>* MakeMaterial()  \
 		{ \
-			EA_ASSERT_MSG(GCurrentRendererState != ERendererState::Initializing && GCurrentRendererState != ERendererState::Destroying, "\"MakeTemplatedMaterialForCurrentFrame\" function can' be't be called in ERendererState::Initializing, Destroying"); \
+			EA_ASSERT_MSG(GCurrentRendererState != ERendererState::Initializing && GCurrentRendererState != ERendererState::Destroying, "\"MakeMaterialForCurrentFrame\" function can' be't be called in ERendererState::Initializing, Destroying"); \
 			EA_ASSERT(TemplateVariable->IsFinishToCompile()); \
 			TD3D12Material<F##ShaderName>* Material{nullptr}; \
-			if(bIsTemplate) \
-			{ \
-				Material = TemplateMaterialPools.emplace_back(new TD3D12Material<F##ShaderName>(TemplateVariable)); \
-				Material->Init(); \
-				Material->bIsTemplateInstance = true; \
-			} \
-			else \
-			{ \
-				eastl::vector<TD3D12Material<F##ShaderName>*>& PerFrameMaterialPool = PerFrameMaterialPoolList[GCurrentBackbufferIndex]; \
-				if (AllocatedPerFrameMaterialCounts[GCurrentBackbufferIndex] < PerFrameMaterialPool.size()) \
-				{ \
-					Material = PerFrameMaterialPool[AllocatedPerFrameMaterialCounts[GCurrentBackbufferIndex]]; \
-					Material->ResetForReuse(); \
-				} \
-				else \
-				{ \
-					Material = PerFrameMaterialPool.emplace_back(new TD3D12Material<F##ShaderName>(TemplateVariable)); \
-					Material->Init(); \
-				} \
-				++AllocatedPerFrameMaterialCounts[GCurrentBackbufferIndex]; \
-				Material->bIsTemplateInstance = false; \
-			} \
+			Material = TemplateMaterialPools.emplace_back(new TD3D12Material<F##ShaderName>(TemplateVariable)); \
+			Material->Init(); \
+			Material->bIsTemplateInstance = true; \
 			return Material; \
 		} \
+		private: \
 		inline static F##ShaderName* TemplateVariable = nullptr; \
 		eastl::array<uint32_t, GNumBackBufferCount> AllocatedPerFrameMaterialCounts{0}; \
 		eastl::vector<TD3D12Material<F##ShaderName>*> TemplateMaterialPools{}; \

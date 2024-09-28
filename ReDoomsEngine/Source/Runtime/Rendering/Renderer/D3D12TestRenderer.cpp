@@ -7,7 +7,7 @@
 #include "GlobalResources.h"
 #include "Utils/ConsoleVariable.h"
 
-static TConsoleVariable<Vector3> GDirectionalLightYawPitchRoll{ "r.DirectionalLightYawPitchRoll", Vector3{ 250.0f, 1.0f, 75.0f } };
+static TConsoleVariable<Vector3> GDirectionalLightYawPitchRoll{ "r.DirectionalLightYawPitchRoll", Vector3{ 415.0f, 1.0f, 75.0f } };
 static TConsoleVariable<Vector3> GDirectionLightColor{ "r.DirectionLightColor", Vector3{ 3.0f, 3.0f, 3.0f } };
 static TConsoleVariable<int32> GCubemapSize{ "r.CubemapSize", 512 };
 
@@ -194,7 +194,7 @@ void D3D12TestRenderer::SceneSetup()
 		EnvCubemap = FD3D12ResourceAllocator::GetInstance()->AllocateRenderTargetCube(GCubemapSize, GCubemapSize, ClearColor);
 		EnvCubemap->SetDebugNameToResource(EA_WCHAR("EnvironmentMap"));
 
-		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"), {}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
+		Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroExterior.fbx"), {}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
 		//Level.UploadModel(CurrentFrameCommandContext, EA_WCHAR("Bistro/BistroInterior.fbx"{}, EMeshLoadFlags::MirrorAddressModeIfTextureCoordinatesOutOfRange);
 		for (FMeshModel& Model : Level.ModelList)
 		{
@@ -224,13 +224,13 @@ void D3D12TestRenderer::SceneSetup()
 		MeshDrawArgument.StartInstanceLocation = 0;
 		
 		// @TODO : Pool shader instance
-		auto MeshDrawVSInstance = MeshDrawVS.MakeTemplatedMaterial();
+		auto MeshDrawVSInstance = MeshDrawVS.MakeMaterial();
 		FD3D12Material* MeshDrawPSInstance = nullptr;
 
 		// @TODO : Support shader permutation
 		if (Model.Material->TextureMapMode[0] == ETextureMapMode::Mirror)
 		{
-			auto SponzaMeshDrawMirrorSamplerPSInstance = SponzaMeshDrawMirrorSamplerPS.MakeTemplatedMaterial();
+			auto SponzaMeshDrawMirrorSamplerPSInstance = SponzaMeshDrawMirrorSamplerPS.MakeMaterial();
 
 			SponzaMeshDrawMirrorSamplerPSInstance->Parameter.DiffuseTexture = Model.Material->DiffuseTexture ? Model.Material->DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 			SponzaMeshDrawMirrorSamplerPSInstance->Parameter.NormalTexture = Model.Material->NormalsTexture ? Model.Material->NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
@@ -243,7 +243,7 @@ void D3D12TestRenderer::SceneSetup()
 		}
 		else
 		{
-			auto SponzaMeshDrawPSInstance = SponzaMeshDrawPS.MakeTemplatedMaterial();
+			auto SponzaMeshDrawPSInstance = SponzaMeshDrawPS.MakeMaterial();
 			SponzaMeshDrawPSInstance->Parameter.DiffuseTexture = Model.Material->DiffuseTexture ? Model.Material->DiffuseTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 			SponzaMeshDrawPSInstance->Parameter.NormalTexture = Model.Material->NormalsTexture ? Model.Material->NormalsTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
 			SponzaMeshDrawPSInstance->Parameter.EmissiveTexture = Model.Material->EmissionColorTexture ? Model.Material->EmissionColorTexture->GetTextureSRV() : DummyBlackTexture->GetTextureSRV();
@@ -291,7 +291,7 @@ void D3D12TestRenderer::OnStartFrame()
 	CreateRenderTargets();
 
 	{
-		float Speed = GTimeDelta * 0.5f;
+		float Speed = GTimeDelta * 2.5f;
 
 		if (FD3D12Window::LeftArrowKeyPressed)
 		{
@@ -392,8 +392,8 @@ bool D3D12TestRenderer::Draw()
 			MeshDrawArgument.BaseVertexLocation = 0;
 			MeshDrawArgument.StartInstanceLocation = 0;
 
-			auto RenderCubemapVSInstance = RenderCubemapVS.MakeTemplatedMaterial();
-			auto RenderCubemapPSInstance = RenderCubemapPS.MakeTemplatedMaterial();
+			auto RenderCubemapVSInstance = RenderCubemapVS.MakeMaterial();
+			auto RenderCubemapPSInstance = RenderCubemapPS.MakeMaterial();
 
 			RenderCubemapVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
 				= Vector4{ static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height), static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height) };
@@ -542,8 +542,8 @@ bool D3D12TestRenderer::Draw()
 		CurrentFrameCommandContext.GraphicsCommandList->ResourceBarrierBatcher.AddBarrier(
 			CD3DX12_RESOURCE_BARRIER::Transition(GBufferManager.Depth->GetResource(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 
-		auto ScreenDrawVSInstance = ScreenDrawVS.MakeTemplatedMaterial();
-		auto DeferredShadingPSInstance = DeferredShadingPS.MakeTemplatedMaterial();
+		auto ScreenDrawVSInstance = ScreenDrawVS.MakeMaterial();
+		auto DeferredShadingPSInstance = DeferredShadingPS.MakeMaterial();
 
 		ScreenDrawVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
 			= Vector4{ static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()), static_cast<float>(SwapChain->GetWidth()), static_cast<float>(SwapChain->GetHeight()) };

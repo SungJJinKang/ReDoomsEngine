@@ -626,15 +626,6 @@ void FD3D12Material::ResetForReuse()
 
 }
 
-FD3D12Material* FD3D12Material::Duplicate() const
-{
-	SCOPED_CPU_TIMER(FD3D12Material_Duplicate)
-
-	FD3D12Material* const DuplicatedMaterial = Shader->MakeMaterialForCurrentFrame();
-	DuplicatedMaterial->ShaderParameterContainerTemplate->CopyFrom(*ShaderParameterContainerTemplate);
-	return DuplicatedMaterial;
-}
-
 void FShaderParameterContainerTemplate::Init()
 {
 	for(uint32_t ShaderParameterIndex = 0 ; ShaderParameterIndex < ShaderParameterList.size() ; ++ShaderParameterIndex)
