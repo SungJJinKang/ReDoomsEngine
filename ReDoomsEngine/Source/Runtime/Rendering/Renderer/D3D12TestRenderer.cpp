@@ -89,17 +89,17 @@ DEFINE_SHADER(DeferredShadingPS, "DeferredShadingPS.hlsl", "DeferredShadingPS", 
 	)
 );
 
-// 
-// DEFINE_SHADER(SetupEnvCubemapPS, "SetupEnvCubemapPS.hlsl", "SetupEnvCubemapPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
-// 	DEFINE_SHADER_PARAMTERS(
-// 		ADD_SHADER_SRV_VARIABLE(HDREnvMapTexture, EShaderParameterResourceType::Texture)
-// 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
-// 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Matrix, ViewMatrixForCubemap)
-// 		)
-// 	)
-// );
-
 DEFINE_SHADER(RenderCubemapVS, "RenderCubemap.hlsl", "RenderCubemapVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+	)
+);
+DEFINE_SHADER(RenderCubemapPS, "RenderCubemap.hlsl", "RenderCubemapPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+	DEFINE_SHADER_PARAMTERS(
+		ADD_SHADER_SRV_VARIABLE(CubemapTextureCube, EShaderParameterResourceType::Texture)
+	)
+);
+
+DEFINE_SHADER(SetupEnvCubemapVS, "SetupEnvCubemap.hlsl", "SetupEnvCubemapVS", EShaderFrequency::Vertex, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
 			ADD_SHADER_CONSTANT_BUFFER_MEMBER_VARIABLE(Vector4, PosScaleUVScale)
@@ -107,7 +107,7 @@ DEFINE_SHADER(RenderCubemapVS, "RenderCubemap.hlsl", "RenderCubemapVS", EShaderF
 		)
 	)
 );
-DEFINE_SHADER(RenderCubemapPS, "RenderCubemap.hlsl", "RenderCubemapPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
+DEFINE_SHADER(SetupEnvCubemapPS, "SetupEnvCubemap.hlsl", "SetupEnvCubemapPS", EShaderFrequency::Pixel, EShaderCompileFlag::None,
 	DEFINE_SHADER_PARAMTERS(
 		ADD_SHADER_SRV_VARIABLE(HDREnvMapTexture, EShaderParameterResourceType::Texture)
 		ADD_SHADER_GLOBAL_CONSTANT_BUFFER(
@@ -392,36 +392,18 @@ bool D3D12TestRenderer::Draw()
 			MeshDrawArgument.BaseVertexLocation = 0;
 			MeshDrawArgument.StartInstanceLocation = 0;
 
-			auto RenderCubemapVSInstance = RenderCubemapVS.MakeMaterial();
-			auto RenderCubemapPSInstance = RenderCubemapPS.MakeMaterial();
+			auto SetupEnvCubemapVSInstance = SetupEnvCubemapVS.MakeMaterial();
+			auto SetupEnvCubemapPSInstance = SetupEnvCubemapPS.MakeMaterial();
 
-			RenderCubemapVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
+			SetupEnvCubemapVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.PosScaleUVScale
 				= Vector4{ static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height), static_cast<float>(EnvCubemap->GetDesc().Width), static_cast<float>(EnvCubemap->GetDesc().Height) };
 
-			RenderCubemapVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.InvTargetSizeAndTextureSize
+			SetupEnvCubemapVSInstance->Parameter.GlobalConstantBuffer.MemberVariables.InvTargetSizeAndTextureSize
 				= Vector4{ 1.0f / EnvCubemap->GetDesc().Width, 1.0f / EnvCubemap->GetDesc().Height, 1.0f / static_cast<float>(EnvCubemap->GetDesc().Width), 1.0f / static_cast<float>(EnvCubemap->GetDesc().Height) };
-			RenderCubemapPSInstance->Parameter.HDREnvMapTexture = HDREnvMapTexture->GetTextureSRV();
+			SetupEnvCubemapPSInstance->Parameter.HDREnvMapTexture = HDREnvMapTexture->GetTextureSRV();
 
-			Vector3 CubemapTarget[CUBEMAP_FACE_COUNT]{
-				Vector3::Forward,
-				Vector3::Backward,
-				Vector3::Right,
-				Vector3::Left,
-				Vector3::Up,
-				Vector3::Down
-			};
-
-			Vector3 CubemapUp[CUBEMAP_FACE_COUNT]{
-				Vector3::Up,
-				Vector3::Up,
-				Vector3::Up,
-				Vector3::Up,
-				Vector3::Backward,
-				Vector3::Forward
-			};
-
-			RenderCubemapPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.CubemapSize = Vector2(GCubemapSize, GCubemapSize);
-			RenderCubemapPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.CubemapFaceIndex = CubeMapFaceIndex;
+			SetupEnvCubemapPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.CubemapSize = Vector2(GCubemapSize, GCubemapSize);
+			SetupEnvCubemapPSInstance->Parameter.GlobalConstantBuffer.MemberVariables.CubemapFaceIndex = CubeMapFaceIndex;
 
 			FD3D12SRVDesc SRVDesc{};
 			SRVDesc.ShaderParameterResourceType = EShaderParameterResourceType::Texture;
@@ -437,8 +419,8 @@ bool D3D12TestRenderer::Draw()
 			SRVDesc.Desc = Desc;
 
 			eastl::array<FD3D12Material*, EShaderFrequency::NumShaderFrequency> ShaderList{};
-			ShaderList[EShaderFrequency::Vertex] = RenderCubemapVSInstance;
-			ShaderList[EShaderFrequency::Pixel] = RenderCubemapPSInstance;
+			ShaderList[EShaderFrequency::Vertex] = SetupEnvCubemapVSInstance;
+			ShaderList[EShaderFrequency::Pixel] = SetupEnvCubemapPSInstance;
 			FBoundShaderSet BoundShaderSet{ ShaderList };
 			DrawDesc.BoundShaderSet = BoundShaderSet;
 			CurrentFrameCommandContext.StateCache.SetPSODrawDesc(DrawDesc);

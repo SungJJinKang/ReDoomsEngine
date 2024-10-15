@@ -5,13 +5,11 @@
 #include "ScreenDrawCommon.hlsl"
 #include "CubemapUtils.hlsl"
 
-Texture2D<float3> HDREnvMapTexture;
-int CubemapFaceIndex;
-float2 CubemapSize;
+TextureCube CubemapTextureCube;
 
 ScreenDrawPSInput RenderCubemapVS(
-    float2 Position : POSITION,
-    float2 UV0 : TEXCOORD
+	float2 Position : POSITION,
+	float2 UV0 : TEXCOORD
 )
 {
 	ScreenDrawPSInput Result;
@@ -24,10 +22,10 @@ ScreenDrawPSInput RenderCubemapVS(
 
 
 void RenderCubemapPS(
-    ScreenDrawPSInput Input, 
-    out float4 Output : SV_Target0
+	ScreenDrawPSInput Input,
+	out float4 Output : SV_Target0
 )
 {
 	float3 CubemapSamplingVector = GetCubemapSamplingVector(Input.ScreenPosition, CubemapFaceIndex, CubemapSize);
-	Output = float4(HDREnvMapTexture.Sample(StaticPointClampSampler, ConvertCubemapSamplingVectorToEquirectangularTexCoord(CubemapSamplingVector)).xyz, 1.0f);
+	Output = CubemapTextureCube.Sample(StaticPointClampSampler, CubemapSamplingVector);
 }
